@@ -1,25 +1,30 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+
+import { Provider } from '@scripters/use-socket.io';
+import Board from './views/Board';
+import { C2CProvider } from './hooks/useC2C';
+
+import { RecoilRoot } from 'recoil';
+
+const SOCKET_URL = process.env.REACT_APP_SOCKET_URL || 'http://localhost:4000';
+const SOCKET_OPTIONS = {
+  forceNew: true,
+};
+
+const room = 'test';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <RecoilRoot>
+      <Provider url={SOCKET_URL} options={SOCKET_OPTIONS}>
+        <C2CProvider room={room}>
+          <div className='App'>
+            <Board room={room} />
+          </div>
+        </C2CProvider>
+      </Provider>
+    </RecoilRoot>
   );
 }
 
