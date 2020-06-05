@@ -23,6 +23,10 @@ const Item = ({ id, ...props }) => {
   const itemStateRef = React.useRef(itemState);
   itemStateRef.current = itemState;
 
+  React.useState(() => {
+    setItemState(props);
+  }, [props]);
+
   const onDrag = (_, data) => {
     const { deltaX, deltaY } = data;
 

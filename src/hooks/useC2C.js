@@ -29,7 +29,6 @@ export const C2CProvider = ({ room, ...props }) => {
           setJoined(true);
         },
         (err) => {
-          console.log(err);
           console.log('I am the master');
           setIsMaster(true);
           unsub.push(
