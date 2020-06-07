@@ -5,6 +5,7 @@ export const Users = ({ users, userId }) => (
     style={{
       position: 'fixed',
       right: '1em',
+      top: '1em',
       background: '#ffffff77',
       padding: '0.2em',
     }}

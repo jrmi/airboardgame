@@ -1,8 +1,10 @@
 import React from 'react';
 import memoize from 'memoizee';
 import { useRecoilState, atom } from 'recoil';
-import Draggable, { DraggableCore } from 'react-draggable';
+import { DraggableCore } from 'react-draggable';
 import { useC2C } from '../hooks/useC2C';
+import { PanZoomRotateState } from '../components/PanZoomRotate';
+import { useRecoilValue } from 'recoil';
 
 export const ItemWithId = memoize((id) =>
   atom({
@@ -22,23 +24,25 @@ const Item = ({ id, ...props }) => {
   const [c2c, _] = useC2C();
   const itemStateRef = React.useRef(itemState);
   itemStateRef.current = itemState;
+  const panZoomRotate = useRecoilValue(PanZoomRotateState);
 
   React.useState(() => {
     setItemState(props);
   }, [props]);
 
-  const onDrag = (_, data) => {
+  const onDrag = (e, data) => {
     const { deltaX, deltaY } = data;
 
     c2c.publish(
       `itemStateUpdate.${id}`,
       {
         ...itemStateRef.current,
-        x: itemStateRef.current.x + deltaX,
-        y: itemStateRef.current.y + deltaY,
+        x: itemStateRef.current.x + deltaX / panZoomRotate.scale,
+        y: itemStateRef.current.y + deltaY / panZoomRotate.scale,
       },
       true
     );
+    //e.stopPropagation();
   };
 
   React.useEffect(() => {
@@ -48,8 +52,12 @@ const Item = ({ id, ...props }) => {
     return unsub;
   }, [id, c2c, setItemState]);
 
+  const onClick = (e) => {
+    //e.stopPropagation();
+  };
+
   return (
-    <DraggableCore onDrag={onDrag}>
+    <DraggableCore onDrag={onDrag} onPanningStart={onClick}>
       <div
         style={{
           position: 'absolute',

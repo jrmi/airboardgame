@@ -1,10 +1,13 @@
 import React from 'react';
 import { useC2C } from '../hooks/useC2C';
 import Cursor from './Cursor';
+import { PanZoomRotateState } from '../components/PanZoomRotate';
+import { useRecoilValue } from 'recoil';
 
 export const Cursors = ({ users }) => {
   const [c2c, joined] = useC2C();
   const [cursors, setCursors] = React.useState({});
+  const panZoomRotate = useRecoilValue(PanZoomRotateState);
 
   const colors = React.useMemo(() => {
     return users.reduce((acc, user) => {

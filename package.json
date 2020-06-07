@@ -3,18 +3,27 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@testing-library/jest-dom": "^4.2.4",
-    "@testing-library/react": "^9.5.0",
-    "@testing-library/user-event": "^7.2.1",
+    "@scripters/use-socket.io": "^1.6.0",
+    "client2client.io": "^1.1.1",
+    "memoizee": "^0.4.14",
+    "nanoid": "^3.1.9",
+    "randomcolor": "^0.5.4",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "react-scripts": "3.4.1"
+    "react-draggable": "^4.4.2",
+    "react-scripts": "3.4.1",
+    "react-zoom-pan-pinch": "^1.6.1",
+    "recoil": "0.0.7",
+    "socket.io": "^2.3.0",
+    "socket.io-client": "^2.3.0"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "lint": "eslint .",
+    "eject": "react-scripts eject",
+    "server": "nodemon src/server.js"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -30,5 +39,14 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/react": "^9.5.0",
+    "@testing-library/user-event": "^7.2.1",
+    "babel-eslint": "^10.1.0",
+    "eslint-plugin-react": "^7.20.0",
+    "eslint-plugin-react-hooks": "^4.0.4",
+    "nodemon": "^2.0.4"
   }
 }
