@@ -4,12 +4,15 @@ const path = require('path');
 
 var app = express();
 var http = require('http').createServer(app);
-var io = require('socket.io')(http);
 var handleC2C = require('client2client.io').handleC2C;
 
 app.use(cors());
 
 const port = process.env.PORT || 4000;
+
+const socketPath = process.env.REACT_APP_SOCKET_PATH || '/socket.io';
+
+var io = require('socket.io')(http, { path: socketPath });
 
 app.use(express.static(path.join(__dirname, '../build')));
 
