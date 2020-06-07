@@ -46,7 +46,14 @@ const Round = ({ radius, color }) => {
 
 // See https://stackoverflow.com/questions/3680429/click-through-div-to-underlying-elements
 // https://developer.mozilla.org/fr/docs/Web/CSS/pointer-events
-const Image = ({ width, height, content }) => {
+const Image = ({
+  width,
+  height,
+  content,
+  backContent,
+  flipped,
+  updateState,
+}) => {
   const size = {};
   if (width) {
     size.width = width;
@@ -54,7 +61,24 @@ const Image = ({ width, height, content }) => {
   if (height) {
     size.height = height;
   }
-  return <img src={content} draggable={false} {...size} />;
+
+  const onDblClick = (e) => {
+    updateState({ flipped: !flipped });
+  };
+
+  if (flipped && backContent) {
+    return (
+      <img
+        src={backContent}
+        draggable={false}
+        {...size}
+        onDoubleClick={onDblClick}
+      />
+    );
+  }
+  return (
+    <img src={content} draggable={false} {...size} onDoubleClick={onDblClick} />
+  );
 };
 
 const getComponent = (type) => {
@@ -82,16 +106,32 @@ const Item = ({ id, ...props }) => {
     setItemState(props);
   }, [props]);
 
+  // Use this for each state update.
+  const updateState = React.useCallback(
+    (newState) => {
+      itemStateRef.current = { ...itemStateRef.current, ...newState };
+      setItemState({ ...itemStateRef.current });
+
+      c2c.publish(`itemStateUpdate.${id}`, {
+        ...itemStateRef.current,
+      });
+    },
+    [c2c, id, setItemState]
+  );
+
   const onDrag = (e, data) => {
     const { deltaX, deltaY } = data;
-    itemStateRef.current.x += deltaX / panZoomRotate.scale;
-    itemStateRef.current.y += deltaY / panZoomRotate.scale;
-    setItemState({ ...itemStateRef.current });
-
-    c2c.publish(`itemStateUpdate.${id}`, {
-      ...itemStateRef.current,
+    updateState({
+      x: itemStateRef.current.x + deltaX / panZoomRotate.scale,
+      y: itemStateRef.current.y + deltaY / panZoomRotate.scale,
     });
   };
+
+  /*React.useEffect(() => {
+    c2c.publish(`itemStateUpdate.${id}`, {
+      ...itemState,
+    });
+  }, [c2c, id, itemState]);*/
 
   React.useEffect(() => {
     const unsub = c2c.subscribe(`itemStateUpdate.${id}`, (newItemState) => {
@@ -114,7 +154,7 @@ const Item = ({ id, ...props }) => {
         padding: '2px',
       }}
     >
-      <Component {...itemState} />
+      <Component {...itemState} updateState={updateState} />
     </div>
   );
 
