@@ -73,8 +73,7 @@ const getComponent = (type) => {
 const Item = ({ id, ...props }) => {
   const [itemState, setItemState] = useRecoilState(ItemWithId(id));
   const [c2c, _] = useC2C();
-  const itemStateRef = React.useRef(itemState);
-  itemStateRef.current = itemState;
+  const itemStateRef = React.useRef({ ...itemState });
   const panZoomRotate = useRecoilValue(PanZoomRotateState);
 
   React.useState(() => {
@@ -83,16 +82,13 @@ const Item = ({ id, ...props }) => {
 
   const onDrag = (e, data) => {
     const { deltaX, deltaY } = data;
+    itemStateRef.current.x += deltaX / panZoomRotate.scale;
+    itemStateRef.current.y += deltaY / panZoomRotate.scale;
+    setItemState({ ...itemStateRef.current });
 
-    c2c.publish(
-      `itemStateUpdate.${id}`,
-      {
-        ...itemStateRef.current,
-        x: itemStateRef.current.x + deltaX / panZoomRotate.scale,
-        y: itemStateRef.current.y + deltaY / panZoomRotate.scale,
-      },
-      true
-    );
+    c2c.publish(`itemStateUpdate.${id}`, {
+      ...itemStateRef.current,
+    });
   };
 
   React.useEffect(() => {
