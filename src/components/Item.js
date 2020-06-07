@@ -74,6 +74,8 @@ const Item = ({ id, ...props }) => {
   const [itemState, setItemState] = useRecoilState(ItemWithId(id));
   const [c2c, _] = useC2C();
   const itemStateRef = React.useRef({ ...itemState });
+  itemStateRef.current = { ...itemState };
+
   const panZoomRotate = useRecoilValue(PanZoomRotateState);
 
   React.useState(() => {
