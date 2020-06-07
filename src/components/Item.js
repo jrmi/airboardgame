@@ -45,8 +45,16 @@ const Round = ({ radius, color }) => {
 };
 
 // See https://stackoverflow.com/questions/3680429/click-through-div-to-underlying-elements
+// https://developer.mozilla.org/fr/docs/Web/CSS/pointer-events
 const Image = ({ width, height, content }) => {
-  return <img src={content} draggable={false} />;
+  const size = {};
+  if (width) {
+    size.width = width;
+  }
+  if (height) {
+    size.height = height;
+  }
+  return <img src={content} draggable={false} {...size} />;
 };
 
 const getComponent = (type) => {

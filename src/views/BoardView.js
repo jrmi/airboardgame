@@ -1,13 +1,10 @@
 import React from 'react';
-import Rect from '../components/Rect';
-import Cursors from '../components/Cursors';
 import Users from '../components/Users';
-import Item from '../components/Item';
 import { useC2C } from '../hooks/useC2C';
 import useUser from '../hooks/useUser';
 import useUsers from '../hooks/useUsers';
 
-import tiktok from '../utils/tiktok';
+import tiktok from '../games/tiktok';
 import { nanoid } from 'nanoid';
 import ZoomPanRotate from '../components/PanZoomRotate';
 import Board from '../components/Board';
@@ -54,7 +51,7 @@ export const BoardView = ({ room }) => {
           }}
           onClick={loadGame}
         >
-          Start
+          TikTok
         </button>
       )}
     </div>

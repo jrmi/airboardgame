@@ -5,9 +5,7 @@ const genTikTok = () => {
 
   items.push({
     type: 'image',
-    content: '/tiktok.svg',
-    width: 35,
-    height: 60,
+    content: '/games/tiktok.svg',
     locked: true,
     x: 100,
     y: 100,

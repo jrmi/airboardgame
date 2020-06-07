@@ -7,7 +7,6 @@ import { useRecoilValue } from 'recoil';
 
 export const Board = ({ user, users, items, config }) => {
   const [c2c, joined, isMaster] = useC2C();
-  const [background, setBackground] = React.useState('');
   const panZoomRotate = useRecoilValue(PanZoomRotateState);
 
   const onMouseMove = (e) => {
@@ -40,7 +39,7 @@ export const Board = ({ user, users, items, config }) => {
       className='content'
       style={{
         background:
-          'repeating-linear-gradient(45deg, #606dbcA0, #606dbcA0 10px, #46529880 10px, #46529880 20px)',
+          'repeating-linear-gradient(45deg, #606dbc60, #606dbc60 10px, #46529860 10px, #46529860 20px)',
         /*backgroundImage: `url(${background})`,
         backgroundSize: '50%',
         backgroundPosition: '50% 50%',

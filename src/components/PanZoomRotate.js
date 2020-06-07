@@ -4,9 +4,9 @@ import { atom, useRecoilState } from 'recoil';
 export const PanZoomRotateState = atom({
   key: 'PanZoomRotate',
   default: {
-    translateX: 50,
-    translateY: 50,
-    scale: 1.2,
+    translateX: 0,
+    translateY: 0,
+    scale: 1,
     rotate: 0,
   },
 });
