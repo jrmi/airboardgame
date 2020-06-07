@@ -7,8 +7,7 @@ import { C2CProvider } from './hooks/useC2C';
 
 import { RecoilRoot } from 'recoil';
 
-const SOCKET_URL =
-  process.env.REACT_APP_SOCKET_URL || 'http://192.168.0.14:4000';
+const SOCKET_URL = process.env.REACT_APP_SOCKET_URL || 'http://localhost:4000';
 const SOCKET_OPTIONS = {
   forceNew: true,
 };

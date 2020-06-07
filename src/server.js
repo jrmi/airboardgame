@@ -1,10 +1,13 @@
 var express = require('express');
+var cors = require('cors');
 const path = require('path');
 
 var app = express();
 var http = require('http').createServer(app);
 var io = require('socket.io')(http);
 var handleC2C = require('client2client.io').handleC2C;
+
+app.use(cors());
 
 const port = process.env.PORT || 4000;
 
