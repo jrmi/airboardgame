@@ -17,13 +17,13 @@ export const BoardView = ({ room }) => {
   const [user, setUser] = useUser();
   const [c2c, joined, isMaster] = useC2C();
   const [itemList, setItemList] = React.useState([]);
-  const [background, setBackground] = React.useState('');
+  const [boardConfig, setBoardConfig] = React.useState({});
 
   React.useEffect(() => {
     c2c.subscribe('loadGame', (game) => {
       console.log('loadgame', game);
       setItemList(game.items);
-      setBackground(game.background);
+      setBoardConfig(game.board);
     });
   }, [c2c]);
 
@@ -35,7 +35,12 @@ export const BoardView = ({ room }) => {
   return (
     <div className='board'>
       <ZoomPanRotate>
-        <Board user={user} users={users} items={itemList} />
+        <Board
+          user={user}
+          users={users}
+          items={itemList}
+          config={boardConfig}
+        />
       </ZoomPanRotate>
 
       <Users users={users} userId={user.id} />

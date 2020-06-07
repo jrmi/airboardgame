@@ -52,13 +52,7 @@ export const Cursors = ({ users }) => {
   return (
     <div>
       {Object.entries(cursors).map(([userId, pos]) => (
-        <Cursor
-          color='#F11'
-          key={userId}
-          pos={pos}
-          text={userId}
-          color={colors[userId]}
-        />
+        <Cursor key={userId} pos={pos} text={userId} color={colors[userId]} />
       ))}
     </div>
   );

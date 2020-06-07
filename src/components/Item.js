@@ -19,6 +19,49 @@ export const ItemWithId = memoize((id) =>
   })
 );
 
+const Rect = ({ width, height, color }) => {
+  return (
+    <div
+      style={{
+        width: width,
+        height: height,
+        backgroundColor: color,
+      }}
+    />
+  );
+};
+
+const Round = ({ radius, color }) => {
+  return (
+    <div
+      style={{
+        borderRadius: '100%',
+        width: radius,
+        height: radius,
+        backgroundColor: color,
+      }}
+    />
+  );
+};
+
+// See https://stackoverflow.com/questions/3680429/click-through-div-to-underlying-elements
+const Image = ({ width, height, content }) => {
+  return <img src={content} draggable={false} />;
+};
+
+const getComponent = (type) => {
+  switch (type) {
+    case 'rect':
+      return Rect;
+    case 'round':
+      return Round;
+    case 'image':
+      return Image;
+    default:
+      return Rect;
+  }
+};
+
 const Item = ({ id, ...props }) => {
   const [itemState, setItemState] = useRecoilState(ItemWithId(id));
   const [c2c, _] = useC2C();
@@ -42,7 +85,6 @@ const Item = ({ id, ...props }) => {
       },
       true
     );
-    //e.stopPropagation();
   };
 
   React.useEffect(() => {
@@ -52,24 +94,30 @@ const Item = ({ id, ...props }) => {
     return unsub;
   }, [id, c2c, setItemState]);
 
-  const onClick = (e) => {
-    //e.stopPropagation();
-  };
+  const Component = getComponent(itemState.type);
+
+  const content = (
+    <div
+      style={{
+        position: 'absolute',
+        left: itemState.x,
+        top: itemState.y,
+        //border: '2px dashed #000000A0',
+        display: 'inline-block',
+        boxSizing: 'content-box',
+        padding: '2px',
+      }}
+    >
+      <Component {...itemState} />
+    </div>
+  );
+
+  if (!itemState.locked) {
+    return <DraggableCore onDrag={onDrag}>{content}</DraggableCore>;
+  }
 
   return (
-    <DraggableCore onDrag={onDrag} onPanningStart={onClick}>
-      <div
-        style={{
-          position: 'absolute',
-          left: itemState.x,
-          top: itemState.y,
-          width: itemState.width,
-          height: itemState.height,
-          backgroundColor: itemState.color,
-        }}
-        {...props}
-      />
-    </DraggableCore>
+    <div style={{ pointerEvents: 'none', userSelect: 'none' }}>{content}</div>
   );
 };
 

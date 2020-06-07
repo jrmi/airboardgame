@@ -5,7 +5,7 @@ import { useC2C } from '../hooks/useC2C';
 import { PanZoomRotateState } from '../components/PanZoomRotate';
 import { useRecoilValue } from 'recoil';
 
-export const Board = ({ user, users, items }) => {
+export const Board = ({ user, users, items, config }) => {
   const [c2c, joined, isMaster] = useC2C();
   const [background, setBackground] = React.useState('');
   const panZoomRotate = useRecoilValue(PanZoomRotateState);
@@ -27,7 +27,11 @@ export const Board = ({ user, users, items }) => {
     });
   };
 
-  const boardDimension = { width: 3000, height: 3000 };
+  if (!config.size) {
+    return null;
+  }
+
+  console.log(config);
 
   return (
     <div
@@ -36,13 +40,13 @@ export const Board = ({ user, users, items }) => {
       className='content'
       style={{
         background:
-          'repeating-linear-gradient(45deg, #606dbc, #606dbc 10px, #465298 10px, #465298 20px)',
+          'repeating-linear-gradient(45deg, #606dbcA0, #606dbcA0 10px, #46529880 10px, #46529880 20px)',
         /*backgroundImage: `url(${background})`,
         backgroundSize: '50%',
         backgroundPosition: '50% 50%',
         backgroundRepeat: 'no-repeat',*/
-        width: `${boardDimension.width}px`,
-        height: `${boardDimension.height}px`,
+        width: `${config.size}px`,
+        height: `${config.size}px`,
       }}
     >
       {items.map((item) => (
