@@ -6,9 +6,9 @@ export const Cursors = ({ users }) => {
   const [c2c, joined] = useC2C();
   const [cursors, setCursors] = React.useState({});
 
-  const colors = React.useMemo(() => {
+  const usersById = React.useMemo(() => {
     return users.reduce((acc, user) => {
-      acc[user.id] = user.color;
+      acc[user.id] = user;
       return acc;
     }, {});
   }, [users]);
@@ -49,7 +49,12 @@ export const Cursors = ({ users }) => {
   return (
     <div>
       {Object.entries(cursors).map(([userId, pos]) => (
-        <Cursor key={userId} pos={pos} text={userId} color={colors[userId]} />
+        <Cursor
+          key={userId}
+          pos={pos}
+          text={usersById[userId].name}
+          color={usersById[userId].color}
+        />
       ))}
     </div>
   );

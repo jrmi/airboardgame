@@ -30,6 +30,9 @@ const genRoomName = () => {
   return nanoid();
 };
 
+/**
+ * Micro component to give room url parameters to C2CProvider
+ */
 export const ConnectedBoardView = () => {
   const { room } = useParams();
 
