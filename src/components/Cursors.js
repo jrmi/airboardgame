@@ -13,6 +13,16 @@ export const Cursors = ({ users }) => {
     }, {});
   }, [users]);
 
+  // Prevent race condition when removing user
+  const currentCursor = React.useMemo(() => {
+    return users.reduce((acc, user) => {
+      if (cursors[user.id]) {
+        acc[user.id] = cursors[user.id];
+      }
+      return acc;
+    }, {});
+  }, [users, cursors]);
+
   React.useEffect(() => {
     setCursors((prevCursors) => {
       return users.reduce((acc, user) => {
@@ -35,7 +45,6 @@ export const Cursors = ({ users }) => {
       });
     });
     c2c.subscribe('cursorOff', ({ userId }) => {
-      //console.log('move', pos);
       setCursors((prevCursors) => {
         const newCursors = {
           ...prevCursors,
@@ -48,7 +57,7 @@ export const Cursors = ({ users }) => {
 
   return (
     <div>
-      {Object.entries(cursors).map(([userId, pos]) => (
+      {Object.entries(currentCursor).map(([userId, pos]) => (
         <Cursor
           key={userId}
           pos={pos}
