@@ -27,7 +27,7 @@ export const Board = ({ user, users, items, config }) => {
   };
 
   if (!config.size) {
-    return null;
+    return <p>Please select a game…</p>;
   }
 
   console.log(config);

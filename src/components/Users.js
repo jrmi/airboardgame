@@ -1,6 +1,6 @@
 import React from 'react';
 
-export const Users = ({ users, userId }) => (
+export const Users = ({ user, setUser, users }) => (
   <div
     style={{
       position: 'fixed',
@@ -12,7 +12,7 @@ export const Users = ({ users, userId }) => (
   >
     {users.map((u) => (
       <p key={u.id} style={{ color: u.color }}>
-        {u.id} {userId === u.id && '<You'}
+        {u.id} {user.id === u.id && '<You'}
       </p>
     ))}
   </div>
