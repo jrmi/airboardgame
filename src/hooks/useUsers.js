@@ -7,21 +7,29 @@ function useUsers() {
   const [c2c, joined, isMaster] = useC2C();
 
   React.useEffect(() => {
-    const unsub = [];
     if (joined) {
       console.log('joined');
       if (!isMaster) {
         c2c.call('getUserList').then((userList) => {
-          //console.log('I am slave');
           usersRef.current = userList;
           setUsers(userList);
         });
-      } else {
-        unsub.push(
-          c2c.register('getUserList', () => {
+      }
+    }
+  }, [joined, c2c, isMaster]);
+
+  React.useEffect(() => {
+    const unsub = [];
+    if (joined) {
+      if (isMaster) {
+        c2c
+          .register('getUserList', () => {
             return usersRef.current;
           })
-        );
+          .then((unregister) => {
+            unsub.push(unregister);
+          });
+
         unsub.push(
           c2c.subscribe('userLeave', (userId) => {
             console.log('userLeave');

@@ -3,15 +3,60 @@ import React from 'react';
 import { useC2C } from '../hooks/useC2C';
 import { nanoid } from 'nanoid';
 
+import { AllItems } from '../components/Item';
+import { useRecoilValue } from 'recoil';
+
 import tiktok from '../games/tiktok';
 import card from '../games/card';
 
-export const GameLoader = ({ setItemList, setBoardConfig }) => {
+export const GameLoader = ({
+  itemList,
+  setItemList,
+  boardConfig,
+  setBoardConfig,
+}) => {
   const [c2c, joined, isMaster] = useC2C();
+  const gameRef = React.useRef({ items: itemList, board: boardConfig });
+  // Not very efficient way to do it
+  const allItems = useRecoilValue(AllItems);
+  gameRef.current = { items: allItems, board: boardConfig };
+
+  // Load game from master if any
+  React.useEffect(() => {
+    if (joined) {
+      if (!isMaster) {
+        c2c.call('getGame').then((game) => {
+          console.log('get this item list', game);
+          setItemList(game.items);
+          setBoardConfig(game.board);
+        });
+      }
+    }
+  }, [c2c, isMaster, joined, setItemList, setBoardConfig]);
+
+  React.useEffect(() => {
+    const unsub = [];
+    if (joined) {
+      if (isMaster) {
+        c2c
+          .register('getGame', () => {
+            console.log('send this game', gameRef.current);
+            return gameRef.current;
+          })
+          .then((unregister) => {
+            unsub.push(unregister);
+          });
+      }
+    }
+    return () => {
+      unsub.forEach((u) => u());
+    };
+  }, [c2c, isMaster, joined, itemList, boardConfig]);
 
   React.useEffect(() => {
     c2c.subscribe('loadGame', (game) => {
-      //console.log('loadgame', game);
+      console.log('loadgame', game);
+      //
       setItemList(game.items);
       setBoardConfig(game.board);
     });

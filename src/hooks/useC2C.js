@@ -15,33 +15,18 @@ export const C2CProvider = ({ room, ...props }) => {
     if (!socket) {
       return;
     }
-    join(socket, room).then((newRoom) => {
+    join(socket, room, (newRoom) => {
+      console.log('isMaster');
+      setIsMaster(true);
+    }).then((newRoom) => {
       console.log('Connected…');
-      const unsub = [];
       roomRef.current = newRoom;
 
       setC2c(newRoom);
 
-      newRoom.call('getMaster').then(
-        (masterId) => {
-          console.log(`${masterId} is the master`);
-          setIsMaster(false);
-          setJoined(true);
-        },
-        (err) => {
-          console.log('I am the master');
-          setIsMaster(true);
-          unsub.push(
-            newRoom.register('getMaster', () => {
-              return newRoom.userId;
-            })
-          );
-          setJoined(true);
-        }
-      );
+      setJoined(true);
 
       return () => {
-        unsub.forEach((u) => u());
         socket.disconnect();
       };
     });

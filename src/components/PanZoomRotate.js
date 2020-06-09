@@ -11,7 +11,7 @@ export const PanZoomRotateState = atom({
   },
 });
 
-const Item = ({ children }) => {
+const PanZoomRotate = ({ children }) => {
   const [dim, setDim] = useRecoilState(PanZoomRotateState);
   const wrapperRef = React.useRef(null);
   const wrappedRef = React.useRef(null);
@@ -101,4 +101,4 @@ const Item = ({ children }) => {
   );
 };
 
-export default Item;
+export default PanZoomRotate;

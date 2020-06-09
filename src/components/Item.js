@@ -1,10 +1,15 @@
 import React from 'react';
 import memoize from 'memoizee';
-import { useRecoilState, atom } from 'recoil';
+import { useRecoilState, atom, selector } from 'recoil';
 import { DraggableCore } from 'react-draggable';
 import { useC2C } from '../hooks/useC2C';
 import { PanZoomRotateState } from '../components/PanZoomRotate';
 import { useRecoilValue } from 'recoil';
+
+const Items = atom({
+  key: 'items',
+  default: [],
+});
 
 export const ItemWithId = memoize((id) =>
   atom({
@@ -18,6 +23,15 @@ export const ItemWithId = memoize((id) =>
     },
   })
 );
+
+// TODO yeark
+export const AllItems = selector({
+  key: 'allItems',
+  get: ({ get }) => {
+    const items = get(Items);
+    return items.map((id) => ({ ...get(ItemWithId(id)), id }));
+  },
+});
 
 const Rect = ({ width, height, color }) => {
   return (
@@ -95,12 +109,20 @@ const getComponent = (type) => {
 };
 
 const Item = ({ id, ...props }) => {
+  const [items, setItems] = useRecoilState(Items);
   const [itemState, setItemState] = useRecoilState(ItemWithId(id));
   const [c2c, _] = useC2C();
   const itemStateRef = React.useRef({ ...itemState });
   itemStateRef.current = { ...itemState };
 
   const panZoomRotate = useRecoilValue(PanZoomRotateState);
+
+  React.useState(() => {
+    setItems((prevItems) => [...new Set([...prevItems, id])]);
+    return () => {
+      setItems((prevItems) => prevItems.filter((itemId) => id === itemId));
+    };
+  }, [id]);
 
   React.useState(() => {
     setItemState(props);

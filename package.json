@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@scripters/use-socket.io": "^1.6.0",
-    "client2client.io": "^1.1.1",
+    "client2client.io": "^1.2.1",
     "cors": "^2.8.5",
     "lodash.debounce": "^4.0.8",
     "memoizee": "^0.4.14",

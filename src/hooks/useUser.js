@@ -49,7 +49,6 @@ function useUser() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const debouncedEmitUpdateUser = React.useCallback(
     debounce((newUser) => {
-      console.log('Publish user', newUser);
       c2c.publish('userUpdate', newUser, true);
     }, 500),
     [c2c]
@@ -57,7 +56,6 @@ function useUser() {
 
   React.useEffect(() => {
     if (user && user.id) {
-      console.log('update', user);
       debouncedEmitUpdateUser(user);
     }
   }, [user, debouncedEmitUpdateUser]);

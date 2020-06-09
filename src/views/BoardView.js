@@ -25,7 +25,12 @@ export const BoardView = () => {
       </ZoomPanRotate>
 
       <Users user={user} setUser={setUser} users={users} userId={user.id} />
-      <GameLoader setItemList={setItemList} setBoardConfig={setBoardConfig} />
+      <GameLoader
+        itemList={itemList}
+        setItemList={setItemList}
+        boardConfig={boardConfig}
+        setBoardConfig={setBoardConfig}
+      />
     </div>
   );
 };
