@@ -66,6 +66,7 @@ const Image = ({
   content,
   backContent,
   flipped,
+  rotation,
   updateState,
 }) => {
   const size = {};
@@ -174,6 +175,7 @@ const Item = ({ id, ...props }) => {
         display: 'inline-block',
         boxSizing: 'content-box',
         padding: '2px',
+        transform: `rotate(${itemState.rotation})`
       }}
     >
       <Component {...itemState} updateState={updateState} />

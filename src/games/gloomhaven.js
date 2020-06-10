@@ -7,6 +7,7 @@ const genGloomhaven = () => {
     backContent: "/games/back.jpg",
     width: 100,
     flipped: false,
+    rotation: '90deg',
     x: 100,
     y: 100,
   });
@@ -17,6 +18,7 @@ const genGloomhaven = () => {
     backContent: "/games/back.jpg",
     width: 100,
     flipped: false,
+    rotation: '270deg',
     x: 100,
     y: 100,
   });
@@ -27,6 +29,7 @@ const genGloomhaven = () => {
     backContent: "/games/back.jpg",
     width: 100,
     flipped: false,
+    rotation: '90deg',
     x: 100,
     y: 100,
   });
