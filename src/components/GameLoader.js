@@ -8,6 +8,7 @@ import { useRecoilValue } from 'recoil';
 
 import tiktok from '../games/tiktok';
 import card from '../games/card';
+import gloomhaven from '../games/gloomhaven';
 
 export const GameLoader = ({
   itemList,
@@ -72,6 +73,11 @@ export const GameLoader = ({
     c2c.publish('loadGame', card, true);
   };
 
+  const loadGloomhaven = () => {
+    gloomhaven.items = gloomhaven.items.map((item) => ({ ...item, id: nanoid() }));
+    c2c.publish('loadGame', gloomhaven, true);
+  };
+
   if (!isMaster) {
     return null;
   }
@@ -86,6 +92,7 @@ export const GameLoader = ({
     >
       <button onClick={loadTikTok}>TikTok</button>
       <button onClick={loadCard}>Card</button>
+      <button onClick={loadGloomhaven}>Gloomhaven</button>
     </div>
   );
 };
