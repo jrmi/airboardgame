@@ -3,7 +3,7 @@ import React from 'react';
 import { useC2C } from '../hooks/useC2C';
 import { nanoid } from 'nanoid';
 
-import { AllItems } from '../components/Item';
+import { ItemListAtom } from '../components/Items';
 import { useRecoilValue } from 'recoil';
 
 import tiktok from '../games/tiktok';
@@ -19,8 +19,12 @@ export const GameLoader = ({
   const [c2c, joined, isMaster] = useC2C();
   const gameRef = React.useRef({ items: itemList, board: boardConfig });
   // Not very efficient way to do it
-  const allItems = useRecoilValue(AllItems);
-  gameRef.current = { items: allItems, board: boardConfig };
+  const allItems = useRecoilValue(ItemListAtom);
+  //gameRef.current = { items: [...allItems], board: boardConfig };
+  gameRef.current = {
+    items: JSON.parse(JSON.stringify(allItems)),
+    board: boardConfig,
+  };
 
   // Load game from master if any
   React.useEffect(() => {
@@ -52,7 +56,7 @@ export const GameLoader = ({
     return () => {
       unsub.forEach((u) => u());
     };
-  }, [c2c, isMaster, joined, itemList, boardConfig]);
+  }, [c2c, isMaster, joined]);
 
   React.useEffect(() => {
     c2c.subscribe('loadGame', (game) => {
@@ -62,6 +66,13 @@ export const GameLoader = ({
       setBoardConfig(game.board);
     });
   }, [c2c, setItemList, setBoardConfig]);
+
+  React.useEffect(() => {
+    if (isMaster) {
+      card.items = card.items.map((item) => ({ ...item, id: nanoid() }));
+      c2c.publish('loadGame', card, true);
+    }
+  }, [c2c, isMaster]);
 
   const loadTikTok = () => {
     tiktok.items = tiktok.items.map((item) => ({ ...item, id: nanoid() }));
@@ -74,7 +85,10 @@ export const GameLoader = ({
   };
 
   const loadGloomhaven = () => {
-    gloomhaven.items = gloomhaven.items.map((item) => ({ ...item, id: nanoid() }));
+    gloomhaven.items = gloomhaven.items.map((item) => ({
+      ...item,
+      id: nanoid(),
+    }));
     c2c.publish('loadGame', gloomhaven, true);
   };
 

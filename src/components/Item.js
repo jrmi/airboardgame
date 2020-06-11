@@ -1,37 +1,8 @@
 import React from 'react';
-import memoize from 'memoizee';
-import { useRecoilState, atom, selector } from 'recoil';
 import { DraggableCore } from 'react-draggable';
 import { useC2C } from '../hooks/useC2C';
 import { PanZoomRotateState } from '../components/PanZoomRotate';
 import { useRecoilValue } from 'recoil';
-
-const Items = atom({
-  key: 'items',
-  default: [],
-});
-
-export const ItemWithId = memoize((id) =>
-  atom({
-    key: `item${id}`,
-    default: {
-      color: '#00D022',
-      width: 30,
-      height: 30,
-      x: 10,
-      y: 10,
-    },
-  })
-);
-
-// TODO yeark
-export const AllItems = selector({
-  key: 'allItems',
-  get: ({ get }) => {
-    const items = get(Items);
-    return items.map((id) => ({ ...get(ItemWithId(id)), id }));
-  },
-});
 
 const Rect = ({ width, height, color }) => {
   return (
@@ -108,37 +79,24 @@ const getComponent = (type) => {
   }
 };
 
-const Item = ({ id, ...props }) => {
-  const [items, setItems] = useRecoilState(Items);
-  const [itemState, setItemState] = useRecoilState(ItemWithId(id));
-  const [c2c, _] = useC2C();
-  const itemStateRef = React.useRef({ ...itemState });
-  itemStateRef.current = { ...itemState };
+const Item = ({ id, setState, state }) => {
+  const [c2c] = useC2C();
+  const itemStateRef = React.useRef({ ...state });
+  itemStateRef.current = { ...state };
 
   const panZoomRotate = useRecoilValue(PanZoomRotateState);
-
-  React.useState(() => {
-    setItems((prevItems) => [...new Set([...prevItems, id])]);
-    return () => {
-      setItems((prevItems) => prevItems.filter((itemId) => id === itemId));
-    };
-  }, [id]);
-
-  React.useState(() => {
-    setItemState(props);
-  }, [props]);
 
   // Use this for each state update.
   const updateState = React.useCallback(
     (newState) => {
       itemStateRef.current = { ...itemStateRef.current, ...newState };
-      setItemState({ ...itemStateRef.current });
+      setState({ ...itemStateRef.current });
 
-      c2c.publish(`itemStateUpdate.${id}`, {
+      c2c.publish(`itemStateUpdate.${state.id}`, {
         ...itemStateRef.current,
       });
     },
-    [c2c, id, setItemState]
+    [c2c, setState, state]
   );
 
   const onDrag = (e, data) => {
@@ -157,30 +115,31 @@ const Item = ({ id, ...props }) => {
 
   React.useEffect(() => {
     const unsub = c2c.subscribe(`itemStateUpdate.${id}`, (newItemState) => {
-      setItemState(newItemState);
+      setState(newItemState);
     });
     return unsub;
-  }, [id, c2c, setItemState]);
+  }, [id, c2c, setState]);
 
-  const Component = getComponent(itemState.type);
+  const Component = getComponent(state.type);
 
   const content = (
     <div
       style={{
         position: 'absolute',
-        left: itemState.x,
-        top: itemState.y,
+        left: state.x,
+        top: state.y,
         //border: '2px dashed #000000A0',
         display: 'inline-block',
         boxSizing: 'content-box',
         padding: '2px',
       }}
+      className='item'
     >
-      <Component {...itemState} updateState={updateState} />
+      <Component {...state} updateState={updateState} />
     </div>
   );
 
-  if (!itemState.locked) {
+  if (!state.locked) {
     return <DraggableCore onDrag={onDrag}>{content}</DraggableCore>;
   }
 

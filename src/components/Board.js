@@ -1,11 +1,12 @@
 import React from 'react';
 import Cursors from '../components/Cursors';
-import Item from '../components/Item';
+import Items from './Items';
 import { useC2C } from '../hooks/useC2C';
 import { PanZoomRotateState } from '../components/PanZoomRotate';
 import { useRecoilValue } from 'recoil';
+import Selector from '../components/Selector';
 
-export const Board = ({ user, users, items, config }) => {
+export const Board = ({ user, users, config }) => {
   const [c2c, joined, isMaster] = useC2C();
   const panZoomRotate = useRecoilValue(PanZoomRotateState);
 
@@ -30,29 +31,27 @@ export const Board = ({ user, users, items, config }) => {
     return <p>Please select a game…</p>;
   }
 
-  console.log(config);
-
   return (
-    <div
-      onMouseMove={onMouseMove}
-      onMouseLeave={onLeave}
-      className='content'
-      style={{
-        background:
-          'repeating-linear-gradient(45deg, #606dbc60, #606dbc60 10px, #46529860 10px, #46529860 20px)',
-        /*backgroundImage: `url(${background})`,
+    <Selector>
+      <div
+        onMouseMove={onMouseMove}
+        onMouseLeave={onLeave}
+        className='content'
+        style={{
+          background:
+            'repeating-linear-gradient(45deg, #606dbc60, #606dbc60 10px, #46529860 10px, #46529860 20px)',
+          /*backgroundImage: `url(${background})`,
         backgroundSize: '50%',
         backgroundPosition: '50% 50%',
         backgroundRepeat: 'no-repeat',*/
-        width: `${config.size}px`,
-        height: `${config.size}px`,
-      }}
-    >
-      {items.map((item) => (
-        <Item key={item.id} {...item} />
-      ))}
-      <Cursors users={users} />
-    </div>
+          width: `${config.size}px`,
+          height: `${config.size}px`,
+        }}
+      >
+        <Items />
+        <Cursors users={users} />
+      </div>
+    </Selector>
   );
 };
 
