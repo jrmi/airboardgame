@@ -40,10 +40,6 @@ export const Board = ({ user, users, config }) => {
         style={{
           background:
             'repeating-linear-gradient(45deg, #606dbc60, #606dbc60 10px, #46529860 10px, #46529860 20px)',
-          /*backgroundImage: `url(${background})`,
-        backgroundSize: '50%',
-        backgroundPosition: '50% 50%',
-        backgroundRepeat: 'no-repeat',*/
           width: `${config.size}px`,
           height: `${config.size}px`,
         }}

@@ -1,6 +1,8 @@
 import React from 'react';
 import { atom, useRecoilValue } from 'recoil';
 import { PanZoomRotateState } from '../components/PanZoomRotate';
+import { ItemListAtom } from '../components/Items';
+import { useRecoilState } from 'recoil';
 
 export const selectedItemsAtom = atom({
   key: 'selectedItems',
@@ -17,8 +19,35 @@ const insideClass = (element, className) => {
   return element.parentNode && insideClass(element.parentNode, className);
 };
 
+const isPointInsideRect = (point, rect) => {
+  return (
+    point.x > rect.left &&
+    point.x < rect.left + rect.width &&
+    point.y > rect.top &&
+    point.y < rect.top + rect.height
+  );
+};
+
+const findSelected = (items, rect) => {
+  return items.filter((item) => {
+    return (
+      !item.locked &&
+      isPointInsideRect(
+        { x: item.x, y: item.y },
+        rect
+      ) /*&&
+      isPointInsideRect(
+        { x: item.x + item.width, y: item.y + item.height },
+        rect
+      )*/
+    );
+  });
+};
+
 const Selector = ({ children }) => {
   const panZoomRotate = useRecoilValue(PanZoomRotateState);
+  const itemList = useRecoilValue(ItemListAtom);
+  const [selected, setSelected] = useRecoilState(selectedItemsAtom);
   const [selector, setSelector] = React.useState({});
   const wrapperRef = React.useRef(null);
   const stateRef = React.useRef({
@@ -40,6 +69,7 @@ const Selector = ({ children }) => {
 
   const onMouseMouve = (e) => {
     if (stateRef.current.moving) {
+      if (selected.length) setSelected([]);
       const { top, left } = e.currentTarget.getBoundingClientRect();
       const currentX = (e.clientX - left) / panZoomRotate.scale;
       const currentY = (e.clientY - top) / panZoomRotate.scale;
@@ -62,7 +92,11 @@ const Selector = ({ children }) => {
   };
 
   const onMouseUp = (e) => {
-    if (e.button === 0) {
+    if (e.button === 0 && stateRef.current.moving) {
+      const selected = findSelected(itemList, stateRef.current).map(
+        ({ id }) => id
+      );
+      setSelected(findSelected(itemList, stateRef.current).map(({ id }) => id));
       stateRef.current = { moving: false };
       setSelector({ ...stateRef.current });
       wrapperRef.current.style.cursor = 'auto';

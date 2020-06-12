@@ -3,6 +3,7 @@ import { DraggableCore } from 'react-draggable';
 import { useC2C } from '../hooks/useC2C';
 import { PanZoomRotateState } from '../components/PanZoomRotate';
 import { useRecoilValue } from 'recoil';
+import { selectedItemsAtom } from './Selector';
 
 const Rect = ({ width, height, color }) => {
   return (
@@ -79,9 +80,13 @@ const getComponent = (type) => {
   }
 };
 
-const Item = ({ id, setState, state }) => {
+const Item = ({ setState, state }) => {
   const [c2c] = useC2C();
-  const itemStateRef = React.useRef({ ...state });
+  const selectedItems = useRecoilValue(selectedItemsAtom);
+  const itemRef = React.useRef(null);
+  const itemStateRef = React.useRef({
+    ...state,
+  });
   itemStateRef.current = { ...state };
 
   const panZoomRotate = useRecoilValue(PanZoomRotateState);
@@ -89,8 +94,13 @@ const Item = ({ id, setState, state }) => {
   // Use this for each state update.
   const updateState = React.useCallback(
     (newState) => {
-      itemStateRef.current = { ...itemStateRef.current, ...newState };
-      setState({ ...itemStateRef.current });
+      itemStateRef.current = {
+        ...itemStateRef.current,
+        ...newState,
+      };
+      setState({
+        ...itemStateRef.current,
+      });
 
       c2c.publish(`itemStateUpdate.${state.id}`, {
         ...itemStateRef.current,
@@ -107,20 +117,36 @@ const Item = ({ id, setState, state }) => {
     });
   };
 
-  /*React.useEffect(() => {
-    c2c.publish(`itemStateUpdate.${id}`, {
-      ...itemState,
-    });
-  }, [c2c, id, itemState]);*/
+  React.useEffect(() => {
+    const { width, height } = itemRef.current.getBoundingClientRect();
+    //console.log(width, height, state.width, state.height);
+    if (state.width !== width && state.height !== height) {
+      //console.log('diff');
+      setState((prevState) => ({ ...prevState, width, height }));
+      /*updateState((prevState) => {
+        return { ...prevState, width, height };
+      });*/
+    }
+  }, [setState, state]);
 
   React.useEffect(() => {
-    const unsub = c2c.subscribe(`itemStateUpdate.${id}`, (newItemState) => {
-      setState(newItemState);
-    });
+    const unsub = c2c.subscribe(
+      `itemStateUpdate.${state.id}`,
+      (newItemState) => {
+        setState(newItemState);
+      }
+    );
     return unsub;
-  }, [id, c2c, setState]);
+  }, [c2c, state.id, setState]);
 
   const Component = getComponent(state.type);
+
+  const style = {};
+  if (selectedItems.includes(state.id)) {
+    style.border = '2px dashed #000000A0';
+  }
+
+  const rotation = state.rotation || 0;
 
   const content = (
     <div
@@ -131,9 +157,12 @@ const Item = ({ id, setState, state }) => {
         //border: '2px dashed #000000A0',
         display: 'inline-block',
         boxSizing: 'content-box',
-        padding: '2px',
+        //padding: '2px',
+        transform: `rotate(${rotation}deg)`,
+        ...style,
       }}
       className='item'
+      ref={itemRef}
     >
       <Component {...state} updateState={updateState} />
     </div>
@@ -144,7 +173,14 @@ const Item = ({ id, setState, state }) => {
   }
 
   return (
-    <div style={{ pointerEvents: 'none', userSelect: 'none' }}>{content}</div>
+    <div
+      style={{
+        pointerEvents: 'none',
+        userSelect: 'none',
+      }}
+    >
+      {content}
+    </div>
   );
 };
 
