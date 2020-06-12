@@ -1,5 +1,5 @@
 import React from 'react';
-import UserName from './UserName';
+import UserConfig from './UserConfig';
 
 export const Users = ({ user, setUser, users }) => (
   <ul
@@ -13,10 +13,9 @@ export const Users = ({ user, setUser, users }) => (
     }}
   >
     {users.map((u, index) => (
-      <li key={u.id} style={{ color: u.color }}>
-        <span>{index} - </span>
-        {user.id === u.id && <UserName user={user} setUser={setUser} />}
-        {user.id !== u.id && <span>{u.name}</span>}
+      <li key={u.id} style={{ display: 'flex', position: 'relative' }}>
+        <span style={{ lineHeight: '30px' }}>{index} - </span>
+        <UserConfig user={u} setUser={setUser} editable={user.id === u.id} />
       </li>
     ))}
   </ul>
