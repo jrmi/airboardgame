@@ -32,14 +32,11 @@ const findSelected = (items, rect) => {
   return items.filter((item) => {
     return (
       !item.locked &&
+      isPointInsideRect({ x: item.x, y: item.y }, rect) &&
       isPointInsideRect(
-        { x: item.x, y: item.y },
+        { x: item.x + item.actualWidth, y: item.y + item.actualHeight },
         rect
-      ) /*&&
-      isPointInsideRect(
-        { x: item.x + item.width, y: item.y + item.height },
-        rect
-      )*/
+      )
     );
   });
 };

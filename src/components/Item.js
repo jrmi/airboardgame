@@ -119,13 +119,12 @@ const Item = ({ setState, state }) => {
 
   React.useEffect(() => {
     const { width, height } = itemRef.current.getBoundingClientRect();
-    //console.log(width, height, state.width, state.height);
-    if (state.width !== width && state.height !== height) {
-      //console.log('diff');
-      setState((prevState) => ({ ...prevState, width, height }));
-      /*updateState((prevState) => {
-        return { ...prevState, width, height };
-      });*/
+    if (state.actualWidth !== width && state.actualHeight !== height) {
+      setState({
+        ...state,
+        actualWidth: width,
+        actualHeight: height,
+      });
     }
   }, [setState, state]);
 
