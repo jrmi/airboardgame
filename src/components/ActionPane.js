@@ -38,9 +38,13 @@ const ActionPane = ({ children }) => {
 
   const moveItem = React.useCallback(
     (itemId, posDelta) => {
+      let ids = [itemId];
+      if (selectedItems.includes(itemId)) {
+        ids = selectedItems;
+      }
       setItemList((prevList) => {
         return prevList.map((item) => {
-          if (item.id === itemId) {
+          if (ids.includes(item.id)) {
             const x = item.x + posDelta.x;
             const y = item.y + posDelta.y;
             return { ...item, x, y };
@@ -49,7 +53,7 @@ const ActionPane = ({ children }) => {
         });
       });
     },
-    [setItemList]
+    [setItemList, selectedItems]
   );
 
   const onMouseMouve = (e) => {
