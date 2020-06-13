@@ -99,6 +99,7 @@ const Selector = ({ children }) => {
       {selector.moving && (
         <div
           style={{
+            zIndex: 100,
             position: 'absolute',
             backgroundColor: '#FF000050',
             top: selector.top,

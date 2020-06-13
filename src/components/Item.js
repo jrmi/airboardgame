@@ -94,6 +94,32 @@ const getComponent = (type) => {
 const Item = ({ setState, state }) => {
   const selectedItems = useRecoilValue(selectedItemsAtom);
   const itemRef = React.useRef(null);
+  const [unlock, setUnlock] = React.useState(false);
+
+  React.useEffect(() => {
+    // Add id to element
+    itemRef.current.id = state.id;
+  }, [state]);
+
+  // Allow to operate on locked item if ctrl is pressed
+  React.useEffect(() => {
+    const onKeyDown = (e) => {
+      if (e.key === 'Control') {
+        setUnlock(true);
+      }
+    };
+    const onKeyUp = (e) => {
+      if (e.key === 'Control') {
+        setUnlock(false);
+      }
+    };
+    document.addEventListener('keydown', onKeyDown);
+    document.addEventListener('keyup', onKeyUp);
+    return () => {
+      document.removeEventListener('keydown', onKeyDown);
+      document.removeEventListener('keyup', onKeyUp);
+    };
+  }, []);
 
   const Component = getComponent(state.type);
 
@@ -156,7 +182,7 @@ const Item = ({ setState, state }) => {
     </div>
   );
 
-  if (!state.locked) {
+  if (!state.locked || unlock) {
     return content;
   }
 

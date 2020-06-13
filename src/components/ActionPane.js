@@ -4,7 +4,6 @@ import { PanZoomRotateState } from '../components/PanZoomRotate';
 import { selectedItemsAtom } from '../components/Selector';
 import { ItemListAtom } from '../components/Items';
 import { useRecoilState } from 'recoil';
-import findlast from 'lodash.findlast';
 import { insideClass, isPointInsideRect, isPointInsideItem } from '../utils';
 
 const ActionPane = ({ children }) => {
@@ -21,11 +20,14 @@ const ActionPane = ({ children }) => {
         x: (e.clientX - left) / panZoomRotate.scale,
         y: (e.clientY - top) / panZoomRotate.scale,
       };
-      const foundItem = findlast(itemList, (item) => {
-        return !item.locked && isPointInsideItem(point, item);
-      });
+      const foundItem = insideClass(e.target, 'item');
       if (foundItem) {
+        if (!selectedItems.includes(foundItem.id)) {
+          setSelectedItems([foundItem.id]);
+        }
         actionRef.current.moving = true;
+        actionRef.current.startX = point.x;
+        actionRef.current.startY = point.y;
         actionRef.current.prevX = point.x;
         actionRef.current.prevY = point.y;
         actionRef.current.item = foundItem;

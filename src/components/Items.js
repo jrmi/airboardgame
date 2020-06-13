@@ -10,7 +10,6 @@ export const ItemListAtom = atom({
 
 const Items = ({}) => {
   const [itemList, setItemList] = useRecoilState(ItemListAtom);
-  const selectedItems = useRecoilValue(selectedItemsAtom);
 
   const updateItemState = React.useCallback(
     (newState) => {

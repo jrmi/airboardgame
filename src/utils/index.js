@@ -6,7 +6,8 @@ import { isCompositeComponentWithType } from 'react-dom/test-utils';
  * @param {string} className
  */
 export const insideClass = (element, className) => {
-  if (element.className === className) return true;
+  if (element.className === className) return element;
+  if (!element.parentNode) return false;
   return element.parentNode && insideClass(element.parentNode, className);
 };
 
