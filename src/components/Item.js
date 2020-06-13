@@ -4,6 +4,7 @@ import { useC2C } from '../hooks/useC2C';
 import { PanZoomRotateState } from '../components/PanZoomRotate';
 import { useRecoilValue } from 'recoil';
 import { selectedItemsAtom } from './Selector';
+import { nanoid } from 'nanoid';
 
 const Rect = ({ width, height, color }) => {
   return (
@@ -54,16 +55,26 @@ const Image = ({
 
   if (flipped && backContent) {
     return (
-      <img
-        src={backContent}
-        draggable={false}
-        {...size}
-        onDoubleClick={onDblClick}
-      />
+      <div onDoubleClick={onDblClick}>
+        <img
+          src={backContent}
+          draggable={false}
+          {...size}
+          style={{ userSelect: 'none', pointerEvents: 'none' }}
+        />
+      </div>
     );
   }
   return (
-    <img src={content} draggable={false} {...size} onDoubleClick={onDblClick} />
+    <div onDoubleClick={onDblClick}>
+      <img
+        src={content}
+        draggable={false}
+        {...size}
+        style={{ userSelect: 'none', pointerEvents: 'none' }}
+        onDoubleClick={onDblClick}
+      />
+    </div>
   );
 };
 
@@ -81,71 +92,51 @@ const getComponent = (type) => {
 };
 
 const Item = ({ setState, state }) => {
-  const [c2c] = useC2C();
   const selectedItems = useRecoilValue(selectedItemsAtom);
   const itemRef = React.useRef(null);
-  const itemStateRef = React.useRef({
-    ...state,
-  });
-  itemStateRef.current = { ...state };
-
-  const panZoomRotate = useRecoilValue(PanZoomRotateState);
-
-  // Use this for each state update.
-  const updateState = React.useCallback(
-    (newState) => {
-      itemStateRef.current = {
-        ...itemStateRef.current,
-        ...newState,
-      };
-      setState({
-        ...itemStateRef.current,
-      });
-
-      c2c.publish(`itemStateUpdate.${state.id}`, {
-        ...itemStateRef.current,
-      });
-    },
-    [c2c, setState, state]
-  );
-
-  const onDrag = (e, data) => {
-    const { deltaX, deltaY } = data;
-    updateState({
-      x: itemStateRef.current.x + deltaX / panZoomRotate.scale,
-      y: itemStateRef.current.y + deltaY / panZoomRotate.scale,
-    });
-  };
-
-  React.useEffect(() => {
-    const { width, height } = itemRef.current.getBoundingClientRect();
-    if (state.actualWidth !== width && state.actualHeight !== height) {
-      setState({
-        ...state,
-        actualWidth: width,
-        actualHeight: height,
-      });
-    }
-  }, [setState, state]);
-
-  React.useEffect(() => {
-    const unsub = c2c.subscribe(
-      `itemStateUpdate.${state.id}`,
-      (newItemState) => {
-        setState(newItemState);
-      }
-    );
-    return unsub;
-  }, [c2c, state.id, setState]);
 
   const Component = getComponent(state.type);
 
   const style = {};
   if (selectedItems.includes(state.id)) {
-    style.border = '2px dashed #000000A0';
+    style.border = '2px dashed #ff0000A0';
+    style.padding = '2px';
+  } else {
+    style.padding = '4px';
   }
 
   const rotation = state.rotation || 0;
+
+  const updateState = React.useCallback(
+    (modif) => {
+      setState({ ...state, ...modif });
+    },
+    [setState, state]
+  );
+
+  // Update actual size when update
+  React.useEffect(() => {
+    const currentElem = itemRef.current;
+    const callback = (entries) => {
+      entries.map((entry) => {
+        if (entry.contentBoxSize) {
+          const { inlineSize: width, blockSize: height } = entry.contentBoxSize;
+          if (state.actualWidth !== width || state.actualHeight !== height) {
+            setState({
+              ...state,
+              actualWidth: width,
+              actualHeight: height,
+            });
+          }
+        }
+      });
+    };
+    const observer = new ResizeObserver(callback);
+    observer.observe(currentElem);
+    return () => {
+      observer.unobserve(currentElem);
+    };
+  }, [setState, state]);
 
   const content = (
     <div
@@ -153,10 +144,8 @@ const Item = ({ setState, state }) => {
         position: 'absolute',
         left: state.x,
         top: state.y,
-        //border: '2px dashed #000000A0',
         display: 'inline-block',
         boxSizing: 'content-box',
-        //padding: '2px',
         transform: `rotate(${rotation}deg)`,
         ...style,
       }}
@@ -168,7 +157,7 @@ const Item = ({ setState, state }) => {
   );
 
   if (!state.locked) {
-    return <DraggableCore onDrag={onDrag}>{content}</DraggableCore>;
+    return content;
   }
 
   return (
@@ -183,4 +172,35 @@ const Item = ({ setState, state }) => {
   );
 };
 
-export default Item;
+const SyncedItem = ({ setState, state }) => {
+  const [c2c] = useC2C();
+  const versionsRef = React.useRef([]);
+
+  React.useEffect(() => {
+    if (versionsRef.current.includes(state.version)) {
+      versionsRef.current = versionsRef.current.filter((v) => {
+        return v !== state.version;
+      });
+    } else {
+      c2c.publish(`itemStateUpdate.${state.id}`, {
+        ...state,
+      });
+    }
+  }, [c2c, setState, state]);
+
+  React.useEffect(() => {
+    const unsub = c2c.subscribe(
+      `itemStateUpdate.${state.id}`,
+      (newItemState) => {
+        const nextVersion = nanoid();
+        versionsRef.current.push(nextVersion);
+        setState({ ...newItemState, version: nextVersion });
+      }
+    );
+    return unsub;
+  }, [c2c, setState, state]);
+
+  return <Item state={state} setState={setState} />;
+};
+
+export default SyncedItem;

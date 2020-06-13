@@ -2,9 +2,11 @@ import React from 'react';
 import { BlockPicker } from 'react-color';
 
 const UserConfig = ({ user, setUser, editable }) => {
+  const [name, setName] = React.useState(user.name);
   const [showPicker, setShowPicker] = React.useState(false);
 
   const handleChange = (e) => {
+    setName(e.target.value);
     setUser({ ...user, name: e.target.value });
   };
 
@@ -55,7 +57,7 @@ const UserConfig = ({ user, setUser, editable }) => {
             backgroundColor: '#CCC',
             width: '7em',
           }}
-          value={user.name}
+          value={name}
           onChange={handleChange}
         />
       )}

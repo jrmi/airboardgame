@@ -1,6 +1,7 @@
 import React from 'react';
 import { useRecoilState, atom, selector, useRecoilValue } from 'recoil';
 import Item from '../components/Item';
+import { selectedItemsAtom } from './Selector';
 
 export const ItemListAtom = atom({
   key: 'itemList',
@@ -9,13 +10,14 @@ export const ItemListAtom = atom({
 
 const Items = ({}) => {
   const [itemList, setItemList] = useRecoilState(ItemListAtom);
+  const selectedItems = useRecoilValue(selectedItemsAtom);
 
-  const setItemState = React.useCallback(
+  const updateItemState = React.useCallback(
     (newState) => {
       setItemList((prevList) => {
         return prevList.map((item) => {
           if (item.id === newState.id) {
-            return newState;
+            return { ...item, ...newState, id: item.id };
           }
           return item;
         });
@@ -25,7 +27,7 @@ const Items = ({}) => {
   );
 
   return itemList.map((item) => (
-    <Item key={item.id} state={item} setState={setItemState} />
+    <Item key={item.id} state={item} setState={updateItemState} />
   ));
 };
 

@@ -3,30 +3,12 @@ import { atom, useRecoilValue } from 'recoil';
 import { PanZoomRotateState } from '../components/PanZoomRotate';
 import { ItemListAtom } from '../components/Items';
 import { useRecoilState } from 'recoil';
+import { insideClass, isPointInsideRect, isPointInsideItem } from '../utils';
 
 export const selectedItemsAtom = atom({
   key: 'selectedItems',
   default: [],
 });
-
-/**
- * Check if element or parent has className.
- * @param {DOMElement} element
- * @param {string} className
- */
-const insideClass = (element, className) => {
-  if (element.className === className) return true;
-  return element.parentNode && insideClass(element.parentNode, className);
-};
-
-const isPointInsideRect = (point, rect) => {
-  return (
-    point.x > rect.left &&
-    point.x < rect.left + rect.width &&
-    point.y > rect.top &&
-    point.y < rect.top + rect.height
-  );
-};
 
 const findSelected = (items, rect) => {
   return items.filter((item) => {
@@ -61,6 +43,11 @@ const Selector = ({ children }) => {
       stateRef.current.startY = displayY;
       setSelector({ ...stateRef.current });
       wrapperRef.current.style.cursor = 'crosshair';
+    } else {
+      if (selected.length) {
+        /* Should remove selection if clic another item */
+        /*setSelected([])*/
+      }
     }
   };
 
@@ -85,6 +72,7 @@ const Selector = ({ children }) => {
         stateRef.current.height = -currentY + stateRef.current.startY;
       }
       setSelector({ ...stateRef.current });
+      e.preventDefault();
     }
   };
 

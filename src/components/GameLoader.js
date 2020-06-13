@@ -30,11 +30,14 @@ export const GameLoader = ({
   React.useEffect(() => {
     if (joined) {
       if (!isMaster) {
-        c2c.call('getGame').then((game) => {
-          console.log('get this item list', game);
-          setItemList(game.items);
-          setBoardConfig(game.board);
-        });
+        c2c.call('getGame').then(
+          (game) => {
+            console.log('get this item list', game);
+            setItemList(game.items);
+            setBoardConfig(game.board);
+          },
+          () => {}
+        );
       }
     }
   }, [c2c, isMaster, joined, setItemList, setBoardConfig]);
