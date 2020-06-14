@@ -106,13 +106,30 @@ export const SelectedItems = ({}) => {
       (minMax.min.x + minMax.max.x) / 2,
       (minMax.min.y + minMax.max.y) / 2,
     ];
+    let index = -1;
+    massUpdateItems(selectedItems, (item) => {
+      index += 1;
+      return {
+        ...item,
+        x: newX - item.actualWidth / 2 + index,
+        y: newY - item.actualHeight / 2 - index,
+      };
+    });
+  }, [selectedItemList, selectedItems, massUpdateItems]);
 
+  const flip = React.useCallback(() => {
     massUpdateItems(selectedItems, (item) => ({
       ...item,
-      x: newX - item.actualWidth / 2,
-      y: newY - item.actualHeight / 2,
+      flipped: true,
     }));
-  }, [selectedItemList, selectedItems, massUpdateItems]);
+  }, [selectedItems, massUpdateItems]);
+
+  const unflip = React.useCallback(() => {
+    massUpdateItems(selectedItems, (item) => ({
+      ...item,
+      flipped: false,
+    }));
+  }, [selectedItems, massUpdateItems]);
 
   if (selectedItemList.length === 0) {
     return null;
@@ -135,6 +152,8 @@ export const SelectedItems = ({}) => {
           <h2>{selectedItems.length} items selected</h2>
           <button onClick={shuffle}>Shuffle selection</button>
           <button onClick={align}>Align selection</button>
+          <button onClick={flip}>Flip all</button>
+          <button onClick={unflip}>UnFlip all</button>
         </div>
       )}
       {selectedItems.length === 1 && (
