@@ -83,12 +83,29 @@ const Image = ({
     );
   } else {
     image = (
-      <img
-        src={content}
-        draggable={false}
-        {...size}
-        style={{ userSelect: 'none', pointerEvents: 'none' }}
-      />
+      <>
+        {unflippedFor && (
+          <div
+            style={{
+              position: 'absolute',
+              top: '-18px',
+              left: '4px',
+              color: '#555',
+              backgroundColor: '#CCCCCCA0',
+              userSelect: 'none',
+              pointerEvents: 'none',
+            }}
+          >
+            Only you
+          </div>
+        )}
+        <img
+          src={content}
+          draggable={false}
+          {...size}
+          style={{ userSelect: 'none', pointerEvents: 'none' }}
+        />
+      </>
     );
   }
 
