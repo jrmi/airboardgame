@@ -64,7 +64,6 @@ export const SelectedItems = ({}) => {
   // Shuffle selection
   const shuffle = React.useCallback(() => {
     setItemList((prevItemList) => {
-      //const result = shuffleSelectedItems(prevItemList, selectedItems);
       const shuffledSelectedItems = shuffleArray(
         prevItemList.filter(({ id }) => selectedItems.includes(id))
       );

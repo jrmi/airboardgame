@@ -15,6 +15,22 @@ const ActionPane = ({ children }) => {
   const wrapperRef = React.useRef(null);
   const actionRef = React.useRef({});
 
+  const putItemOnTop = React.useCallback(
+    (itemIdToMove) => {
+      setItemList((prevItemList) => {
+        const itemToMove = prevItemList.find(({ id }) => itemIdToMove === id);
+        const result = prevItemList.filter(({ id }) => itemIdToMove !== id);
+        result.push(itemToMove);
+        c2c.publish(
+          `updateItemListOrder`,
+          result.map(({ id }) => id)
+        );
+        return result;
+      });
+    },
+    [setItemList, c2c]
+  );
+
   const onMouseDown = (e) => {
     if (e.button === 0) {
       const { top, left } = e.currentTarget.getBoundingClientRect();
@@ -22,18 +38,19 @@ const ActionPane = ({ children }) => {
         x: (e.clientX - left) / panZoomRotate.scale,
         y: (e.clientY - top) / panZoomRotate.scale,
       };
-      const foundItem = insideClass(e.target, 'item');
-      if (foundItem) {
-        if (!selectedItems.includes(foundItem.id)) {
-          setSelectedItems([foundItem.id]);
+      const foundElement = insideClass(e.target, 'item');
+      if (foundElement) {
+        if (!selectedItems.includes(foundElement.id)) {
+          setSelectedItems([foundElement.id]);
+          putItemOnTop(foundElement.id);
         }
         actionRef.current.moving = true;
         actionRef.current.startX = point.x;
         actionRef.current.startY = point.y;
         actionRef.current.prevX = point.x;
         actionRef.current.prevY = point.y;
-        actionRef.current.item = foundItem;
         actionRef.current.moving = true;
+        actionRef.current.itemId = foundElement.id;
         wrapperRef.current.style.cursor = 'move';
         e.stopPropagation();
       }
@@ -68,7 +85,7 @@ const ActionPane = ({ children }) => {
       const { top, left } = e.currentTarget.getBoundingClientRect();
       const currentX = (e.clientX - left) / panZoomRotate.scale;
       const currentY = (e.clientY - top) / panZoomRotate.scale;
-      moveItem(actionRef.current.item.id, {
+      moveItem(actionRef.current.itemId, {
         x: currentX - actionRef.current.prevX,
         y: currentY - actionRef.current.prevY,
       });
