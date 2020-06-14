@@ -85,23 +85,6 @@ const ActionPane = ({ children }) => {
     }
   };
 
-  React.useEffect(() => {
-    const unsub = c2c.subscribe(`selectedItemsMove`, ({ itemIds, move }) => {
-      setItemList((prevList) => {
-        return prevList.map((item) => {
-          if (itemIds.includes(item.id)) {
-            const x = item.x + move.x;
-            const y = item.y + move.y;
-            const newItem = { ...item, x, y };
-            return newItem;
-          }
-          return item;
-        });
-      });
-    });
-    return unsub;
-  }, [c2c, setItemList]);
-
   return (
     <div
       onMouseDown={onMouseDown}
