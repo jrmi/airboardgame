@@ -81,7 +81,7 @@ const Selector = ({ children }) => {
       const selected = findSelected(itemList, stateRef.current).map(
         ({ id }) => id
       );
-      setSelected(findSelected(itemList, stateRef.current).map(({ id }) => id));
+      setSelected(selected);
       stateRef.current = { moving: false };
       setSelector({ ...stateRef.current });
       wrapperRef.current.style.cursor = 'auto';

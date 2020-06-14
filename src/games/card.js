@@ -3,34 +3,36 @@ import { urlAlphabet } from 'nanoid';
 const genGame = () => {
   const items = [];
 
-  items.push({
-    type: 'image',
-    content: '/games/card.jpg',
-    backContent: '/games/back.jpg',
-    width: 100,
-    flipped: true,
-    x: 100,
-    y: 100,
-  });
+  [...Array(10).keys()].forEach(() => {
+    items.push({
+      type: 'image',
+      content: '/games/card.jpg',
+      backContent: '/games/back.jpg',
+      width: 100,
+      flipped: true,
+      x: 100,
+      y: 100,
+    });
 
-  items.push({
-    type: 'image',
-    content: '/games/card.jpg',
-    backContent: '/games/back.jpg',
-    width: 100,
-    flipped: true,
-    x: 100,
-    y: 100,
-  });
+    items.push({
+      type: 'image',
+      content: '/games/card.jpg',
+      backContent: '/games/back.jpg',
+      width: 100,
+      flipped: true,
+      x: 100,
+      y: 100,
+    });
 
-  items.push({
-    type: 'image',
-    content: '/games/8diamond.png',
-    backContent: '/games/back.jpg',
-    width: 100,
-    flipped: true,
-    x: 100,
-    y: 100,
+    items.push({
+      type: 'image',
+      content: '/games/8diamond.png',
+      backContent: '/games/back.jpg',
+      width: 100,
+      flipped: true,
+      x: 100,
+      y: 100,
+    });
   });
 
   return {

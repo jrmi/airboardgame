@@ -1,10 +1,8 @@
 import React from 'react';
-import { DraggableCore } from 'react-draggable';
 import { useC2C } from '../hooks/useC2C';
 import { PanZoomRotateState } from '../components/PanZoomRotate';
 import { useRecoilValue } from 'recoil';
 import { selectedItemsAtom } from './Selector';
-import { nanoid } from 'nanoid';
 
 const Rect = ({ width, height, color }) => {
   return (
@@ -50,7 +48,7 @@ const Image = ({
   }
 
   const onDblClick = (e) => {
-    updateState({ flipped: !flipped });
+    updateState((prevItem) => ({ ...prevItem, flipped: !prevItem.flipped }));
   };
 
   if (flipped && backContent) {
@@ -134,8 +132,8 @@ const Item = ({ setState, state }) => {
   const rotation = state.rotation || 0;
 
   const updateState = React.useCallback(
-    (modif) => {
-      setState({ ...state, ...modif });
+    (callbackOrItem) => {
+      setState(state.id, callbackOrItem);
     },
     [setState, state]
   );
@@ -148,11 +146,11 @@ const Item = ({ setState, state }) => {
         if (entry.contentBoxSize) {
           const { inlineSize: width, blockSize: height } = entry.contentBoxSize;
           if (state.actualWidth !== width || state.actualHeight !== height) {
-            setState({
-              ...state,
+            updateState((prevState) => ({
+              ...prevState,
               actualWidth: width,
               actualHeight: height,
-            });
+            }));
           }
         }
       });
@@ -162,7 +160,7 @@ const Item = ({ setState, state }) => {
     return () => {
       observer.unobserve(currentElem);
     };
-  }, [setState, state]);
+  }, [updateState, state]);
 
   const content = (
     <div
@@ -200,27 +198,12 @@ const Item = ({ setState, state }) => {
 
 const SyncedItem = ({ setState, state }) => {
   const [c2c] = useC2C();
-  const versionsRef = React.useRef([]);
-
-  React.useEffect(() => {
-    if (versionsRef.current.includes(state.version)) {
-      versionsRef.current = versionsRef.current.filter((v) => {
-        return v !== state.version;
-      });
-    } else {
-      c2c.publish(`itemStateUpdate.${state.id}`, {
-        ...state,
-      });
-    }
-  }, [c2c, setState, state]);
 
   React.useEffect(() => {
     const unsub = c2c.subscribe(
       `itemStateUpdate.${state.id}`,
       (newItemState) => {
-        const nextVersion = nanoid();
-        versionsRef.current.push(nextVersion);
-        setState({ ...newItemState, version: nextVersion });
+        setState(state.id, newItemState, false);
       }
     );
     return unsub;

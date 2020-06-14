@@ -5,8 +5,10 @@ import { selectedItemsAtom } from '../components/Selector';
 import { ItemListAtom } from '../components/Items';
 import { useRecoilState } from 'recoil';
 import { insideClass, isPointInsideRect, isPointInsideItem } from '../utils';
+import { useC2C } from '../hooks/useC2C';
 
 const ActionPane = ({ children }) => {
+  const [c2c] = useC2C();
   const panZoomRotate = useRecoilValue(PanZoomRotateState);
   const [itemList, setItemList] = useRecoilState(ItemListAtom);
   const [selectedItems, setSelectedItems] = useRecoilState(selectedItemsAtom);
@@ -45,17 +47,20 @@ const ActionPane = ({ children }) => {
         ids = selectedItems;
       }
       setItemList((prevList) => {
-        return prevList.map((item) => {
+        const newItemList = prevList.map((item) => {
           if (ids.includes(item.id)) {
             const x = item.x + posDelta.x;
             const y = item.y + posDelta.y;
-            return { ...item, x, y };
+            const newItem = { ...item, x, y };
+            return newItem;
           }
           return item;
         });
+        c2c.publish(`selectedItemsMove`, { itemIds: ids, move: posDelta });
+        return newItemList;
       });
     },
-    [setItemList, selectedItems]
+    [setItemList, selectedItems, c2c]
   );
 
   const onMouseMouve = (e) => {
@@ -79,6 +84,23 @@ const ActionPane = ({ children }) => {
       wrapperRef.current.style.cursor = 'auto';
     }
   };
+
+  React.useEffect(() => {
+    const unsub = c2c.subscribe(`selectedItemsMove`, ({ itemIds, move }) => {
+      setItemList((prevList) => {
+        return prevList.map((item) => {
+          if (itemIds.includes(item.id)) {
+            const x = item.x + move.x;
+            const y = item.y + move.y;
+            const newItem = { ...item, x, y };
+            return newItem;
+          }
+          return item;
+        });
+      });
+    });
+    return unsub;
+  }, [c2c, setItemList]);
 
   return (
     <div
