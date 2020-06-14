@@ -3,7 +3,7 @@ import React from 'react';
 import { useRecoilState } from 'recoil';
 import { ItemListAtom } from '../components/Items';
 import { selectedItemsAtom } from '../components/Selector';
-import { shuffleSelectedItems } from '../utils';
+import { shuffle as shuffleArray } from '../utils';
 import { useC2C } from '../hooks/useC2C';
 
 export const SelectedItems = ({}) => {
@@ -64,7 +64,24 @@ export const SelectedItems = ({}) => {
   // Shuffle selection
   const shuffle = React.useCallback(() => {
     setItemList((prevItemList) => {
-      const result = shuffleSelectedItems(prevItemList, selectedItems);
+      //const result = shuffleSelectedItems(prevItemList, selectedItems);
+      const shuffledSelectedItems = shuffleArray(
+        prevItemList.filter(({ id }) => selectedItems.includes(id))
+      );
+
+      const result = prevItemList.map((item) => {
+        if (selectedItems.includes(item.id)) {
+          const newItem = {
+            ...shuffledSelectedItems.pop(),
+            x: item.x,
+            y: item.y,
+          };
+          c2c.publish(`itemStateUpdate.${newItem.id}`, newItem);
+          return newItem;
+        }
+        return item;
+      });
+
       c2c.publish(
         `updateItemListOrder`,
         result.map(({ id }) => id)
@@ -75,6 +92,7 @@ export const SelectedItems = ({}) => {
 
   // Align selection to center
   const align = React.useCallback(() => {
+    // Compute
     const minMax = { min: {}, max: {} };
     minMax.min.x = Math.min(...selectedItemList.map(({ x }) => x));
     minMax.min.y = Math.min(...selectedItemList.map(({ y }) => y));
@@ -95,8 +113,6 @@ export const SelectedItems = ({}) => {
       x: newX - item.actualWidth / 2,
       y: newY - item.actualHeight / 2,
     }));
-
-    console.log(minMax);
   }, [selectedItemList, selectedItems, massUpdateItems]);
 
   if (selectedItemList.length === 0) {

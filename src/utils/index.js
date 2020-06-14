@@ -42,13 +42,13 @@ export const shuffle = (a) => {
 };
 
 export const shuffleSelectedItems = (itemList, selectedItemIds) => {
-  const selectedItems = shuffle(
+  const shuffledSelectedItems = shuffle(
     itemList.filter(({ id }) => selectedItemIds.includes(id))
   );
 
   return itemList.map((item) => {
     if (selectedItemIds.includes(item.id)) {
-      return selectedItems.pop();
+      return { ...shuffledSelectedItems.pop(), x: item.x, y: item.y };
     }
     return item;
   });

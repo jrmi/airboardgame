@@ -3,7 +3,7 @@ import { urlAlphabet } from 'nanoid';
 const genGame = () => {
   const items = [];
 
-  [...Array(10).keys()].forEach(() => {
+  [...Array(3).keys()].forEach(() => {
     items.push({
       type: 'image',
       content: '/games/card.jpg',
