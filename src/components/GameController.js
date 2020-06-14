@@ -6,17 +6,24 @@ import { nanoid } from 'nanoid';
 import { ItemListAtom } from '../components/Items';
 import { useRecoilValue } from 'recoil';
 
+import useLocalStorage from 'react-use-localstorage';
+
 import tiktok from '../games/tiktok';
 import card from '../games/card';
 import gloomhaven from '../games/gloomhaven';
 
-export const GameLoader = ({
+export const GameController = ({
   itemList,
   setItemList,
   boardConfig,
   setBoardConfig,
 }) => {
   const [c2c, joined, isMaster] = useC2C();
+  /*const [gameSave, setGameSave] = useLocalStorage('savedGame', {
+    items: [],
+    board: {},
+  });*/
+
   const gameRef = React.useRef({ items: itemList, board: boardConfig });
   // Not very efficient way to do it
   const allItems = useRecoilValue(ItemListAtom);
@@ -95,6 +102,14 @@ export const GameLoader = ({
     c2c.publish('loadGame', gloomhaven, true);
   };
 
+  /*const loadLastGame = () => {
+    gameSave.items = gameSave.items.map((item) => ({
+      ...item,
+      id: nanoid(),
+    }));
+    c2c.publish('loadGame', gameSave, true);
+  };*/
+
   if (!isMaster) {
     return null;
   }
@@ -107,6 +122,7 @@ export const GameLoader = ({
         display: 'block',
       }}
     >
+      <button onClick={() => {}}>Load last game</button>
       <button onClick={loadTikTok}>TikTok</button>
       <button onClick={loadCard}>Card</button>
       <button onClick={loadGloomhaven}>Gloomhaven</button>
@@ -114,4 +130,4 @@ export const GameLoader = ({
   );
 };
 
-export default GameLoader;
+export default GameController;

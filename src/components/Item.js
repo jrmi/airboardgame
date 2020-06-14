@@ -3,6 +3,7 @@ import { useC2C } from '../hooks/useC2C';
 import { PanZoomRotateState } from '../components/PanZoomRotate';
 import { useRecoilValue } from 'recoil';
 import { selectedItemsAtom } from './Selector';
+import { userAtom } from '../hooks/useUser';
 
 const Rect = ({ width, height, color }) => {
   return (
@@ -38,7 +39,9 @@ const Image = ({
   backContent,
   flipped,
   updateState,
+  unflippedFor,
 }) => {
+  const user = useRecoilValue(userAtom);
   const size = {};
   if (width) {
     size.width = width;
@@ -47,33 +50,49 @@ const Image = ({
     size.height = height;
   }
 
-  const onDblClick = (e) => {
-    updateState((prevItem) => ({ ...prevItem, flipped: !prevItem.flipped }));
-  };
+  const onDblClick = React.useCallback(
+    (e) => {
+      if (e.ctrlKey) {
+        updateState((prevItem) => {
+          if (prevItem.unflippedFor !== null) {
+            return { ...prevItem, unflippedFor: null };
+          } else {
+            return { ...prevItem, unflippedFor: user.id, flipped: false };
+          }
+        });
+      } else {
+        updateState((prevItem) => ({
+          ...prevItem,
+          flipped: !prevItem.flipped,
+          unflippedFor: null,
+        }));
+      }
+    },
+    [updateState, user.id]
+  );
 
-  if (flipped && backContent) {
-    return (
-      <div onDoubleClick={onDblClick}>
-        <img
-          src={backContent}
-          draggable={false}
-          {...size}
-          style={{ userSelect: 'none', pointerEvents: 'none' }}
-        />
-      </div>
+  let image;
+  if (backContent && (flipped || (unflippedFor && unflippedFor !== user.id))) {
+    image = (
+      <img
+        src={backContent}
+        draggable={false}
+        {...size}
+        style={{ userSelect: 'none', pointerEvents: 'none' }}
+      />
     );
-  }
-  return (
-    <div onDoubleClick={onDblClick}>
+  } else {
+    image = (
       <img
         src={content}
         draggable={false}
         {...size}
         style={{ userSelect: 'none', pointerEvents: 'none' }}
-        onDoubleClick={onDblClick}
       />
-    </div>
-  );
+    );
+  }
+
+  return <div onDoubleClick={onDblClick}>{image}</div>;
 };
 
 const getComponent = (type) => {
@@ -132,8 +151,8 @@ const Item = ({ setState, state }) => {
   const rotation = state.rotation || 0;
 
   const updateState = React.useCallback(
-    (callbackOrItem) => {
-      setState(state.id, callbackOrItem);
+    (callbackOrItem, sync = true) => {
+      setState(state.id, callbackOrItem, sync);
     },
     [setState, state]
   );
@@ -146,11 +165,14 @@ const Item = ({ setState, state }) => {
         if (entry.contentBoxSize) {
           const { inlineSize: width, blockSize: height } = entry.contentBoxSize;
           if (state.actualWidth !== width || state.actualHeight !== height) {
-            updateState((prevState) => ({
-              ...prevState,
-              actualWidth: width,
-              actualHeight: height,
-            }));
+            updateState(
+              (prevState) => ({
+                ...prevState,
+                actualWidth: width,
+                actualHeight: height,
+              }),
+              false // Don't need to sync that.
+            );
           }
         }
       });
@@ -203,7 +225,16 @@ const SyncedItem = ({ setState, state }) => {
     const unsub = c2c.subscribe(
       `itemStateUpdate.${state.id}`,
       (newItemState) => {
-        setState(state.id, newItemState, false);
+        setState(
+          state.id,
+          (prevState) => ({
+            ...newItemState,
+            // Ignore some modifications
+            actualWidth: prevState.actualWidth,
+            actualHeight: prevState.actualHeight,
+          }),
+          false
+        );
       }
     );
     return unsub;

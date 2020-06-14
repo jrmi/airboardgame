@@ -3,6 +3,7 @@ import { useC2C } from './useC2C';
 import randomColor from 'randomcolor';
 import debounce from 'lodash.debounce';
 import { nanoid } from 'nanoid';
+import { atom, useRecoilState } from 'recoil';
 
 const getUser = () => {
   if (localStorage.user) {
@@ -28,8 +29,13 @@ const persistUser = (user) => {
   localStorage.setItem('user', JSON.stringify(user));
 };
 
+export const userAtom = atom({
+  key: 'user',
+  default: getUser(),
+});
+
 function useUser() {
-  const [user, setUserState] = React.useState(getUser());
+  const [user, setUserState] = useRecoilState(userAtom);
   const [c2c, joined] = useC2C();
 
   React.useEffect(() => {
@@ -39,12 +45,15 @@ function useUser() {
         id: c2c.userId,
       }));
     }
-  }, [joined, c2c.userId]);
+  }, [joined, c2c.userId, setUserState]);
 
-  const setUser = React.useCallback((newUser) => {
-    setUserState((prevUser) => ({ ...newUser, id: prevUser.id }));
-    persistUser(newUser);
-  }, []);
+  const setUser = React.useCallback(
+    (newUser) => {
+      setUserState((prevUser) => ({ ...newUser, id: prevUser.id }));
+      persistUser(newUser);
+    },
+    [setUserState]
+  );
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const debouncedEmitUpdateUser = React.useCallback(

@@ -25,7 +25,9 @@ const Items = ({}) => {
               ...callback(item),
               id: item.id, // Prevent id modification
             };
-            sync && c2c.publish(`itemStateUpdate.${id}`, newItem);
+            if (sync) {
+              c2c.publish(`itemStateUpdate.${newItem.id}`, newItem);
+            }
             return newItem;
           }
           return item;

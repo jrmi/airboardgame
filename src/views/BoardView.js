@@ -1,7 +1,7 @@
 import React from 'react';
 
 import Users from '../components/Users';
-import GameLoader from '../components/GameLoader';
+import GameController from '../components/GameController';
 import ZoomPanRotate from '../components/PanZoomRotate';
 import Board from '../components/Board';
 import { ItemListAtom } from '../components/Items';
@@ -25,7 +25,7 @@ export const BoardView = () => {
       <Users user={user} setUser={setUser} users={users} userId={user.id} />
 
       <SelectedItems />
-      <GameLoader
+      <GameController
         itemList={itemList}
         setItemList={setItemList}
         boardConfig={boardConfig}
