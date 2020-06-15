@@ -32,7 +32,7 @@ const ActionPane = ({ children }) => {
   );
 
   const onMouseDown = (e) => {
-    if (e.button === 0) {
+    if (e.button === 0 && !(e.altKey)) {
       const { top, left } = e.currentTarget.getBoundingClientRect();
       const point = {
         x: (e.clientX - left) / panZoomRotate.scale,
