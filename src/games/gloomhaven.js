@@ -101,6 +101,30 @@ const genGloomhaven = () => {
     });
   });
 
+  // monster tokens
+  [...Array(10).keys()].forEach((_, index) => {
+    items.push({
+      type: 'image',
+      content: 'https://raw.githubusercontent.com//romgar/gloomhaven/master/images/monster-tokens/bandit-guard.png',
+      x: 1500 + 50*index,
+      y: 0,
+      width: 50
+    });
+    items.push({
+      type: 'image',
+      content: 'https://raw.githubusercontent.com//romgar/gloomhaven/master/images/monster-tokens/bandit-archer.png',
+      x: 1500 + 50*index,
+      y: 50,
+      width: 50
+    });
+    items.push({
+      type: 'image',
+      content: 'https://raw.githubusercontent.com//romgar/gloomhaven/master/images/monster-tokens/living-bones.png',
+      x: 1500 + 50*index,
+      y: 100,
+      width: 50
+    });
+  });
   return {
     items,
     board: { size: 2000, scale: 0.5 },
