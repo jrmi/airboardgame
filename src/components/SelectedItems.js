@@ -150,10 +150,10 @@ export const SelectedItems = ({}) => {
       {selectedItems.length > 1 && (
         <div>
           <h2>{selectedItems.length} items selected</h2>
-          <button onClick={shuffle}>Shuffle selection</button>
-          <button onClick={align}>Align selection</button>
-          <button onClick={flip}>Flip all</button>
-          <button onClick={unflip}>UnFlip all</button>
+          <button onClick={shuffle}>Shuffle</button>
+          <button onClick={align}>Stack</button>
+          <button onClick={flip}>Flip</button>
+          <button onClick={unflip}>UnFlip</button>
         </div>
       )}
       {selectedItems.length === 1 && (

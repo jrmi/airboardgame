@@ -2,6 +2,8 @@
 
 Play any board game with your friends thanks to this tabletop simulator.
 
+You can try a version [here](https://airboardgame.netlify.app).
+
 ## Installation
 
 You need a recent node version. You can use nvm to initialize your environment.
