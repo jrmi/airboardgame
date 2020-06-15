@@ -20,6 +20,10 @@ const PanZoomRotate = ({ children }) => {
   });
 
   const onWheel = (e) => {
+    if (e.altKey) {
+      return;
+    }
+
     const scaleMult = (e.deltaY * dim.scale) / 20;
 
     setDim((prevDim) => {
@@ -49,7 +53,7 @@ const PanZoomRotate = ({ children }) => {
   };
 
   const onMouseDown = (e) => {
-    if (e.button === 1) {
+    if ((e.button === 1) || e.altKey) {
       stateRef.current.moving = true;
       stateRef.current.startX = e.clientX;
       stateRef.current.startY = e.clientY;
@@ -74,7 +78,7 @@ const PanZoomRotate = ({ children }) => {
   };
 
   const onMouseUp = (e) => {
-    if (e.button === 1) {
+    if (e.button === 1 || e.altKey) {
       stateRef.current.moving = false;
       wrapperRef.current.style.cursor = 'auto';
     }
