@@ -8,8 +8,8 @@ const genGloomhaven = () => {
       type: 'image',
       content: `https://raw.githubusercontent.com/romgar/gloomhaven/master/images/map-tiles/${l}1a.png`,
       backContent: `https://raw.githubusercontent.com/romgar/gloomhaven/master/images/map-tiles/${l}1b.png`,
-      imgText: `${l}1a`,
-      backImgText: `${l}1b`,
+      text: `${l}1a`,
+      backText: `${l}1b`,
       x: 558,
       y: 80,
     });
@@ -17,8 +17,8 @@ const genGloomhaven = () => {
       type: 'image',
       content: `https://raw.githubusercontent.com/romgar/gloomhaven/master/images/map-tiles/${l}2a.png`,
       backContent: `https://raw.githubusercontent.com/romgar/gloomhaven/master/images/map-tiles/${l}2b.png`,
-      imgText: `${l}2a`,
-      backImgText: `${l}2b`,
+      text: `${l}2a`,
+      backText: `${l}2b`,
       x: 558,
       y: 80,
     });
@@ -87,7 +87,7 @@ const genGloomhaven = () => {
       x: 1500 + 50 * index,
       y: 0,
       width: 50,
-      imgText: `${index}`,
+      text: `${index}`,
       extraStyle: {
         border: `2px solid ${index < 7 ? 'white' : 'yellow'}`,
       },
@@ -99,7 +99,7 @@ const genGloomhaven = () => {
       x: 1500 + 50 * index,
       y: 50,
       width: 50,
-      imgText: `${index}`,
+      text: `${index}`,
       extraStyle: {
         border: `2px solid ${index < 7 ? 'white' : 'yellow'}`,
       },
@@ -111,7 +111,7 @@ const genGloomhaven = () => {
       x: 1500 + 50 * index,
       y: 100,
       width: 50,
-      imgText: `${index}`,
+      text: `${index}`,
       extraStyle: {
         border: `2px solid ${index < 7 ? 'white' : 'yellow'}`,
       },
@@ -253,7 +253,7 @@ const genGloomhaven = () => {
       'level-9': ['face-your-end', 'king-of-the-hill'],
     },
     backCard:
-      'https://raw.githubusercontent.com//romgar/gloomhaven/master/images/character-ability-cards/br-back.png',
+      'https://raw.githubusercontent.com//romgar/gloomhaven/master/images/character-ability-cards/BR/br-back.png',
   };
 
   brute.abilityCards['level-1'].forEach((abilityName, index) => {
@@ -291,7 +291,7 @@ const genGloomhaven = () => {
       'level-9': ['inferno', 'black-hole'],
     },
     backCard:
-      'https://raw.githubusercontent.com//romgar/gloomhaven/master/images/character-ability-cards/sw-back.png',
+      'https://raw.githubusercontent.com//romgar/gloomhaven/master/images/character-ability-cards/SW/sw-back.png',
   };
 
   spellWeaver.abilityCards['level-1'].forEach((abilityName, index) => {

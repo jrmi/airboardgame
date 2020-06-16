@@ -139,8 +139,8 @@ const Image = ({
   updateState,
   unflippedFor,
   extraStyle,
-  imgText,
-  backImgText,
+  text,
+  backText,
 }) => {
   const user = useRecoilValue(userAtom);
   const size = {};
@@ -176,7 +176,7 @@ const Image = ({
   if (backContent && (flipped || (unflippedFor && unflippedFor !== user.id))) {
     image = (
       <>
-        {imgText && (
+        {text && (
           <div
             className='image-text'
             style={{
@@ -189,7 +189,7 @@ const Image = ({
               borderRadius: '50%',
             }}
           >
-            {backImgText}
+            {backText}
           </div>
         )}
         <img
@@ -218,7 +218,7 @@ const Image = ({
             Only you
           </div>
         )}
-        {imgText && (
+        {text && (
           <div
             className='image-text'
             style={{
@@ -231,7 +231,7 @@ const Image = ({
               borderRadius: '50%',
             }}
           >
-            {imgText}
+            {text}
           </div>
         )}
         <img
