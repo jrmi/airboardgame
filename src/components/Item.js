@@ -140,7 +140,7 @@ const Image = ({
   unflippedFor,
   extraStyling,
   imgText,
-  backImgText
+  backImgText,
 }) => {
   const user = useRecoilValue(userAtom);
   const size = {};
@@ -176,22 +176,33 @@ const Image = ({
   if (backContent && (flipped || (unflippedFor && unflippedFor !== user.id))) {
     image = (
       <>
-      { imgText && (
-        <div class='image-text' style={{position: 'absolute', right: 0, padding: '0 3px', margin: '7px', 'background-color': 'white', color: 'black', 'border-radius': '50%'}}>
-          {backImgText}
-        </div>
-      )}
-      <img
-        src={backContent}
-        draggable={false}
-        {...size}
-        style={{ userSelect: 'none', pointerEvents: 'none', ...extraStyling }}
-      />
+        {imgText && (
+          <div
+            className='image-text'
+            style={{
+              position: 'absolute',
+              right: 0,
+              padding: '0 3px',
+              margin: '7px',
+              'background-color': 'white',
+              color: 'black',
+              'border-radius': '50%',
+            }}
+          >
+            {backImgText}
+          </div>
+        )}
+        <img
+          src={backContent}
+          draggable={false}
+          {...size}
+          style={{ userSelect: 'none', pointerEvents: 'none', ...extraStyling }}
+        />
       </>
     );
   } else {
     image = (
-      <div class='image-wrapper' style={{position: 'relative'}}>
+      <div className='image-wrapper' style={{ position: 'relative' }}>
         {unflippedFor && (
           <div
             style={{
@@ -207,8 +218,19 @@ const Image = ({
             Only you
           </div>
         )}
-        { imgText && (
-          <div class='image-text' style={{position: 'absolute', right: 0, padding: '0 3px', margin: '7px', 'background-color': 'white', color: 'black', 'border-radius': '50%'}}>
+        {imgText && (
+          <div
+            class='image-text'
+            style={{
+              position: 'absolute',
+              right: 0,
+              padding: '0 3px',
+              margin: '7px',
+              'background-color': 'white',
+              color: 'black',
+              'border-radius': '50%',
+            }}
+          >
             {imgText}
           </div>
         )}

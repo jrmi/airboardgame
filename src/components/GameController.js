@@ -35,7 +35,7 @@ export const GameController = ({
   const [c2c, joined, isMaster] = useC2C();
   const [downloadURI, setDownloadURI] = React.useState({});
   const [date, setDate] = React.useState(Date.now());
-  /*const [gameSave, setGameSave] = useLocalStorage('savedGame', {
+  /*const [gameLocalSave, setGameLocalSave] = useLocalStorage('savedGame', {
     items: [],
     board: {},
   });*/
