@@ -138,7 +138,7 @@ const Image = ({
   flipped,
   updateState,
   unflippedFor,
-  extraStyling,
+  extraStyle,
   imgText,
   backImgText,
 }) => {
@@ -196,7 +196,7 @@ const Image = ({
           src={backContent}
           draggable={false}
           {...size}
-          style={{ userSelect: 'none', pointerEvents: 'none', ...extraStyling }}
+          style={{ userSelect: 'none', pointerEvents: 'none', ...extraStyle }}
         />
       </>
     );
@@ -238,7 +238,7 @@ const Image = ({
           src={content}
           draggable={false}
           {...size}
-          style={{ userSelect: 'none', pointerEvents: 'none', ...extraStyling }}
+          style={{ userSelect: 'none', pointerEvents: 'none', ...extraStyle }}
         />
       </div>
     );

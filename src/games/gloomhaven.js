@@ -88,9 +88,9 @@ const genGloomhaven = () => {
       y: 0,
       width: 50,
       imgText: `${index}`,
-      extraStyling: {
-        border: `2px solid ${index < 7 ? 'white': 'yellow'}`
-      }
+      extraStyle: {
+        border: `2px solid ${index < 7 ? 'white' : 'yellow'}`,
+      },
     });
     items.push({
       type: 'image',
@@ -100,9 +100,9 @@ const genGloomhaven = () => {
       y: 50,
       width: 50,
       imgText: `${index}`,
-      extraStyling: {
-        border: `2px solid ${index < 7 ? 'white': 'yellow'}`
-      }
+      extraStyle: {
+        border: `2px solid ${index < 7 ? 'white' : 'yellow'}`,
+      },
     });
     items.push({
       type: 'image',
@@ -112,9 +112,9 @@ const genGloomhaven = () => {
       y: 100,
       width: 50,
       imgText: `${index}`,
-      extraStyling: {
-        border: `2px solid ${index < 7 ? 'white': 'yellow'}`
-      }
+      extraStyle: {
+        border: `2px solid ${index < 7 ? 'white' : 'yellow'}`,
+      },
     });
   });
 
@@ -122,10 +122,11 @@ const genGloomhaven = () => {
   [...Array(20).keys()].forEach((_, index) => {
     items.push({
       type: 'image',
-      content: 'https://raw.githubusercontent.com//romgar/gloomhaven/master/images/overlay-tokens/treasures/coin-1.png',
-      x: 1100 + 20*index,
+      content:
+        'https://raw.githubusercontent.com//romgar/gloomhaven/master/images/overlay-tokens/treasures/coin-1.png',
+      x: 1100 + 20 * index,
       y: 200,
-      width: 50
+      width: 50,
     });
   });
 
@@ -185,39 +186,43 @@ const genGloomhaven = () => {
 
   items.push({
     type: 'image',
-    content: 'https://raw.githubusercontent.com//romgar/gloomhaven/master/images/overlay-tokens/treasures/treasure.png',
+    content:
+      'https://raw.githubusercontent.com//romgar/gloomhaven/master/images/overlay-tokens/treasures/treasure.png',
     x: 1100,
     y: 250,
-    width: 50
+    width: 50,
   });
 
   [...Array(2).keys()].forEach((_, index) => {
     items.push({
       type: 'image',
-      content: 'https://raw.githubusercontent.com//romgar/gloomhaven/master/images/overlay-tokens/doors/stone-door.png',
-      x: 1100 + 20*index,
+      content:
+        'https://raw.githubusercontent.com//romgar/gloomhaven/master/images/overlay-tokens/doors/stone-door.png',
+      x: 1100 + 20 * index,
       y: 300,
-      width: 50
+      width: 50,
     });
   });
 
   [...Array(2).keys()].forEach((_, index) => {
     items.push({
       type: 'image',
-      content: 'https://raw.githubusercontent.com//romgar/gloomhaven/master/images/overlay-tokens/traps/spike-pit-trap.png',
-      x: 1100 + 20*index,
+      content:
+        'https://raw.githubusercontent.com//romgar/gloomhaven/master/images/overlay-tokens/traps/spike-pit-trap.png',
+      x: 1100 + 20 * index,
       y: 350,
-      width: 50
+      width: 50,
     });
   });
 
   [...Array(2).keys()].forEach((_, index) => {
     items.push({
       type: 'image',
-      content: 'https://raw.githubusercontent.com//romgar/gloomhaven/master/images/overlay-tokens/obstacles/table.png',
-      x: 1100 + 20*index,
+      content:
+        'https://raw.githubusercontent.com//romgar/gloomhaven/master/images/overlay-tokens/obstacles/table.png',
+      x: 1100 + 20 * index,
       y: 400,
-      width: 50
+      width: 50,
     });
   });
 
@@ -225,7 +230,18 @@ const genGloomhaven = () => {
   const brute = {
     code: 'BR',
     abilityCards: {
-      'level-1': ['eye-for-an-eye', 'grab-and-go', 'leaping-cleave', 'overwhelming-assault', 'provoking-roar', 'shield-bash', 'spare-dagger', 'sweeping-blow', 'trample', 'warding-strength'],
+      'level-1': [
+        'eye-for-an-eye',
+        'grab-and-go',
+        'leaping-cleave',
+        'overwhelming-assault',
+        'provoking-roar',
+        'shield-bash',
+        'spare-dagger',
+        'sweeping-blow',
+        'trample',
+        'warding-strength',
+      ],
       'level-X': ['balanced-measure', 'skewer', 'wall-of-doom'],
       'level-2': ['fatal-advance', 'juggernaut'],
       'level-3': ['brute-force', 'hook-and-chain'],
@@ -234,9 +250,10 @@ const genGloomhaven = () => {
       'level-6': ['immovable-phalanx', 'quietus'],
       'level-7': ['crippling-offensive', 'defensive-tactics'],
       'level-8': ['frenzied-onslaught', 'selfish-retribution'],
-      'level-9': ['face-your-end', 'king-of-the-hill']
+      'level-9': ['face-your-end', 'king-of-the-hill'],
     },
-    backCard: 'https://raw.githubusercontent.com//romgar/gloomhaven/master/images/character-ability-cards/br-back.png'
+    backCard:
+      'https://raw.githubusercontent.com//romgar/gloomhaven/master/images/character-ability-cards/br-back.png',
   };
 
   brute.abilityCards['level-1'].forEach((abilityName, index) => {
@@ -244,7 +261,7 @@ const genGloomhaven = () => {
       type: 'image',
       content: `https://raw.githubusercontent.com//romgar/gloomhaven/master/images/character-ability-cards/${brute.code}/${abilityName}.png`,
       backContent: `${brute.backCard}`,
-      x: 0 + 70*index,
+      x: 0 + 70 * index,
       y: 1000,
       width: 70,
     });
@@ -253,7 +270,16 @@ const genGloomhaven = () => {
   const spellWeaver = {
     code: 'SW',
     abilityCards: {
-      'level-1': ['fire-orbs', 'flame-strike', 'freezing-nova', 'frost-armor', 'impaling-eruption', 'mana-bolt', 'reviving-ether', 'ride-the-wind'],
+      'level-1': [
+        'fire-orbs',
+        'flame-strike',
+        'freezing-nova',
+        'frost-armor',
+        'impaling-eruption',
+        'mana-bolt',
+        'reviving-ether',
+        'ride-the-wind',
+      ],
       'level-X': ['crackling-air', 'hardened-spikes', 'aid-from-the-ether'],
       'level-2': ['flashing-burst', 'icy-blast'],
       'level-3': ['elemental-aid', 'cold-fire'],
@@ -262,9 +288,10 @@ const genGloomhaven = () => {
       'level-6': ['frozen-night', 'living-torch'],
       'level-7': ['stone-fists', 'twin-restoration'],
       'level-8': ['zephyr-wings', 'cold-front'],
-      'level-9': ['inferno', 'black-hole']
+      'level-9': ['inferno', 'black-hole'],
     },
-    backCard: 'https://raw.githubusercontent.com//romgar/gloomhaven/master/images/character-ability-cards/sw-back.png'
+    backCard:
+      'https://raw.githubusercontent.com//romgar/gloomhaven/master/images/character-ability-cards/sw-back.png',
   };
 
   spellWeaver.abilityCards['level-1'].forEach((abilityName, index) => {
@@ -272,7 +299,7 @@ const genGloomhaven = () => {
       type: 'image',
       content: `https://raw.githubusercontent.com//romgar/gloomhaven/master/images/character-ability-cards/${spellWeaver.code}/${abilityName}.png`,
       backContent: `${spellWeaver.backCard}`,
-      x: 0 + 70*index,
+      x: 0 + 70 * index,
       y: 1150,
       width: 70,
     });

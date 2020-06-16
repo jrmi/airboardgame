@@ -147,7 +147,6 @@ export const GameController = ({
   const updateSaveLink = React.useCallback(
     throttle(
       (items, board) => {
-        console.log('alled');
         setDownloadURI(generateDownloadURI({ items, board }));
         setDate(Date.now());
       },
