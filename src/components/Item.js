@@ -184,9 +184,9 @@ const Image = ({
               right: 0,
               padding: '0 3px',
               margin: '7px',
-              'background-color': 'white',
+              backgroundColor: 'white',
               color: 'black',
-              'border-radius': '50%',
+              borderRadius: '50%',
             }}
           >
             {backImgText}
@@ -220,15 +220,15 @@ const Image = ({
         )}
         {imgText && (
           <div
-            class='image-text'
+            className='image-text'
             style={{
               position: 'absolute',
               right: 0,
               padding: '0 3px',
               margin: '7px',
-              'background-color': 'white',
+              backgroundColor: 'white',
               color: 'black',
-              'border-radius': '50%',
+              borderRadius: '50%',
             }}
           >
             {imgText}
