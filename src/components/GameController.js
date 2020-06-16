@@ -11,6 +11,7 @@ import useLocalStorage from 'react-use-localstorage';
 import tiktok from '../games/tiktok';
 import card from '../games/card';
 import gloomhaven from '../games/gloomhaven';
+import settlers from '../games/settlers';
 
 export const GameController = ({
   itemList,
@@ -77,17 +78,10 @@ export const GameController = ({
     });
   }, [c2c, setItemList, setBoardConfig]);
 
-  React.useEffect(() => {
-    if (isMaster) {
-      card.items = card.items.map((item) => ({ ...item, id: nanoid() }));
-      c2c.publish('loadGame', card, true);
-    }
-  }, [c2c, isMaster]);
-
-  const loadTikTok = () => {
+  const loadTikTok = React.useCallback(() => {
     tiktok.items = tiktok.items.map((item) => ({ ...item, id: nanoid() }));
     c2c.publish('loadGame', tiktok, true);
-  };
+  }, [c2c]);
 
   const loadCard = () => {
     card.items = card.items.map((item) => ({ ...item, id: nanoid() }));
@@ -101,6 +95,21 @@ export const GameController = ({
     }));
     c2c.publish('loadGame', gloomhaven, true);
   };
+
+  const loadSettlers = React.useCallback(() => {
+    settlers.items = settlers.items.map((item) => ({
+      ...item,
+      id: nanoid(),
+    }));
+    c2c.publish('loadGame', settlers, true);
+  }, [c2c]);
+
+  React.useEffect(() => {
+    if (isMaster) {
+      //loadSettlers();
+      loadTikTok();
+    }
+  }, [loadSettlers, loadTikTok, isMaster]);
 
   /*const loadLastGame = () => {
     gameSave.items = gameSave.items.map((item) => ({
@@ -126,6 +135,7 @@ export const GameController = ({
       <button onClick={loadTikTok}>TikTok</button>
       <button onClick={loadCard}>Card</button>
       <button onClick={loadGloomhaven}>Gloomhaven</button>
+      <button onClick={loadSettlers}>Settlers of Catan</button>
     </div>
   );
 };
