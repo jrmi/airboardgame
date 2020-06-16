@@ -6,7 +6,7 @@ import { nanoid } from 'nanoid';
 import { ItemListAtom } from '../components/Items';
 import { useRecoilValue } from 'recoil';
 
-import useLocalStorage from 'react-use-localstorage';
+import useLocalStorage from '../hooks/useLocalStorage';
 import throttle from 'lodash.throttle';
 
 import tiktok from '../games/tiktok';
@@ -21,11 +21,6 @@ const generateDownloadURI = (data) => {
   );
 };
 
-const formatDate = (date) => {
-  console.log(date);
-  return `${date.getFullYear()}${date.getMonth()}${date.getDay()}_${date.getHours()}${date.getMinutes()}`;
-};
-
 export const GameController = ({
   itemList,
   setItemList,
@@ -35,10 +30,10 @@ export const GameController = ({
   const [c2c, joined, isMaster] = useC2C();
   const [downloadURI, setDownloadURI] = React.useState({});
   const [date, setDate] = React.useState(Date.now());
-  /*const [gameLocalSave, setGameLocalSave] = useLocalStorage('savedGame', {
-    items: [],
-    board: {},
-  });*/
+  const [gameLocalSave, setGameLocalSave] = useLocalStorage('savedGame', {
+    items: itemList,
+    board: boardConfig,
+  });
 
   const gameRef = React.useRef({ items: itemList, board: boardConfig });
   // Not very efficient way to do it
@@ -122,7 +117,8 @@ export const GameController = ({
   React.useEffect(() => {
     if (isMaster) {
       //loadSettlers();
-      loadTikTok();
+      //loadTikTok();
+      loadLocalSavedGame();
     }
   }, [loadSettlers, loadTikTok, isMaster]);
 
@@ -144,11 +140,23 @@ export const GameController = ({
     [c2c]
   );
 
+  const loadLocalSavedGame = React.useCallback(() => {
+    const game = gameLocalSave;
+    game.items = game.items.map((item) => ({
+      ...item,
+      id: nanoid(),
+    }));
+    c2c.publish('loadGame', game, true);
+  }, [c2c, gameLocalSave]);
+
   const updateSaveLink = React.useCallback(
     throttle(
-      (items, board) => {
-        setDownloadURI(generateDownloadURI({ items, board }));
-        setDate(Date.now());
+      (game) => {
+        if (game.items.length) {
+          setDownloadURI(generateDownloadURI(game));
+          setDate(Date.now());
+          setGameLocalSave(game);
+        }
       },
       5000,
       { trailing: true }
@@ -157,7 +165,7 @@ export const GameController = ({
   );
 
   React.useEffect(() => {
-    updateSaveLink(itemList, boardConfig);
+    updateSaveLink({ items: itemList, board: boardConfig });
   }, [itemList, boardConfig, updateSaveLink]);
 
   if (!isMaster) {
