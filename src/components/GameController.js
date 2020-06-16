@@ -36,9 +36,7 @@ export const GameController = ({
   });
 
   const gameRef = React.useRef({ items: itemList, board: boardConfig });
-  // Not very efficient way to do it
   const allItems = useRecoilValue(ItemListAtom);
-  //gameRef.current = { items: [...allItems], board: boardConfig };
   gameRef.current = {
     items: JSON.parse(JSON.stringify(allItems)),
     board: boardConfig,
@@ -50,7 +48,7 @@ export const GameController = ({
       if (!isMaster) {
         c2c.call('getGame').then(
           (game) => {
-            console.log('get this item list', game);
+            console.log('Get this game from master', game);
             setItemList(game.items);
             setBoardConfig(game.board);
           },
@@ -66,7 +64,7 @@ export const GameController = ({
       if (isMaster) {
         c2c
           .register('getGame', () => {
-            console.log('send this game', gameRef.current);
+            console.log('Send this game', gameRef.current);
             return gameRef.current;
           })
           .then((unregister) => {
@@ -81,7 +79,7 @@ export const GameController = ({
 
   React.useEffect(() => {
     c2c.subscribe('loadGame', (game) => {
-      console.log('loadgame', game);
+      console.log('Loadgame', game);
       //
       setItemList(game.items);
       setBoardConfig(game.board);
@@ -114,14 +112,6 @@ export const GameController = ({
     c2c.publish('loadGame', settlers, true);
   }, [c2c]);
 
-  const loadLastGame = () => {
-    gameLocalSave.items = gameLocalSave.items.map((item) => ({
-      ...item,
-      id: nanoid(),
-    }));
-    c2c.publish('loadGame', gameLocalSave, true);
-  };
-
   const onLoadSavedGame = React.useCallback(
     (game) => {
       game.items = game.items.map((item) => ({
@@ -134,7 +124,7 @@ export const GameController = ({
   );
 
   const loadLocalSavedGame = React.useCallback(() => {
-    const game = gameLocalSave;
+    const game = { ...gameLocalSave };
     game.items = game.items.map((item) => ({
       ...item,
       id: nanoid(),
@@ -142,6 +132,7 @@ export const GameController = ({
     c2c.publish('loadGame', game, true);
   }, [c2c, gameLocalSave]);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const updateSaveLink = React.useCallback(
     throttle(
       (game) => {
@@ -174,19 +165,27 @@ export const GameController = ({
     <div
       style={{
         position: 'fixed',
-        left: '2px',
-        bottom: '2px',
+        left: '0.5em',
+        top: '0.5em',
         display: 'block',
+        backgroundColor: '#ffffff77',
+        display: 'flex',
+        flexDirection: 'column',
+        width: '10em',
+        padding: '0.5em',
+        textAlign: 'center',
       }}
     >
-      <button onClick={loadLastGame}>Load last game</button>
+      <h2>Games</h2>
       <button onClick={loadTikTok}>TikTok</button>
       <button onClick={loadCard}>Card</button>
       <button onClick={loadGloomhaven}>Gloomhaven</button>
       <button onClick={loadSettlers}>Settlers of Catan</button>
+      <h2>Save/Load</h2>
+      <button onClick={loadLocalSavedGame}>Load last game</button>
       <LoadGame onLoad={onLoadSavedGame} />
       <a href={downloadURI} download={`save_${date}.json`}>
-        Save
+        Save game
       </a>
     </div>
   );

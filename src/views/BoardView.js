@@ -30,6 +30,8 @@ export const BoardView = () => {
         setItemList={setItemList}
         boardConfig={boardConfig}
         setBoardConfig={setBoardConfig}
+        //game={{ items: itemList, board: boardConfig }}
+        //setGame=
       />
     </div>
   );

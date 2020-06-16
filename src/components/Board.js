@@ -6,7 +6,18 @@ import CursorPane from './CursorPane';
 
 export const Board = ({ user, users, config }) => {
   if (!config.size) {
-    return <p>Please select a game…</p>;
+    return (
+      <p
+        style={{
+          position: 'fixed',
+          top: '40vh',
+          width: '100vw',
+          textAlign: 'center',
+        }}
+      >
+        Please select a game…
+      </p>
+    );
   }
 
   return (
