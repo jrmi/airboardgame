@@ -114,21 +114,14 @@ export const GameController = ({
     c2c.publish('loadGame', settlers, true);
   }, [c2c]);
 
-  React.useEffect(() => {
-    if (isMaster) {
-      //loadSettlers();
-      //loadTikTok();
-      loadLocalSavedGame();
-    }
-  }, [loadSettlers, loadTikTok, isMaster]);
-
-  /*const loadLastGame = () => {
-    gameSave.items = gameSave.items.map((item) => ({
+  const loadLastGame = () => {
+    gameLocalSave.items = gameLocalSave.items.map((item) => ({
       ...item,
       id: nanoid(),
     }));
-    c2c.publish('loadGame', gameSave, true);
-  };*/
+    c2c.publish('loadGame', gameLocalSave, true);
+  };
+
   const onLoadSavedGame = React.useCallback(
     (game) => {
       game.items = game.items.map((item) => ({
@@ -164,6 +157,12 @@ export const GameController = ({
     []
   );
 
+  /*React.useEffect(() => {
+    if (isMaster) {
+      loadLocalSavedGame();
+    }
+  }, [loadLocalSavedGame, isMaster]);*/
+
   React.useEffect(() => {
     updateSaveLink({ items: itemList, board: boardConfig });
   }, [itemList, boardConfig, updateSaveLink]);
@@ -180,7 +179,7 @@ export const GameController = ({
         display: 'block',
       }}
     >
-      <button onClick={() => {}}>Load last game</button>
+      <button onClick={loadLastGame}>Load last game</button>
       <button onClick={loadTikTok}>TikTok</button>
       <button onClick={loadCard}>Card</button>
       <button onClick={loadGloomhaven}>Gloomhaven</button>
