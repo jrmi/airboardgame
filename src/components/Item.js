@@ -17,7 +17,13 @@ const Rect = ({ width, height, color }) => {
   );
 };
 
-const Round = ({ radius, color }) => {
+const Round = ({
+  radius,
+  color,
+  text = '',
+  textColor = '#000',
+  fontSize = '16',
+}) => {
   return (
     <div
       style={{
@@ -25,8 +31,100 @@ const Round = ({ radius, color }) => {
         width: radius,
         height: radius,
         backgroundColor: color,
+        textAlign: 'center',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
       }}
-    />
+    >
+      <span
+        style={{
+          textColor,
+          fontSize: fontSize + 'px',
+        }}
+      >
+        {text}
+      </span>
+    </div>
+  );
+};
+
+const Counter = ({
+  value = 0,
+  color = '#CCC',
+  label = '',
+  textColor = '#000',
+  fontSize = '16',
+  updateState,
+}) => {
+  const setValue = (e) => {
+    updateState((prevState) => ({
+      ...prevState,
+      value: e.target.value,
+    }));
+  };
+
+  const increment = (e) => {
+    updateState((prevState) => ({
+      ...prevState,
+      value: prevState.value + 1,
+    }));
+  };
+
+  const decrement = (e) => {
+    updateState((prevState) => ({
+      ...prevState,
+      value: prevState.value - 1,
+    }));
+  };
+
+  return (
+    <div
+      style={{
+        backgroundColor: color,
+        width: '5em',
+        padding: '0.5em',
+        paddingBottom: '2em',
+        textAlign: 'center',
+        fontSize: fontSize + 'px',
+        display: 'flex',
+        justifyContent: 'space-between',
+        flexDirection: 'column',
+        borderRadius: '0.5em',
+        boxShadow: '10px 10px 13px 0px rgb(0, 0, 0, 0.3)',
+      }}
+    >
+      <label style={{ userSelect: 'none' }}>
+        {label}
+        <input
+          style={{
+            textColor,
+            width: '100%',
+            display: 'block',
+            textAlign: 'center',
+            border: 'none',
+            margin: '0.2em 0',
+            padding: '0.2em 0',
+            fontSize: fontSize + 'px',
+            userSelect: 'none',
+          }}
+          value={value}
+          onChange={setValue}
+        />
+      </label>
+      <span
+        style={{
+          paddingTop: '1em',
+        }}
+      >
+        <button onClick={increment} style={{ fontSize: fontSize + 'px' }}>
+          +
+        </button>
+        <button onClick={decrement} style={{ fontSize: fontSize + 'px' }}>
+          -
+        </button>
+      </span>
+    </div>
   );
 };
 
@@ -120,6 +218,8 @@ const getComponent = (type) => {
       return Round;
     case 'image':
       return Image;
+    case 'counter':
+      return Counter;
     default:
       return Rect;
   }

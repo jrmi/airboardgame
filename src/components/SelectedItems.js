@@ -111,7 +111,7 @@ export const SelectedItems = ({}) => {
       index += 1;
       return {
         ...item,
-        x: newX - item.actualWidth / 2 + index,
+        x: newX - item.actualWidth / 2 - index,
         y: newY - item.actualHeight / 2 - index,
       };
     });
