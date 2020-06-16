@@ -13,6 +13,7 @@ import tiktok from '../games/tiktok';
 import card from '../games/card';
 import gloomhaven from '../games/gloomhaven';
 import settlers from '../games/settlers';
+import LoadGame from './LoadGame';
 
 const generateDownloadURI = (data) => {
   return (
@@ -132,6 +133,16 @@ export const GameController = ({
     }));
     c2c.publish('loadGame', gameSave, true);
   };*/
+  const onLoadSavedGame = React.useCallback(
+    (game) => {
+      game.items = game.items.map((item) => ({
+        ...item,
+        id: nanoid(),
+      }));
+      c2c.publish('loadGame', game, true);
+    },
+    [c2c]
+  );
 
   const updateSaveLink = React.useCallback(
     throttle(
@@ -167,6 +178,7 @@ export const GameController = ({
       <button onClick={loadCard}>Card</button>
       <button onClick={loadGloomhaven}>Gloomhaven</button>
       <button onClick={loadSettlers}>Settlers of Catan</button>
+      <LoadGame onLoad={onLoadSavedGame} />
       <a href={downloadURI} download={`save_${date}.json`}>
         Save
       </a>
