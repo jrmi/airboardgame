@@ -7,11 +7,23 @@ import { ItemListAtom } from '../components/Items';
 import { useRecoilValue } from 'recoil';
 
 import useLocalStorage from 'react-use-localstorage';
+import throttle from 'lodash.throttle';
 
 import tiktok from '../games/tiktok';
 import card from '../games/card';
 import gloomhaven from '../games/gloomhaven';
 import settlers from '../games/settlers';
+
+const generateDownloadURI = (data) => {
+  return (
+    'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(data))
+  );
+};
+
+const formatDate = (date) => {
+  console.log(date);
+  return `${date.getFullYear()}${date.getMonth()}${date.getDay()}_${date.getHours()}${date.getMinutes()}`;
+};
 
 export const GameController = ({
   itemList,
@@ -20,6 +32,8 @@ export const GameController = ({
   setBoardConfig,
 }) => {
   const [c2c, joined, isMaster] = useC2C();
+  const [downloadURI, setDownloadURI] = React.useState({});
+  const [date, setDate] = React.useState(Date.now());
   /*const [gameSave, setGameSave] = useLocalStorage('savedGame', {
     items: [],
     board: {},
@@ -119,6 +133,23 @@ export const GameController = ({
     c2c.publish('loadGame', gameSave, true);
   };*/
 
+  const updateSaveLink = React.useCallback(
+    throttle(
+      (items, board) => {
+        console.log('alled');
+        setDownloadURI(generateDownloadURI({ items, board }));
+        setDate(Date.now());
+      },
+      5000,
+      { trailing: true }
+    ),
+    []
+  );
+
+  React.useEffect(() => {
+    updateSaveLink(itemList, boardConfig);
+  }, [itemList, boardConfig, updateSaveLink]);
+
   if (!isMaster) {
     return null;
   }
@@ -136,6 +167,9 @@ export const GameController = ({
       <button onClick={loadCard}>Card</button>
       <button onClick={loadGloomhaven}>Gloomhaven</button>
       <button onClick={loadSettlers}>Settlers of Catan</button>
+      <a href={downloadURI} download={`save_${date}.json`}>
+        Save
+      </a>
     </div>
   );
 };
