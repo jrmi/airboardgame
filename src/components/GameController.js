@@ -150,9 +150,10 @@ export const GameController = ({
 
   /*React.useEffect(() => {
     if (isMaster) {
+      console.log('should load');
       loadLocalSavedGame();
     }
-  }, [loadLocalSavedGame, isMaster]);*/
+  }, [isMaster]);*/
 
   React.useEffect(() => {
     updateSaveLink({ items: itemList, board: boardConfig });

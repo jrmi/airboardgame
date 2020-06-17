@@ -5,6 +5,8 @@ import { ItemListAtom } from '../components/Items';
 import { selectedItemsAtom } from '../components/Selector';
 import { shuffle as shuffleArray } from '../utils';
 import { useC2C } from '../hooks/useC2C';
+import Slider from 'rc-slider';
+import 'rc-slider/assets/index.css';
 
 export const SelectedItems = ({}) => {
   const [c2c] = useC2C();
@@ -163,7 +165,14 @@ export const SelectedItems = ({}) => {
           }}
         >
           {selectedItemList.map(({ id, ...state }, index) => (
-            <li key={id} style={{}}>
+            <li
+              key={id}
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                width: '25em',
+              }}
+            >
               <h2 style={{ lineHeight: '30px' }}>{index}</h2>
               <label>
                 Locked:
@@ -180,13 +189,25 @@ export const SelectedItems = ({}) => {
               </label>
               <label>
                 Rotation:
-                <input
-                  type='number'
-                  value={state.rotation || 0}
-                  onChange={(e) =>
+                <Slider
+                  defaultValue={0}
+                  value={state.rotation}
+                  min={-180}
+                  max={180}
+                  step={5}
+                  included={false}
+                  marks={{
+                    '-45': -45,
+                    '-30': -30,
+                    0: 0,
+                    30: 30,
+                    45: 45,
+                    90: 90,
+                  }}
+                  onChange={(value) =>
                     updateItem(id, (item) => ({
                       ...item,
-                      rotation: parseInt(e.target.value, 10),
+                      rotation: parseInt(value, 10),
                     }))
                   }
                 />
