@@ -138,9 +138,9 @@ const Image = ({
   flipped,
   updateState,
   unflippedFor,
-  extraStyle,
   text,
   backText,
+  overlay
 }) => {
   const user = useRecoilValue(userAtom);
   const size = {};
@@ -183,9 +183,8 @@ const Image = ({
               position: 'absolute',
               right: 0,
               padding: '0 3px',
-              margin: '7px',
-              backgroundColor: 'white',
-              color: 'black',
+              backgroundColor: 'black',
+              color: 'white',
               borderRadius: '50%',
             }}
           >
@@ -196,7 +195,7 @@ const Image = ({
           src={backContent}
           draggable={false}
           {...size}
-          style={{ userSelect: 'none', pointerEvents: 'none', ...extraStyle }}
+          style={{ userSelect: 'none', pointerEvents: 'none' }}
         />
       </>
     );
@@ -218,6 +217,9 @@ const Image = ({
             Only you
           </div>
         )}
+        {overlay && (
+          <img src={overlay.content} style={{position: 'absolute'}}/>
+        )}
         {text && (
           <div
             className='image-text'
@@ -225,9 +227,8 @@ const Image = ({
               position: 'absolute',
               right: 0,
               padding: '0 3px',
-              margin: '7px',
-              backgroundColor: 'white',
-              color: 'black',
+              backgroundColor: 'black',
+              color: 'white',
               borderRadius: '50%',
             }}
           >
@@ -238,7 +239,7 @@ const Image = ({
           src={content}
           draggable={false}
           {...size}
-          style={{ userSelect: 'none', pointerEvents: 'none', ...extraStyle }}
+          style={{ userSelect: 'none', pointerEvents: 'none' }}
         />
       </div>
     );
