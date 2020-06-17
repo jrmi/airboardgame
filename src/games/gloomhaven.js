@@ -475,11 +475,38 @@ const genGloomhaven = () => {
         width: 30,
       });
     });
+
+    const characterItems = [
+      "boots-of-striding",
+      "cloak-of-invisibility",
+      "eagle-eye-goggles",
+      "heater-shield",
+      "hide-armor",
+      "iron-helmet",
+      "leather-armor",
+      "minor-healing-potion",
+      "minor-power-potion",
+      "minor-stamina-potion",
+      "piercing-bow",
+      "poison-dagger",
+      "war-hammer",
+      "winged-shoes",
+    ];
+    characterItems.forEach((itemName, index) => {
+      items.push({
+        type: "image",
+        content: `https://raw.githubusercontent.com/romgar/gloomhaven/master/images/items/1-14/${itemName}.png`,
+        x: 1500 + 40 * index,
+        y: 1500,
+        flipped: true,
+        width: 40,
+      });
+    });
   });
 
   return {
     items,
-    board: { size: 2000, scale: 0.5 },
+    board: { size: 3000, scale: 0.5 },
   };
 };
 
