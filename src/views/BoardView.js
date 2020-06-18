@@ -5,6 +5,7 @@ import GameController from '../components/GameController';
 import ZoomPanRotate from '../components/PanZoomRotate';
 import Board from '../components/Board';
 import { ItemListAtom } from '../components/Items';
+import { AvailableItemListAtom } from '../components/AvailableItems';
 import useUser from '../hooks/useUser';
 import useUsers from '../hooks/useUsers';
 import { useRecoilState } from 'recoil';
@@ -13,6 +14,9 @@ import SelectedItems from '../components/SelectedItems';
 export const BoardView = () => {
   const users = useUsers();
   const [user, setUser] = useUser();
+  const [availableItemList, setAvailableItemList] = useRecoilState(
+    AvailableItemListAtom
+  );
   const [itemList, setItemList] = useRecoilState(ItemListAtom);
   const [boardConfig, setBoardConfig] = React.useState({});
 
@@ -26,6 +30,8 @@ export const BoardView = () => {
 
       <SelectedItems />
       <GameController
+        availableItemList={availableItemList}
+        setAvailableItemList={setAvailableItemList}
         itemList={itemList}
         setItemList={setItemList}
         boardConfig={boardConfig}
