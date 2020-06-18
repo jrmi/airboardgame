@@ -45,17 +45,17 @@ function App() {
   return (
     <RecoilRoot>
       <Provider url={SOCKET_URL} options={SOCKET_OPTIONS}>
-        <div className='App'>
+        <div className="App">
           <Router>
             <Switch>
-              <Route path='/room/:room/'>
+              <Route path="/room/:room/">
                 <ConnectedBoardView />
               </Route>
-              <Redirect path='/room/' to={`/room/${genRoomName()}`} />
+              <Redirect path="/room/" to={`/room/${genRoomName()}`} />
               {/*<Route exact path='/home'>
                   <HomePage />
               </Route>*/}
-              <Redirect from='/' to='/room/' />
+              <Redirect from="/" to="/room/" />
             </Switch>
           </Router>
         </div>

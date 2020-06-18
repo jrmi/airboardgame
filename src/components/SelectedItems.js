@@ -177,7 +177,7 @@ export const SelectedItems = () => {
               <label>
                 Locked:
                 <input
-                  type='checkbox'
+                  type="checkbox"
                   checked={Boolean(state.locked)}
                   onChange={(e) =>
                     updateItem(id, (item) => ({

@@ -21,7 +21,7 @@ export const BoardView = () => {
   const [boardConfig, setBoardConfig] = React.useState({});
 
   return (
-    <div className='board'>
+    <div className="board">
       <ZoomPanRotate>
         <Board user={user} users={users} config={boardConfig} />
       </ZoomPanRotate>

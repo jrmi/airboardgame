@@ -177,7 +177,7 @@ const Image = ({
       <>
         {text && (
           <div
-            className='image-text'
+            className="image-text"
             style={{
               position: 'absolute',
               right: 0,
@@ -193,7 +193,7 @@ const Image = ({
         )}
         <img
           src={backContent}
-          alt=''
+          alt=""
           draggable={false}
           {...size}
           style={{ userSelect: 'none', pointerEvents: 'none' }}
@@ -202,7 +202,7 @@ const Image = ({
     );
   } else {
     image = (
-      <div className='image-wrapper' style={{ position: 'relative' }}>
+      <div className="image-wrapper" style={{ position: 'relative' }}>
         {unflippedFor && (
           <div
             style={{
@@ -221,7 +221,7 @@ const Image = ({
         {overlay && (
           <img
             src={overlay.content}
-            alt=''
+            alt=""
             style={{
               position: 'absolute',
               userSelect: 'none',
@@ -231,7 +231,7 @@ const Image = ({
         )}
         {text && (
           <div
-            className='image-text'
+            className="image-text"
             style={{
               position: 'absolute',
               right: 0,
@@ -247,7 +247,7 @@ const Image = ({
         )}
         <img
           src={content}
-          alt=''
+          alt=""
           draggable={false}
           {...size}
           style={{ userSelect: 'none', pointerEvents: 'none' }}
@@ -359,7 +359,7 @@ const Item = ({ setState, state }) => {
         transform: `rotate(${rotation}deg)`,
         ...style,
       }}
-      className='item'
+      className="item"
       ref={itemRef}
     >
       <Component {...state} updateState={updateState} />

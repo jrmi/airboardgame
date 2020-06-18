@@ -25,7 +25,7 @@ export const Board = ({ user, users, config }) => {
       <ActionPane>
         <CursorPane user={user} users={users}>
           <div
-            className='content'
+            className="content"
             style={{
               background:
                 'repeating-linear-gradient(45deg, #606dbc60, #606dbc60 10px, #46529860 10px, #46529860 20px)',

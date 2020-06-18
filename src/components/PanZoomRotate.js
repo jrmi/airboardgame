@@ -53,7 +53,7 @@ const PanZoomRotate = ({ children }) => {
   };
 
   const onMouseDown = (e) => {
-    if ((e.button === 1) || e.altKey) {
+    if (e.button === 1 || e.altKey) {
       stateRef.current.moving = true;
       stateRef.current.startX = e.clientX;
       stateRef.current.startY = e.clientY;
