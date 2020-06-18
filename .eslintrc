@@ -7,6 +7,11 @@
       "jsx": true
     }
   },
+  "settings":{
+    "react": {
+      "version": "detect"
+    },
+  },
   "parser": "babel-eslint",
   "rules": {
     "semi": "error",
