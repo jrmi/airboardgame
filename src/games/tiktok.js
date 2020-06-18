@@ -1,5 +1,3 @@
-import { urlAlphabet } from 'nanoid';
-
 const genTikTok = () => {
   const items = [];
 

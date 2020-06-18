@@ -1,5 +1,3 @@
-import { isCompositeComponentWithType } from 'react-dom/test-utils';
-
 /**
  * Check if element or parent has className.
  * @param {DOMElement} element

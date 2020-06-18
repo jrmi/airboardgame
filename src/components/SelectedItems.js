@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { ItemListAtom } from '../components/Items';
 import { selectedItemsAtom } from '../components/Selector';
 import { shuffle as shuffleArray } from '../utils';
@@ -8,10 +8,10 @@ import { useC2C } from '../hooks/useC2C';
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
 
-export const SelectedItems = ({}) => {
+export const SelectedItems = () => {
   const [c2c] = useC2C();
   const [itemList, setItemList] = useRecoilState(ItemListAtom);
-  const [selectedItems, setSelectedItems] = useRecoilState(selectedItemsAtom);
+  const selectedItems = useRecoilValue(selectedItemsAtom);
 
   const selectedItemList = React.useMemo(() => {
     return itemList.filter(({ id }) => selectedItems.includes(id));

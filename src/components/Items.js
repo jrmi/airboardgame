@@ -8,7 +8,7 @@ export const ItemListAtom = atom({
   default: [],
 });
 
-const Items = ({}) => {
+const Items = () => {
   const [c2c] = useC2C();
   const [itemList, setItemList] = useRecoilState(ItemListAtom);
 

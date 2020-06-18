@@ -3,7 +3,7 @@ import { atom, useRecoilValue } from 'recoil';
 import { PanZoomRotateState } from '../components/PanZoomRotate';
 import { ItemListAtom } from '../components/Items';
 import { useRecoilState } from 'recoil';
-import { insideClass, isPointInsideRect, isPointInsideItem } from '../utils';
+import { insideClass, isPointInsideRect } from '../utils';
 
 export const selectedItemsAtom = atom({
   key: 'selectedItems',

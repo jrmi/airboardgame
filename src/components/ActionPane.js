@@ -1,16 +1,16 @@
 import React from 'react';
-import { atom, useRecoilValue } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import { PanZoomRotateState } from '../components/PanZoomRotate';
 import { selectedItemsAtom } from '../components/Selector';
 import { ItemListAtom } from '../components/Items';
-import { useRecoilState } from 'recoil';
-import { insideClass, isPointInsideRect, isPointInsideItem } from '../utils';
+import { useRecoilState, useSetRecoilState } from 'recoil';
+import { insideClass } from '../utils';
 import { useC2C } from '../hooks/useC2C';
 
 const ActionPane = ({ children }) => {
   const [c2c] = useC2C();
   const panZoomRotate = useRecoilValue(PanZoomRotateState);
-  const [itemList, setItemList] = useRecoilState(ItemListAtom);
+  const setItemList = useSetRecoilState(ItemListAtom);
   const [selectedItems, setSelectedItems] = useRecoilState(selectedItemsAtom);
   const wrapperRef = React.useRef(null);
   const actionRef = React.useRef({});
@@ -32,7 +32,7 @@ const ActionPane = ({ children }) => {
   );
 
   const onMouseDown = (e) => {
-    if (e.button === 0 && !(e.altKey)) {
+    if (e.button === 0 && !e.altKey) {
       const { top, left } = e.currentTarget.getBoundingClientRect();
       const point = {
         x: (e.clientX - left) / panZoomRotate.scale,

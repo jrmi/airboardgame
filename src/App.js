@@ -24,8 +24,6 @@ const SOCKET_OPTIONS = {
   path: SOCKET_PATH,
 };
 
-const room = 'test';
-
 const genRoomName = () => {
   return nanoid();
 };

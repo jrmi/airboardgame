@@ -2,7 +2,6 @@ import React from 'react';
 import { useC2C } from './useC2C';
 import randomColor from 'randomcolor';
 import debounce from 'lodash.debounce';
-import { nanoid } from 'nanoid';
 import { atom, useRecoilState } from 'recoil';
 
 const getUser = () => {

@@ -7,6 +7,8 @@ import { ItemListAtom } from '../components/Items';
 import { useRecoilValue } from 'recoil';
 
 import useLocalStorage from '../hooks/useLocalStorage';
+//import useLocalStorage from 'react-use-localstorage';
+
 import throttle from 'lodash.throttle';
 
 import tiktok from '../games/tiktok';
@@ -196,7 +198,6 @@ export const GameController = ({
         position: 'fixed',
         left: '0.5em',
         top: '0.5em',
-        display: 'block',
         backgroundColor: '#ffffff77',
         display: 'flex',
         flexDirection: 'column',

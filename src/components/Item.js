@@ -1,6 +1,5 @@
 import React from 'react';
 import { useC2C } from '../hooks/useC2C';
-import { PanZoomRotateState } from '../components/PanZoomRotate';
 import { useRecoilValue } from 'recoil';
 import { selectedItemsAtom } from './Selector';
 import { userAtom } from '../hooks/useUser';
@@ -186,6 +185,7 @@ const Image = ({
               backgroundColor: 'black',
               color: 'white',
               borderRadius: '50%',
+              userSelect: 'none',
             }}
           >
             {backText}
@@ -193,6 +193,7 @@ const Image = ({
         )}
         <img
           src={backContent}
+          alt=''
           draggable={false}
           {...size}
           style={{ userSelect: 'none', pointerEvents: 'none' }}
@@ -218,7 +219,15 @@ const Image = ({
           </div>
         )}
         {overlay && (
-          <img src={overlay.content} style={{ position: 'absolute' }} />
+          <img
+            src={overlay.content}
+            alt=''
+            style={{
+              position: 'absolute',
+              userSelect: 'none',
+              pointerEvents: 'none',
+            }}
+          />
         )}
         {text && (
           <div
@@ -230,6 +239,7 @@ const Image = ({
               backgroundColor: 'black',
               color: 'white',
               borderRadius: '50%',
+              userSelect: 'none',
             }}
           >
             {text}
@@ -237,6 +247,7 @@ const Image = ({
         )}
         <img
           src={content}
+          alt=''
           draggable={false}
           {...size}
           style={{ userSelect: 'none', pointerEvents: 'none' }}
@@ -306,9 +317,7 @@ const Item = ({ setState, state }) => {
   const rotation = state.rotation || 0;
 
   const updateState = React.useCallback(
-    (callbackOrItem, sync = true) => {
-      setState(state.id, callbackOrItem, sync);
-    },
+    (callbackOrItem, sync = true) => setState(state.id, callbackOrItem, sync),
     [setState, state]
   );
 
@@ -316,7 +325,7 @@ const Item = ({ setState, state }) => {
   React.useEffect(() => {
     const currentElem = itemRef.current;
     const callback = (entries) => {
-      entries.map((entry) => {
+      entries.forEach((entry) => {
         if (entry.contentBoxSize) {
           const { inlineSize: width, blockSize: height } = entry.contentBoxSize;
           if (state.actualWidth !== width || state.actualHeight !== height) {
