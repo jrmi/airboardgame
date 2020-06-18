@@ -140,7 +140,7 @@ const Image = ({
   unflippedFor,
   text,
   backText,
-  overlay
+  overlay,
 }) => {
   const user = useRecoilValue(userAtom);
   const size = {};
@@ -218,7 +218,7 @@ const Image = ({
           </div>
         )}
         {overlay && (
-          <img src={overlay.content} style={{position: 'absolute'}}/>
+          <img src={overlay.content} style={{ position: 'absolute' }} />
         )}
         {text && (
           <div
