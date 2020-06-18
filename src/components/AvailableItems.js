@@ -1,10 +1,10 @@
-import React from 'react';
-import { nanoid } from 'nanoid';
-import { useRecoilState, atom } from 'recoil';
-import { ItemListAtom } from './Items';
+import React from "react";
+import { nanoid } from "nanoid";
+import { useRecoilState, atom } from "recoil";
+import { ItemListAtom } from "./Items";
 
 export const AvailableItemListAtom = atom({
-  key: 'availableItemList',
+  key: "availableItemList",
   default: [],
 });
 

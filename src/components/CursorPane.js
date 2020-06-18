@@ -1,8 +1,8 @@
-import React from 'react';
-import Cursors from '../components/Cursors';
-import { useC2C } from '../hooks/useC2C';
-import { PanZoomRotateState } from '../components/PanZoomRotate';
-import { useRecoilValue } from 'recoil';
+import React from "react";
+import Cursors from "../components/Cursors";
+import { useC2C } from "../hooks/useC2C";
+import { PanZoomRotateState } from "../components/PanZoomRotate";
+import { useRecoilValue } from "recoil";
 
 export const Board = ({ children, user, users }) => {
   const [c2c] = useC2C();
@@ -10,7 +10,7 @@ export const Board = ({ children, user, users }) => {
 
   const onMouseMove = (e) => {
     const { top, left } = e.currentTarget.getBoundingClientRect();
-    c2c.publish('cursorMove', {
+    c2c.publish("cursorMove", {
       userId: user.id,
       pos: {
         x: (e.clientX - left) / panZoomRotate.scale,
@@ -20,7 +20,7 @@ export const Board = ({ children, user, users }) => {
   };
 
   const onLeave = (e) => {
-    c2c.publish('cursorOff', {
+    c2c.publish("cursorOff", {
       userId: user.id,
     });
   };

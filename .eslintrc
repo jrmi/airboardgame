@@ -12,5 +12,5 @@
     "semi": "error"
   },
   "plugins": ["react-hooks"],
-  "extends": ["plugin:react-hooks/recommended"]
+  "extends": ["plugin:react-hooks/recommended", "plugin:prettier/recommended"]
 }

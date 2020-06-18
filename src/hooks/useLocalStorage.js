@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 const useLocalStorage = (key, initialValue) => {
   // State to store our value
@@ -49,9 +49,9 @@ const useLocalStorage = (key, initialValue) => {
         setStoredValue(JSON.parse(e.newValue));
       }
     };
-    window.addEventListener('storage', localStorageChanged);
+    window.addEventListener("storage", localStorageChanged);
     return () => {
-      window.removeEventListener('storage', localStorageChanged);
+      window.removeEventListener("storage", localStorageChanged);
     };
   }, [key]);
 

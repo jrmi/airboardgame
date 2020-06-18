@@ -1,12 +1,12 @@
-import React from 'react';
+import React from "react";
 
-import { useRecoilState, useRecoilValue } from 'recoil';
-import { ItemListAtom } from '../components/Items';
-import { selectedItemsAtom } from '../components/Selector';
-import { shuffle as shuffleArray } from '../utils';
-import { useC2C } from '../hooks/useC2C';
-import Slider from 'rc-slider';
-import 'rc-slider/assets/index.css';
+import { useRecoilState, useRecoilValue } from "recoil";
+import { ItemListAtom } from "../components/Items";
+import { selectedItemsAtom } from "../components/Selector";
+import { shuffle as shuffleArray } from "../utils";
+import { useC2C } from "../hooks/useC2C";
+import Slider from "rc-slider";
+import "rc-slider/assets/index.css";
 
 export const SelectedItems = () => {
   const [c2c] = useC2C();
@@ -20,7 +20,7 @@ export const SelectedItems = () => {
   const updateItem = React.useCallback(
     (id, callbackOrItem) => {
       let callback = callbackOrItem;
-      if (typeof callbackOrItem === 'object') {
+      if (typeof callbackOrItem === "object") {
         callback = (item) => callbackOrItem;
       }
       setItemList((prevList) => {
@@ -43,7 +43,7 @@ export const SelectedItems = () => {
   const massUpdateItems = React.useCallback(
     (ids, callbackOrItem) => {
       let callback = callbackOrItem;
-      if (typeof callbackOrItem === 'object') {
+      if (typeof callbackOrItem === "object") {
         callback = (item) => callbackOrItem;
       }
       setItemList((prevList) => {
@@ -140,13 +140,13 @@ export const SelectedItems = () => {
   return (
     <div
       style={{
-        position: 'fixed',
-        right: '1em',
-        bottom: '1em',
-        background: '#ffffff77',
-        padding: '0.2em',
-        maxHeight: '50vh',
-        overflowY: 'scroll',
+        position: "fixed",
+        right: "1em",
+        bottom: "1em",
+        background: "#ffffff77",
+        padding: "0.2em",
+        maxHeight: "50vh",
+        overflowY: "scroll",
       }}
     >
       {selectedItems.length > 1 && (
@@ -161,19 +161,19 @@ export const SelectedItems = () => {
       {selectedItems.length === 1 && (
         <ul
           style={{
-            listStyle: 'none',
+            listStyle: "none",
           }}
         >
           {selectedItemList.map(({ id, ...state }, index) => (
             <li
               key={id}
               style={{
-                display: 'flex',
-                flexDirection: 'column',
-                width: '25em',
+                display: "flex",
+                flexDirection: "column",
+                width: "25em",
               }}
             >
-              <h2 style={{ lineHeight: '30px' }}>{index}</h2>
+              <h2 style={{ lineHeight: "30px" }}>{index}</h2>
               <label>
                 Locked:
                 <input
@@ -197,8 +197,8 @@ export const SelectedItems = () => {
                   step={5}
                   included={false}
                   marks={{
-                    '-45': -45,
-                    '-30': -30,
+                    "-45": -45,
+                    "-30": -30,
                     0: 0,
                     30: 30,
                     45: 45,

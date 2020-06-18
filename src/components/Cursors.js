@@ -1,6 +1,6 @@
-import React from 'react';
-import { useC2C } from '../hooks/useC2C';
-import Cursor from './Cursor';
+import React from "react";
+import { useC2C } from "../hooks/useC2C";
+import Cursor from "./Cursor";
 
 export const Cursors = ({ users }) => {
   const [c2c] = useC2C();
@@ -37,7 +37,7 @@ export const Cursors = ({ users }) => {
   React.useEffect(() => {
     const unsub = [];
     unsub.push(
-      c2c.subscribe('cursorMove', ({ userId, pos }) => {
+      c2c.subscribe("cursorMove", ({ userId, pos }) => {
         //console.log('move', pos);
         setCursors((prevCursors) => {
           return {
@@ -48,7 +48,7 @@ export const Cursors = ({ users }) => {
       })
     );
     unsub.push(
-      c2c.subscribe('cursorOff', ({ userId }) => {
+      c2c.subscribe("cursorOff", ({ userId }) => {
         setCursors((prevCursors) => {
           const newCursors = {
             ...prevCursors,

@@ -2,16 +2,16 @@ const genTikTok = () => {
   const items = [];
 
   items.push({
-    type: 'image',
-    content: '/games/tiktok.svg',
+    type: "image",
+    content: "/games/tiktok.svg",
     locked: true,
     x: 100,
     y: 100,
   });
 
   items.push({
-    type: 'rect',
-    color: '#00D022',
+    type: "rect",
+    color: "#00D022",
     width: 80,
     height: 80,
     x: 10,
@@ -19,8 +19,8 @@ const genTikTok = () => {
   });
 
   items.push({
-    type: 'rect',
-    color: '#00D022',
+    type: "rect",
+    color: "#00D022",
     width: 80,
     height: 80,
     x: 15,
@@ -28,8 +28,8 @@ const genTikTok = () => {
   });
 
   items.push({
-    type: 'rect',
-    color: '#00D022',
+    type: "rect",
+    color: "#00D022",
     width: 80,
     height: 80,
     x: 20,
@@ -37,8 +37,8 @@ const genTikTok = () => {
   });
 
   items.push({
-    type: 'rect',
-    color: '#00D022',
+    type: "rect",
+    color: "#00D022",
     width: 80,
     height: 80,
     x: 25,
@@ -46,8 +46,8 @@ const genTikTok = () => {
   });
 
   items.push({
-    type: 'rect',
-    color: '#00D022',
+    type: "rect",
+    color: "#00D022",
     width: 80,
     height: 80,
     x: 30,
@@ -55,8 +55,8 @@ const genTikTok = () => {
   });
 
   items.push({
-    type: 'rect',
-    color: '#00D022',
+    type: "rect",
+    color: "#00D022",
     width: 80,
     height: 80,
     x: 35,
@@ -66,48 +66,48 @@ const genTikTok = () => {
   // Red player
 
   items.push({
-    type: 'round',
-    color: '#D00022',
+    type: "round",
+    color: "#D00022",
     radius: 80,
     x: 1010,
     y: 1050,
   });
 
   items.push({
-    type: 'round',
-    color: '#D00022',
+    type: "round",
+    color: "#D00022",
     radius: 80,
     x: 1015,
     y: 1052,
   });
 
   items.push({
-    type: 'round',
-    color: '#D00022',
+    type: "round",
+    color: "#D00022",
     radius: 80,
     x: 1020,
     y: 1054,
   });
 
   items.push({
-    type: 'round',
-    color: '#D00022',
+    type: "round",
+    color: "#D00022",
     radius: 80,
     x: 1025,
     y: 1056,
   });
 
   items.push({
-    type: 'round',
-    color: '#D00022',
+    type: "round",
+    color: "#D00022",
     radius: 80,
     x: 1030,
     y: 1058,
   });
 
   items.push({
-    type: 'round',
-    color: '#D00022',
+    type: "round",
+    color: "#D00022",
     radius: 80,
     x: 1035,
     y: 1060,

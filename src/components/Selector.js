@@ -1,12 +1,12 @@
-import React from 'react';
-import { atom, useRecoilValue } from 'recoil';
-import { PanZoomRotateState } from '../components/PanZoomRotate';
-import { ItemListAtom } from '../components/Items';
-import { useRecoilState } from 'recoil';
-import { insideClass, isPointInsideRect } from '../utils';
+import React from "react";
+import { atom, useRecoilValue } from "recoil";
+import { PanZoomRotateState } from "../components/PanZoomRotate";
+import { ItemListAtom } from "../components/Items";
+import { useRecoilState } from "recoil";
+import { insideClass, isPointInsideRect } from "../utils";
 
 export const selectedItemsAtom = atom({
-  key: 'selectedItems',
+  key: "selectedItems",
   default: [],
 });
 
@@ -34,7 +34,7 @@ const Selector = ({ children }) => {
   });
 
   const onMouseDown = (e) => {
-    if (e.button === 0 && !insideClass(e.target, 'item')) {
+    if (e.button === 0 && !insideClass(e.target, "item")) {
       const { top, left } = e.currentTarget.getBoundingClientRect();
       const displayX = (e.clientX - left) / panZoomRotate.scale;
       const displayY = (e.clientY - top) / panZoomRotate.scale;
@@ -42,7 +42,7 @@ const Selector = ({ children }) => {
       stateRef.current.startX = displayX;
       stateRef.current.startY = displayY;
       setSelector({ ...stateRef.current });
-      wrapperRef.current.style.cursor = 'crosshair';
+      wrapperRef.current.style.cursor = "crosshair";
     } else {
       if (selected.length) {
         /* Should remove selection if clic another item */
@@ -84,7 +84,7 @@ const Selector = ({ children }) => {
       setSelected(selected);
       stateRef.current = { moving: false };
       setSelector({ ...stateRef.current });
-      wrapperRef.current.style.cursor = 'auto';
+      wrapperRef.current.style.cursor = "auto";
     }
   };
 
@@ -100,8 +100,8 @@ const Selector = ({ children }) => {
         <div
           style={{
             zIndex: 100,
-            position: 'absolute',
-            backgroundColor: '#FF000050',
+            position: "absolute",
+            backgroundColor: "#FF000050",
             top: selector.top,
             left: selector.left,
             height: selector.height,

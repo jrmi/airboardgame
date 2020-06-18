@@ -1,11 +1,11 @@
-import React from 'react';
-import { useRecoilValue } from 'recoil';
-import { PanZoomRotateState } from '../components/PanZoomRotate';
-import { selectedItemsAtom } from '../components/Selector';
-import { ItemListAtom } from '../components/Items';
-import { useRecoilState, useSetRecoilState } from 'recoil';
-import { insideClass } from '../utils';
-import { useC2C } from '../hooks/useC2C';
+import React from "react";
+import { useRecoilValue } from "recoil";
+import { PanZoomRotateState } from "../components/PanZoomRotate";
+import { selectedItemsAtom } from "../components/Selector";
+import { ItemListAtom } from "../components/Items";
+import { useRecoilState, useSetRecoilState } from "recoil";
+import { insideClass } from "../utils";
+import { useC2C } from "../hooks/useC2C";
 
 const ActionPane = ({ children }) => {
   const [c2c] = useC2C();
@@ -38,7 +38,7 @@ const ActionPane = ({ children }) => {
         x: (e.clientX - left) / panZoomRotate.scale,
         y: (e.clientY - top) / panZoomRotate.scale,
       };
-      const foundElement = insideClass(e.target, 'item');
+      const foundElement = insideClass(e.target, "item");
       if (foundElement) {
         if (!selectedItems.includes(foundElement.id)) {
           setSelectedItems([foundElement.id]);
@@ -51,7 +51,7 @@ const ActionPane = ({ children }) => {
         actionRef.current.prevY = point.y;
         actionRef.current.moving = true;
         actionRef.current.itemId = foundElement.id;
-        wrapperRef.current.style.cursor = 'move';
+        wrapperRef.current.style.cursor = "move";
         e.stopPropagation();
       }
     }
@@ -98,7 +98,7 @@ const ActionPane = ({ children }) => {
   const onMouseUp = (e) => {
     if (actionRef.current.moving === true) {
       actionRef.current = { moving: false };
-      wrapperRef.current.style.cursor = 'auto';
+      wrapperRef.current.style.cursor = "auto";
     }
   };
 

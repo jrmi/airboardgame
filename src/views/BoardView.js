@@ -1,15 +1,15 @@
-import React from 'react';
+import React from "react";
 
-import Users from '../components/Users';
-import GameController from '../components/GameController';
-import ZoomPanRotate from '../components/PanZoomRotate';
-import Board from '../components/Board';
-import { ItemListAtom } from '../components/Items';
-import { AvailableItemListAtom } from '../components/AvailableItems';
-import useUser from '../hooks/useUser';
-import useUsers from '../hooks/useUsers';
-import { useRecoilState } from 'recoil';
-import SelectedItems from '../components/SelectedItems';
+import Users from "../components/Users";
+import GameController from "../components/GameController";
+import ZoomPanRotate from "../components/PanZoomRotate";
+import Board from "../components/Board";
+import { ItemListAtom } from "../components/Items";
+import { AvailableItemListAtom } from "../components/AvailableItems";
+import useUser from "../hooks/useUser";
+import useUsers from "../hooks/useUsers";
+import { useRecoilState } from "recoil";
+import SelectedItems from "../components/SelectedItems";
 
 export const BoardView = () => {
   const users = useUsers();

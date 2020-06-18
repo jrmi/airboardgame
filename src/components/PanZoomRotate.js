@@ -1,8 +1,8 @@
-import React from 'react';
-import { atom, useRecoilState } from 'recoil';
+import React from "react";
+import { atom, useRecoilState } from "recoil";
 
 export const PanZoomRotateState = atom({
-  key: 'PanZoomRotate',
+  key: "PanZoomRotate",
   default: {
     translateX: 0,
     translateY: 0,
@@ -59,7 +59,7 @@ const PanZoomRotate = ({ children }) => {
       stateRef.current.startY = e.clientY;
       stateRef.current.startTranslateX = dim.translateX;
       stateRef.current.startTranslateY = dim.translateY;
-      wrapperRef.current.style.cursor = 'move';
+      wrapperRef.current.style.cursor = "move";
     }
   };
 
@@ -80,13 +80,13 @@ const PanZoomRotate = ({ children }) => {
   const onMouseUp = (e) => {
     if (e.button === 1 || e.altKey) {
       stateRef.current.moving = false;
-      wrapperRef.current.style.cursor = 'auto';
+      wrapperRef.current.style.cursor = "auto";
     }
   };
 
   const style = {
     transform: `translate(${dim.translateX}px, ${dim.translateY}px) scale(${dim.scale}) rotate(${dim.rotate}deg)`,
-    transformOrigin: 'top left',
+    transformOrigin: "top left",
   };
 
   return (
@@ -98,7 +98,7 @@ const PanZoomRotate = ({ children }) => {
       ref={wrapperRef}
       style={{}}
     >
-      <div style={{ ...style, display: 'inline-block' }} ref={wrappedRef}>
+      <div style={{ ...style, display: "inline-block" }} ref={wrappedRef}>
         {children}
       </div>
     </div>

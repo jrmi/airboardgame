@@ -1,6 +1,6 @@
-import React, { useContext } from 'react';
-import { useSocket } from '@scripters/use-socket.io';
-import { join } from 'client2client.io';
+import React, { useContext } from "react";
+import { useSocket } from "@scripters/use-socket.io";
+import { join } from "client2client.io";
 
 export const C2CContext = React.createContext([null, false]);
 
@@ -16,10 +16,10 @@ export const C2CProvider = ({ room, ...props }) => {
       return;
     }
     join(socket, room, (newRoom) => {
-      console.log('isMaster');
+      console.log("isMaster");
       setIsMaster(true);
     }).then((newRoom) => {
-      console.log('Connected…');
+      console.log("Connected…");
       roomRef.current = newRoom;
 
       setC2c(newRoom);

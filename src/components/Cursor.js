@@ -1,16 +1,16 @@
-import React from 'react';
+import React from "react";
 
-export const Cursor = ({ color = '#666', size = 40, pos, text }) => (
+export const Cursor = ({ color = "#666", size = 40, pos, text }) => (
   <div
     style={{
-      position: 'fixed',
+      position: "fixed",
       top: pos.y - size / 2,
       left: pos.x - size / 2,
       //transition: 'left 100ms, top 100ms',
-      opacity: '0.7',
-      display: 'flex',
-      flexDirection: 'row',
-      alignItems: 'center',
+      opacity: "0.7",
+      display: "flex",
+      flexDirection: "row",
+      alignItems: "center",
     }}
   >
     <svg viewBox={`0 0 1024 1024`} width={size} height={size}>
@@ -26,11 +26,11 @@ export const Cursor = ({ color = '#666', size = 40, pos, text }) => (
     <div
       style={{
         color,
-        maxWidth: '5em',
-        overflow: 'hidden',
-        textOverflow: 'ellipsis',
-        marginLeft: '0.5em',
-        whiteSpace: 'nowrap',
+        maxWidth: "5em",
+        overflow: "hidden",
+        textOverflow: "ellipsis",
+        marginLeft: "0.5em",
+        whiteSpace: "nowrap",
       }}
     >
       {text}

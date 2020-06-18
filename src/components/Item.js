@@ -1,8 +1,8 @@
-import React from 'react';
-import { useC2C } from '../hooks/useC2C';
-import { useRecoilValue } from 'recoil';
-import { selectedItemsAtom } from './Selector';
-import { userAtom } from '../hooks/useUser';
+import React from "react";
+import { useC2C } from "../hooks/useC2C";
+import { useRecoilValue } from "recoil";
+import { selectedItemsAtom } from "./Selector";
+import { userAtom } from "../hooks/useUser";
 
 const Rect = ({ width, height, color }) => {
   return (
@@ -19,27 +19,27 @@ const Rect = ({ width, height, color }) => {
 const Round = ({
   radius,
   color,
-  text = '',
-  textColor = '#000',
-  fontSize = '16',
+  text = "",
+  textColor = "#000",
+  fontSize = "16",
 }) => {
   return (
     <div
       style={{
-        borderRadius: '100%',
+        borderRadius: "100%",
         width: radius,
         height: radius,
         backgroundColor: color,
-        textAlign: 'center',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
+        textAlign: "center",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
       }}
     >
       <span
         style={{
           textColor,
-          fontSize: fontSize + 'px',
+          fontSize: fontSize + "px",
         }}
       >
         {text}
@@ -50,10 +50,10 @@ const Round = ({
 
 const Counter = ({
   value = 0,
-  color = '#CCC',
-  label = '',
-  textColor = '#000',
-  fontSize = '16',
+  color = "#CCC",
+  label = "",
+  textColor = "#000",
+  fontSize = "16",
   updateState,
 }) => {
   const setValue = (e) => {
@@ -81,31 +81,31 @@ const Counter = ({
     <div
       style={{
         backgroundColor: color,
-        width: '5em',
-        padding: '0.5em',
-        paddingBottom: '2em',
-        textAlign: 'center',
-        fontSize: fontSize + 'px',
-        display: 'flex',
-        justifyContent: 'space-between',
-        flexDirection: 'column',
-        borderRadius: '0.5em',
-        boxShadow: '10px 10px 13px 0px rgb(0, 0, 0, 0.3)',
+        width: "5em",
+        padding: "0.5em",
+        paddingBottom: "2em",
+        textAlign: "center",
+        fontSize: fontSize + "px",
+        display: "flex",
+        justifyContent: "space-between",
+        flexDirection: "column",
+        borderRadius: "0.5em",
+        boxShadow: "10px 10px 13px 0px rgb(0, 0, 0, 0.3)",
       }}
     >
-      <label style={{ userSelect: 'none' }}>
+      <label style={{ userSelect: "none" }}>
         {label}
         <input
           style={{
             textColor,
-            width: '100%',
-            display: 'block',
-            textAlign: 'center',
-            border: 'none',
-            margin: '0.2em 0',
-            padding: '0.2em 0',
-            fontSize: fontSize + 'px',
-            userSelect: 'none',
+            width: "100%",
+            display: "block",
+            textAlign: "center",
+            border: "none",
+            margin: "0.2em 0",
+            padding: "0.2em 0",
+            fontSize: fontSize + "px",
+            userSelect: "none",
           }}
           value={value}
           onChange={setValue}
@@ -113,13 +113,13 @@ const Counter = ({
       </label>
       <span
         style={{
-          paddingTop: '1em',
+          paddingTop: "1em",
         }}
       >
-        <button onClick={increment} style={{ fontSize: fontSize + 'px' }}>
+        <button onClick={increment} style={{ fontSize: fontSize + "px" }}>
           +
         </button>
-        <button onClick={decrement} style={{ fontSize: fontSize + 'px' }}>
+        <button onClick={decrement} style={{ fontSize: fontSize + "px" }}>
           -
         </button>
       </span>
@@ -179,13 +179,13 @@ const Image = ({
           <div
             className="image-text"
             style={{
-              position: 'absolute',
+              position: "absolute",
               right: 0,
-              padding: '0 3px',
-              backgroundColor: 'black',
-              color: 'white',
-              borderRadius: '50%',
-              userSelect: 'none',
+              padding: "0 3px",
+              backgroundColor: "black",
+              color: "white",
+              borderRadius: "50%",
+              userSelect: "none",
             }}
           >
             {backText}
@@ -196,23 +196,23 @@ const Image = ({
           alt=""
           draggable={false}
           {...size}
-          style={{ userSelect: 'none', pointerEvents: 'none' }}
+          style={{ userSelect: "none", pointerEvents: "none" }}
         />
       </>
     );
   } else {
     image = (
-      <div className="image-wrapper" style={{ position: 'relative' }}>
+      <div className="image-wrapper" style={{ position: "relative" }}>
         {unflippedFor && (
           <div
             style={{
-              position: 'absolute',
-              top: '-18px',
-              left: '4px',
-              color: '#555',
-              backgroundColor: '#CCCCCCA0',
-              userSelect: 'none',
-              pointerEvents: 'none',
+              position: "absolute",
+              top: "-18px",
+              left: "4px",
+              color: "#555",
+              backgroundColor: "#CCCCCCA0",
+              userSelect: "none",
+              pointerEvents: "none",
             }}
           >
             Only you
@@ -223,9 +223,9 @@ const Image = ({
             src={overlay.content}
             alt=""
             style={{
-              position: 'absolute',
-              userSelect: 'none',
-              pointerEvents: 'none',
+              position: "absolute",
+              userSelect: "none",
+              pointerEvents: "none",
             }}
           />
         )}
@@ -233,13 +233,13 @@ const Image = ({
           <div
             className="image-text"
             style={{
-              position: 'absolute',
+              position: "absolute",
               right: 0,
-              padding: '0 3px',
-              backgroundColor: 'black',
-              color: 'white',
-              borderRadius: '50%',
-              userSelect: 'none',
+              padding: "0 3px",
+              backgroundColor: "black",
+              color: "white",
+              borderRadius: "50%",
+              userSelect: "none",
             }}
           >
             {text}
@@ -250,7 +250,7 @@ const Image = ({
           alt=""
           draggable={false}
           {...size}
-          style={{ userSelect: 'none', pointerEvents: 'none' }}
+          style={{ userSelect: "none", pointerEvents: "none" }}
         />
       </div>
     );
@@ -261,13 +261,13 @@ const Image = ({
 
 const getComponent = (type) => {
   switch (type) {
-    case 'rect':
+    case "rect":
       return Rect;
-    case 'round':
+    case "round":
       return Round;
-    case 'image':
+    case "image":
       return Image;
-    case 'counter':
+    case "counter":
       return Counter;
     default:
       return Rect;
@@ -287,20 +287,20 @@ const Item = ({ setState, state }) => {
   // Allow to operate on locked item if ctrl is pressed
   React.useEffect(() => {
     const onKeyDown = (e) => {
-      if (e.key === 'Control') {
+      if (e.key === "Control") {
         setUnlock(true);
       }
     };
     const onKeyUp = (e) => {
-      if (e.key === 'Control') {
+      if (e.key === "Control") {
         setUnlock(false);
       }
     };
-    document.addEventListener('keydown', onKeyDown);
-    document.addEventListener('keyup', onKeyUp);
+    document.addEventListener("keydown", onKeyDown);
+    document.addEventListener("keyup", onKeyUp);
     return () => {
-      document.removeEventListener('keydown', onKeyDown);
-      document.removeEventListener('keyup', onKeyUp);
+      document.removeEventListener("keydown", onKeyDown);
+      document.removeEventListener("keyup", onKeyUp);
     };
   }, []);
 
@@ -308,10 +308,10 @@ const Item = ({ setState, state }) => {
 
   const style = {};
   if (selectedItems.includes(state.id)) {
-    style.border = '2px dashed #ff0000A0';
-    style.padding = '2px';
+    style.border = "2px dashed #ff0000A0";
+    style.padding = "2px";
   } else {
-    style.padding = '4px';
+    style.padding = "4px";
   }
 
   const rotation = state.rotation || 0;
@@ -351,11 +351,11 @@ const Item = ({ setState, state }) => {
   const content = (
     <div
       style={{
-        position: 'absolute',
+        position: "absolute",
         left: state.x,
         top: state.y,
-        display: 'inline-block',
-        boxSizing: 'content-box',
+        display: "inline-block",
+        boxSizing: "content-box",
         transform: `rotate(${rotation}deg)`,
         ...style,
       }}
@@ -373,8 +373,8 @@ const Item = ({ setState, state }) => {
   return (
     <div
       style={{
-        pointerEvents: 'none',
-        userSelect: 'none',
+        pointerEvents: "none",
+        userSelect: "none",
       }}
     >
       {content}

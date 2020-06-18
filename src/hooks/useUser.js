@@ -1,14 +1,14 @@
-import React from 'react';
-import { useC2C } from './useC2C';
-import randomColor from 'randomcolor';
-import debounce from 'lodash.debounce';
-import { atom, useRecoilState } from 'recoil';
+import React from "react";
+import { useC2C } from "./useC2C";
+import randomColor from "randomcolor";
+import debounce from "lodash.debounce";
+import { atom, useRecoilState } from "recoil";
 
 const getUser = () => {
   if (localStorage.user) {
     const localUser = {
-      name: 'Player',
-      color: randomColor({ luminosity: 'dark' }),
+      name: "Player",
+      color: randomColor({ luminosity: "dark" }),
       ...JSON.parse(localStorage.user),
     };
     // Id is given by server
@@ -17,19 +17,19 @@ const getUser = () => {
     return localUser;
   }
   const newUser = {
-    name: 'Player',
-    color: randomColor({ luminosity: 'dark' }),
+    name: "Player",
+    color: randomColor({ luminosity: "dark" }),
   };
   persistUser(newUser);
   return newUser;
 };
 
 const persistUser = (user) => {
-  localStorage.setItem('user', JSON.stringify(user));
+  localStorage.setItem("user", JSON.stringify(user));
 };
 
 export const userAtom = atom({
-  key: 'user',
+  key: "user",
   default: getUser(),
 });
 
@@ -57,7 +57,7 @@ function useUser() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const debouncedEmitUpdateUser = React.useCallback(
     debounce((newUser) => {
-      c2c.publish('userUpdate', newUser, true);
+      c2c.publish("userUpdate", newUser, true);
     }, 500),
     [c2c]
   );

@@ -3,9 +3,9 @@ const genGame = () => {
 
   [...Array(3).keys()].forEach(() => {
     items.push({
-      type: 'image',
-      content: '/games/card.jpg',
-      backContent: '/games/back.jpg',
+      type: "image",
+      content: "/games/card.jpg",
+      backContent: "/games/back.jpg",
       width: 100,
       flipped: true,
       x: 100,
@@ -13,9 +13,9 @@ const genGame = () => {
     });
 
     items.push({
-      type: 'image',
-      content: '/games/card.jpg',
-      backContent: '/games/back.jpg',
+      type: "image",
+      content: "/games/card.jpg",
+      backContent: "/games/back.jpg",
       width: 100,
       flipped: true,
       x: 100,
@@ -23,9 +23,9 @@ const genGame = () => {
     });
 
     items.push({
-      type: 'image',
-      content: '/games/8diamond.png',
-      backContent: '/games/back.jpg',
+      type: "image",
+      content: "/games/8diamond.png",
+      backContent: "/games/back.jpg",
       width: 100,
       flipped: true,
       x: 100,

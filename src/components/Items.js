@@ -1,10 +1,10 @@
-import React from 'react';
-import { useRecoilState, atom } from 'recoil';
-import Item from '../components/Item';
-import { useC2C } from '../hooks/useC2C';
+import React from "react";
+import { useRecoilState, atom } from "recoil";
+import Item from "../components/Item";
+import { useC2C } from "../hooks/useC2C";
 
 export const ItemListAtom = atom({
-  key: 'itemList',
+  key: "itemList",
   default: [],
 });
 
@@ -15,7 +15,7 @@ const Items = () => {
   const updateItem = React.useCallback(
     (id, callbackOrItem, sync = true) => {
       let callback = callbackOrItem;
-      if (typeof callbackOrItem === 'object') {
+      if (typeof callbackOrItem === "object") {
         callback = (item) => callbackOrItem;
       }
       setItemList((prevList) => {
