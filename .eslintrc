@@ -9,8 +9,14 @@
   },
   "parser": "babel-eslint",
   "rules": {
-    "semi": "error"
+    "semi": "error",
+    "react/prop-types": "off"
   },
   "plugins": ["react-hooks"],
-  "extends": ["plugin:react-hooks/recommended", "plugin:prettier/recommended"]
+  "extends": [
+    "plugin:react-hooks/recommended",
+    "plugin:prettier/recommended",
+    "plugin:react-hooks/recommended",
+    "plugin:react/recommended"
+  ]
 }

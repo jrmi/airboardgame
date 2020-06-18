@@ -31,7 +31,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "lint": "eslint .",
+    "lint": "eslint src/",
+    "prettier": "prettier --write src/",
     "eject": "react-scripts eject",
     "server": "nodemon src/server.js"
   },

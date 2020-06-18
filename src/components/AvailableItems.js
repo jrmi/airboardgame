@@ -39,8 +39,8 @@ const AvailableItems = ({}) => {
   return (
     <ul>
       {availableItemList.map((availableItem) => (
-        <li>
-          <AvailableItem key={availableItem.id} data={availableItem} />
+        <li key={availableItem.id}>
+          <AvailableItem data={availableItem} />
         </li>
       ))}
     </ul>
