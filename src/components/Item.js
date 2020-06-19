@@ -50,17 +50,17 @@ const Round = ({
 
 const CounterPane = styled.div`
   ${({ color, fontSize }) => css`
-    backgroundcolor: ${color};
+    background-color: ${color};
     width: 5em;
     padding: 0.5em;
-    paddingbottom: 2em;
-    textalign: center;
+    padding-bottom: 2em;
+    text-align: center;
     fontsize: ${fontSize}px;
     display: flex;
-    justifycontent: space-between;
-    flexdirection: column;
-    borderradius: 0.5em;
-    boxshadow: 10px 10px 13px 0px rgb(0, 0, 0, 0.3);
+    justify-content: space-between;
+    flex-direction: column;
+    border-radius: 0.5em;
+    box-shadow: 10px 10px 13px 0px rgb(0, 0, 0, 0.3);
   `}
 `;
 
@@ -94,7 +94,7 @@ const Counter = ({
   };
 
   return (
-    <CounterPane color={color}>
+    <CounterPane color={color} fontSize={fontSize}>
       <label style={{ userSelect: "none" }}>
         {label}
         <input
