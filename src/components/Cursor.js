@@ -1,18 +1,28 @@
 import React from "react";
 
+import styled from "styled-components";
+
+const StyledCursor = styled.div`
+  position: fixed;
+  top: ${({ top }) => top}px;
+  left: ${({ left }) => left}px;
+  opacity: 0.7;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+`;
+
+const CursorName = styled.div`
+  color: ${({ color }) => color};
+  max-width: 5em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-left: 0.5em;
+  whitespace: nowrap;
+`;
+
 export const Cursor = ({ color = "#666", size = 40, pos, text }) => (
-  <div
-    style={{
-      position: "fixed",
-      top: pos.y - size / 2,
-      left: pos.x - size / 2,
-      //transition: 'left 100ms, top 100ms',
-      opacity: "0.7",
-      display: "flex",
-      flexDirection: "row",
-      alignItems: "center",
-    }}
-  >
+  <StyledCursor top={pos.y - size / 2} left={pos.x - size / 2}>
     <svg viewBox={`0 0 1024 1024`} width={size} height={size}>
       <g>
         <g
@@ -23,19 +33,8 @@ export const Cursor = ({ color = "#666", size = 40, pos, text }) => (
         </g>
       </g>
     </svg>
-    <div
-      style={{
-        color,
-        maxWidth: "5em",
-        overflow: "hidden",
-        textOverflow: "ellipsis",
-        marginLeft: "0.5em",
-        whiteSpace: "nowrap",
-      }}
-    >
-      {text}
-    </div>
-  </div>
+    <CursorName color={color}>{text}</CursorName>
+  </StyledCursor>
 );
 
 export default Cursor;
