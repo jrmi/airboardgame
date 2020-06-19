@@ -271,7 +271,7 @@ const genGloomhavenBox = () => {
       "https://raw.githubusercontent.com/romgar/gloomhaven/master/images/character-icons/brute-character-token.png",
   };
 
-  brute.abilityCards["level-1"].forEach((abilityName, index) => {
+  brute.abilityCards["level-1"].forEach((abilityName) => {
     items.push({
       type: "image",
       content: `https://raw.githubusercontent.com//romgar/gloomhaven/master/images/character-ability-cards/${brute.code}/${abilityName}.png`,
@@ -329,7 +329,7 @@ const genGloomhavenBox = () => {
       "https://raw.githubusercontent.com/romgar/gloomhaven/master/images/character-icons/spellweaver-character-token.png",
   };
 
-  spellWeaver.abilityCards["level-1"].forEach((abilityName, index) => {
+  spellWeaver.abilityCards["level-1"].forEach((abilityName) => {
     items.push({
       type: "image",
       content: `https://raw.githubusercontent.com//romgar/gloomhaven/master/images/character-ability-cards/${spellWeaver.code}/${abilityName}.png`,
@@ -357,7 +357,7 @@ const genGloomhavenBox = () => {
   });
 
   const elements = ["ice", "air", "earth", "fire", "dark", "light"];
-  elements.forEach((elementName, index) => {
+  elements.forEach((elementName) => {
     items.push({
       type: "image",
       content: `https://raw.githubusercontent.com/romgar/gloomhaven/master/images/elements/${elementName}-element.svg`,
@@ -386,7 +386,7 @@ const genGloomhavenBox = () => {
     "confusion",
     "poison",
   ];
-  ailments.forEach((ailmentName, index) => {
+  ailments.forEach((ailmentName) => {
     items.push({
       type: "image",
       content: `https://raw.githubusercontent.com/romgar/gloomhaven/master/images/ailments/${ailmentName}.png`,
@@ -422,7 +422,7 @@ const genGloomhavenBox = () => {
     "workhorse",
     "zealot",
   ];
-  battleGoals.forEach((battleGoalName, index) => {
+  battleGoals.forEach((battleGoalName) => {
     items.push({
       type: "image",
       content: `https://raw.githubusercontent.com/romgar/gloomhaven/master/images/battle-goals/${battleGoalName}.png`,
@@ -451,7 +451,7 @@ const genGloomhavenBox = () => {
     "war-hammer",
     "winged-shoes",
   ];
-  characterItems.forEach((itemName, index) => {
+  characterItems.forEach((itemName) => {
     items.push({
       type: "image",
       content: `https://raw.githubusercontent.com/romgar/gloomhaven/master/images/items/1-14/${itemName}.png`,

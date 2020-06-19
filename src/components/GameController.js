@@ -18,6 +18,7 @@ import card from "../games/card";
 import gloomhaven from "../games/gloomhaven";
 import gloomhavenBox from "../games/gloomhaven-box";
 import settlers from "../games/settlers";
+import testGame from "../games/testGame";
 import LoadGame from "./LoadGame";
 import AvailableItems from "./AvailableItems";
 
@@ -163,6 +164,15 @@ export const GameController = ({
     c2c.publish("loadGame", settlers, true);
   }, [c2c]);
 
+  const loadTestGame = React.useCallback(() => {
+    testGame.availableItems = [];
+    testGame.items = testGame.items.map((item) => ({
+      ...item,
+      id: nanoid(),
+    }));
+    c2c.publish("loadGame", testGame, true);
+  }, [c2c]);
+
   const onLoadSavedGame = React.useCallback(
     (game) => {
       game.items = game.items.map((item) => ({
@@ -222,6 +232,7 @@ export const GameController = ({
   return (
     <RightPane>
       <Title>{t("Games")}</Title>
+      <button onClick={loadTestGame}>Test Game</button>
       <button onClick={loadTikTok}>TikTok</button>
       <button onClick={loadCard}>Card</button>
       <button onClick={loadGloomhaven}>Gloomhaven</button>
