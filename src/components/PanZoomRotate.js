@@ -1,6 +1,8 @@
 import React from "react";
 import { atom, useRecoilState } from "recoil";
 
+import styled, { css } from "styled-components";
+
 export const PanZoomRotateState = atom({
   key: "PanZoomRotate",
   default: {
@@ -10,6 +12,16 @@ export const PanZoomRotateState = atom({
     rotate: 0,
   },
 });
+
+const Pane = styled.div`
+  ${({ translateX, translateY, scale, rotate }) => css`
+    transform: translate(${translateX}px, ${translateY}px) scale(${scale})
+      rotate(${rotate}deg);
+  `}
+
+  transform-origin: top left;
+  display: inline-block;
+`;
 
 const PanZoomRotate = ({ children }) => {
   const [dim, setDim] = useRecoilState(PanZoomRotateState);
@@ -84,11 +96,6 @@ const PanZoomRotate = ({ children }) => {
     }
   };
 
-  const style = {
-    transform: `translate(${dim.translateX}px, ${dim.translateY}px) scale(${dim.scale}) rotate(${dim.rotate}deg)`,
-    transformOrigin: "top left",
-  };
-
   return (
     <div
       onWheel={onWheel}
@@ -96,11 +103,10 @@ const PanZoomRotate = ({ children }) => {
       onMouseMove={onMouseMouve}
       onMouseUp={onMouseUp}
       ref={wrapperRef}
-      style={{}}
     >
-      <div style={{ ...style, display: "inline-block" }} ref={wrappedRef}>
+      <Pane {...dim} ref={wrappedRef}>
         {children}
-      </div>
+      </Pane>
     </div>
   );
 };
