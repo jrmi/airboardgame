@@ -1,3 +1,9 @@
 {
-  "Please select or load a game": "Veuillez choisir un jeu"
+  "Please select or load a game": "Veuillez choisir un jeu…",
+  "Games": "Jeux",
+  "Save/Load": "Sauvegardes",
+  "Save game": "Sauvegarder",
+  "Box Content": "Boite",
+  "Load last game": "Dernière partie",
+  "Dragn drop file here": "Déposez un fichier ici pour charger une partie"
 }

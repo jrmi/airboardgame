@@ -1,7 +1,10 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
+
 import { useDropzone } from "react-dropzone";
 
 const LoadGame = ({ onLoad = () => {} }) => {
+  const { t } = useTranslation();
   const onDrop = React.useCallback(
     (acceptedFiles) => {
       acceptedFiles.forEach((file) => {
@@ -28,7 +31,7 @@ const LoadGame = ({ onLoad = () => {} }) => {
   return (
     <div {...getRootProps()}>
       <input {...getInputProps()} />
-      <p>Drag &apos;n&apos; drop some files here, or click to select files</p>
+      <p>{t("Dragn drop file here")}</p>
     </div>
   );
 };
