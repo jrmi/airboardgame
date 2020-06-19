@@ -4,7 +4,7 @@
  * @param {string} className
  */
 export const insideClass = (element, className) => {
-  if (element.className === className) return element;
+  if (element.className.split(" ").includes(className)) return element;
   if (!element.parentNode) return false;
   return element.parentNode && insideClass(element.parentNode, className);
 };
