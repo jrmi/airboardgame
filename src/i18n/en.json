@@ -1,3 +1,9 @@
 {
-  "Please select or load a game": "Please select or load a game"
+  "Please select or load a game": "Please select or load a game…",
+  "Games": "Games",
+  "Save/Load": "Save/Load",
+  "Save game": "Save game",
+  "Box Content": "Box Content",
+  "Load last game": "Load last game",
+  "Dragn drop file here": "Drop file here to load them"
 }

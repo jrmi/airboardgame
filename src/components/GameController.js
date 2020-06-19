@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 import { useC2C } from "../hooks/useC2C";
 import { nanoid } from "nanoid";
@@ -33,6 +34,7 @@ export const GameController = ({
   boardConfig,
   setBoardConfig,
 }) => {
+  const { t } = useTranslation();
   const [c2c, joined, isMaster] = useC2C();
   const [downloadURI, setDownloadURI] = React.useState({});
   const [date, setDate] = React.useState(Date.now());
@@ -208,16 +210,16 @@ export const GameController = ({
         overflowY: "scroll",
       }}
     >
-      <h2>Games</h2>
+      <h2>{t("Games")}</h2>
       <button onClick={loadTikTok}>TikTok</button>
       <button onClick={loadCard}>Card</button>
       <button onClick={loadGloomhaven}>Gloomhaven</button>
       <button onClick={loadSettlers}>Settlers of Catan</button>
-      <h2>Save/Load</h2>
-      <button onClick={loadLocalSavedGame}>Load last game</button>
+      <h2>{t("Save/Load")}</h2>
+      <button onClick={loadLocalSavedGame}>{t("Load last game")}</button>
       <LoadGame onLoad={onLoadSavedGame} />
       <a href={downloadURI} download={`save_${date}.json`}>
-        Save game
+        {t("Save game")}
       </a>
       <div
         style={{
@@ -226,7 +228,7 @@ export const GameController = ({
           color: "white",
         }}
       >
-        <h3>Game Box Content</h3>
+        <h3>{t("Box Content")}</h3>
         <AvailableItems />
       </div>
     </div>
