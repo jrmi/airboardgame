@@ -1,4 +1,5 @@
 import React from "react";
+import styled from "styled-components";
 
 import { useRecoilState, useRecoilValue } from "recoil";
 import { ItemListAtom } from "../components/Items";
@@ -7,6 +8,16 @@ import { shuffle as shuffleArray } from "../utils";
 import { useC2C } from "../hooks/useC2C";
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
+
+const SelectedPane = styled.div`
+  position: fixed;
+  right: 1em;
+  bottom: 1em;
+  background: #ffffff77;
+  padding: 0.2em;
+  max-height: 50vh;
+  overflow-y: scroll;
+`;
 
 export const SelectedItems = () => {
   const [c2c] = useC2C();
@@ -138,17 +149,7 @@ export const SelectedItems = () => {
   }
 
   return (
-    <div
-      style={{
-        position: "fixed",
-        right: "1em",
-        bottom: "1em",
-        background: "#ffffff77",
-        padding: "0.2em",
-        maxHeight: "50vh",
-        overflowY: "scroll",
-      }}
-    >
+    <SelectedPane>
       {selectedItems.length > 1 && (
         <div>
           <h2>{selectedItems.length} items selected</h2>
@@ -216,7 +217,7 @@ export const SelectedItems = () => {
           ))}
         </ul>
       )}
-    </div>
+    </SelectedPane>
   );
 };
 

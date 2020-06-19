@@ -4,18 +4,28 @@ import { useRecoilValue } from "recoil";
 import { selectedItemsAtom } from "./Selector";
 import { userAtom } from "../hooks/useUser";
 import debounce from "lodash.debounce";
+import styled, { css } from "styled-components";
 
-const Rect = ({ width, height, color }) => {
-  return (
-    <div
-      style={{
-        width: width,
-        height: height,
-        backgroundColor: color,
-      }}
-    />
-  );
-};
+const Rect = styled.div`
+  ${({ width, height, color }) => css`
+    width: ${width}px;
+    height: ${height}px;
+    background-color: ${color};
+  `}
+`;
+
+const StyledRound = styled.div`
+  ${({ radius, color }) => css`
+    border-radius: 100%;
+    width: ${radius}px;
+    height: ${radius}px;
+    background-color: ${color};
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  `}
+`;
 
 const Round = ({
   radius,
@@ -25,18 +35,7 @@ const Round = ({
   fontSize = "16",
 }) => {
   return (
-    <div
-      style={{
-        borderRadius: "100%",
-        width: radius,
-        height: radius,
-        backgroundColor: color,
-        textAlign: "center",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
+    <StyledRound radius={radius} color={color}>
       <span
         style={{
           textColor,
@@ -45,9 +44,25 @@ const Round = ({
       >
         {text}
       </span>
-    </div>
+    </StyledRound>
   );
 };
+
+const CounterPane = styled.div`
+  ${({ color, fontSize }) => css`
+    backgroundcolor: ${color};
+    width: 5em;
+    padding: 0.5em;
+    paddingbottom: 2em;
+    textalign: center;
+    fontsize: ${fontSize}px;
+    display: flex;
+    justifycontent: space-between;
+    flexdirection: column;
+    borderradius: 0.5em;
+    boxshadow: 10px 10px 13px 0px rgb(0, 0, 0, 0.3);
+  `}
+`;
 
 const Counter = ({
   value = 0,
@@ -79,21 +94,7 @@ const Counter = ({
   };
 
   return (
-    <div
-      style={{
-        backgroundColor: color,
-        width: "5em",
-        padding: "0.5em",
-        paddingBottom: "2em",
-        textAlign: "center",
-        fontSize: fontSize + "px",
-        display: "flex",
-        justifyContent: "space-between",
-        flexDirection: "column",
-        borderRadius: "0.5em",
-        boxShadow: "10px 10px 13px 0px rgb(0, 0, 0, 0.3)",
-      }}
-    >
+    <CounterPane color={color}>
       <label style={{ userSelect: "none" }}>
         {label}
         <input
@@ -124,7 +125,7 @@ const Counter = ({
           -
         </button>
       </span>
-    </div>
+    </CounterPane>
   );
 };
 
@@ -275,6 +276,31 @@ const getComponent = (type) => {
   }
 };
 
+const ItemWrapper = styled.div.attrs(() => ({
+  className: "item",
+}))`
+  ${({ rotation, x, y }) => css`
+    position: absolute;
+    left: ${x}px;
+    top: ${y}px;
+    display: inline-block;
+    box-sizing: content-box;
+    transform: rotate(${rotation} deg);
+  `}
+  ${({ selected }) => {
+    if (selected) {
+      return css`
+        border: 2px dashed #ff0000a0;
+        padding: 2px;
+      `;
+    } else {
+      return css`
+        padding: 4px;
+      `;
+    }
+  }}
+`;
+
 const Item = ({ setState, state }) => {
   const selectedItems = useRecoilValue(selectedItemsAtom);
   const itemRef = React.useRef(null);
@@ -311,14 +337,6 @@ const Item = ({ setState, state }) => {
 
   const Component = getComponent(state.type);
 
-  const style = {};
-  if (selectedItems.includes(state.id)) {
-    style.border = "2px dashed #ff0000A0";
-    style.padding = "2px";
-  } else {
-    style.padding = "4px";
-  }
-
   const rotation = state.rotation || 0;
 
   const updateState = React.useCallback(
@@ -326,6 +344,7 @@ const Item = ({ setState, state }) => {
     [setState, state]
   );
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const actualSizeCallback = React.useCallback(
     debounce((entries) => {
       entries.forEach((entry) => {
@@ -363,21 +382,15 @@ const Item = ({ setState, state }) => {
   }, [actualSizeCallback]);
 
   const content = (
-    <div
-      style={{
-        position: "absolute",
-        left: state.x,
-        top: state.y,
-        display: "inline-block",
-        boxSizing: "content-box",
-        transform: `rotate(${rotation}deg)`,
-        ...style,
-      }}
-      className="item"
+    <ItemWrapper
+      x={state.x}
+      y={state.y}
+      rotation={rotation}
+      selected={selectedItems.includes(state.id)}
       ref={itemRef}
     >
       <Component {...state} updateState={updateState} />
-    </div>
+    </ItemWrapper>
   );
 
   if (!state.locked || unlock) {
