@@ -7,10 +7,15 @@
       "jsx": true
     }
   },
-  "settings":{
+  "env": {
+    "browser": true,
+    "node": true,
+    "jest": true
+  },
+  "settings": {
     "react": {
       "version": "detect"
-    },
+    }
   },
   "parser": "babel-eslint",
   "rules": {
@@ -19,6 +24,7 @@
   },
   "plugins": ["react-hooks"],
   "extends": [
+    "eslint:recommended",
     "plugin:react-hooks/recommended",
     "plugin:prettier/recommended",
     "plugin:react-hooks/recommended",

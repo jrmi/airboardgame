@@ -1,6 +1,6 @@
 import React from "react";
 import { nanoid } from "nanoid";
-import { useRecoilState, atom } from "recoil";
+import { useSetRecoilState, useRecoilValue, atom } from "recoil";
 import { ItemListAtom } from "./Items";
 
 export const AvailableItemListAtom = atom({
@@ -10,7 +10,7 @@ export const AvailableItemListAtom = atom({
 
 const AvailableItem = ({ data }) => {
   const { content } = data;
-  const [itemList, setItemList] = useRecoilState(ItemListAtom);
+  const setItemList = useSetRecoilState(ItemListAtom);
 
   const onClickHandler = () => {
     setItemList((oldItemList) => [
@@ -31,10 +31,8 @@ const AvailableItem = ({ data }) => {
   );
 };
 
-const AvailableItems = ({}) => {
-  const [availableItemList, setAvailableItemList] = useRecoilState(
-    AvailableItemListAtom
-  );
+const AvailableItems = () => {
+  const availableItemList = useRecoilValue(AvailableItemListAtom);
 
   return (
     <ul>

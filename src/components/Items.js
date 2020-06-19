@@ -16,7 +16,7 @@ const Items = () => {
     (id, callbackOrItem, sync = true) => {
       let callback = callbackOrItem;
       if (typeof callbackOrItem === "object") {
-        callback = (item) => callbackOrItem;
+        callback = () => callbackOrItem;
       }
       setItemList((prevList) => {
         return prevList.map((item) => {

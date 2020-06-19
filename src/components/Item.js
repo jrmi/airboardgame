@@ -63,14 +63,14 @@ const Counter = ({
     }));
   };
 
-  const increment = (e) => {
+  const increment = () => {
     updateState((prevState) => ({
       ...prevState,
       value: prevState.value + 1,
     }));
   };
 
-  const decrement = (e) => {
+  const decrement = () => {
     updateState((prevState) => ({
       ...prevState,
       value: prevState.value - 1,

@@ -3,7 +3,7 @@ const genGloomhavenBox = () => {
 
   // map-tiles
 
-  Array.from("abcdefghijkl").forEach((l, index) => {
+  Array.from("abcdefghijkl").forEach((l) => {
     items.push({
       type: "image",
       content: `https://raw.githubusercontent.com/romgar/gloomhaven/master/images/map-tiles/${l}1a.png`,

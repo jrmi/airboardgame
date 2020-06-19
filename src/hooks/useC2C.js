@@ -15,7 +15,7 @@ export const C2CProvider = ({ room, ...props }) => {
     if (!socket) {
       return;
     }
-    join(socket, room, (newRoom) => {
+    join(socket, room, () => {
       console.log("isMaster");
       setIsMaster(true);
     }).then((newRoom) => {

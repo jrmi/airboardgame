@@ -15,7 +15,6 @@ import { useParams } from "react-router-dom";
 
 import { C2CProvider } from "./hooks/useC2C";
 import BoardView from "./views/BoardView";
-import { composeInitialProps } from "react-i18next";
 
 const SOCKET_URL = process.env.REACT_APP_SOCKET_URL || "http://localhost:4000";
 const SOCKET_PATH = process.env.REACT_APP_SOCKET_PATH || "/socket.io";

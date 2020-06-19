@@ -95,7 +95,7 @@ const ActionPane = ({ children }) => {
     }
   };
 
-  const onMouseUp = (e) => {
+  const onMouseUp = () => {
     if (actionRef.current.moving === true) {
       actionRef.current = { moving: false };
       wrapperRef.current.style.cursor = "auto";
