@@ -9,7 +9,7 @@ export const AvailableItemListAtom = atom({
 });
 
 const AvailableItem = ({ data }) => {
-  const { content } = data;
+  const { label } = data;
   const setItemList = useSetRecoilState(ItemListAtom);
 
   const onClickHandler = () => {
@@ -24,24 +24,33 @@ const AvailableItem = ({ data }) => {
     ]);
   };
 
-  return (
-    <span onClick={onClickHandler}>
-      {content ? content.slice(-20) : content}
-    </span>
-  );
+  return <span onClick={onClickHandler}>{label}</span>;
 };
 
 const AvailableItems = () => {
   const availableItemList = useRecoilValue(AvailableItemListAtom);
 
+  const groupIds = [...new Set(availableItemList.map((item) => item.groupId))];
+
   return (
-    <ul>
-      {availableItemList.map((availableItem) => (
-        <li key={availableItem.id}>
-          <AvailableItem data={availableItem} />
-        </li>
-      ))}
-    </ul>
+    <>
+      {groupIds.map((groupId) => {
+        return (
+          <div>
+            <h3>{groupId}</h3>
+            <ul style={{ textAlign: "left" }}>
+              {availableItemList
+                .filter((item) => item.groupId === groupId)
+                .map((item) => (
+                  <li>
+                    <AvailableItem data={item} />
+                  </li>
+                ))}
+            </ul>
+          </div>
+        );
+      })}
+    </>
   );
 };
 
