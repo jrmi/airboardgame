@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import styled, { css } from "styled-components";
 
 const CounterPane = styled.div`
@@ -35,14 +35,14 @@ const Counter = ({
   const increment = () => {
     updateState((prevState) => ({
       ...prevState,
-      value: prevState.value + 1,
+      value: (prevState.value || 0) + 1,
     }));
   };
 
   const decrement = () => {
     updateState((prevState) => ({
       ...prevState,
-      value: prevState.value - 1,
+      value: (prevState.value || 0) - 1,
     }));
   };
 
