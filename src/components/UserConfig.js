@@ -1,6 +1,36 @@
 import React from "react";
 import { BlockPicker } from "react-color";
 
+import styled from "styled-components";
+
+const UserColor = styled.div`
+  background-color: ${({ color }) => color};
+  width: 20px;
+  height: 20px;
+  margin: 5px;
+  cursor: ${({ editable }) => (editable ? "pointer" : "auto")};
+`;
+
+const ColorPickerWrapper = styled.div`
+  position: absolute;
+  top: 38px;
+  left: -53px;
+  z-index: 1000;
+`;
+
+const StyledInputName = styled.input`
+  border: none;
+  padding: 2px;
+  padding-left: 0.5em;
+  background-color: #ccc;
+  width: 7em;
+`;
+
+const StyledName = styled.span`
+  line-height: 30px;
+  padding-left: 0.5em;
+`;
+
 const UserConfig = ({ user, setUser, editable }) => {
   const [name, setName] = React.useState(user.name);
   const [showPicker, setShowPicker] = React.useState(false);
@@ -23,49 +53,21 @@ const UserConfig = ({ user, setUser, editable }) => {
 
   return (
     <>
-      <span
-        style={{
-          backgroundColor: user.color,
-          width: "20px",
-          height: "20px",
-          margin: "5px",
-          cursor: editable ? "pointer" : "auto",
-        }}
+      <UserColor
+        color={user.color}
+        editable={editable}
         onClick={showColorPicker}
-      ></span>
+      />
       {showPicker && (
-        <div
-          style={{
-            position: "absolute",
-            top: "38px ",
-            left: "-53px",
-            zIndex: 1000,
-          }}
-        >
+        <ColorPickerWrapper>
           <BlockPicker
             color={user.color}
             onChangeComplete={handleChangecolor}
           />
-        </div>
+        </ColorPickerWrapper>
       )}
-      {editable && (
-        <input
-          style={{
-            border: "none",
-            padding: "2px",
-            paddingLeft: "0.5em",
-            backgroundColor: "#CCC",
-            width: "7em",
-          }}
-          value={name}
-          onChange={handleChange}
-        />
-      )}
-      {!editable && (
-        <span style={{ lineHeight: "30px", paddingLeft: "0.5em" }}>
-          {user.name}
-        </span>
-      )}
+      {editable && <StyledInputName value={name} onChange={handleChange} />}
+      {!editable && <StyledName>{user.name}</StyledName>}
     </>
   );
 };
