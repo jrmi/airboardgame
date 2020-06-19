@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense, Timeout } from "react";
 import "./App.css";
 
 import {
@@ -15,6 +15,7 @@ import { useParams } from "react-router-dom";
 
 import { C2CProvider } from "./hooks/useC2C";
 import BoardView from "./views/BoardView";
+import { composeInitialProps } from "react-i18next";
 
 const SOCKET_URL = process.env.REACT_APP_SOCKET_URL || "http://localhost:4000";
 const SOCKET_PATH = process.env.REACT_APP_SOCKET_PATH || "/socket.io";
@@ -22,10 +23,6 @@ const SOCKET_PATH = process.env.REACT_APP_SOCKET_PATH || "/socket.io";
 const SOCKET_OPTIONS = {
   forceNew: true,
   path: SOCKET_PATH,
-};
-
-const genRoomName = () => {
-  return nanoid();
 };
 
 /**
@@ -41,26 +38,36 @@ export const ConnectedBoardView = () => {
   );
 };
 
+const Spinner = ({ children }) => {
+  return (
+    <Timeout ms={5000}>
+      {(didTimeout) => (didTimeout ? <span>Loading...</span> : children)}
+    </Timeout>
+  );
+};
+
 function App() {
   return (
-    <RecoilRoot>
-      <Provider url={SOCKET_URL} options={SOCKET_OPTIONS}>
-        <div className="App">
-          <Router>
-            <Switch>
-              <Route path="/room/:room/">
-                <ConnectedBoardView />
-              </Route>
-              <Redirect path="/room/" to={`/room/${genRoomName()}`} />
-              {/*<Route exact path='/home'>
+    <Suspense fallback={<Spinner />}>
+      <RecoilRoot>
+        <Provider url={SOCKET_URL} options={SOCKET_OPTIONS}>
+          <div className="App">
+            <Router>
+              <Switch>
+                <Route path="/room/:room/">
+                  <ConnectedBoardView />
+                </Route>
+                <Redirect path="/room/" to={`/room/${nanoid()}`} />
+                {/*<Route exact path='/home'>
                   <HomePage />
               </Route>*/}
-              <Redirect from="/" to="/room/" />
-            </Switch>
-          </Router>
-        </div>
-      </Provider>
-    </RecoilRoot>
+                <Redirect from="/" to="/room/" />
+              </Switch>
+            </Router>
+          </div>
+        </Provider>
+      </RecoilRoot>
+    </Suspense>
   );
 }
 

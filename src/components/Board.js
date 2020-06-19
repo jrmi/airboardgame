@@ -1,10 +1,14 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
+
 import Items from "./Items";
 import Selector from "../components/Selector";
 import ActionPane from "./ActionPane";
 import CursorPane from "./CursorPane";
 
 export const Board = ({ user, users, config }) => {
+  const { t } = useTranslation();
+
   if (!config.size) {
     return (
       <p
@@ -15,7 +19,7 @@ export const Board = ({ user, users, config }) => {
           textAlign: "center",
         }}
       >
-        Please select a game…
+        {t("Please select or load a game")}
       </p>
     );
   }
