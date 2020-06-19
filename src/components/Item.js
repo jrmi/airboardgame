@@ -3,6 +3,7 @@ import { useC2C } from "../hooks/useC2C";
 import { useRecoilValue } from "recoil";
 import { selectedItemsAtom } from "./Selector";
 import { userAtom } from "../hooks/useUser";
+import debounce from "lodash.debounce";
 
 const Rect = ({ width, height, color }) => {
   return (
@@ -277,6 +278,10 @@ const getComponent = (type) => {
 const Item = ({ setState, state }) => {
   const selectedItems = useRecoilValue(selectedItemsAtom);
   const itemRef = React.useRef(null);
+  const sizeRef = React.useRef({
+    actualWidth: state.width,
+    actualHeight: state.height,
+  });
   const [unlock, setUnlock] = React.useState(false);
 
   React.useEffect(() => {
@@ -321,32 +326,41 @@ const Item = ({ setState, state }) => {
     [setState, state]
   );
 
-  // Update actual size when update
-  React.useEffect(() => {
-    const currentElem = itemRef.current;
-    const callback = (entries) => {
+  const actualSizeCallback = React.useCallback(
+    debounce((entries) => {
       entries.forEach((entry) => {
         if (entry.contentBoxSize) {
           const { inlineSize: width, blockSize: height } = entry.contentBoxSize;
-          if (state.actualWidth !== width || state.actualHeight !== height) {
+          if (
+            sizeRef.current.actualWidth !== width ||
+            sizeRef.current.actualHeight !== height
+          ) {
+            sizeRef.current.actualWidth = width;
+            sizeRef.current.actualHeight = height;
             updateState(
               (prevState) => ({
                 ...prevState,
                 actualWidth: width,
                 actualHeight: height,
               }),
-              false // Don't need to sync that.
+              false // Don't want to sync that.
             );
           }
         }
       });
-    };
-    const observer = new ResizeObserver(callback);
+    }, 1000),
+    [updateState]
+  );
+
+  // Update actual size when update
+  React.useEffect(() => {
+    const currentElem = itemRef.current;
+    const observer = new ResizeObserver(actualSizeCallback);
     observer.observe(currentElem);
     return () => {
       observer.unobserve(currentElem);
     };
-  }, [updateState, state]);
+  }, [actualSizeCallback]);
 
   const content = (
     <div
