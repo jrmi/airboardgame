@@ -34,7 +34,7 @@ const ItemWrapper = styled.div.attrs((props) => ({
     top: ${y}px;
     display: inline-block;
     box-sizing: content-box;
-    transform: rotate(${rotation} deg);
+    transform: rotate(${rotation}deg);
   `}
   ${({ selected }) => {
     if (selected) {

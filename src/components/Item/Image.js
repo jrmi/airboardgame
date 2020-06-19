@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import { useRecoilValue } from "recoil";
 import { userAtom } from "../../hooks/useUser";
 
@@ -134,4 +134,4 @@ const Image = ({
   return <div onDoubleClick={onDblClick}>{image}</div>;
 };
 
-export default Image;
+export default memo(Image);

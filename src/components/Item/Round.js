@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import styled, { css } from "styled-components";
 
 const StyledRound = styled.div`
@@ -35,4 +35,4 @@ const Round = ({
   );
 };
 
-export default Round;
+export default memo(Round);
