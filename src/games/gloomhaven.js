@@ -57,9 +57,9 @@ const genGloomhaven = () => {
     "l3",
     "m1",
     "n1",
-  ].forEach((ln, index) => {
+  ].forEach((ln) => {
     const [l, n] = Array.from(ln);
-    [...Array(n).keys()].forEach((y, index) => {
+    [...Array(n).keys()].forEach((y) => {
       items.push({
         type: "image",
         content: `https://raw.githubusercontent.com/romgar/gloomhaven/master/images/map-tiles/${l}${

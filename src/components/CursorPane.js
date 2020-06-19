@@ -19,7 +19,7 @@ export const Board = ({ children, user, users }) => {
     });
   };
 
-  const onLeave = (e) => {
+  const onLeave = () => {
     c2c.publish("cursorOff", {
       userId: user.id,
     });

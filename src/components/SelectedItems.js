@@ -21,7 +21,7 @@ export const SelectedItems = () => {
     (id, callbackOrItem) => {
       let callback = callbackOrItem;
       if (typeof callbackOrItem === "object") {
-        callback = (item) => callbackOrItem;
+        callback = () => callbackOrItem;
       }
       setItemList((prevList) => {
         return prevList.map((item) => {
@@ -44,7 +44,7 @@ export const SelectedItems = () => {
     (ids, callbackOrItem) => {
       let callback = callbackOrItem;
       if (typeof callbackOrItem === "object") {
-        callback = (item) => callbackOrItem;
+        callback = () => callbackOrItem;
       }
       setItemList((prevList) => {
         return prevList.map((item) => {
@@ -179,7 +179,7 @@ export const SelectedItems = () => {
                 <input
                   type="checkbox"
                   checked={Boolean(state.locked)}
-                  onChange={(e) =>
+                  onChange={() =>
                     updateItem(id, (item) => ({
                       ...item,
                       locked: !item.locked,
