@@ -1,5 +1,6 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
+import styled from "styled-components";
 
 import { useC2C } from "../hooks/useC2C";
 import { nanoid } from "nanoid";
@@ -25,6 +26,29 @@ const generateDownloadURI = (data) => {
     "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(data))
   );
 };
+
+const RightPane = styled.div`
+  position: fixed;
+  left: 0.5em;
+  top: 0.5em;
+  bottom: 0.5em;
+  background-color: #ffffff77;
+  display: flex;
+  flex-direction: column;
+  width: 15em;
+  padding: 0.5em;
+  text-align: center;
+  overflow-y: scroll;
+`;
+
+const AvailableItemList = styled.div`
+  margin-top: 2em;
+  background-color: black;
+  color: white;
+  list-type: none;
+`;
+
+const Title = styled.h3``;
 
 export const GameController = ({
   itemList,
@@ -194,44 +218,27 @@ export const GameController = ({
   if (!isMaster) {
     return null;
   }
+
   return (
-    <div
-      style={{
-        position: "fixed",
-        left: "0.5em",
-        top: "0.5em",
-        backgroundColor: "#ffffff77",
-        display: "flex",
-        flexDirection: "column",
-        width: "15em",
-        height: "100%",
-        padding: "0.5em",
-        textAlign: "center",
-        overflowY: "scroll",
-      }}
-    >
-      <h2>{t("Games")}</h2>
+    <RightPane>
+      <Title>{t("Games")}</Title>
       <button onClick={loadTikTok}>TikTok</button>
       <button onClick={loadCard}>Card</button>
       <button onClick={loadGloomhaven}>Gloomhaven</button>
       <button onClick={loadSettlers}>Settlers of Catan</button>
-      <h2>{t("Save/Load")}</h2>
+      <Title>{t("Save/Load")}</Title>
       <button onClick={loadLocalSavedGame}>{t("Load last game")}</button>
       <LoadGame onLoad={onLoadSavedGame} />
       <a href={downloadURI} download={`save_${date}.json`}>
         {t("Save game")}
       </a>
-      <div
-        style={{
-          marginTop: "2em",
-          backgroundColor: "black",
-          color: "white",
-        }}
-      >
-        <h3>{t("Box Content")}</h3>
-        <AvailableItems />
-      </div>
-    </div>
+      {availableItemList && availableItemList.length > 0 && (
+        <AvailableItemList>
+          <Title>{t("Box Content")}</Title>
+          <AvailableItems />
+        </AvailableItemList>
+      )}
+    </RightPane>
   );
 };
 
