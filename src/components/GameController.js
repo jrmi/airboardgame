@@ -5,9 +5,6 @@ import styled from "styled-components";
 import { useC2C } from "../hooks/useC2C";
 import { nanoid } from "nanoid";
 
-import { ItemListAtom } from "../components/Items";
-import { useRecoilValue } from "recoil";
-
 import useLocalStorage from "../hooks/useLocalStorage";
 //import useLocalStorage from 'react-use-localstorage';
 
@@ -21,6 +18,7 @@ import settlers from "../games/settlers";
 import testGame from "../games/testGame";
 import LoadGame from "./LoadGame";
 import AvailableItems from "./AvailableItems";
+import useItemList from "../hooks/useItemList";
 
 const generateDownloadURI = (data) => {
   return (
@@ -52,14 +50,13 @@ const AvailableItemList = styled.div`
 const Title = styled.h3``;
 
 export const GameController = ({
-  itemList,
-  setItemList,
   availableItemList,
   setAvailableItemList,
   boardConfig,
   setBoardConfig,
 }) => {
   const { t } = useTranslation();
+  const { itemList, setItemList } = useItemList();
   const [c2c, joined, isMaster] = useC2C();
   const [downloadURI, setDownloadURI] = React.useState({});
   const [date, setDate] = React.useState(Date.now());
@@ -74,9 +71,9 @@ export const GameController = ({
     board: boardConfig,
     availableItems: availableItemList,
   });
-  const allItems = useRecoilValue(ItemListAtom);
+  //const allItems = useRecoilValue(ItemListAtom);
   gameRef.current = {
-    items: JSON.parse(JSON.stringify(allItems)),
+    items: JSON.parse(JSON.stringify(itemList)),
     board: boardConfig,
     availableItem: availableItemList,
   };

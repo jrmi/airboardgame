@@ -1,7 +1,6 @@
 import React from "react";
-import { nanoid } from "nanoid";
-import { useSetRecoilState, useRecoilValue, atom } from "recoil";
-import { ItemListAtom } from "./Items";
+import { useRecoilValue, atom } from "recoil";
+import useItemList from "../hooks/useItemList";
 
 export const AvailableItemListAtom = atom({
   key: "availableItemList",
@@ -10,18 +9,10 @@ export const AvailableItemListAtom = atom({
 
 const AvailableItem = ({ data }) => {
   const { label } = data;
-  const setItemList = useSetRecoilState(ItemListAtom);
+  const { pushItem } = useItemList();
 
   const onClickHandler = () => {
-    setItemList((oldItemList) => [
-      ...oldItemList,
-      {
-        ...data,
-        x: 200,
-        y: 50,
-        id: nanoid(),
-      },
-    ]);
+    pushItem(data);
   };
 
   return <span onClick={onClickHandler}>{label}</span>;

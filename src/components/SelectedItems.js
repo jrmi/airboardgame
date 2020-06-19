@@ -1,11 +1,9 @@
 import React from "react";
 import styled from "styled-components";
 
-import { useRecoilState, useRecoilValue } from "recoil";
-import { ItemListAtom } from "../components/Items";
+import { useRecoilValue } from "recoil";
+import useItemList from "../hooks/useItemList";
 import { selectedItemsAtom } from "../components/Selector";
-import { shuffle as shuffleArray } from "../utils";
-import { useC2C } from "../hooks/useC2C";
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
 
@@ -20,87 +18,18 @@ const SelectedPane = styled.div`
 `;
 
 export const SelectedItems = () => {
-  const [c2c] = useC2C();
-  const [itemList, setItemList] = useRecoilState(ItemListAtom);
+  const {
+    itemList,
+    updateItem,
+    batchUpdateItems,
+    shuffleSelectedItems,
+  } = useItemList();
+
   const selectedItems = useRecoilValue(selectedItemsAtom);
 
   const selectedItemList = React.useMemo(() => {
     return itemList.filter(({ id }) => selectedItems.includes(id));
   }, [itemList, selectedItems]);
-
-  const updateItem = React.useCallback(
-    (id, callbackOrItem) => {
-      let callback = callbackOrItem;
-      if (typeof callbackOrItem === "object") {
-        callback = () => callbackOrItem;
-      }
-      setItemList((prevList) => {
-        return prevList.map((item) => {
-          if (item.id === id) {
-            const newItem = {
-              ...callback(item),
-              id: item.id,
-            };
-            c2c.publish(`itemStateUpdate.${item.id}`, newItem);
-            return newItem;
-          }
-          return item;
-        });
-      });
-    },
-    [c2c, setItemList]
-  );
-
-  const massUpdateItems = React.useCallback(
-    (ids, callbackOrItem) => {
-      let callback = callbackOrItem;
-      if (typeof callbackOrItem === "object") {
-        callback = () => callbackOrItem;
-      }
-      setItemList((prevList) => {
-        return prevList.map((item) => {
-          if (ids.includes(item.id)) {
-            const newItem = {
-              ...callback(item),
-              id: item.id,
-            };
-            c2c.publish(`itemStateUpdate.${item.id}`, newItem);
-            return newItem;
-          }
-          return item;
-        });
-      });
-    },
-    [c2c, setItemList]
-  );
-
-  // Shuffle selection
-  const shuffle = React.useCallback(() => {
-    setItemList((prevItemList) => {
-      const shuffledSelectedItems = shuffleArray(
-        prevItemList.filter(({ id }) => selectedItems.includes(id))
-      );
-
-      const result = prevItemList.map((item) => {
-        if (selectedItems.includes(item.id)) {
-          const newItem = {
-            ...shuffledSelectedItems.pop(),
-            x: item.x,
-            y: item.y,
-          };
-          c2c.publish(`itemStateUpdate.${newItem.id}`, newItem);
-          return newItem;
-        }
-        return item;
-      });
-
-      c2c.publish(
-        `updateItemListOrder`,
-        result.map(({ id }) => id)
-      );
-      return result;
-    });
-  }, [c2c, setItemList, selectedItems]);
 
   // Align selection to center
   const align = React.useCallback(() => {
@@ -120,7 +49,7 @@ export const SelectedItems = () => {
       (minMax.min.y + minMax.max.y) / 2,
     ];
     let index = -1;
-    massUpdateItems(selectedItems, (item) => {
+    batchUpdateItems(selectedItems, (item) => {
       index += 1;
       return {
         ...item,
@@ -128,21 +57,21 @@ export const SelectedItems = () => {
         y: newY - item.actualHeight / 2 - index,
       };
     });
-  }, [selectedItemList, selectedItems, massUpdateItems]);
+  }, [selectedItemList, selectedItems, batchUpdateItems]);
 
   const flip = React.useCallback(() => {
-    massUpdateItems(selectedItems, (item) => ({
+    batchUpdateItems(selectedItems, (item) => ({
       ...item,
       flipped: true,
     }));
-  }, [selectedItems, massUpdateItems]);
+  }, [selectedItems, batchUpdateItems]);
 
   const unflip = React.useCallback(() => {
-    massUpdateItems(selectedItems, (item) => ({
+    batchUpdateItems(selectedItems, (item) => ({
       ...item,
       flipped: false,
     }));
-  }, [selectedItems, massUpdateItems]);
+  }, [selectedItems, batchUpdateItems]);
 
   if (selectedItemList.length === 0) {
     return null;
@@ -153,7 +82,7 @@ export const SelectedItems = () => {
       {selectedItems.length > 1 && (
         <div>
           <h2>{selectedItems.length} items selected</h2>
-          <button onClick={shuffle}>Shuffle</button>
+          <button onClick={shuffleSelectedItems}>Shuffle</button>
           <button onClick={align}>Stack</button>
           <button onClick={flip}>Flip</button>
           <button onClick={unflip}>UnFlip</button>
