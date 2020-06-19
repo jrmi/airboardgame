@@ -276,8 +276,9 @@ const getComponent = (type) => {
   }
 };
 
-const ItemWrapper = styled.div.attrs(() => ({
+const ItemWrapper = styled.div.attrs((props) => ({
   className: "item",
+  id: props.id,
 }))`
   ${({ rotation, x, y }) => css`
     position: absolute;
@@ -309,11 +310,6 @@ const Item = ({ setState, state }) => {
     actualHeight: state.height,
   });
   const [unlock, setUnlock] = React.useState(false);
-
-  React.useEffect(() => {
-    // Add id to element
-    itemRef.current.id = state.id;
-  }, [state]);
 
   // Allow to operate on locked item if ctrl is pressed
   React.useEffect(() => {
@@ -385,8 +381,10 @@ const Item = ({ setState, state }) => {
     <ItemWrapper
       x={state.x}
       y={state.y}
+      locked={!state.locked || unlock}
       rotation={rotation}
       selected={selectedItems.includes(state.id)}
+      id={state.id}
       ref={itemRef}
     >
       <Component {...state} updateState={updateState} />
