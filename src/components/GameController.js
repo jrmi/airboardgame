@@ -205,7 +205,7 @@ export const GameController = ({
         height: "100%",
         padding: "0.5em",
         textAlign: "center",
-        "overflow-y": "scroll",
+        overflowY: "scroll",
       }}
     >
       <h2>Games</h2>
@@ -221,8 +221,8 @@ export const GameController = ({
       </a>
       <div
         style={{
-          "margin-top": "2em",
-          "background-color": "black",
+          marginTop: "2em",
+          backgroundColor: "black",
           color: "white",
         }}
       >
