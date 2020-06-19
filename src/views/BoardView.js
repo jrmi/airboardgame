@@ -1,8 +1,8 @@
 import React from "react";
+import styled from "styled-components";
 
 import Users from "../components/Users";
 import GameController from "../components/GameController";
-import ZoomPanRotate from "../components/PanZoomRotate";
 import Board from "../components/Board";
 import { ItemListAtom } from "../components/Items";
 import { AvailableItemListAtom } from "../components/AvailableItems";
@@ -10,6 +10,17 @@ import useUser from "../hooks/useUser";
 import useUsers from "../hooks/useUsers";
 import { useRecoilState } from "recoil";
 import SelectedItems from "../components/SelectedItems";
+
+const BoardContainer = styled.div`
+  display: fixed;
+  top: 0;
+  left: 0;
+  background-color: #282c34;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  box-sizing: border-box;
+`;
 
 export const BoardView = () => {
   const users = useUsers();
@@ -21,13 +32,9 @@ export const BoardView = () => {
   const [boardConfig, setBoardConfig] = React.useState({});
 
   return (
-    <div className="board">
-      <ZoomPanRotate>
-        <Board user={user} users={users} config={boardConfig} />
-      </ZoomPanRotate>
-
+    <BoardContainer>
+      <Board user={user} users={users} config={boardConfig} />
       <Users user={user} setUser={setUser} users={users} userId={user.id} />
-
       <SelectedItems />
       <GameController
         availableItemList={availableItemList}
@@ -39,7 +46,7 @@ export const BoardView = () => {
         //game={{ items: itemList, board: boardConfig }}
         //setGame=
       />
-    </div>
+    </BoardContainer>
   );
 };
 

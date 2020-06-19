@@ -10,7 +10,7 @@ i18n
   .use(LanguageDetector)
   .init({
     resources: { fr: { translation: fr }, en: { translation: en } },
-    debug: true,
+    debug: false,
     fallbackLng: "en",
 
     keySeparator: false, // we do not use keys in form messages.welcome

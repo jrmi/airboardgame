@@ -107,7 +107,6 @@ const ActionPane = ({ children }) => {
       onMouseDown={onMouseDown}
       onMouseMove={onMouseMouve}
       onMouseUp={onMouseUp}
-      style={{}}
       ref={wrapperRef}
     >
       {children}

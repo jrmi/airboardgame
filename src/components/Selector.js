@@ -1,5 +1,8 @@
 import React from "react";
+
 import { atom, useRecoilValue } from "recoil";
+import styled from "styled-components";
+
 import { PanZoomRotateState } from "../components/PanZoomRotate";
 import { ItemListAtom } from "../components/Items";
 import { useRecoilState } from "recoil";
@@ -22,6 +25,16 @@ const findSelected = (items, rect) => {
     );
   });
 };
+
+const SelectorZone = styled.div`
+  z-index: 100;
+  position: absolute;
+  background-color: #ff000050;
+  top: ${({ top }) => top}px;
+  left: ${({ left }) => left}px;
+  height: ${({ height }) => height}px;
+  width: ${({ width }) => width}px;
+`;
 
 const Selector = ({ children }) => {
   const panZoomRotate = useRecoilValue(PanZoomRotateState);
@@ -94,20 +107,14 @@ const Selector = ({ children }) => {
       onMouseMove={onMouseMouve}
       onMouseUp={onMouseUp}
       ref={wrapperRef}
-      style={{}}
     >
       {selector.moving && (
-        <div
-          style={{
-            zIndex: 100,
-            position: "absolute",
-            backgroundColor: "#FF000050",
-            top: selector.top,
-            left: selector.left,
-            height: selector.height,
-            width: selector.width,
-          }}
-        ></div>
+        <SelectorZone
+          top={selector.top}
+          left={selector.left}
+          height={selector.height}
+          width={selector.width}
+        />
       )}
       {children}
     </div>
