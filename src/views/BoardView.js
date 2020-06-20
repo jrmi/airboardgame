@@ -5,8 +5,7 @@ import Users from "../components/Users";
 import GameController from "../components/GameController";
 import Board from "../components/Board";
 import { AvailableItemListAtom } from "../components/AvailableItems";
-import useUser from "../hooks/useUser";
-import useUsers from "../hooks/useUsers";
+import useUsers, { SubscribeUserEvents } from "../hooks/useUsers";
 import { useRecoilState } from "recoil";
 import SelectedItems from "../components/SelectedItems";
 import { ItemsSubscription } from "../hooks/useItemList";
@@ -23,8 +22,7 @@ const BoardContainer = styled.div`
 `;
 
 export const BoardView = () => {
-  const users = useUsers();
-  const [user, setUser] = useUser();
+  const { currentUser, setCurrentUser, users } = useUsers();
   const [availableItemList, setAvailableItemList] = useRecoilState(
     AvailableItemListAtom
   );
@@ -32,9 +30,15 @@ export const BoardView = () => {
 
   return (
     <BoardContainer>
+      <SubscribeUserEvents />
       <ItemsSubscription />
-      <Board user={user} users={users} config={boardConfig} />
-      <Users user={user} setUser={setUser} users={users} userId={user.id} />
+      <Board user={currentUser} users={users} config={boardConfig} />
+      <Users
+        user={currentUser}
+        setUser={setCurrentUser}
+        users={users}
+        userId={currentUser.id}
+      />
       <SelectedItems />
       <GameController
         availableItemList={availableItemList}
