@@ -1,6 +1,5 @@
 import React, { memo } from "react";
-import { useRecoilValue } from "recoil";
-import { userAtom } from "../../hooks/useUser";
+import useUsers from "../../hooks/useUsers";
 
 // See https://stackoverflow.com/questions/3680429/click-through-div-to-underlying-elements
 // https://developer.mozilla.org/fr/docs/Web/CSS/pointer-events
@@ -16,7 +15,8 @@ const Image = ({
   backText,
   overlay,
 }) => {
-  const user = useRecoilValue(userAtom);
+  //const user = useRecoilValue(userAtom);
+  const { currentUser } = useUsers();
   const size = {};
   if (width) {
     size.width = width;
@@ -32,7 +32,11 @@ const Image = ({
           if (prevItem.unflippedFor !== null) {
             return { ...prevItem, unflippedFor: null };
           } else {
-            return { ...prevItem, unflippedFor: user.id, flipped: false };
+            return {
+              ...prevItem,
+              unflippedFor: currentUser.id,
+              flipped: false,
+            };
           }
         });
       } else {
@@ -43,11 +47,14 @@ const Image = ({
         }));
       }
     },
-    [updateState, user.id]
+    [updateState, currentUser.id]
   );
 
   let image;
-  if (backContent && (flipped || (unflippedFor && unflippedFor !== user.id))) {
+  if (
+    backContent &&
+    (flipped || (unflippedFor && unflippedFor !== currentUser.id))
+  ) {
     image = (
       <>
         {text && (
