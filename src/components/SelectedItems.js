@@ -6,6 +6,7 @@ import useItemList from "../hooks/useItemList";
 import { selectedItemsAtom } from "../components/Selector";
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
+import ItemFormFactory from "./Item/forms/ItemFormFactory";
 
 const SelectedPane = styled.div`
   position: fixed;
@@ -77,6 +78,13 @@ export const SelectedItems = () => {
     return null;
   }
 
+  const onSubmitHandler = (formValues) => {
+    updateItem(formValues.id, (item) => ({
+      ...item,
+      ...formValues,
+    }));
+  };
+
   return (
     <SelectedPane>
       {selectedItems.length > 1 && (
@@ -94,6 +102,12 @@ export const SelectedItems = () => {
             listStyle: "none",
           }}
         >
+          {selectedItemList.length === 1 && (
+            <ItemFormFactory
+              item={selectedItemList[0]}
+              onSubmitHandler={onSubmitHandler}
+            />
+          )}
           {selectedItemList.map(({ id, ...state }, index) => (
             <li
               key={id}
