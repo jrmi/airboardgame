@@ -18,7 +18,7 @@ import settlers from "../games/settlers";
 import testGame from "../games/testGame";
 import LoadGame from "./LoadGame";
 import AvailableItems from "./AvailableItems";
-import useItemList from "../hooks/useItemList";
+import { useItems } from "../components/Board/Items";
 
 const generateDownloadURI = (data) => {
   return (
@@ -49,15 +49,10 @@ const AvailableItemList = styled.div`
 
 const Title = styled.h3``;
 
-export const GameController = ({
-  availableItemList,
-  setAvailableItemList,
-  boardConfig,
-  setBoardConfig,
-}) => {
+export const GameController = ({ availableItemList, boardConfig }) => {
   const { t } = useTranslation();
-  const { itemList, setItemList } = useItemList();
-  const [c2c, joined, isMaster] = useC2C();
+  const [c2c, , isMaster] = useC2C();
+  const { itemList } = useItems();
   const [downloadURI, setDownloadURI] = React.useState({});
   const [date, setDate] = React.useState(Date.now());
   const [gameLocalSave, setGameLocalSave] = useLocalStorage("savedGame", {
@@ -66,130 +61,42 @@ export const GameController = ({
     availableItems: availableItemList,
   });
 
-  const gameRef = React.useRef({
-    items: itemList,
-    board: boardConfig,
-    availableItems: availableItemList,
-  });
-  //const allItems = useRecoilValue(ItemListAtom);
-  gameRef.current = {
-    items: JSON.parse(JSON.stringify(itemList)),
-    board: boardConfig,
-    availableItem: availableItemList,
-  };
-
-  // Load game from master if any
-  React.useEffect(() => {
-    if (joined) {
-      if (!isMaster) {
-        c2c.call("getGame").then(
-          (game) => {
-            console.log("Get this game from master", game);
-            setAvailableItemList(game.availableItems);
-            setItemList(game.items);
-            setBoardConfig(game.board);
-          },
-          () => {}
-        );
-      }
-    }
-  }, [
-    c2c,
-    isMaster,
-    joined,
-    setAvailableItemList,
-    setItemList,
-    setBoardConfig,
-  ]);
-
-  React.useEffect(() => {
-    const unsub = [];
-    if (joined) {
-      if (isMaster) {
-        c2c
-          .register("getGame", () => {
-            console.log("Send this game", gameRef.current);
-            return gameRef.current;
-          })
-          .then((unregister) => {
-            unsub.push(unregister);
-          });
-      }
-    }
-    return () => {
-      unsub.forEach((u) => u());
-    };
-  }, [c2c, isMaster, joined]);
-
-  React.useEffect(() => {
-    c2c.subscribe("loadGame", (game) => {
-      console.log("Loadgame", game);
-      //
-      setAvailableItemList(game.availableItems);
-      setItemList(game.items);
-      setBoardConfig(game.board);
-    });
-  }, [c2c, setAvailableItemList, setItemList, setBoardConfig]);
-
-  const loadTikTok = React.useCallback(() => {
-    tiktok.availableItems = [];
-    tiktok.items = tiktok.items.map((item) => ({ ...item, id: nanoid() }));
-    c2c.publish("loadGame", tiktok, true);
-  }, [c2c]);
-
-  const loadCard = () => {
-    card.availableItems = [];
-    card.items = card.items.map((item) => ({ ...item, id: nanoid() }));
-    c2c.publish("loadGame", card, true);
-  };
-
-  const loadGloomhaven = () => {
-    gloomhaven.availableItems = gloomhavenBox.items;
-    gloomhaven.items = gloomhaven.items.map((item) => ({
-      ...item,
-      id: nanoid(),
-    }));
-    c2c.publish("loadGame", gloomhaven, true);
-  };
-
-  const loadSettlers = React.useCallback(() => {
-    settlers.availableItems = [];
-    settlers.items = settlers.items.map((item) => ({
-      ...item,
-      id: nanoid(),
-    }));
-    c2c.publish("loadGame", settlers, true);
-  }, [c2c]);
-
-  const loadTestGame = React.useCallback(() => {
-    testGame.availableItems = [];
-    testGame.items = testGame.items.map((item) => ({
-      ...item,
-      id: nanoid(),
-    }));
-    c2c.publish("loadGame", testGame, true);
-  }, [c2c]);
-
-  const onLoadSavedGame = React.useCallback(
+  const loadGame = React.useCallback(
     (game) => {
-      game.items = game.items.map((item) => ({
-        ...item,
-        id: nanoid(),
-      }));
+      game.items = game.items.map((item) => ({ ...item, id: nanoid() }));
       c2c.publish("loadGame", game, true);
     },
     [c2c]
   );
 
-  const loadLocalSavedGame = React.useCallback(() => {
-    const game = { ...gameLocalSave };
-    game.items = game.items.map((item) => ({
-      ...item,
-      id: nanoid(),
-    }));
+  const loadTikTok = React.useCallback(() => {
+    tiktok.availableItems = [];
+    loadGame(tiktok);
+  }, [loadGame]);
 
-    c2c.publish("loadGame", game, true);
-  }, [c2c, gameLocalSave]);
+  const loadCard = React.useCallback(() => {
+    card.availableItems = [];
+    loadGame(card);
+  }, [loadGame]);
+
+  const loadGloomhaven = React.useCallback(() => {
+    gloomhaven.availableItems = gloomhavenBox.items;
+    loadGame(gloomhaven);
+  }, [loadGame]);
+
+  const loadSettlers = React.useCallback(() => {
+    settlers.availableItems = [];
+    loadGame(settlers);
+  }, [loadGame]);
+
+  const loadTestGame = React.useCallback(() => {
+    testGame.availableItems = [];
+    loadGame(testGame);
+  }, [loadGame]);
+
+  const loadLocalSavedGame = React.useCallback(() => {
+    loadGame({ ...gameLocalSave });
+  }, [loadGame, gameLocalSave]);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const updateSaveLink = React.useCallback(
@@ -236,7 +143,7 @@ export const GameController = ({
       <button onClick={loadSettlers}>Settlers of Catan</button>
       <Title>{t("Save/Load")}</Title>
       <button onClick={loadLocalSavedGame}>{t("Load last game")}</button>
-      <LoadGame onLoad={onLoadSavedGame} />
+      <LoadGame onLoad={loadGame} />
       <a href={downloadURI} download={`save_${date}.json`}>
         {t("Save game")}
       </a>

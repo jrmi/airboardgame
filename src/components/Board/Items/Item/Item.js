@@ -1,9 +1,10 @@
-import React from "react";
-import { useC2C } from "../../hooks/useC2C";
+import React, { memo } from "react";
+import { useC2C } from "../../../../hooks/useC2C";
 import { useRecoilValue } from "recoil";
-import { selectedItemsAtom } from "../Selector";
+import { selectedItemsAtom } from "../../Selector";
 import debounce from "lodash.debounce";
 import styled, { css } from "styled-components";
+
 import Rect from "./Rect";
 import Round from "./Round";
 import Image from "./Image";
@@ -53,10 +54,7 @@ const ItemWrapper = styled.div.attrs((props) => ({
 const Item = ({ setState, state }) => {
   const selectedItems = useRecoilValue(selectedItemsAtom);
   const itemRef = React.useRef(null);
-  const sizeRef = React.useRef({
-    actualWidth: state.width,
-    actualHeight: state.height,
-  });
+  const sizeRef = React.useRef({});
   const [unlock, setUnlock] = React.useState(false);
 
   // Allow to operate on locked item if ctrl is pressed
@@ -180,4 +178,4 @@ const SyncedItem = ({ setState, state }) => {
   return <Item state={state} setState={setState} />;
 };
 
-export default SyncedItem;
+export default memo(SyncedItem);

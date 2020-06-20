@@ -1,5 +1,5 @@
 import React, { memo } from "react";
-import { useUsers } from "../../components/users";
+import { useUsers } from "../../../../components/users";
 
 // See https://stackoverflow.com/questions/3680429/click-through-div-to-underlying-elements
 // https://developer.mozilla.org/fr/docs/Web/CSS/pointer-events

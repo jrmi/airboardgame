@@ -2,11 +2,12 @@ import React from "react";
 import styled from "styled-components";
 
 import { useRecoilValue } from "recoil";
-import useItemList from "../hooks/useItemList";
-import { selectedItemsAtom } from "../components/Selector";
+import { useItems } from "./Board/Items";
+import { selectedItemsAtom } from "../components/Board/Selector";
+
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
-import ItemFormFactory from "./Item/forms/ItemFormFactory";
+import ItemFormFactory from "./Board/Items/Item/forms/ItemFormFactory";
 
 const SelectedPane = styled.div`
   position: fixed;
@@ -24,7 +25,7 @@ export const SelectedItems = () => {
     updateItem,
     batchUpdateItems,
     shuffleSelectedItems,
-  } = useItemList();
+  } = useItems();
 
   const selectedItems = useRecoilValue(selectedItemsAtom);
 

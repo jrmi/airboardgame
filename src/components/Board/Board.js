@@ -1,11 +1,11 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 
-import Items from "./Items";
-import Selector from "../components/Selector";
+import { ItemList, SubscribeItemEvents } from "./Items";
+import Selector from "./Selector";
 import ActionPane from "./ActionPane";
-import CursorPane from "./CursorPane";
-import ZoomPanRotate from "../components/PanZoomRotate";
+import CursorPane from "./Cursors/CursorPane";
+import PanZoomRotate from "./PanZoomRotate";
 
 import styled from "styled-components";
 
@@ -37,17 +37,20 @@ export const Board = ({ user, users, config }) => {
   }
 
   return (
-    <ZoomPanRotate>
-      <Selector>
-        <ActionPane>
-          <CursorPane user={user} users={users}>
-            <StyledBoard size={config.size}>
-              <Items />
-            </StyledBoard>
-          </CursorPane>
-        </ActionPane>
-      </Selector>
-    </ZoomPanRotate>
+    <>
+      <SubscribeItemEvents />
+      <PanZoomRotate>
+        <Selector>
+          <ActionPane>
+            <CursorPane user={user} users={users}>
+              <StyledBoard size={config.size}>
+                <ItemList />
+              </StyledBoard>
+            </CursorPane>
+          </ActionPane>
+        </Selector>
+      </PanZoomRotate>
+    </>
   );
 };
 

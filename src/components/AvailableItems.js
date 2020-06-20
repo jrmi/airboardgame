@@ -1,6 +1,6 @@
 import React from "react";
 import { useRecoilValue, atom } from "recoil";
-import useItemList from "../hooks/useItemList";
+import { useItems } from "../components/Board/Items";
 
 export const AvailableItemListAtom = atom({
   key: "availableItemList",
@@ -9,7 +9,7 @@ export const AvailableItemListAtom = atom({
 
 const AvailableItem = ({ data }) => {
   const { label } = data;
-  const { pushItem } = useItemList();
+  const { pushItem } = useItems();
 
   const onClickHandler = () => {
     pushItem(data);

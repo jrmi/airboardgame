@@ -2,12 +2,12 @@ import React from "react";
 import styled from "styled-components";
 
 import GameController from "../components/GameController";
-import Board from "../components/Board";
+import SubscribeGameEvents from "../components/SubscribeGameEvents";
+import { Board } from "../components/Board";
 import { AvailableItemListAtom } from "../components/AvailableItems";
-import { useUsers, SubscribeUserEvents, UserList } from "../components/users";
 import { useRecoilState } from "recoil";
-import SelectedItems from "../components/SelectedItems";
-import { ItemsSubscription } from "../hooks/useItemList";
+import SelectedItemsPane from "../components/SelectedItemsPane";
+import { useUsers, SubscribeUserEvents, UserList } from "../components/users";
 
 const BoardContainer = styled.div`
   display: fixed;
@@ -30,15 +30,18 @@ export const BoardView = () => {
   return (
     <BoardContainer>
       <SubscribeUserEvents />
-      <ItemsSubscription />
-      <Board user={currentUser} users={users} config={boardConfig} />
-      <UserList />
-      <SelectedItems />
-      <GameController
+      <SubscribeGameEvents
         availableItemList={availableItemList}
         setAvailableItemList={setAvailableItemList}
         boardConfig={boardConfig}
         setBoardConfig={setBoardConfig}
+      />
+      <Board user={currentUser} users={users} config={boardConfig} />
+      <UserList />
+      <SelectedItemsPane />
+      <GameController
+        availableItemList={availableItemList}
+        boardConfig={boardConfig}
         //game={{ items: itemList, board: boardConfig }}
         //setGame={setGame}
       />
