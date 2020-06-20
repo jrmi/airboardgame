@@ -1,3 +1,4 @@
+import { memo } from "react";
 import styled, { css } from "styled-components";
 
 const Rect = styled.div`
@@ -8,4 +9,4 @@ const Rect = styled.div`
   `}
 `;
 
-export default Rect;
+export default memo(Rect);

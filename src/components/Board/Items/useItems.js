@@ -1,59 +1,11 @@
 import React from "react";
-import { useC2C } from "../hooks/useC2C";
-import {
-  atom,
-  useRecoilState,
-  useSetRecoilState,
-  useRecoilValue,
-} from "recoil";
-import { selectedItemsAtom } from "../components/Selector";
-import { shuffle as shuffleArray } from "../utils";
+import { useC2C } from "../../../hooks/useC2C";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { selectedItemsAtom } from "../Selector";
+import { shuffle as shuffleArray } from "../../../utils";
 import { nanoid } from "nanoid";
 
-const ItemListAtom = atom({
-  key: "itemList",
-  default: [],
-});
-
-export const ItemsSubscription = () => {
-  const [c2c] = useC2C();
-  const setItemList = useSetRecoilState(ItemListAtom);
-
-  React.useEffect(() => {
-    const unsub = c2c.subscribe(`selectedItemsMove`, ({ itemIds, move }) => {
-      setItemList((prevList) => {
-        return prevList.map((item) => {
-          if (itemIds.includes(item.id)) {
-            const x = item.x + move.x;
-            const y = item.y + move.y;
-            const newItem = { ...item, x, y };
-            return newItem;
-          }
-          return item;
-        });
-      });
-    });
-    return unsub;
-  }, [c2c, setItemList]);
-
-  React.useEffect(() => {
-    const unsub = c2c.subscribe(`updateItemListOrder`, (itemIds) => {
-      setItemList((prevList) => {
-        const itemsMap = prevList.reduce((prev, item) => {
-          prev[item.id] = item;
-          return prev;
-        }, {});
-        const result = prevList.map((item, index) => {
-          return itemsMap[itemIds[index]];
-        });
-        return result;
-      });
-    });
-    return unsub;
-  }, [c2c, setItemList]);
-
-  return null;
-};
+import ItemListAtom from "./atoms";
 
 const useItemsAction = () => {
   const [c2c] = useC2C();

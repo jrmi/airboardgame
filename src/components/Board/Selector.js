@@ -3,10 +3,10 @@ import React from "react";
 import { atom, useRecoilValue } from "recoil";
 import styled from "styled-components";
 
-import { PanZoomRotateState } from "../components/PanZoomRotate";
-import useItemList from "../hooks/useItemList";
+import { PanZoomRotateState } from "./PanZoomRotate";
+import { useItems } from "./Items";
 import { useRecoilState } from "recoil";
-import { insideClass, isPointInsideRect } from "../utils";
+import { insideClass, isPointInsideRect } from "../../utils";
 
 export const selectedItemsAtom = atom({
   key: "selectedItems",
@@ -38,7 +38,7 @@ const SelectorZone = styled.div`
 
 const Selector = ({ children }) => {
   const panZoomRotate = useRecoilValue(PanZoomRotateState);
-  const { itemList } = useItemList();
+  const { itemList } = useItems();
   const [selected, setSelected] = useRecoilState(selectedItemsAtom);
   const [selector, setSelector] = React.useState({});
   const wrapperRef = React.useRef(null);

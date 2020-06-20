@@ -7,7 +7,6 @@
     "client2client.io": "^1.2.1",
     "cors": "^2.8.5",
     "final-form": "^4.20.0",
-    "hookleton": "^0.4.9",
     "i18next": "^19.4.5",
     "i18next-browser-languagedetector": "^4.3.1",
     "lodash.debounce": "^4.0.8",
