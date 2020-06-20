@@ -1,49 +1,13 @@
 import React from "react";
-import { useC2C } from "./useC2C";
+
+import { useSetRecoilState, useRecoilState } from "recoil";
+import { userAtom, usersAtom } from "./atoms";
+
 import debounce from "lodash.debounce";
-import randomColor from "randomcolor";
-import {
-  atom,
-  useSetRecoilState,
-  useRecoilValue,
-  useRecoilState,
-} from "recoil";
 
-const getUser = () => {
-  if (localStorage.user) {
-    const localUser = {
-      name: "Player",
-      color: randomColor({ luminosity: "dark" }),
-      ...JSON.parse(localStorage.user),
-    };
-    // Id is given by server
-    delete localUser.id;
-    persistUser(localUser);
-    return localUser;
-  }
-  const newUser = {
-    name: "Player",
-    color: randomColor({ luminosity: "dark" }),
-  };
-  persistUser(newUser);
-  return newUser;
-};
+import { useC2C } from "../../hooks/useC2C";
 
-const persistUser = (user) => {
-  localStorage.setItem("user", JSON.stringify(user));
-};
-
-export const userAtom = atom({
-  key: "user",
-  default: getUser(),
-});
-
-export const usersAtom = atom({
-  key: "users",
-  default: [],
-});
-
-export const SubscribeUserEvents = () => {
+const SubscribeUserEvents = () => {
   const usersRef = React.useRef([]);
   const setUsers = useSetRecoilState(usersAtom);
   const [currentUser, setCurrentUserState] = useRecoilState(userAtom);
@@ -142,19 +106,4 @@ export const SubscribeUserEvents = () => {
   return null;
 };
 
-const useUsers = () => {
-  const [currentUser, setCurrentUserState] = useRecoilState(userAtom);
-  const users = useRecoilValue(usersAtom);
-
-  const setCurrentUser = React.useCallback(
-    (newUser) => {
-      setCurrentUserState((prevUser) => ({ ...newUser, id: prevUser.id }));
-      persistUser(newUser);
-    },
-    [setCurrentUserState]
-  );
-
-  return { currentUser, setCurrentUser, users };
-};
-
-export default useUsers;
+export default SubscribeUserEvents;

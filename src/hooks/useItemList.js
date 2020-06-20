@@ -1,5 +1,5 @@
 import React from "react";
-import { useC2C } from "./useC2C";
+import { useC2C } from "../hooks/useC2C";
 import {
   atom,
   useRecoilState,
