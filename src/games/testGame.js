@@ -28,9 +28,18 @@ const genGame = () => {
   });
 
   items.push({
+    label: "Counter",
     type: "counter",
     color: "#D00022",
     x: 50,
+    y: 50,
+  });
+
+  items.push({
+    label: "Dice",
+    type: "dice",
+    color: "#D00022",
+    x: 200,
     y: 50,
   });
 

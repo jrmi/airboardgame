@@ -9,6 +9,7 @@ import Rect from "./Rect";
 import Round from "./Round";
 import Image from "./Image";
 import Counter from "./Counter";
+import Dice from "./Dice";
 
 const getComponent = (type) => {
   switch (type) {
@@ -20,6 +21,8 @@ const getComponent = (type) => {
       return Image;
     case "counter":
       return Counter;
+    case "dice":
+      return Dice;
     default:
       return Rect;
   }
@@ -127,13 +130,14 @@ const Item = ({ setState, state }) => {
     <ItemWrapper
       x={state.x}
       y={state.y}
+      layer={state.layer || 0}
       locked={!state.locked || unlock}
       rotation={rotation}
       selected={selectedItems.includes(state.id)}
       id={state.id}
       ref={itemRef}
     >
-      <Component {...state} updateState={updateState} />
+      <Component {...state} setState={updateState} />
     </ItemWrapper>
   );
 

@@ -9,7 +9,7 @@ const Image = ({
   content,
   backContent,
   flipped,
-  updateState,
+  setState,
   unflippedFor,
   text,
   backText,
@@ -28,7 +28,7 @@ const Image = ({
   const onDblClick = React.useCallback(
     (e) => {
       if (e.ctrlKey) {
-        updateState((prevItem) => {
+        setState((prevItem) => {
           if (prevItem.unflippedFor !== null) {
             return { ...prevItem, unflippedFor: null };
           } else {
@@ -40,14 +40,14 @@ const Image = ({
           }
         });
       } else {
-        updateState((prevItem) => ({
+        setState((prevItem) => ({
           ...prevItem,
           flipped: !prevItem.flipped,
           unflippedFor: null,
         }));
       }
     },
-    [updateState, currentUser.id]
+    [setState, currentUser.id]
   );
 
   let image;
