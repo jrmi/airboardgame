@@ -3,7 +3,6 @@ import { useC2C } from "../../../../hooks/useC2C";
 import { useRecoilValue } from "recoil";
 import { selectedItemsAtom } from "../../Selector";
 import debounce from "lodash.debounce";
-import styled, { css } from "styled-components";
 
 import Rect from "./Rect";
 import Round from "./Round";
@@ -27,33 +26,6 @@ const getComponent = (type) => {
       return Rect;
   }
 };
-
-const ItemWrapper = styled.div.attrs((props) => ({
-  className: "item",
-  id: props.id,
-}))`
-  ${({ rotation, x, y, layer }) => css`
-    position: absolute;
-    left: ${x}px;
-    top: ${y}px;
-    display: inline-block;
-    box-sizing: content-box;
-    z-index: ${layer + 3};
-    transform: rotate(${rotation}deg);
-  `}
-  ${({ selected }) => {
-    if (selected) {
-      return css`
-        border: 2px dashed #ff0000a0;
-        padding: 2px;
-      `;
-    } else {
-      return css`
-        padding: 4px;
-      `;
-    }
-  }}
-`;
 
 const Item = ({ setState, state }) => {
   const selectedItems = useRecoilValue(selectedItemsAtom);
@@ -127,19 +99,27 @@ const Item = ({ setState, state }) => {
     };
   }, [actualSizeCallback]);
 
+  const extraStyle = selectedItems.includes(state.id)
+    ? { border: "2px dashed #ff0000a0", padding: "2px" }
+    : { padding: "4px" };
+
   const content = (
-    <ItemWrapper
-      x={state.x}
-      y={state.y}
-      layer={state.layer || 0}
-      locked={!state.locked || unlock}
-      rotation={rotation}
-      selected={selectedItems.includes(state.id)}
-      id={state.id}
+    <div
+      style={{
+        left: state.x + "px",
+        top: state.y + "px",
+        position: "absolute",
+        display: "inline-block",
+        transform: `rotate(${rotation}deg)`,
+        zIndex: (state.layer || 0) + 3,
+        ...extraStyle,
+      }}
+      className="item"
       ref={itemRef}
+      id={state.id}
     >
-      <Component {...state} setState={updateState} />
-    </ItemWrapper>
+      <Component {...state} x={0} y={0} setState={updateState} />
+    </div>
   );
 
   if (!state.locked || unlock) {

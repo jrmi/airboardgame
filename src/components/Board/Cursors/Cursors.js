@@ -38,7 +38,6 @@ export const Cursors = ({ users }) => {
     const unsub = [];
     unsub.push(
       c2c.subscribe("cursorMove", ({ userId, pos }) => {
-        //console.log('move', pos);
         setCursors((prevCursors) => {
           return {
             ...prevCursors,

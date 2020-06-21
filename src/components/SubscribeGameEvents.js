@@ -12,6 +12,8 @@ export const SubscribeGameEvents = ({
 }) => {
   const [c2c, joined, isMaster] = useC2C();
   const { itemList, setItemList } = useItems();
+  const [gameLoaded, setGameLoaded] = React.useState(false);
+  const gameLoadingRef = React.useRef(false);
 
   const gameRef = React.useRef({
     items: itemList,
@@ -27,17 +29,16 @@ export const SubscribeGameEvents = ({
 
   React.useEffect(() => {
     const unsub = [];
-    if (joined) {
-      if (isMaster) {
-        c2c
-          .register("getGame", () => {
-            console.log("Send this game", gameRef.current);
-            return gameRef.current;
-          })
-          .then((unregister) => {
-            unsub.push(unregister);
-          });
-      }
+    if (joined && isMaster) {
+      console.log("Register");
+      c2c
+        .register("getGame", () => {
+          console.log("Send this game", gameRef.current);
+          return gameRef.current;
+        })
+        .then((unregister) => {
+          unsub.push(unregister);
+        });
     }
     return () => {
       unsub.forEach((u) => u());
@@ -61,18 +62,17 @@ export const SubscribeGameEvents = ({
 
   // Load game from master if any
   React.useEffect(() => {
-    if (joined) {
-      if (!isMaster) {
-        c2c.call("getGame").then(
-          (game) => {
-            console.log("Get this game from master", game);
-            setAvailableItemList(game.availableItems);
-            setItemList(game.items);
-            setBoardConfig(game.board);
-          },
-          () => {}
-        );
-      }
+    if (!gameLoaded && joined && !isMaster && !gameLoadingRef.current) {
+      gameLoadingRef.current = true;
+      c2c.call("getGame").then(
+        (game) => {
+          setGameLoaded(true);
+          setAvailableItemList(game.availableItems);
+          setItemList(game.items);
+          setBoardConfig(game.board);
+        },
+        () => {}
+      );
     }
   }, [
     c2c,
@@ -81,6 +81,7 @@ export const SubscribeGameEvents = ({
     setAvailableItemList,
     setItemList,
     setBoardConfig,
+    gameLoaded,
   ]);
   return null;
 };
