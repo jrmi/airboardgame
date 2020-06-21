@@ -157,6 +157,32 @@ export const SelectedItems = () => {
                   }
                 />
               </label>
+              <label>
+                Layer:
+                <Slider
+                  defaultValue={0}
+                  value={state.layer}
+                  min={-3}
+                  max={3}
+                  step={1}
+                  included={false}
+                  marks={{
+                    "-3": -3,
+                    "-2": -2,
+                    "-1": -1,
+                    0: 0,
+                    "1": 1,
+                    "2": 2,
+                    "3": 3,
+                  }}
+                  onChange={(value) =>
+                    updateItem(id, (item) => ({
+                      ...item,
+                      layer: parseInt(value, 10),
+                    }))
+                  }
+                />
+              </label>
             </li>
           ))}
         </ul>
