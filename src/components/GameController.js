@@ -129,13 +129,17 @@ export const GameController = ({ availableItemList, boardConfig }) => {
     });
   }, [itemList, boardConfig, availableItemList, updateSaveLink]);
 
+  const logGame = () => {
+    console.log(itemList);
+  };
+
   if (!isMaster) {
     return null;
   }
 
   return (
     <RightPane>
-      <Title>{t("Games")}</Title>
+      <Title onClick={logGame}>{t("Games")}</Title>
       <button onClick={loadTestGame}>Test Game</button>
       <button onClick={loadTikTok}>TikTok</button>
       <button onClick={loadCard}>Card</button>
