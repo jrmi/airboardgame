@@ -43,6 +43,14 @@ const genGame = () => {
     y: 50,
   });
 
+  items.push({
+    label: "Note",
+    type: "note",
+    color: "#00D022",
+    x: 200,
+    y: 200,
+  });
+
   return {
     items,
     board: { size: 1000, scale: 0.5 },

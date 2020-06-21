@@ -9,6 +9,7 @@ import Round from "./Round";
 import Image from "./Image";
 import Counter from "./Counter";
 import Dice from "./Dice";
+import Note from "./Note";
 
 const getComponent = (type) => {
   switch (type) {
@@ -22,6 +23,8 @@ const getComponent = (type) => {
       return Counter;
     case "dice":
       return Dice;
+    case "note":
+      return Note;
     default:
       return Rect;
   }
