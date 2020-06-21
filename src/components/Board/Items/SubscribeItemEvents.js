@@ -40,6 +40,27 @@ export const SubcribeItemEvents = () => {
     return unsub;
   }, [c2c, setItemList]);
 
+  React.useEffect(() => {
+    const unsub = c2c.subscribe(`pushItem`, (newItem) => {
+      setItemList((prevItemList) => [
+        ...prevItemList,
+        {
+          ...newItem,
+        },
+      ]);
+    });
+    return unsub;
+  }, [c2c, setItemList]);
+
+  React.useEffect(() => {
+    const unsub = c2c.subscribe(`removeItem`, (itemId) => {
+      setItemList((prevItemList) =>
+        prevItemList.filter((item) => item.id !== itemId)
+      );
+    });
+    return unsub;
+  }, [c2c, setItemList]);
+
   return null;
 };
 

@@ -1,6 +1,7 @@
 import React from "react";
 import { useRecoilValue, atom } from "recoil";
 import { useItems } from "../components/Board/Items";
+import { nanoid } from "nanoid";
 
 export const AvailableItemListAtom = atom({
   key: "availableItemList",
@@ -12,10 +13,14 @@ const AvailableItem = ({ data }) => {
   const { pushItem } = useItems();
 
   const onClickHandler = () => {
-    pushItem(data);
+    pushItem({ ...data, x: 200, y: 50, id: nanoid() });
   };
 
-  return <span onClick={onClickHandler}>{label}</span>;
+  return (
+    <span style={{ cursor: "pointer" }} onClick={onClickHandler}>
+      {label}
+    </span>
+  );
 };
 
 const AvailableItems = () => {
