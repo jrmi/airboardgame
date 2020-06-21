@@ -9,6 +9,10 @@ import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
 import ItemFormFactory from "./Board/Items/Item/forms/ItemFormFactory";
 
+import { confirmAlert } from "react-confirm-alert";
+import "react-confirm-alert/src/react-confirm-alert.css";
+import { useTranslation } from "react-i18next";
+
 const SelectedPane = styled.div`
   position: fixed;
   right: 1em;
@@ -25,7 +29,10 @@ export const SelectedItems = () => {
     updateItem,
     batchUpdateItems,
     shuffleSelectedItems,
+    removeItem,
   } = useItems();
+
+  const { t } = useTranslation();
 
   const selectedItems = useRecoilValue(selectedItemsAtom);
 
@@ -86,15 +93,36 @@ export const SelectedItems = () => {
     }));
   };
 
+  const onRemove = () => {
+    confirmAlert({
+      title: t("Confirmation"),
+      message: t("Do you really want to remove selected items ?"),
+      buttons: [
+        {
+          label: t("Yes"),
+          onClick: () =>
+            selectedItems.forEach((id) => {
+              removeItem(id);
+            }),
+        },
+        {
+          label: t("No"),
+          onClick: () => {},
+        },
+      ],
+    });
+  };
+
   return (
     <SelectedPane>
       {selectedItems.length > 1 && (
         <div>
           <h2>{selectedItems.length} items selected</h2>
-          <button onClick={shuffleSelectedItems}>Shuffle</button>
-          <button onClick={align}>Stack</button>
-          <button onClick={flip}>Flip</button>
-          <button onClick={unflip}>UnFlip</button>
+          <button onClick={shuffleSelectedItems}>{t("Shuffle")}</button>
+          <button onClick={align}>{t("Stack")}</button>
+          <button onClick={flip}>{t("Hide")}</button>
+          <button onClick={unflip}>{t("SHow")}</button>
+          <button onClick={onRemove}>{t("Remove all")}</button>
         </div>
       )}
       {selectedItems.length === 1 && (
@@ -103,12 +131,6 @@ export const SelectedItems = () => {
             listStyle: "none",
           }}
         >
-          {selectedItemList.length === 1 && (
-            <ItemFormFactory
-              item={selectedItemList[0]}
-              onSubmitHandler={onSubmitHandler}
-            />
-          )}
           {selectedItemList.map(({ id, ...state }, index) => (
             <li
               key={id}
@@ -119,6 +141,10 @@ export const SelectedItems = () => {
               }}
             >
               <h2 style={{ lineHeight: "30px" }}>{index}</h2>
+              <ItemFormFactory
+                item={selectedItemList[0]}
+                onSubmitHandler={onSubmitHandler}
+              />
               <label>
                 Locked:
                 <input
@@ -183,6 +209,8 @@ export const SelectedItems = () => {
                   }
                 />
               </label>
+
+              <button onClick={onRemove}>{t("Remove")}</button>
             </li>
           ))}
         </ul>

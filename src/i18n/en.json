@@ -5,5 +5,9 @@
   "Save game": "Save game",
   "Box Content": "Box Content",
   "Load last game": "Load last game",
-  "Dragn drop file here": "Drop file here to load them"
+  "Dragn drop file here": "Drop file here to load them",
+  "Confirmation": "Confirmation",
+  "Do you really want to remove selected items ?": "Do you really want to remove selected items ?",
+  "Yes": "Yes",
+  "No": "No"
 }

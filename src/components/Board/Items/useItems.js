@@ -3,7 +3,6 @@ import { useC2C } from "../../../hooks/useC2C";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { selectedItemsAtom } from "../Selector";
 import { shuffle as shuffleArray } from "../../../utils";
-import { nanoid } from "nanoid";
 
 import ItemListAtom from "./atoms";
 
@@ -130,17 +129,30 @@ const useItemsAction = () => {
     });
   }, [c2c, setItemList, selectedItems]);
 
-  const pushItem = (newItem) => {
-    setItemList((prevItemList) => [
-      ...prevItemList,
-      {
-        ...newItem,
-        x: 200,
-        y: 50,
-        id: nanoid(),
-      },
-    ]);
-  };
+  const pushItem = React.useCallback(
+    (newItem) => {
+      setItemList((prevItemList) => {
+        c2c.publish(`pushItem`, newItem);
+        return [
+          ...prevItemList,
+          {
+            ...newItem,
+          },
+        ];
+      });
+    },
+    [c2c, setItemList]
+  );
+
+  const removeItem = React.useCallback(
+    (itemId) => {
+      setItemList((prevItemList) => {
+        c2c.publish(`removeItem`, itemId);
+        return prevItemList.filter((item) => item.id !== itemId);
+      });
+    },
+    [c2c, setItemList]
+  );
 
   return {
     itemList,
@@ -151,6 +163,7 @@ const useItemsAction = () => {
     shuffleSelectedItems,
     setItemList,
     pushItem,
+    removeItem,
   };
 };
 
