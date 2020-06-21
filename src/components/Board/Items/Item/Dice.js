@@ -42,10 +42,19 @@ const Dice = ({
   };
 
   const roll = () => {
-    setState((prevState) => ({
-      ...prevState,
-      value: getRandomInt(side),
-    }));
+    const simulateRoll = (nextTimeout) => {
+      setState((prevState) => ({
+        ...prevState,
+        value: getRandomInt(side),
+      }));
+      if (nextTimeout < 200) {
+        setTimeout(
+          () => simulateRoll(nextTimeout + getRandomInt(30)),
+          nextTimeout
+        );
+      }
+    };
+    simulateRoll(100);
   };
 
   return (
