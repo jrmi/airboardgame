@@ -1,7 +1,7 @@
 import React from "react";
 import { atom, useRecoilState } from "recoil";
 
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 
 export const PanZoomRotateState = atom({
   key: "PanZoomRotate",
@@ -13,12 +13,11 @@ export const PanZoomRotateState = atom({
   },
 });
 
-const Pane = styled.div`
-  ${({ translateX, translateY, scale, rotate }) => css`
-    transform: translate(${translateX}px, ${translateY}px) scale(${scale})
-      rotate(${rotate}deg);
-  `}
-
+const Pane = styled.div.attrs(({ translateX, translateY, scale, rotate }) => ({
+  style: {
+    transform: `translate(${translateX}px, ${translateY}px) scale(${scale}) rotate(${rotate}deg)`,
+  },
+}))`
   transform-origin: top left;
   display: inline-block;
 `;

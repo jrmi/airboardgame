@@ -3,19 +3,28 @@ import Cursors from "./Cursors";
 import { useC2C } from "../../../hooks/useC2C";
 import { PanZoomRotateState } from "../PanZoomRotate";
 import { useRecoilValue } from "recoil";
+import throttle from "lodash.throttle";
 
 export const Board = ({ children, user, users }) => {
   const [c2c] = useC2C();
   const panZoomRotate = useRecoilValue(PanZoomRotateState);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const throttledPublish = React.useCallback(
+    throttle((newPos) => {
+      c2c.publish("cursorMove", {
+        userId: user.id,
+        pos: newPos,
+      });
+    }, 100),
+    [c2c, user.id]
+  );
+
   const onMouseMove = (e) => {
     const { top, left } = e.currentTarget.getBoundingClientRect();
-    c2c.publish("cursorMove", {
-      userId: user.id,
-      pos: {
-        x: (e.clientX - left) / panZoomRotate.scale,
-        y: (e.clientY - top) / panZoomRotate.scale,
-      },
+    throttledPublish({
+      x: (e.clientX - left) / panZoomRotate.scale,
+      y: (e.clientY - top) / panZoomRotate.scale,
     });
   };
 

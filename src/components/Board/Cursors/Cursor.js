@@ -2,10 +2,13 @@ import React from "react";
 
 import styled from "styled-components";
 
-const StyledCursor = styled.div`
+const StyledCursor = styled.div.attrs(({ top, left }) => ({
+  style: {
+    top: `${top}px`,
+    left: `${left}px`,
+  },
+}))`
   position: fixed;
-  top: ${({ top }) => top}px;
-  left: ${({ left }) => left}px;
   opacity: 0.7;
   display: flex;
   flex-direction: row;

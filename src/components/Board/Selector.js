@@ -26,14 +26,17 @@ const findSelected = (items, rect) => {
   });
 };
 
-const SelectorZone = styled.div`
+const SelectorZone = styled.div.attrs(({ top, left, height, width }) => ({
+  style: {
+    top: `${top}px`,
+    left: `${left}px`,
+    height: `${height}px`,
+    width: `${width}px`,
+  },
+}))`
   z-index: 100;
   position: absolute;
   background-color: #ff000050;
-  top: ${({ top }) => top}px;
-  left: ${({ left }) => left}px;
-  height: ${({ height }) => height}px;
-  width: ${({ width }) => width}px;
 `;
 
 const Selector = ({ children }) => {
