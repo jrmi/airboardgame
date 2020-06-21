@@ -94,8 +94,8 @@ const Item = ({ setState, state }) => {
   const actualSizeCallback = React.useCallback(
     debounce((entries) => {
       entries.forEach((entry) => {
-        if (entry.contentBoxSize) {
-          const { inlineSize: width, blockSize: height } = entry.contentBoxSize;
+        if (entry.contentRect) {
+          const { width, height } = entry.contentRect;
           if (
             sizeRef.current.actualWidth !== width ||
             sizeRef.current.actualHeight !== height
