@@ -10,6 +10,7 @@ const StyledCursor = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
+  z-index: 7;
 `;
 
 const CursorName = styled.div`
