@@ -1,12 +1,13 @@
 import React, { memo } from "react";
 import styled, { css } from "styled-components";
+import { useTranslation } from "react-i18next";
 
-const CounterPane = styled.div`
+const DicePane = styled.div`
   ${({ color, fontSize }) => css`
     background-color: ${color};
     width: 5em;
-    padding: 0.5em;
-    padding-bottom: 2em;
+    padding: 0.3em;
+    padding-bottom: 1em;
     text-align: center;
     fontsize: ${fontSize}px;
     display: flex;
@@ -17,14 +18,22 @@ const CounterPane = styled.div`
   `}
 `;
 
-const Counter = ({
+const getRandomInt = (sides) => {
+  let min = 1;
+  let max = Math.ceil(sides);
+  return Math.floor(Math.random() * max) + min;
+};
+
+const Dice = ({
   value = 0,
   color = "#CCC",
   label = "",
+  side = 6,
   textColor = "#000",
   fontSize = "16",
   setState,
 }) => {
+  const { t } = useTranslation();
   const setValue = (e) => {
     setState((prevState) => ({
       ...prevState,
@@ -32,22 +41,15 @@ const Counter = ({
     }));
   };
 
-  const increment = () => {
+  const roll = () => {
     setState((prevState) => ({
       ...prevState,
-      value: (prevState.value || 0) + 1,
-    }));
-  };
-
-  const decrement = () => {
-    setState((prevState) => ({
-      ...prevState,
-      value: (prevState.value || 0) - 1,
+      value: getRandomInt(side),
     }));
   };
 
   return (
-    <CounterPane color={color} fontSize={fontSize}>
+    <DicePane color={color} fontSize={fontSize}>
       <label style={{ userSelect: "none" }}>
         {label}
         <input
@@ -71,15 +73,12 @@ const Counter = ({
           paddingTop: "1em",
         }}
       >
-        <button onClick={increment} style={{ fontSize: fontSize + "px" }}>
-          +
-        </button>
-        <button onClick={decrement} style={{ fontSize: fontSize + "px" }}>
-          -
+        <button onClick={roll} style={{ fontSize: fontSize + "px" }}>
+          {t("Roll")}
         </button>
       </span>
-    </CounterPane>
+    </DicePane>
   );
 };
 
-export default memo(Counter);
+export default memo(Dice);
