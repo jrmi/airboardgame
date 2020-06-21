@@ -32,12 +32,13 @@ const ItemWrapper = styled.div.attrs((props) => ({
   className: "item",
   id: props.id,
 }))`
-  ${({ rotation, x, y }) => css`
+  ${({ rotation, x, y, layer }) => css`
     position: absolute;
     left: ${x}px;
     top: ${y}px;
     display: inline-block;
     box-sizing: content-box;
+    z-index: ${layer + 3};
     transform: rotate(${rotation}deg);
   `}
   ${({ selected }) => {
