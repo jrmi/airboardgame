@@ -62,7 +62,7 @@ const Item = ({ setState, state }) => {
 
   const updateState = React.useCallback(
     (callbackOrItem, sync = true) => setState(state.id, callbackOrItem, sync),
-    [setState, state]
+    [setState, state.id]
   );
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
