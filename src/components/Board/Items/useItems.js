@@ -11,18 +11,18 @@ const useItemsAction = () => {
   const [itemList, setItemList] = useRecoilState(ItemListAtom);
   const selectedItems = useRecoilValue(selectedItemsAtom);
 
-  const updateItem = React.useCallback(
-    (id, callbackOrItem, sync = true) => {
+  const batchUpdateItems = React.useCallback(
+    (ids, callbackOrItem, sync = true) => {
       let callback = callbackOrItem;
       if (typeof callbackOrItem === "object") {
         callback = () => callbackOrItem;
       }
       setItemList((prevList) => {
         return prevList.map((item) => {
-          if (item.id === id) {
+          if (ids.includes(item.id)) {
             const newItem = {
               ...callback(item),
-              id: item.id, // Prevent id modification
+              id: item.id,
             };
             if (sync) {
               c2c.publish(`itemStateUpdate.${newItem.id}`, newItem);
@@ -33,7 +33,14 @@ const useItemsAction = () => {
         });
       });
     },
-    [setItemList, c2c]
+    [c2c, setItemList]
+  );
+
+  const updateItem = React.useCallback(
+    (id, callbackOrItem, sync = true) => {
+      batchUpdateItems([id], callbackOrItem, sync);
+    },
+    [batchUpdateItems]
   );
 
   const moveSelectedItems = React.useCallback(
@@ -60,29 +67,6 @@ const useItemsAction = () => {
       });
     },
     [setItemList, selectedItems, c2c]
-  );
-
-  const batchUpdateItems = React.useCallback(
-    (ids, callbackOrItem) => {
-      let callback = callbackOrItem;
-      if (typeof callbackOrItem === "object") {
-        callback = () => callbackOrItem;
-      }
-      setItemList((prevList) => {
-        return prevList.map((item) => {
-          if (ids.includes(item.id)) {
-            const newItem = {
-              ...callback(item),
-              id: item.id,
-            };
-            c2c.publish(`itemStateUpdate.${item.id}`, newItem);
-            return newItem;
-          }
-          return item;
-        });
-      });
-    },
-    [c2c, setItemList]
   );
 
   const putItemOnTop = React.useCallback(
