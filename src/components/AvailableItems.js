@@ -33,16 +33,18 @@ const AvailableItems = () => {
       {groupIds.map((groupId) => {
         return (
           <div key={groupId}>
-            <h3>{groupId}</h3>
-            <ul style={{ textAlign: "left" }}>
-              {availableItemList
-                .filter((item) => item.groupId === groupId)
-                .map((item) => (
-                  <li key={item.id}>
-                    <AvailableItem data={item} />
-                  </li>
-                ))}
-            </ul>
+            <details style={{ textAlign: "left", marginLeft: "10px" }}>
+              <summary style={{ cursor: "pointer" }}>{groupId}</summary>
+              <ul>
+                {availableItemList
+                  .filter((item) => item.groupId === groupId)
+                  .map((item) => (
+                    <li key={item.id}>
+                      <AvailableItem data={item} />
+                    </li>
+                  ))}
+              </ul>
+            </details>
           </div>
         );
       })}
