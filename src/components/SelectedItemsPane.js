@@ -131,9 +131,9 @@ export const SelectedItems = () => {
             listStyle: "none",
           }}
         >
-          {selectedItemList.map(({ id, ...state }, index) => (
+          {selectedItemList.map((item, index) => (
             <li
-              key={id}
+              key={item.id}
               style={{
                 display: "flex",
                 flexDirection: "column",
@@ -141,17 +141,14 @@ export const SelectedItems = () => {
               }}
             >
               <h2 style={{ lineHeight: "30px" }}>{index}</h2>
-              <ItemFormFactory
-                item={selectedItemList[0]}
-                onSubmitHandler={onSubmitHandler}
-              />
+              <ItemFormFactory item={item} onSubmitHandler={onSubmitHandler} />
               <label>
                 Locked:
                 <input
                   type="checkbox"
-                  checked={Boolean(state.locked)}
+                  checked={Boolean(item.locked)}
                   onChange={() =>
-                    updateItem(id, (item) => ({
+                    updateItem(item.id, (item) => ({
                       ...item,
                       locked: !item.locked,
                     }))
@@ -162,7 +159,7 @@ export const SelectedItems = () => {
                 Rotation:
                 <Slider
                   defaultValue={0}
-                  value={state.rotation}
+                  value={item.rotation}
                   min={-180}
                   max={180}
                   step={5}
@@ -176,7 +173,7 @@ export const SelectedItems = () => {
                     90: 90,
                   }}
                   onChange={(value) =>
-                    updateItem(id, (item) => ({
+                    updateItem(item.id, (item) => ({
                       ...item,
                       rotation: parseInt(value, 10),
                     }))
@@ -187,7 +184,7 @@ export const SelectedItems = () => {
                 Layer:
                 <Slider
                   defaultValue={0}
-                  value={state.layer}
+                  value={item.layer}
                   min={-3}
                   max={3}
                   step={1}
@@ -202,7 +199,7 @@ export const SelectedItems = () => {
                     "3": 3,
                   }}
                   onChange={(value) =>
-                    updateItem(id, (item) => ({
+                    updateItem(item.id, (item) => ({
                       ...item,
                       layer: parseInt(value, 10),
                     }))
