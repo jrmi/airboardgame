@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@scripters/use-socket.io": "^1.6.0",
+    "@welldone-software/why-did-you-render": "^4.2.5",
     "client2client.io": "^1.2.1",
     "cors": "^2.8.5",
     "final-form": "^4.20.0",
