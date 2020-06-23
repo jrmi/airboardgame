@@ -5,8 +5,6 @@ import { useRecoilValue } from "recoil";
 import { useItems } from "./Board/Items";
 import { selectedItemsAtom } from "../components/Board/Selector";
 
-import Slider from "rc-slider";
-import "rc-slider/assets/index.css";
 import ItemFormFactory from "./Board/Items/Item/forms/ItemFormFactory";
 
 import { confirmAlert } from "react-confirm-alert";
@@ -125,93 +123,14 @@ export const SelectedItems = () => {
           <button onClick={onRemove}>{t("Remove all")}</button>
         </div>
       )}
-      {selectedItems.length === 1 && (
-        <ul
-          style={{
-            listStyle: "none",
-          }}
-        >
-          {selectedItemList.map((item, index) => (
-            <li
-              key={item.id}
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                width: "25em",
-              }}
-            >
-              <h2 style={{ lineHeight: "30px" }}>{index}</h2>
-              <ItemFormFactory item={item} onSubmitHandler={onSubmitHandler} />
-              <label>
-                Locked:
-                <input
-                  type="checkbox"
-                  checked={Boolean(item.locked)}
-                  onChange={() =>
-                    updateItem(item.id, (item) => ({
-                      ...item,
-                      locked: !item.locked,
-                    }))
-                  }
-                />
-              </label>
-              <label>
-                Rotation:
-                <Slider
-                  defaultValue={0}
-                  value={item.rotation}
-                  min={-180}
-                  max={180}
-                  step={5}
-                  included={false}
-                  marks={{
-                    "-45": -45,
-                    "-30": -30,
-                    0: 0,
-                    30: 30,
-                    45: 45,
-                    90: 90,
-                  }}
-                  onChange={(value) =>
-                    updateItem(item.id, (item) => ({
-                      ...item,
-                      rotation: parseInt(value, 10),
-                    }))
-                  }
-                />
-              </label>
-              <label>
-                Layer:
-                <Slider
-                  defaultValue={0}
-                  value={item.layer}
-                  min={-3}
-                  max={3}
-                  step={1}
-                  included={false}
-                  marks={{
-                    "-3": -3,
-                    "-2": -2,
-                    "-1": -1,
-                    0: 0,
-                    "1": 1,
-                    "2": 2,
-                    "3": 3,
-                  }}
-                  onChange={(value) =>
-                    updateItem(item.id, (item) => ({
-                      ...item,
-                      layer: parseInt(value, 10),
-                    }))
-                  }
-                />
-              </label>
-
-              <button onClick={onRemove}>{t("Remove")}</button>
-            </li>
-          ))}
-        </ul>
-      )}
+      {selectedItems.length === 1 &&
+        selectedItemList.map((item) => (
+          <div key={item.id}>
+            <h2>{t("Edit item")}</h2>
+            <ItemFormFactory item={item} onSubmitHandler={onSubmitHandler} />
+            <button onClick={onRemove}>{t("Remove")}</button>
+          </div>
+        ))}
     </SelectedPane>
   );
 };
