@@ -19,6 +19,7 @@ import testGame from "../games/testGame";
 import LoadGame from "./LoadGame";
 import AvailableItems from "./AvailableItems";
 import { useItems } from "../components/Board/Items";
+import NewItems from "./NewItems";
 
 const generateDownloadURI = (data) => {
   return (
@@ -26,7 +27,7 @@ const generateDownloadURI = (data) => {
   );
 };
 
-const RightPane = styled.div`
+const LeftPane = styled.div`
   position: fixed;
   left: 0.5em;
   top: 0.5em;
@@ -138,7 +139,7 @@ export const GameController = ({ availableItemList, boardConfig }) => {
   }
 
   return (
-    <RightPane>
+    <LeftPane>
       <Title onClick={logGame}>{t("Games")}</Title>
       <button onClick={loadTestGame}>Test Game</button>
       <button onClick={loadTikTok}>TikTok</button>
@@ -151,13 +152,15 @@ export const GameController = ({ availableItemList, boardConfig }) => {
       <a href={downloadURI} download={`save_${date}.json`}>
         {t("Save game")}
       </a>
+      <Title>{t("Add item")}</Title>
+      <NewItems />
       {availableItemList && availableItemList.length > 0 && (
         <AvailableItemList>
           <Title>{t("Box Content")}</Title>
           <AvailableItems />
         </AvailableItemList>
       )}
-    </RightPane>
+    </LeftPane>
   );
 };
 

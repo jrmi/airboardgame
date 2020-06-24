@@ -6,16 +6,15 @@ import { useUsers } from "../../../../components/users";
 const Image = ({
   width,
   height,
-  content,
+  content = "/default.png",
   backContent,
-  flipped,
+  flipped = false,
   setState,
   unflippedFor,
   text,
   backText,
   overlay,
 }) => {
-  //const user = useRecoilValue(userAtom);
   const { currentUser } = useUsers();
   const size = {};
   if (width) {
