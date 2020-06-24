@@ -2,7 +2,7 @@ import React, { memo } from "react";
 import styled, { css } from "styled-components";
 
 const StyledRound = styled.div`
-  ${({ radius, color }) => css`
+  ${({ radius = 50, color = "#ccc" }) => css`
     border-radius: 100%;
     width: ${radius}px;
     height: ${radius}px;
