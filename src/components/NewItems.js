@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import { useItems } from "../components/Board/Items";
 import { nanoid } from "nanoid";
 import { useTranslation } from "react-i18next";
@@ -14,7 +14,7 @@ const itemTemplates = {
   dice: {},
 };
 
-const NewItem = ({ type }) => {
+const NewItem = memo(({ type }) => {
   const { t } = useTranslation();
 
   const { pushItem } = useItems();
@@ -35,7 +35,9 @@ const NewItem = ({ type }) => {
       {t(type)}
     </button>
   );
-};
+});
+
+NewItem.displayName = "NewItem";
 
 const NewItems = () => {
   return (
@@ -49,4 +51,4 @@ const NewItems = () => {
   );
 };
 
-export default NewItems;
+export default memo(NewItems);

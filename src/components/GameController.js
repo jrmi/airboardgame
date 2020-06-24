@@ -70,6 +70,14 @@ export const GameController = ({ availableItemList, boardConfig }) => {
     [c2c]
   );
 
+  const newGame = React.useCallback(() => {
+    loadGame({
+      items: [],
+      availableItems: [],
+      board: { size: 1000, scale: 0.5 },
+    });
+  }, [loadGame]);
+
   const loadTikTok = React.useCallback(() => {
     tiktok.availableItems = [];
     loadGame(tiktok);
@@ -141,6 +149,7 @@ export const GameController = ({ availableItemList, boardConfig }) => {
   return (
     <LeftPane>
       <Title onClick={logGame}>{t("Games")}</Title>
+      <button onClick={newGame}>New Game</button>
       <button onClick={loadTestGame}>Test Game</button>
       <button onClick={loadTikTok}>TikTok</button>
       <button onClick={loadCard}>Card</button>
