@@ -10,11 +10,6 @@ import useLocalStorage from "../hooks/useLocalStorage";
 
 import throttle from "lodash.throttle";
 
-import tiktok from "../games/tiktok";
-import card from "../games/card";
-import gloomhaven from "../games/gloomhaven";
-import gloomhavenBox from "../games/gloomhaven-box";
-import settlers from "../games/settlers";
 import testGame from "../games/testGame";
 import LoadGame from "./LoadGame";
 import AvailableItems from "./AvailableItems";
@@ -50,10 +45,25 @@ const AvailableItemList = styled.div`
 
 const Title = styled.h3``;
 
+const GAMELIST_URL = process.env.REACT_APP_GAMELIST_URL || "/gamelist.json";
+
+const loadGameList = async () => {
+  console.log(GAMELIST_URL);
+  const result = await fetch(GAMELIST_URL);
+  return await result.json();
+};
+
+const fetchGame = async (url) => {
+  console.log(url);
+  const result = await fetch(url);
+  return await result.json();
+};
+
 export const GameController = ({ availableItemList, boardConfig }) => {
   const { t } = useTranslation();
   const [c2c, , isMaster] = useC2C();
   const { itemList } = useItems();
+  const [gameList, setGameList] = React.useState([]);
   const [downloadURI, setDownloadURI] = React.useState({});
   const [date, setDate] = React.useState(Date.now());
   const [gameLocalSave, setGameLocalSave] = useLocalStorage("savedGame", {
@@ -61,6 +71,12 @@ export const GameController = ({ availableItemList, boardConfig }) => {
     board: boardConfig,
     availableItems: availableItemList,
   });
+
+  React.useEffect(() => {
+    loadGameList().then((content) => {
+      setGameList(content);
+    });
+  }, []);
 
   const loadGame = React.useCallback(
     (game) => {
@@ -70,32 +86,21 @@ export const GameController = ({ availableItemList, boardConfig }) => {
     [c2c]
   );
 
+  const loadGameUrl = React.useCallback(
+    (url) => {
+      fetchGame(url).then((content) => {
+        loadGame(content);
+      });
+    },
+    [loadGame]
+  );
+
   const newGame = React.useCallback(() => {
     loadGame({
       items: [],
       availableItems: [],
       board: { size: 1000, scale: 0.5 },
     });
-  }, [loadGame]);
-
-  const loadTikTok = React.useCallback(() => {
-    tiktok.availableItems = [];
-    loadGame(tiktok);
-  }, [loadGame]);
-
-  const loadCard = React.useCallback(() => {
-    card.availableItems = [];
-    loadGame(card);
-  }, [loadGame]);
-
-  const loadGloomhaven = React.useCallback(() => {
-    gloomhaven.availableItems = gloomhavenBox.items;
-    loadGame(gloomhaven);
-  }, [loadGame]);
-
-  const loadSettlers = React.useCallback(() => {
-    settlers.availableItems = [];
-    loadGame(settlers);
   }, [loadGame]);
 
   const loadTestGame = React.useCallback(() => {
@@ -151,10 +156,11 @@ export const GameController = ({ availableItemList, boardConfig }) => {
       <Title onClick={logGame}>{t("Games")}</Title>
       <button onClick={newGame}>New Game</button>
       <button onClick={loadTestGame}>Test Game</button>
-      <button onClick={loadTikTok}>TikTok</button>
-      <button onClick={loadCard}>Card</button>
-      <button onClick={loadGloomhaven}>Gloomhaven</button>
-      <button onClick={loadSettlers}>Settlers of Catan</button>
+      {gameList.map(({ name, url }) => (
+        <button key={name} onClick={() => loadGameUrl(url)}>
+          {name}
+        </button>
+      ))}
       <Title>{t("Save/Load")}</Title>
       <button onClick={loadLocalSavedGame}>{t("Load last game")}</button>
       <LoadGame onLoad={loadGame} />
