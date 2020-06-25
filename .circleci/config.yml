@@ -5,13 +5,51 @@ jobs:
   build-and-test:
     executor:
       name: node/default
+    environment:
+      NETLIFY_SITE_ID: airboardgame.netlify.app
+      REACT_APP_SOCKET_URL: https://public.jeremiez.net/
+      REACT_APP_SOCKET_PATH: /wamp/socket.io
+      REACT_APP_GAMELIST_URL: https://airgames.netlify.app/gameList.json
     steps:
       - checkout
       - node/with-cache:
           steps:
             - run: npm install
             - run: npm run lint
+            - run: npm run build
+            - run:
+                name: Netlify Deploy
+                command: npx netlify deploy --site $NETLIFY_SITE_ID --auth $NETLIFY_ACCESS_TOKEN --dir=build
+
+  build-deploy:
+    executor:
+      name: node/default
+    environment:
+      NETLIFY_SITE_ID: airboardgame.netlify.app
+      REACT_APP_SOCKET_URL: https://public.jeremiez.net/
+      REACT_APP_SOCKET_PATH: /wamp/socket.io
+      REACT_APP_GAMELIST_URL: https://airgames.netlify.app/gameList.json
+    steps:
+      - checkout
+      - node/with-cache:
+          steps:
+            - run: npm install
+            - run: npm run lint
+            - run: npm run build
+            - run:
+                name: Netlify Deploy
+                command: npx netlify deploy --site $NETLIFY_SITE_ID --auth $NETLIFY_ACCESS_TOKEN --dir=build --prod
+
 workflows:
   build-and-test:
     jobs:
-      - build-and-test
+      - build-and-test:
+          filters:
+            branches:
+              ignore:
+                - master
+      - build-deploy:
+          filters:
+            branches:
+              only:
+                - master
