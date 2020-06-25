@@ -3,6 +3,8 @@ import { Field } from "react-final-form";
 
 import Label from "./Label";
 
+import ColorPicker from "./ColorPicker";
+
 const Form = ({ initialValues }) => {
   return (
     <>
@@ -32,6 +34,19 @@ const Form = ({ initialValues }) => {
           initialValue={initialValues.height}
         >
           {(props) => <input {...props.input} type="number" />}
+        </Field>
+      </Label>
+
+      <Label>
+        Color:
+        <Field
+          name="color"
+          component="input"
+          initialValue={initialValues.color}
+        >
+          {({ input: { onChange, value } }) => (
+            <ColorPicker value={value} onChange={onChange} />
+          )}
         </Field>
       </Label>
     </>
