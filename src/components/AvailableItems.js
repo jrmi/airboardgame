@@ -1,14 +1,10 @@
-import React from "react";
-import { useRecoilValue, atom } from "recoil";
+import React, { memo } from "react";
+import { useRecoilValue } from "recoil";
 import { useItems } from "../components/Board/Items";
 import { nanoid } from "nanoid";
+import { AvailableItemListAtom } from "./Board/game/atoms";
 
-export const AvailableItemListAtom = atom({
-  key: "availableItemList",
-  default: [],
-});
-
-const AvailableItem = ({ data }) => {
+const AvailableItem = memo(({ data }) => {
   const { label } = data;
   const { pushItem } = useItems();
 
@@ -21,7 +17,9 @@ const AvailableItem = ({ data }) => {
       {label}
     </span>
   );
-};
+});
+
+AvailableItem.displayName = "NewItem";
 
 const AvailableItems = () => {
   const availableItemList = useRecoilValue(AvailableItemListAtom);

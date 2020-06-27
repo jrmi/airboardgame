@@ -5,9 +5,12 @@ import styled from "styled-components";
 
 const UserColor = styled.div`
   background-color: ${({ color }) => color};
-  width: 20px;
-  height: 20px;
-  margin: 5px;
+  width: 30px;
+  height: 30px;
+  margin: 2px;
+  margin-right: 0.5em;
+  text-align: center;
+  line-height: 30px;
   cursor: ${({ editable }) => (editable ? "pointer" : "auto")};
 `;
 
@@ -18,20 +21,15 @@ const ColorPickerWrapper = styled.div`
   z-index: 1000;
 `;
 
-const StyledInputName = styled.input`
-  border: none;
-  padding: 2px;
-  padding-left: 0.5em;
-  background-color: #ccc;
+const StyledInputName = styled.input.attrs(() => ({ className: "uk-input" }))`
   width: 7em;
 `;
 
 const StyledName = styled.span`
-  line-height: 30px;
   padding-left: 0.5em;
 `;
 
-const UserConfig = ({ user, setUser, editable }) => {
+const UserConfig = ({ user, setUser, editable, index }) => {
   const [name, setName] = React.useState(user.name);
   const [showPicker, setShowPicker] = React.useState(false);
 
@@ -57,7 +55,9 @@ const UserConfig = ({ user, setUser, editable }) => {
         color={user.color}
         editable={editable}
         onClick={showColorPicker}
-      />
+      >
+        {index}
+      </UserColor>
       {showPicker && (
         <ColorPickerWrapper>
           <BlockPicker

@@ -1,7 +1,7 @@
 import React from "react";
 import { useC2C } from "../../../hooks/useC2C";
 import { useSetRecoilState } from "recoil";
-import ItemListAtom from "./atoms";
+import { ItemListAtom } from "../game/atoms";
 
 export const SubcribeItemEvents = () => {
   const [c2c] = useC2C();

@@ -62,12 +62,10 @@ const SubscribeUserEvents = () => {
 
         unsub.push(
           c2c.subscribe("userLeave", (userId) => {
-            console.log("userLeave");
             usersRef.current = usersRef.current.filter(
               ({ id }) => id !== userId
             );
             setUsers(usersRef.current);
-            console.log("publish new user list", usersRef.current);
             c2c.publish("updateUserList", usersRef.current);
           })
         );
@@ -83,7 +81,6 @@ const SubscribeUserEvents = () => {
               usersRef.current = newUsers;
             }
             setUsers(usersRef.current);
-            console.log("publish new user list", usersRef.current);
             c2c.publish("updateUserList", usersRef.current);
           })
         );
@@ -91,7 +88,6 @@ const SubscribeUserEvents = () => {
 
       unsub.push(
         c2c.subscribe("updateUserList", (newList) => {
-          console.log("User list", newList);
           usersRef.current = newList;
           setUsers(usersRef.current);
         })

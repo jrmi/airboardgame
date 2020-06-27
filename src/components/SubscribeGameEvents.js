@@ -1,17 +1,19 @@
 import React from "react";
+import { useRecoilState } from "recoil";
 
 import { useC2C } from "../hooks/useC2C";
 
 import { useItems } from "../components/Board/Items";
+import { AvailableItemListAtom, BoardConfigAtom } from "./Board/game/atoms";
 
-export const SubscribeGameEvents = ({
-  availableItemList,
-  setAvailableItemList,
-  boardConfig,
-  setBoardConfig,
-}) => {
+export const SubscribeGameEvents = () => {
   const [c2c, joined, isMaster] = useC2C();
   const { itemList, setItemList } = useItems();
+  const [availableItemList, setAvailableItemList] = useRecoilState(
+    AvailableItemListAtom
+  );
+  const [boardConfig, setBoardConfig] = useRecoilState(BoardConfigAtom);
+
   const [gameLoaded, setGameLoaded] = React.useState(false);
   const gameLoadingRef = React.useRef(false);
 

@@ -31,7 +31,11 @@ const NewItem = memo(({ type }) => {
   };
 
   return (
-    <button style={{ cursor: "pointer" }} onClick={onClickHandler}>
+    <button
+      className="button"
+      style={{ display: "block", width: "100%" }}
+      onClick={onClickHandler}
+    >
       {t(type)}
     </button>
   );
@@ -40,15 +44,7 @@ const NewItem = memo(({ type }) => {
 NewItem.displayName = "NewItem";
 
 const NewItems = () => {
-  return (
-    <ul style={{ textAlign: "left", listStyle: "none" }}>
-      {itemTypes.map((type) => (
-        <li key={type}>
-          <NewItem type={type} />
-        </li>
-      ))}
-    </ul>
-  );
+  return itemTypes.map((type) => <NewItem type={type} key={type} />);
 };
 
 export default memo(NewItems);
