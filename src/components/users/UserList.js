@@ -4,22 +4,21 @@ import useUsers from "./useUsers";
 
 import styled from "styled-components";
 
-const UserList = styled.ul`
-  position: fixed;
-  right: 1em;
-  top: 1em;
-  background: #ffffff77;
+const UserList = styled.ul.attrs(() => ({ className: "uk-card" }))`
+  position: absolute;
+  right: 1rem;
+  top: 1rem;
+  background-color: #ffffffe0;
   padding: 0.2em;
   list-style: none;
+  margin: 0;
+  z-index: 1;
 `;
 
 const UserListItem = styled.li`
   display: flex;
   position: relative;
-`;
-
-const UserListIndex = styled.span`
-  line-height: 30px;
+  align-items: center;
 `;
 
 export const Users = () => {
@@ -29,8 +28,8 @@ export const Users = () => {
     <UserList>
       {users.map((u, index) => (
         <UserListItem key={u.id}>
-          <UserListIndex>{index} - </UserListIndex>
           <UserConfig
+            index={index + 1}
             user={u}
             setUser={setCurrentUser}
             editable={currentUser.id === u.id}

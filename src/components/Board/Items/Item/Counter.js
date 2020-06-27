@@ -4,7 +4,7 @@ import styled, { css } from "styled-components";
 const CounterPane = styled.div`
   ${({ color, fontSize }) => css`
     background-color: ${color};
-    width: 5em;
+    width: 6em;
     padding: 0.5em;
     padding-bottom: 2em;
     text-align: center;
@@ -71,10 +71,16 @@ const Counter = ({
           paddingTop: "1em",
         }}
       >
-        <button onClick={increment} style={{ fontSize: fontSize + "px" }}>
+        <button
+          onClick={increment}
+          style={{ fontSize: fontSize + "px", margin: "2px" }}
+        >
           +
         </button>
-        <button onClick={decrement} style={{ fontSize: fontSize + "px" }}>
+        <button
+          onClick={decrement}
+          style={{ fontSize: fontSize + "px", margin: "2px" }}
+        >
           -
         </button>
       </span>

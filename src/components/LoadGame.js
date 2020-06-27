@@ -5,6 +5,7 @@ import { useDropzone } from "react-dropzone";
 
 const LoadGame = ({ onLoad = () => {} }) => {
   const { t } = useTranslation();
+
   const onDrop = React.useCallback(
     (acceptedFiles) => {
       acceptedFiles.forEach((file) => {
@@ -29,7 +30,10 @@ const LoadGame = ({ onLoad = () => {} }) => {
   const { getRootProps, getInputProps } = useDropzone({ onDrop });
 
   return (
-    <div {...getRootProps()}>
+    <div
+      {...getRootProps()}
+      style={{ border: "3px dashed black", margin: "0.5em", padding: "0.5em" }}
+    >
       <input {...getInputProps()} />
       <p>{t("Dragn drop file here")}</p>
     </div>

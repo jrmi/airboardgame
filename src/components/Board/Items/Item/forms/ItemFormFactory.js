@@ -52,14 +52,15 @@ const ItemFormFactory = ({ item, onSubmitHandler }) => {
           <div style={{ display: "none" }}>
             <Field name="id" component="input" initialValue={item.id} />
           </div>
+
           <Label>
-            Locked:
             <Field
               name="locked"
               component="input"
               type="checkbox"
               initialValue={item.locked}
             />
+            <span className="checkable">Locked ?</span>
           </Label>
           <Label>
             Rotation:

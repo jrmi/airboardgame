@@ -11,13 +11,13 @@ import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
 import { useTranslation } from "react-i18next";
 
-const SelectedPane = styled.div`
-  position: fixed;
-  right: 1em;
-  bottom: 1em;
-  background: #ffffff77;
-  padding: 0.2em;
-  max-height: 50vh;
+const SelectedPane = styled.div.attrs(() => ({ className: "casrd" }))`
+  position: absolute;
+  right: 0.5em;
+  bottom: 0.5em;
+  background-color: #ffffffe0;
+  padding: 0.5em;
+  max-height: 66%;
   overflow-y: scroll;
 `;
 
@@ -114,21 +114,29 @@ export const SelectedItems = () => {
   return (
     <SelectedPane>
       {selectedItems.length > 1 && (
-        <div>
-          <h2>{selectedItems.length} items selected</h2>
-          <button onClick={shuffleSelectedItems}>{t("Shuffle")}</button>
-          <button onClick={align}>{t("Stack")}</button>
-          <button onClick={flip}>{t("Hide")}</button>
-          <button onClick={unflip}>{t("SHow")}</button>
-          <button onClick={onRemove}>{t("Remove all")}</button>
+        <div className="card">
+          <header>
+            <h3>{selectedItems.length} items selected</h3>
+          </header>
+          <section className="content">
+            <button onClick={shuffleSelectedItems}>{t("Shuffle")}</button>
+            <button onClick={align}>{t("Stack")}</button>
+            <button onClick={flip}>{t("Hide")}</button>
+            <button onClick={unflip}>{t("Reveal")}</button>
+            <button onClick={onRemove}>{t("Remove all")}</button>
+          </section>
         </div>
       )}
       {selectedItems.length === 1 &&
         selectedItemList.map((item) => (
-          <div key={item.id}>
-            <h2>{t("Edit item")}</h2>
-            <ItemFormFactory item={item} onSubmitHandler={onSubmitHandler} />
-            <button onClick={onRemove}>{t("Remove")}</button>
+          <div className="card" key={item.id}>
+            <header>
+              <h3>{t("Edit item")}</h3>
+            </header>
+            <section className="content">
+              <ItemFormFactory item={item} onSubmitHandler={onSubmitHandler} />
+              <button onClick={onRemove}>{t("Remove")}</button>
+            </section>
           </div>
         ))}
     </SelectedPane>

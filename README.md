@@ -13,7 +13,11 @@ Then, execute
 npm ci # To install dependencies
 ```
 
-First you need to start the server:
+Configure the environement:
+
+Copy the `.env.dist` file without the `.dist` extension and edit it.
+
+Now you can start the server:
 
 ```sh
 npm run server

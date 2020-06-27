@@ -4,7 +4,7 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import { selectedItemsAtom } from "../Selector";
 import { shuffle as shuffleArray } from "../../../utils";
 
-import ItemListAtom from "./atoms";
+import { ItemListAtom } from "../game/atoms";
 
 const useItemsAction = () => {
   const [c2c] = useC2C();

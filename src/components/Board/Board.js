@@ -8,6 +8,8 @@ import CursorPane from "./Cursors/CursorPane";
 import PanZoomRotate from "./PanZoomRotate";
 
 import styled from "styled-components";
+import { useRecoilValue } from "recoil";
+import { BoardConfigAtom } from "./game/atoms";
 
 const Placeholder = styled.p`
   position: fixed;
@@ -29,8 +31,10 @@ const StyledBoard = styled.div`
   height: ${({ size }) => size}px;
 `;
 
-export const Board = ({ user, users, config }) => {
+export const Board = ({ user, users }) => {
   const { t } = useTranslation();
+
+  const config = useRecoilValue(BoardConfigAtom);
 
   if (!config.size) {
     return <Placeholder>{t("Please select or load a game")}</Placeholder>;
