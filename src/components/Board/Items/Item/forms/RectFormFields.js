@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { Field } from "react-final-form";
 
 import Label from "./Label";
@@ -6,10 +7,11 @@ import Label from "./Label";
 import ColorPicker from "./ColorPicker";
 
 const Form = ({ initialValues }) => {
+  const { t } = useTranslation();
   return (
     <>
       <Label>
-        Label:
+        {t("Label")}
         <Field
           name="label"
           component="input"
@@ -17,7 +19,7 @@ const Form = ({ initialValues }) => {
         />
       </Label>
       <Label>
-        Width:
+        {t("Width")}
         <Field
           name="width"
           component="input"
@@ -27,7 +29,7 @@ const Form = ({ initialValues }) => {
         </Field>
       </Label>
       <Label>
-        Height:
+        {t("Height")}
         <Field
           name="height"
           component="input"
@@ -38,7 +40,7 @@ const Form = ({ initialValues }) => {
       </Label>
 
       <Label>
-        Color:
+        {t("Color")}
         <Field
           name="color"
           component="input"

@@ -1,13 +1,15 @@
 import React from "react";
 import { Field } from "react-final-form";
+import { useTranslation } from "react-i18next";
 
 import Label from "./Label";
 
 const ImageForm = ({ initialValues }) => {
+  const { t } = useTranslation();
   return (
     <>
       <Label>
-        Label:
+        {t("Label")}
         <Field
           name="label"
           component="input"
@@ -15,7 +17,7 @@ const ImageForm = ({ initialValues }) => {
         />
       </Label>
       <Label>
-        Text:
+        {t("Text")}è
         <Field
           name="text"
           component="input"
@@ -23,7 +25,7 @@ const ImageForm = ({ initialValues }) => {
         />
       </Label>
       <Label>
-        Back Text:
+        {t("Back Text")}
         <Field
           name="backText"
           component="input"
@@ -31,7 +33,7 @@ const ImageForm = ({ initialValues }) => {
         />
       </Label>
       <Label>
-        Width:
+        {t("Width")}
         <Field
           name="width"
           component="input"
@@ -41,7 +43,7 @@ const ImageForm = ({ initialValues }) => {
         </Field>
       </Label>
       <Label>
-        Height:
+        {t("Height")}
         <Field
           name="height"
           component="input"
@@ -51,7 +53,7 @@ const ImageForm = ({ initialValues }) => {
         </Field>
       </Label>
       <Label>
-        Front image:
+        {t("Front image")}
         <Field
           name="content"
           component="input"
@@ -59,7 +61,7 @@ const ImageForm = ({ initialValues }) => {
         />
       </Label>
       <Label>
-        Back image:
+        {t("Back image")}
         <Field
           name="backContent"
           component="input"
@@ -67,7 +69,7 @@ const ImageForm = ({ initialValues }) => {
         />
       </Label>
       <Label>
-        Overlay image:
+        {t("Overlay image")}
         <Field
           name="overlay.content"
           component="input"

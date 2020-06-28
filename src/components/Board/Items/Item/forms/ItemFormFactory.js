@@ -1,5 +1,7 @@
 import React from "react";
 
+import { useTranslation } from "react-i18next";
+
 import { Form, Field } from "react-final-form";
 import AutoSave from "./AutoSave";
 
@@ -37,6 +39,7 @@ const getFormFieldComponent = (type) => {
 };
 
 const ItemFormFactory = ({ item, onSubmitHandler }) => {
+  const { t } = useTranslation();
   const FieldsComponent = getFormFieldComponent(item.type);
   return (
     <Form
@@ -60,10 +63,10 @@ const ItemFormFactory = ({ item, onSubmitHandler }) => {
               type="checkbox"
               initialValue={item.locked}
             />
-            <span className="checkable">Locked ?</span>
+            <span className="checkable">{t("Locked?")}</span>
           </Label>
           <Label>
-            Rotation:
+            {t("Rotation")}
             <Field name="rotation" initialValue={item.rotation}>
               {({ input: { onChange, value } }) => {
                 return (
@@ -89,7 +92,7 @@ const ItemFormFactory = ({ item, onSubmitHandler }) => {
             </Field>
           </Label>
           <Label>
-            Layer:
+            {t("Layer")}
             <Field name="layer" initialValue={item.layer}>
               {({ input: { onChange, value } }) => {
                 return (

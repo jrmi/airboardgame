@@ -34,7 +34,7 @@ export const LoadGameModal = ({ setShowModal, showModal }) => {
       ></div>
       <article>
         <header>
-          <h3>Load Game</h3>
+          <h3>{t("Load game")}</h3>
           <button
             onClick={() => {
               setShowModal(false);

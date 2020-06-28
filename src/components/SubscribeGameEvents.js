@@ -35,7 +35,6 @@ export const SubscribeGameEvents = () => {
       console.log("Register");
       c2c
         .register("getGame", () => {
-          console.log("Send this game", gameRef.current);
           return gameRef.current;
         })
         .then((unregister) => {
@@ -51,7 +50,6 @@ export const SubscribeGameEvents = () => {
     const unsub = [];
     unsub.push(
       c2c.subscribe("loadGame", (game) => {
-        console.log("Loadgame", game);
         setAvailableItemList(game.availableItems);
         setItemList(game.items);
         setBoardConfig(game.board);
