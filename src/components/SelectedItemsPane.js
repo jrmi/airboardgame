@@ -116,7 +116,7 @@ export const SelectedItems = () => {
       {selectedItems.length > 1 && (
         <div className="card">
           <header>
-            <h3>{selectedItems.length} items selected</h3>
+            <h3>{t("items selected", { count: selectedItems.length })}</h3>
           </header>
           <section className="content">
             <button onClick={shuffleSelectedItems}>{t("Shuffle")}</button>

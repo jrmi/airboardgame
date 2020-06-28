@@ -2,16 +2,24 @@ import React, { memo } from "react";
 import { useItems } from "../components/Board/Items";
 import { nanoid } from "nanoid";
 import { useTranslation } from "react-i18next";
+import i18n from "../i18n";
 
-const itemTypes = ["rect", "round", "image", "note", "counter", "dice"];
+const itemTypes = [
+  i18n.t("Rectangle"),
+  i18n.t("Image"),
+  i18n.t("Round"),
+  i18n.t("Note"),
+  i18n.t("Counter"),
+  i18n.t("Dice"),
+];
 
 const itemTemplates = {
-  round: {},
-  rect: {},
-  image: {},
-  note: {},
-  counter: {},
-  dice: {},
+  [i18n.t("Round")]: { type: "round" },
+  [i18n.t("Rectangle")]: { type: "rect" },
+  [i18n.t("Image")]: { type: "image" },
+  [i18n.t("Note")]: { type: "note" },
+  [i18n.t("Counter")]: { type: "counter" },
+  [i18n.t("Dice")]: { type: "dice" },
 };
 
 const NewItem = memo(({ type }) => {
@@ -22,7 +30,6 @@ const NewItem = memo(({ type }) => {
   const onClickHandler = () => {
     const newItem = {
       ...itemTemplates[type],
-      type,
       x: 200,
       y: 50,
       id: nanoid(),
