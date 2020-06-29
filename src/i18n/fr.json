@@ -44,5 +44,12 @@
   "Round": "Rond",
   "Note": "Note",
   "Counter": "Compteur",
-  "Dice": "Dé"
+  "Dice": "Dé",
+  "Actions": "Actions",
+  "Untap": "Restaurer",
+  "Tap": "Engager",
+  "Unlock": "Libérer",
+  "Lock": "Figer",
+  "Edit mode": "Mode édition",
+  "Play": "Jouer"
 }

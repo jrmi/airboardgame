@@ -17,7 +17,7 @@ const ImageForm = ({ initialValues }) => {
         />
       </Label>
       <Label>
-        {t("Text")}è
+        {t("Text")}
         <Field
           name="text"
           component="input"
