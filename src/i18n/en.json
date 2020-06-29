@@ -44,5 +44,12 @@
   "Round": "Round",
   "Note": "Note",
   "Counter": "Counter",
-  "Dice": "Dice"
+  "Dice": "Dice",
+  "Actions": "Actions",
+  "Untap": "Untap",
+  "Tap": "Tap",
+  "Unlock": "Unlock",
+  "Lock": "Lock",
+  "Edit mode": "Edit mode",
+  "Play": "Play"
 }

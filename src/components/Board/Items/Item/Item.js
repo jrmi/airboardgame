@@ -114,6 +114,7 @@ const Item = ({ setState, state }) => {
         position: "absolute",
         display: "inline-block",
         transform: `rotate(${rotation}deg)`,
+        transition: "transform 200ms",
         zIndex: (state.layer || 0) + 3,
         ...extraStyle,
       }}

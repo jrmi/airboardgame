@@ -21,7 +21,7 @@ const SelectedPane = styled.div.attrs(() => ({ className: "casrd" }))`
   overflow-y: scroll;
 `;
 
-export const SelectedItems = () => {
+export const SelectedItems = ({ edit }) => {
   const {
     itemList,
     updateItem,
@@ -73,6 +73,41 @@ export const SelectedItems = () => {
     }));
   }, [selectedItems, batchUpdateItems]);
 
+  const tap = React.useCallback(() => {
+    batchUpdateItems(selectedItems, (item) => ({
+      ...item,
+      rotation: 90,
+    }));
+  }, [selectedItems, batchUpdateItems]);
+
+  const untap = React.useCallback(() => {
+    batchUpdateItems(selectedItems, (item) => ({
+      ...item,
+      rotation: 0,
+    }));
+  }, [selectedItems, batchUpdateItems]);
+
+  const toggleTap = React.useCallback(() => {
+    batchUpdateItems(selectedItems, (item) => ({
+      ...item,
+      rotation: item.rotation === 90 ? 0 : 90,
+    }));
+  }, [selectedItems, batchUpdateItems]);
+
+  const toggleLock = React.useCallback(() => {
+    batchUpdateItems(selectedItems, (item) => ({
+      ...item,
+      locked: !item.locked,
+    }));
+  }, [selectedItems, batchUpdateItems]);
+
+  const toggleFlip = React.useCallback(() => {
+    batchUpdateItems(selectedItems, (item) => ({
+      ...item,
+      flipped: !item.flipped,
+    }));
+  }, [selectedItems, batchUpdateItems]);
+
   const unflip = React.useCallback(() => {
     batchUpdateItems(selectedItems, (item) => ({
       ...item,
@@ -111,34 +146,64 @@ export const SelectedItems = () => {
     });
   };
 
+  if (selectedItems.length === 1) {
+    return (
+      <SelectedPane>
+        {edit &&
+          selectedItemList.map((item) => (
+            <div className="card" key={item.id}>
+              <header>
+                <h3>{t("Edit item")}</h3>
+              </header>
+              <section className="content">
+                <ItemFormFactory
+                  item={item}
+                  onSubmitHandler={onSubmitHandler}
+                />
+                <button onClick={onRemove}>{t("Remove")}</button>
+              </section>
+            </div>
+          ))}
+        {!edit &&
+          selectedItemList.map((item) => (
+            <div className="card" key={item.id}>
+              <header>
+                <h3>{t("Actions")}</h3>
+              </header>
+              <section className="content">
+                {item.type === "image" && item.backContent && (
+                  <button onClick={toggleFlip}>
+                    {item.flipped ? t("Reveal") : t("Hide")}
+                  </button>
+                )}
+                <button onClick={toggleTap}>
+                  {item.rotation === 90 ? t("Untap") : t("Tap")}
+                </button>
+                <button onClick={toggleLock}>
+                  {item.locked ? t("Unlock") : t("Lock")}
+                </button>
+              </section>
+            </div>
+          ))}
+      </SelectedPane>
+    );
+  }
   return (
     <SelectedPane>
-      {selectedItems.length > 1 && (
-        <div className="card">
-          <header>
-            <h3>{t("items selected", { count: selectedItems.length })}</h3>
-          </header>
-          <section className="content">
-            <button onClick={shuffleSelectedItems}>{t("Shuffle")}</button>
-            <button onClick={align}>{t("Stack")}</button>
-            <button onClick={flip}>{t("Hide")}</button>
-            <button onClick={unflip}>{t("Reveal")}</button>
-            <button onClick={onRemove}>{t("Remove all")}</button>
-          </section>
-        </div>
-      )}
-      {selectedItems.length === 1 &&
-        selectedItemList.map((item) => (
-          <div className="card" key={item.id}>
-            <header>
-              <h3>{t("Edit item")}</h3>
-            </header>
-            <section className="content">
-              <ItemFormFactory item={item} onSubmitHandler={onSubmitHandler} />
-              <button onClick={onRemove}>{t("Remove")}</button>
-            </section>
-          </div>
-        ))}
+      <div className="card">
+        <header>
+          <h3>{t("items selected", { count: selectedItems.length })}</h3>
+        </header>
+        <section className="content">
+          <button onClick={shuffleSelectedItems}>{t("Shuffle")}</button>
+          <button onClick={align}>{t("Stack")}</button>
+          <button onClick={flip}>{t("Hide")}</button>
+          <button onClick={unflip}>{t("Reveal")}</button>
+          <button onClick={tap}>{t("Tap")}</button>
+          <button onClick={untap}>{t("Untap")}</button>
+          {edit && <button onClick={onRemove}>{t("Remove all")}</button>}
+        </section>
+      </div>
     </SelectedPane>
   );
 };

@@ -3,13 +3,30 @@ const genGame = () => {
 
   items.push({
     type: "image",
-    content: "/games/card.jpg",
-    backContent: "/games/back.jpg",
+    content: "/games/AS.jpg",
+    backContent: "/games/Red_back.jpg",
     width: 100,
-    x: 100,
+    x: 400,
     y: 100,
   });
 
+  items.push({
+    type: "image",
+    content: "/games/BH.jpg",
+    backContent: "/games/Red_back.jpg",
+    width: 100,
+    x: 410,
+    y: 100,
+  });
+
+  items.push({
+    type: "image",
+    content: "/games/JC.jpg",
+    backContent: "/games/Red_back.jpg",
+    width: 100,
+    x: 420,
+    y: 100,
+  });
   items.push({
     type: "rect",
     color: "#00D022",
