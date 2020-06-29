@@ -1,5 +1,54 @@
 import React, { memo } from "react";
 import { useUsers } from "../../../../components/users";
+import styled from "styled-components";
+
+const OnlyYouLabel = styled.div`
+  position: absolute;
+  top: -20px;
+  right: 2px;
+  color: #555;
+  font-size: 0.6em;
+
+  background-color: #cccccca0;
+  pointer-events: none;
+`;
+
+const Label = styled.div`
+  position: absolute;
+  top: 1px;
+  right: 1px;
+  padding: 0 3px;
+  background-color: black;
+  color: white;
+  border-radius: 0.5em;
+  opacity: 0.5;
+`;
+
+const Wrapper = styled.div`
+  user-select: none;
+  position: relative;
+`;
+
+const StyledImage = styled.img`
+  transition: transform 200ms;
+  transform: rotateY(${({ visible }) => (visible ? 0 : 180)}deg);
+  backface-visibility: hidden;
+  pointer-events: none;
+  z-index: -1;
+`;
+
+const BackImage = styled(StyledImage)`
+  position: absolute;
+  top: 0;
+  left: 0;
+`;
+
+const OverlayImage = styled.img`
+  pointer-events: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+`;
 
 // See https://stackoverflow.com/questions/3680429/click-through-div-to-underlying-elements
 // https://developer.mozilla.org/fr/docs/Web/CSS/pointer-events
@@ -11,7 +60,8 @@ const Image = ({
   flipped = false,
   setState,
   unflippedFor,
-  text,
+  label,
+  text = label,
   backText,
   overlay,
 }) => {
@@ -26,10 +76,12 @@ const Image = ({
 
   const onDblClick = React.useCallback(
     (e) => {
+      if (!backContent) return;
       if (e.ctrlKey) {
+        // Reveal only for current player
         setState((prevItem) => {
-          if (prevItem.unflippedFor !== null) {
-            return { ...prevItem, unflippedFor: null };
+          if (prevItem.unflippedFor !== undefined) {
+            return { ...prevItem, unflippedFor: undefined };
           } else {
             return {
               ...prevItem,
@@ -42,102 +94,46 @@ const Image = ({
         setState((prevItem) => ({
           ...prevItem,
           flipped: !prevItem.flipped,
-          unflippedFor: null,
+          unflippedFor: undefined,
         }));
       }
     },
-    [setState, currentUser.id]
+    [setState, currentUser.id, backContent]
   );
 
-  let image;
-  if (
+  const flippedForMe =
     backContent &&
-    (flipped || (unflippedFor && unflippedFor !== currentUser.id))
-  ) {
-    image = (
-      <>
-        {text && (
-          <div
-            className="image-text"
-            style={{
-              position: "absolute",
-              right: 0,
-              padding: "0 3px",
-              backgroundColor: "black",
-              color: "white",
-              borderRadius: "50%",
-              userSelect: "none",
-            }}
-          >
-            {backText}
-          </div>
-        )}
-        <img
-          src={backContent}
-          alt=""
-          draggable={false}
-          {...size}
-          style={{ userSelect: "none", pointerEvents: "none" }}
-        />
-      </>
-    );
-  } else {
-    image = (
-      <div className="image-wrapper" style={{ position: "relative" }}>
-        {unflippedFor && (
-          <div
-            style={{
-              position: "absolute",
-              top: "-18px",
-              left: "4px",
-              color: "#555",
-              backgroundColor: "#CCCCCCA0",
-              userSelect: "none",
-              pointerEvents: "none",
-            }}
-          >
-            Only you
-          </div>
-        )}
-        {overlay && (
-          <img
-            src={overlay.content}
-            alt=""
-            style={{
-              position: "absolute",
-              userSelect: "none",
-              pointerEvents: "none",
-            }}
-          />
-        )}
-        {text && (
-          <div
-            className="image-text"
-            style={{
-              position: "absolute",
-              right: 0,
-              padding: "0 3px",
-              backgroundColor: "black",
-              color: "white",
-              borderRadius: "50%",
-              userSelect: "none",
-            }}
-          >
-            {text}
-          </div>
-        )}
-        <img
-          src={content}
-          alt=""
-          draggable={false}
-          {...size}
-          style={{ userSelect: "none", pointerEvents: "none" }}
-        />
-      </div>
-    );
-  }
+    (flipped || (unflippedFor && unflippedFor !== currentUser.id));
 
-  return <div onDoubleClick={onDblClick}>{image}</div>;
+  return (
+    <Wrapper onDoubleClick={onDblClick}>
+      {unflippedFor === currentUser.id && <OnlyYouLabel>Only you</OnlyYouLabel>}
+      {overlay && (
+        <OverlayImage
+          src={overlay.content}
+          draggable={false}
+          alt=""
+          {...size}
+        />
+      )}
+      {flippedForMe && backText && <Label>{backText}</Label>}
+      {(!flippedForMe || !backText) && text && <Label>{text}</Label>}
+      <StyledImage
+        visible={!flippedForMe}
+        src={content}
+        alt=""
+        draggable={false}
+        {...size}
+      />
+      <BackImage
+        visible={flippedForMe}
+        src={backContent}
+        alt=""
+        draggable={false}
+        {...size}
+      />
+    </Wrapper>
+  );
 };
 
 export default memo(Image);
