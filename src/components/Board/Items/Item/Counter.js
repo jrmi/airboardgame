@@ -26,9 +26,14 @@ const Counter = ({
   setState,
 }) => {
   const setValue = (e) => {
+    let value = parseInt(e.target.value, 10);
+    if (isNaN(value)) {
+      value = 0;
+    }
+
     setState((prevState) => ({
       ...prevState,
-      value: e.target.value,
+      value: value,
     }));
   };
 
