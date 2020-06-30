@@ -5,11 +5,15 @@ import { useRecoilValue } from "recoil";
 import { useItems } from "./Board/Items";
 import { selectedItemsAtom } from "../components/Board/Selector";
 
+import { insideClass } from "../utils";
+
 import ItemFormFactory from "./Board/Items/Item/forms/ItemFormFactory";
 
 import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
+
 import { useTranslation } from "react-i18next";
+import { useUsers } from "./users";
 
 const SelectedPane = styled.div.attrs(() => ({ className: "casrd" }))`
   position: absolute;
@@ -31,6 +35,8 @@ export const SelectedItems = ({ edit }) => {
   } = useItems();
 
   const { t } = useTranslation();
+
+  const { currentUser } = useUsers();
 
   const selectedItems = useRecoilValue(selectedItemsAtom);
 
@@ -66,33 +72,21 @@ export const SelectedItems = ({ edit }) => {
     });
   }, [selectedItemList, selectedItems, batchUpdateItems]);
 
-  const flip = React.useCallback(() => {
-    batchUpdateItems(selectedItems, (item) => ({
-      ...item,
-      flipped: true,
-    }));
-  }, [selectedItems, batchUpdateItems]);
-
-  const tap = React.useCallback(() => {
-    batchUpdateItems(selectedItems, (item) => ({
-      ...item,
-      rotation: 90,
-    }));
-  }, [selectedItems, batchUpdateItems]);
-
-  const untap = React.useCallback(() => {
-    batchUpdateItems(selectedItems, (item) => ({
-      ...item,
-      rotation: 0,
-    }));
-  }, [selectedItems, batchUpdateItems]);
-
   const toggleTap = React.useCallback(() => {
+    const tappedCount = selectedItemList.filter(
+      ({ rotation }) => rotation === 90
+    ).length;
+
+    let untap = false;
+    if (tappedCount > selectedItems.length / 2) {
+      untap = true;
+    }
+
     batchUpdateItems(selectedItems, (item) => ({
       ...item,
-      rotation: item.rotation === 90 ? 0 : 90,
+      rotation: untap ? 0 : 90,
     }));
-  }, [selectedItems, batchUpdateItems]);
+  }, [selectedItems, batchUpdateItems, selectedItemList]);
 
   const toggleLock = React.useCallback(() => {
     batchUpdateItems(selectedItems, (item) => ({
@@ -102,29 +96,62 @@ export const SelectedItems = ({ edit }) => {
   }, [selectedItems, batchUpdateItems]);
 
   const toggleFlip = React.useCallback(() => {
-    batchUpdateItems(selectedItems, (item) => ({
-      ...item,
-      flipped: !item.flipped,
-    }));
-  }, [selectedItems, batchUpdateItems]);
+    const flippedCount = selectedItemList.filter(({ flipped }) => flipped)
+      .length;
 
-  const unflip = React.useCallback(() => {
+    let flip = true;
+    if (flippedCount > selectedItems.length / 2) {
+      flip = false;
+    }
     batchUpdateItems(selectedItems, (item) => ({
       ...item,
-      flipped: false,
+      flipped: flip,
+      unflippedFor: undefined,
     }));
-  }, [selectedItems, batchUpdateItems]);
+  }, [selectedItemList, selectedItems, batchUpdateItems]);
+
+  const revealForMe = React.useCallback(() => {
+    batchUpdateItems(selectedItems, (item) => ({
+      ...item,
+      flipped: true,
+      unflippedFor: currentUser.id,
+    }));
+  }, [batchUpdateItems, selectedItems, currentUser.id]);
+
+  React.useEffect(() => {
+    const onKeyUp = (e) => {
+      if (e.key === "f") {
+        if (insideClass(e.target, "item")) return;
+        toggleFlip();
+      }
+      if (e.key === "t") {
+        if (insideClass(e.target, "item")) return;
+        toggleTap();
+      }
+      if (e.key === "o") {
+        if (insideClass(e.target, "item")) return;
+        revealForMe();
+      }
+    };
+    document.addEventListener("keyup", onKeyUp);
+    return () => {
+      document.removeEventListener("keyup", onKeyUp);
+    };
+  }, [revealForMe, toggleFlip, toggleTap]);
+
+  const onSubmitHandler = React.useCallback(
+    (formValues) => {
+      updateItem(formValues.id, (item) => ({
+        ...item,
+        ...formValues,
+      }));
+    },
+    [updateItem]
+  );
 
   if (selectedItemList.length === 0) {
     return null;
   }
-
-  const onSubmitHandler = (formValues) => {
-    updateItem(formValues.id, (item) => ({
-      ...item,
-      ...formValues,
-    }));
-  };
 
   const onRemove = () => {
     confirmAlert({
@@ -195,12 +222,10 @@ export const SelectedItems = ({ edit }) => {
           <h3>{t("items selected", { count: selectedItems.length })}</h3>
         </header>
         <section className="content">
-          <button onClick={shuffleSelectedItems}>{t("Shuffle")}</button>
+          <button onClick={toggleFlip}>{t("Reveal") + "/" + t("Hide")}</button>
+          <button onClick={toggleTap}>{t("Tap") + "/" + t("Untap")}</button>
           <button onClick={align}>{t("Stack")}</button>
-          <button onClick={flip}>{t("Hide")}</button>
-          <button onClick={unflip}>{t("Reveal")}</button>
-          <button onClick={tap}>{t("Tap")}</button>
-          <button onClick={untap}>{t("Untap")}</button>
+          <button onClick={shuffleSelectedItems}>{t("Shuffle")}</button>
           {edit && <button onClick={onRemove}>{t("Remove all")}</button>}
         </section>
       </div>

@@ -29,7 +29,7 @@ const Wrapper = styled.div`
   position: relative;
 `;
 
-const StyledImage = styled.img`
+const FrontImage = styled.img`
   transition: transform 200ms;
   transform: rotateY(${({ visible }) => (visible ? 0 : 180)}deg);
   backface-visibility: hidden;
@@ -37,7 +37,7 @@ const StyledImage = styled.img`
   z-index: -1;
 `;
 
-const BackImage = styled(StyledImage)`
+const BackImage = styled(FrontImage)`
   position: absolute;
   top: 0;
   left: 0;
@@ -86,7 +86,7 @@ const Image = ({
             return {
               ...prevItem,
               unflippedFor: currentUser.id,
-              flipped: false,
+              flipped: true,
             };
           }
         });
@@ -102,8 +102,7 @@ const Image = ({
   );
 
   const flippedForMe =
-    backContent &&
-    (flipped || (unflippedFor && unflippedFor !== currentUser.id));
+    backContent && flipped && unflippedFor !== currentUser.id;
 
   return (
     <Wrapper onDoubleClick={onDblClick}>
@@ -118,7 +117,7 @@ const Image = ({
       )}
       {flippedForMe && backText && <Label>{backText}</Label>}
       {(!flippedForMe || !backText) && text && <Label>{text}</Label>}
-      <StyledImage
+      <FrontImage
         visible={!flippedForMe}
         src={content}
         alt=""

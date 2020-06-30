@@ -4,6 +4,8 @@ import { useRecoilValue } from "recoil";
 import { selectedItemsAtom } from "../../Selector";
 import debounce from "lodash.debounce";
 
+import styled, { css } from "styled-components";
+
 import Rect from "./Rect";
 import Round from "./Round";
 import Image from "./Image";
@@ -30,21 +32,47 @@ const getComponent = (type) => {
   }
 };
 
+const ItemWrapper = styled.div.attrs(({ x, y, rotation }) => ({
+  className: "item",
+  style: { left: `${x}px`, top: `${y}px`, transform: `rotate(${rotation}deg)` },
+}))`
+  position: absolute;
+  display: inline-block;
+  transition: transform 200ms;
+  z-index: ${({ layer }) => (layer || 0) + 3};
+  ${({ selected }) =>
+    selected
+      ? css`
+          border: 2px dashed #ff0000a0;
+          padding: 2px;
+          cursor: pointer;
+        `
+      : css`
+          padding: 4px;
+        `}
+  ${({ locked }) =>
+    locked &&
+    css`
+      pointer-events: none;
+      user-select: none;
+    `}
+`;
+
 const Item = ({ setState, state }) => {
   const selectedItems = useRecoilValue(selectedItemsAtom);
   const itemRef = React.useRef(null);
   const sizeRef = React.useRef({});
   const [unlock, setUnlock] = React.useState(false);
 
-  // Allow to operate on locked item if ctrl is pressed
+  // Allow to operate on locked item if key is pressed
   React.useEffect(() => {
     const onKeyDown = (e) => {
-      if (e.key === "Control") {
+      if (e.key === "u" || e.key === "l") {
         setUnlock(true);
       }
     };
     const onKeyUp = (e) => {
-      if (e.key === "Control") {
+      if (e.key === "u" || e.key === "l") {
         setUnlock(false);
       }
     };
@@ -65,6 +93,7 @@ const Item = ({ setState, state }) => {
     [setState, state.id]
   );
 
+  // Update actual dimension. Usefull when image with own dimensions.
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const actualSizeCallback = React.useCallback(
     debounce((entries) => {
@@ -102,43 +131,18 @@ const Item = ({ setState, state }) => {
     };
   }, [actualSizeCallback]);
 
-  const extraStyle = selectedItems.includes(state.id)
-    ? { border: "2px dashed #ff0000a0", padding: "2px" }
-    : { padding: "4px" };
-
-  const content = (
-    <div
-      style={{
-        left: state.x + "px",
-        top: state.y + "px",
-        position: "absolute",
-        display: "inline-block",
-        transform: `rotate(${rotation}deg)`,
-        transition: "transform 200ms",
-        zIndex: (state.layer || 0) + 3,
-        ...extraStyle,
-      }}
-      className="item"
+  return (
+    <ItemWrapper
+      x={state.x}
+      y={state.y}
+      rotation={rotation}
+      locked={state.locked && !unlock}
+      selected={selectedItems.includes(state.id)}
       ref={itemRef}
       id={state.id}
     >
       <Component {...state} x={0} y={0} setState={updateState} />
-    </div>
-  );
-
-  if (!state.locked || unlock) {
-    return content;
-  }
-
-  return (
-    <div
-      style={{
-        pointerEvents: "none",
-        userSelect: "none",
-      }}
-    >
-      {content}
-    </div>
+    </ItemWrapper>
   );
 };
 
