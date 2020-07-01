@@ -9,8 +9,7 @@ import SelectedItemsPane from "../components/SelectedItemsPane";
 import { useUsers, SubscribeUserEvents, UserList } from "../components/users";
 import LoadGameModal from "../components/LoadGameModal";
 import HelpModal from "../components/HelpModal";
-import { useC2C } from "../hooks/useC2C";
-import { useTranslation } from "react-i18next";
+import NavBar from "../components/NavBar";
 
 const BoardContainer = styled.div`
   width: 100%;
@@ -20,57 +19,40 @@ const BoardContainer = styled.div`
   background-color: #202b38;
 `;
 
-const EditButton = styled.button`
-  position: absolute;
-  top: 0.5em;
-  left: 5em;
-  z-index: 10;
-`;
-
-const HelpButton = styled.button`
-  position: absolute;
-  top: 0.5em;
-  left: 15em;
-  z-index: 10;
-`;
-
 export const BoardView = () => {
-  const { t } = useTranslation();
   const { currentUser, users } = useUsers();
-  const [, , isMaster] = useC2C();
   const [showLoadGameModal, setShowLoadGameModal] = React.useState(false);
   const [showHelpModal, setShowHelpModal] = React.useState(false);
+  const [menuOpen, setMenuOpen] = React.useState(false);
   const [edit, setEdit] = React.useState(false);
 
-  const toggleEdit = () => {
-    setEdit((prev) => !prev);
-  };
-
-  const showHelp = () => {
-    setShowHelpModal(true);
-  };
-
   return (
-    <BoardContainer>
-      <BoardMenu setShowLoadGameModal={setShowLoadGameModal} />
-      {isMaster && (
-        <EditButton onClick={toggleEdit}>
-          {!edit ? t("Edit mode") : t("Play")}
-        </EditButton>
-      )}
-      <HelpButton onClick={showHelp}>{t("Help")}</HelpButton>
+    <>
       <SubscribeUserEvents />
       <SubscribeGameEvents />
-      <UserList />
-      <Board user={currentUser} users={users} />
-      <SelectedItemsPane edit={edit} />
-      {edit && <GameController />}
-      <LoadGameModal
-        showModal={showLoadGameModal}
-        setShowModal={setShowLoadGameModal}
+      <NavBar
+        setMenuOpen={setMenuOpen}
+        setShowHelpModal={setShowHelpModal}
+        setEditMode={setEdit}
+        edit={edit}
       />
-      <HelpModal show={showHelpModal} setShow={setShowHelpModal} />
-    </BoardContainer>
+      <BoardMenu
+        isOpen={menuOpen}
+        setMenuOpen={setMenuOpen}
+        setShowLoadGameModal={setShowLoadGameModal}
+      />
+      <BoardContainer>
+        <UserList />
+        <Board user={currentUser} users={users} />
+        <SelectedItemsPane edit={edit} />
+        {edit && <GameController />}
+        <LoadGameModal
+          showModal={showLoadGameModal}
+          setShowModal={setShowLoadGameModal}
+        />
+        <HelpModal show={showHelpModal} setShow={setShowHelpModal} />
+      </BoardContainer>
+    </>
   );
 };
 

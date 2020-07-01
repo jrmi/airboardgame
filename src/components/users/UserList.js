@@ -6,9 +6,9 @@ import styled from "styled-components";
 
 const UserList = styled.ul.attrs(() => ({ className: "uk-card" }))`
   position: absolute;
-  right: 1rem;
-  top: 1rem;
-  background-color: #ffffffe0;
+  right: 0;
+  top: 3.2em;
+  background-color: #ffffff40;
   padding: 0.2em;
   list-style: none;
   margin: 0;
