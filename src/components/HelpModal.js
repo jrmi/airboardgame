@@ -2,7 +2,25 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { Trans } from "react-i18next";
 
+import styled from "styled-components";
+
 import Modal from "./Modal";
+
+const Kbd = styled.kbd`
+  background-color: #eee;
+  border-radius: 3px;
+  border: 1px solid #b4b4b4;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2),
+    0 2px 0 0 rgba(255, 255, 255, 0.7) inset;
+  color: #333;
+  display: inline-block;
+  font-family: consolas, "Liberation Mono", courier, monospace;
+  font-size: 0.85em;
+  font-weight: 700;
+  line-height: 1;
+  padding: 2px 4px;
+  white-space: nowrap;
+`;
 
 const HelpModal = ({ show, setShow }) => {
   const { t } = useTranslation();
@@ -41,18 +59,17 @@ const HelpModal = ({ show, setShow }) => {
         <ul>
           <li>Double click on any item that can be flipped to flip it.</li>
           <li>
-            <strong>t</strong> key to tap/untap selected items.
+            <Kbd>t</Kbd> key to tap/untap selected items.
           </li>
           <li>
-            <strong>f</strong> key to flip/unflip selected items.
+            <Kbd>f</Kbd> key to flip/unflip selected items.
           </li>
           <li>
-            <strong>o</strong> key to reveal front side of selected flipped
-            items ONLY to you.
+            <Kbd>o</Kbd> key to reveal front side of selected flipped items ONLY
+            to you.
           </li>
           <li>
-            <strong>l</strong> key to be able to selected previously locked
-            item.
+            <Kbd>l</Kbd> key to be able to selected previously locked item.
           </li>
         </ul>
       </Trans>

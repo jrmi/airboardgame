@@ -12,6 +12,7 @@ import DownloadGameLink from "../components/DownloadGameLink";
 
 const styles = {
   bmBurgerButton: {
+    display: "none",
     position: "fixed",
     width: "36px",
     height: "30px",
@@ -34,7 +35,10 @@ const styles = {
   bmMenuWrap: {
     width: "25%",
     position: "fixed",
-    height: "100%",
+    top: "3em",
+    left: 0,
+    bottom: 0,
+    height: "auto",
   },
   bmMenu: {
     background: "#373a47",
@@ -65,7 +69,6 @@ const GAMELIST_URL = process.env.REACT_APP_GAMELIST_URL || "/gamelist.json";
 const isProduction = process.env.NODE_ENV === "production";
 
 const loadGameList = async () => {
-  console.log(GAMELIST_URL);
   const result = await fetch(GAMELIST_URL);
   return await result.json();
 };
@@ -75,7 +78,7 @@ const fetchGame = async (url) => {
   return await result.json();
 };
 
-const BoardMenu = ({ setShowLoadGameModal }) => {
+const BoardMenu = ({ setShowLoadGameModal, isOpen, setMenuOpen }) => {
   const { t } = useTranslation();
   const [c2c, , isMaster] = useC2C();
   const [gameList, setGameList] = React.useState([]);
@@ -90,8 +93,9 @@ const BoardMenu = ({ setShowLoadGameModal }) => {
     (game) => {
       game.items = game.items.map((item) => ({ ...item, id: nanoid() }));
       c2c.publish("loadGame", game, true);
+      setMenuOpen(false);
     },
-    [c2c]
+    [c2c, setMenuOpen]
   );
 
   const loadGameUrl = React.useCallback(
@@ -116,12 +120,24 @@ const BoardMenu = ({ setShowLoadGameModal }) => {
     loadGame(testGame);
   }, [loadGame]);
 
+  const handleStateChange = React.useCallback(
+    (state) => {
+      setMenuOpen(state.isOpen);
+    },
+    [setMenuOpen]
+  );
+
   if (!isMaster) {
     return null;
   }
 
   return (
-    <Menu styles={styles}>
+    <Menu
+      isOpen={isOpen}
+      styles={styles}
+      onStateChange={handleStateChange}
+      disableAutoFocus
+    >
       <h3>{t("Games")}</h3>
       <button className="button" onClick={newGame}>
         {t("New Game")}
@@ -132,13 +148,25 @@ const BoardMenu = ({ setShowLoadGameModal }) => {
         </button>
       )}
       {gameList.map(({ name, url }) => (
-        <button className="button" key={name} onClick={() => loadGameUrl(url)}>
+        <button
+          className="button"
+          key={name}
+          onClick={() => {
+            loadGameUrl(url);
+          }}
+        >
           {name}
         </button>
       ))}
       <h3>{t("Save")}</h3>
       <LoadLastGameLink />
-      <button className="button" onClick={() => setShowLoadGameModal(true)}>
+      <button
+        className="button"
+        onClick={() => {
+          setShowLoadGameModal(true);
+          setMenuOpen(false);
+        }}
+      >
         {t("Load game")}
       </button>
 

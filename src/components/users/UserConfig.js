@@ -16,8 +16,8 @@ const UserColor = styled.div`
 
 const ColorPickerWrapper = styled.div`
   position: absolute;
-  top: 38px;
-  left: -53px;
+  top: 45px;
+  left: -68px;
   z-index: 1000;
 `;
 
