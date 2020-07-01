@@ -6,6 +6,8 @@ import { nanoid } from "nanoid";
 
 import LoadGame from "./LoadGame";
 
+import Modal from "./Modal";
+
 export const LoadGameModal = ({ setShowModal, showModal }) => {
   const { t } = useTranslation();
   const [c2c] = useC2C();
@@ -24,41 +26,23 @@ export const LoadGameModal = ({ setShowModal, showModal }) => {
   }
 
   return (
-    <div className="modal">
-      <input id="modal_1" type="checkbox" checked={showModal} />
-      <div
-        className="overlay"
-        onClick={() => {
-          setShowModal(false);
-        }}
-      ></div>
-      <article>
-        <header>
-          <h3>{t("Load game")}</h3>
-          <button
-            onClick={() => {
-              setShowModal(false);
-            }}
-            className="close"
-          >
-            &times;
-          </button>
-        </header>
-        <section className="content">
-          <LoadGame onLoad={loadGame} />
-        </section>
-        <footer>
-          <button
-            onClick={() => {
-              setShowModal(false);
-            }}
-            className="button dangerous"
-          >
-            {t("Cancel")}
-          </button>
-        </footer>
-      </article>
-    </div>
+    <Modal
+      title={t("Load game")}
+      setShow={setShowModal}
+      show={showModal}
+      footer={
+        <button
+          onClick={() => {
+            setShowModal(false);
+          }}
+          className="button dangerous"
+        >
+          {t("Cancel")}
+        </button>
+      }
+    >
+      <LoadGame onLoad={loadGame} />
+    </Modal>
   );
 };
 
