@@ -69,12 +69,17 @@ const useItemsAction = () => {
     [setItemList, selectedItems, c2c]
   );
 
-  const putItemOnTop = React.useCallback(
-    (itemIdToMove) => {
+  const putItemsOnTop = React.useCallback(
+    (itemIdsToMove) => {
       setItemList((prevItemList) => {
-        const itemToMove = prevItemList.find(({ id }) => itemIdToMove === id);
-        const result = prevItemList.filter(({ id }) => itemIdToMove !== id);
-        result.push(itemToMove);
+        const itemsToMove = prevItemList.filter(({ id }) =>
+          itemIdsToMove.includes(id)
+        );
+        const result = [
+          ...prevItemList.filter(({ id }) => !itemIdsToMove.includes(id)),
+          ...itemsToMove,
+        ];
+        console.log(result);
         c2c.publish(
           `updateItemListOrder`,
           result.map(({ id }) => id)
@@ -140,7 +145,7 @@ const useItemsAction = () => {
 
   return {
     itemList,
-    putItemOnTop,
+    putItemsOnTop,
     batchUpdateItems,
     moveSelectedItems,
     updateItem,

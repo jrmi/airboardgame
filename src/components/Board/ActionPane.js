@@ -8,7 +8,7 @@ import { insideClass } from "../../utils";
 
 const ActionPane = ({ children }) => {
   const panZoomRotate = useRecoilValue(PanZoomRotateState);
-  const { putItemOnTop, moveSelectedItems } = useItems();
+  const { putItemsOnTop, moveSelectedItems } = useItems();
   const [selectedItems, setSelectedItems] = useRecoilState(selectedItemsAtom);
   const wrapperRef = React.useRef(null);
   const actionRef = React.useRef({});
@@ -22,10 +22,17 @@ const ActionPane = ({ children }) => {
       };
       const foundElement = insideClass(e.target, "item");
       if (foundElement) {
+        let selectedItemsToMove = selectedItems;
         if (!selectedItems.includes(foundElement.id)) {
-          setSelectedItems([foundElement.id]);
-          putItemOnTop(foundElement.id);
+          if (e.ctrlKey || e.metaKey) {
+            setSelectedItems((prev) => [...prev, foundElement.id]);
+            selectedItemsToMove = [...selectedItems, foundElement.id];
+          } else {
+            setSelectedItems([foundElement.id]);
+            selectedItemsToMove = [foundElement.id];
+          }
         }
+        putItemsOnTop(selectedItemsToMove);
         actionRef.current.moving = true;
         actionRef.current.startX = point.x;
         actionRef.current.startY = point.y;
