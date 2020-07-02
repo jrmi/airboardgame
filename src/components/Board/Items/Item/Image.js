@@ -22,6 +22,7 @@ const Label = styled.div`
   color: white;
   border-radius: 0.5em;
   opacity: 0.5;
+  font-size: 0.6em;
 `;
 
 const Wrapper = styled.div`
