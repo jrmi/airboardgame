@@ -32,6 +32,7 @@ export const SelectedItems = ({ edit }) => {
     batchUpdateItems,
     shuffleSelectedItems,
     removeItem,
+    reverseItemsOrder,
   } = useItems();
 
   const { t } = useTranslation();
@@ -108,7 +109,8 @@ export const SelectedItems = ({ edit }) => {
       flipped: flip,
       unflippedFor: undefined,
     }));
-  }, [selectedItemList, selectedItems, batchUpdateItems]);
+    reverseItemsOrder(selectedItems);
+  }, [selectedItemList, selectedItems, batchUpdateItems, reverseItemsOrder]);
 
   const revealForMe = React.useCallback(() => {
     batchUpdateItems(selectedItems, (item) => ({
