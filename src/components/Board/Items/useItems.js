@@ -79,7 +79,29 @@ const useItemsAction = () => {
           ...prevItemList.filter(({ id }) => !itemIdsToMove.includes(id)),
           ...itemsToMove,
         ];
-        console.log(result);
+        c2c.publish(
+          `updateItemListOrder`,
+          result.map(({ id }) => id)
+        );
+        return result;
+      });
+    },
+    [setItemList, c2c]
+  );
+
+  const reverseItemsOrder = React.useCallback(
+    (itemIdsToReverse) => {
+      setItemList((prevItemList) => {
+        const itemsToReverse = prevItemList.filter(({ id }) =>
+          itemIdsToReverse.includes(id)
+        );
+        //itemsToReverse.reverse();
+        const result = prevItemList.map((item) => {
+          if (itemIdsToReverse.includes(item.id)) {
+            return itemsToReverse.pop();
+          }
+          return item;
+        });
         c2c.publish(
           `updateItemListOrder`,
           result.map(({ id }) => id)
@@ -150,6 +172,7 @@ const useItemsAction = () => {
     moveSelectedItems,
     updateItem,
     shuffleSelectedItems,
+    reverseItemsOrder,
     setItemList,
     pushItem,
     removeItem,
