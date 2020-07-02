@@ -26,6 +26,8 @@ const PanZoomRotate = ({ children }) => {
   const [dim, setDim] = useRecoilState(PanZoomRotateState);
   const wrapperRef = React.useRef(null);
   const wrappedRef = React.useRef(null);
+  const scaleRef = React.useRef(dim.scale);
+  scaleRef.current = dim.scale;
   const stateRef = React.useRef({
     moving: false,
   });
@@ -38,7 +40,7 @@ const PanZoomRotate = ({ children }) => {
     const scaleMult = (e.deltaY * dim.scale) / 20;
 
     setDim((prevDim) => {
-      let newScale = prevDim.scale - scaleMult;
+      let newScale = scaleRef.current - scaleMult;
 
       if (newScale > 8) {
         newScale = 8;
@@ -47,6 +49,8 @@ const PanZoomRotate = ({ children }) => {
       if (newScale < 0.3) {
         newScale = 0.3;
       }
+
+      scaleRef.current = newScale;
 
       const { top, left } = wrappedRef.current.getBoundingClientRect();
       const displayX = e.clientX - left;
