@@ -92,23 +92,34 @@ const Selector = ({ children }) => {
     }
   };
 
-  const onMouseUp = (e) => {
-    if (e.button === 0 && stateRef.current.moving) {
-      const selected = findSelected(itemList, stateRef.current).map(
-        ({ id }) => id
-      );
-      setSelected(selected);
-      stateRef.current = { moving: false };
-      setSelector({ ...stateRef.current });
-      wrapperRef.current.style.cursor = "auto";
-    }
-  };
+  const onMouseUp = React.useCallback(
+    (e) => {
+      if (e.buttons === 0 && stateRef.current.moving) {
+        const selected = findSelected(itemList, stateRef.current).map(
+          ({ id }) => id
+        );
+        setSelected(selected);
+        stateRef.current = { moving: false };
+        setSelector({ ...stateRef.current });
+        wrapperRef.current.style.cursor = "auto";
+      }
+    },
+    [itemList, setSelected]
+  );
+
+  React.useEffect(() => {
+    document.addEventListener("mouseup", onMouseUp);
+    return () => {
+      document.removeEventListener("mouseup", onMouseUp);
+    };
+  }, [onMouseUp]);
 
   return (
     <div
       onMouseDown={onMouseDown}
       onMouseMove={onMouseMouve}
-      onMouseUp={onMouseUp}
+      onMouseEnter={onMouseUp}
+      onMouseOut={onMouseMouve}
       ref={wrapperRef}
     >
       {selector.moving && (
@@ -117,6 +128,8 @@ const Selector = ({ children }) => {
           left={selector.left}
           height={selector.height}
           width={selector.width}
+          onMouseEnter={(e) => e.stopPropagation()}
+          onMouseOut={(e) => e.stopPropagation()}
         />
       )}
       {children}

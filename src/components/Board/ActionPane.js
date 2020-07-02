@@ -47,7 +47,7 @@ const ActionPane = ({ children }) => {
   };
 
   const onMouseMouve = (e) => {
-    if (actionRef.current.moving === true) {
+    if (actionRef.current.moving) {
       const { top, left } = e.currentTarget.getBoundingClientRect();
       const currentX = (e.clientX - left) / panZoomRotate.scale;
       const currentY = (e.clientY - top) / panZoomRotate.scale;
@@ -62,7 +62,7 @@ const ActionPane = ({ children }) => {
   };
 
   const onMouseUp = () => {
-    if (actionRef.current.moving === true) {
+    if (actionRef.current.moving) {
       actionRef.current = { moving: false };
       wrapperRef.current.style.cursor = "auto";
     }
