@@ -31,7 +31,7 @@ const PanZoomRotate = ({ children }) => {
   });
 
   const onWheel = (e) => {
-    if (e.altKey) {
+    if (e.altKey || e.ctrlKey) {
       return;
     }
 
