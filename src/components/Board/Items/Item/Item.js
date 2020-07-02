@@ -34,7 +34,11 @@ const getComponent = (type) => {
 
 const ItemWrapper = styled.div.attrs(({ x, y, rotation }) => ({
   className: "item",
-  style: { left: `${x}px`, top: `${y}px`, transform: `rotate(${rotation}deg)` },
+  style: {
+    left: `${x}px`,
+    top: `${y}px`,
+    transform: `rotate(${rotation}deg)`,
+  },
 }))`
   position: absolute;
   display: inline-block;
@@ -139,6 +143,7 @@ const Item = ({ setState, state }) => {
       locked={state.locked && !unlock}
       selected={selectedItems.includes(state.id)}
       ref={itemRef}
+      layer={state.layer}
       id={state.id}
     >
       <Component {...state} x={0} y={0} setState={updateState} />
