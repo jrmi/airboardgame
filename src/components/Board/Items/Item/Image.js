@@ -11,6 +11,7 @@ const OnlyYouLabel = styled.div`
 
   background-color: #cccccca0;
   pointer-events: none;
+  line-height: 1.5em;
 `;
 
 const Label = styled.div`
@@ -23,11 +24,13 @@ const Label = styled.div`
   border-radius: 0.5em;
   opacity: 0.5;
   font-size: 0.6em;
+  line-height: 1.5em;
 `;
 
 const Wrapper = styled.div`
   user-select: none;
   position: relative;
+  line-height: 0em;
 `;
 
 const FrontImage = styled.img`
