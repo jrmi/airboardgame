@@ -6,6 +6,11 @@ import { useC2C } from "../hooks/useC2C";
 import { useItems } from "../components/Board/Items";
 import { AvailableItemListAtom, BoardConfigAtom } from "./Board/game/atoms";
 
+const fetchGame = async (url) => {
+  const result = await fetch(url);
+  return await result.json();
+};
+
 export const SubscribeGameEvents = () => {
   const [c2c, joined, isMaster] = useC2C();
   const { itemList, setItemList } = useItems();
@@ -50,7 +55,13 @@ export const SubscribeGameEvents = () => {
     const unsub = [];
     unsub.push(
       c2c.subscribe("loadGame", (game) => {
-        setAvailableItemList(game.availableItems);
+        if (game.board.url) {
+          fetchGame(game.board.url).then((result) => {
+            setAvailableItemList(result.availableItems);
+          });
+        } else {
+          setAvailableItemList(game.availableItems);
+        }
         setItemList(game.items);
         setBoardConfig(game.board);
       })
