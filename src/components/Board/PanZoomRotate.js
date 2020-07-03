@@ -108,11 +108,9 @@ const PanZoomRotate = ({ children }) => {
     }
   };
 
-  const onMouseUp = React.useCallback((e) => {
-    if (e.button === 1 || e.altKey) {
-      stateRef.current.moving = false;
-      wrapperRef.current.style.cursor = "auto";
-    }
+  const onMouseUp = React.useCallback(() => {
+    stateRef.current.moving = false;
+    wrapperRef.current.style.cursor = "auto";
   }, []);
 
   React.useEffect(() => {
