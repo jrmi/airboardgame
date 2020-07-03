@@ -1,5 +1,6 @@
 import React from "react";
-import { atom, useRecoilState } from "recoil";
+import { atom, useRecoilState, useRecoilValue } from "recoil";
+import { BoardConfigAtom } from "./game/atoms";
 
 import styled from "styled-components";
 
@@ -24,6 +25,8 @@ const Pane = styled.div.attrs(({ translateX, translateY, scale, rotate }) => ({
 
 const PanZoomRotate = ({ children }) => {
   const [dim, setDim] = useRecoilState(PanZoomRotateState);
+  const config = useRecoilValue(BoardConfigAtom);
+
   const wrapperRef = React.useRef(null);
   const wrappedRef = React.useRef(null);
   const scaleRef = React.useRef(dim.scale);
@@ -31,6 +34,19 @@ const PanZoomRotate = ({ children }) => {
   const stateRef = React.useRef({
     moving: false,
   });
+
+  /**
+   * Center board on game loading
+   */
+  React.useEffect(() => {
+    const { innerHeight, innerWidth } = window;
+    setDim((prev) => ({
+      ...prev,
+      scale: config.scale,
+      translateX: innerWidth / 2 - (config.size / 2) * config.scale,
+      translateY: innerHeight / 2 - (config.size / 2) * config.scale,
+    }));
+  }, [config, setDim]);
 
   const onWheel = (e) => {
     if (e.altKey || e.ctrlKey) {
