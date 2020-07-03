@@ -112,7 +112,7 @@ const Image = ({
   return (
     <Wrapper onDoubleClick={onDblClick}>
       {unflippedFor === currentUser.id && <OnlyYouLabel>Only you</OnlyYouLabel>}
-      {overlay && (
+      {overlay && overlay.content && (
         <OverlayImage
           src={overlay.content}
           draggable={false}
