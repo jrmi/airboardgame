@@ -37,6 +37,7 @@ const FrontImage = styled.img`
   transition: transform 200ms;
   transform: rotateY(${({ visible }) => (visible ? 0 : 180)}deg);
   backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
   pointer-events: none;
   z-index: -1;
 `;
