@@ -57,5 +57,9 @@
   "Board interactions": "Board interactions",
   "Item interactions": "Item interactions",
   "helpBoard": "<0><0>Move the board with middle mouse button click. Alternatively you can use left button with alt key.</0><1>Zoom with mouse wheel.</1><2>Switch to edit mode with top button to be able to edit the game.</2><3>You can save and reload game by clicking the burger menu.</3></0>",
-  "helpItem": "<0><0>Double click on any item that can be flipped to flip it.</0><1><0>t</0> key to tap/untap selected items.</1><2><0>f</0> key to flip/unflip selected items.</2><3><0>o</0> key to reveal front side of selected flipped items ONLY to you.</3><4><0>l</0> key to be able to selected previously locked item.</4></0>"
+  "helpItem": "<0><0>Double click on any item that can be flipped to flip it.</0><1><0>t</0> key to tap/untap selected items.</1><2><0>f</0> key to flip/unflip selected items.</2><3><0>o</0> key to reveal front side of selected flipped items ONLY to you.</3><4><0>l</0> key to be able to selected previously locked item.</4></0>",
+  "Name": "Name",
+  "Size": "Size",
+  "Board config": "Board config",
+  "Menu": "Menu"
 }

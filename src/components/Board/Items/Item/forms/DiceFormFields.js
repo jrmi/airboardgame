@@ -2,7 +2,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { Field } from "react-final-form";
 
-import Label from "./Label";
+import Label from "../../../Form/Label";
 
 const Form = ({ initialValues }) => {
   const { t } = useTranslation();

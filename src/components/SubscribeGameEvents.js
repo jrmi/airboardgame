@@ -4,7 +4,8 @@ import { useRecoilState } from "recoil";
 import { useC2C } from "../hooks/useC2C";
 
 import { useItems } from "../components/Board/Items";
-import { AvailableItemListAtom, BoardConfigAtom } from "./Board/game/atoms";
+import { AvailableItemListAtom } from "./Board/game/atoms";
+import useBoardConfig from "./useBoardConfig";
 
 const fetchGame = async (url) => {
   const result = await fetch(url);
@@ -17,7 +18,7 @@ export const SubscribeGameEvents = () => {
   const [availableItemList, setAvailableItemList] = useRecoilState(
     AvailableItemListAtom
   );
-  const [boardConfig, setBoardConfig] = useRecoilState(BoardConfigAtom);
+  const [boardConfig, setBoardConfig] = useBoardConfig();
 
   const [gameLoaded, setGameLoaded] = React.useState(false);
   const gameLoadingRef = React.useRef(false);
@@ -64,6 +65,11 @@ export const SubscribeGameEvents = () => {
         }
         setItemList(game.items);
         setBoardConfig(game.board);
+      })
+    );
+    unsub.push(
+      c2c.subscribe("updateBoardConfig", (newConfig) => {
+        setBoardConfig(newConfig, false);
       })
     );
     return () => {

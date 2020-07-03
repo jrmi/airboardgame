@@ -2,9 +2,9 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { Field } from "react-final-form";
 
-import Label from "./Label";
+import Label from "../../../Form/Label";
 
-import ColorPicker from "./ColorPicker";
+import ColorPicker from "../../../Form/ColorPicker";
 
 const Form = ({ initialValues }) => {
   const { t } = useTranslation();

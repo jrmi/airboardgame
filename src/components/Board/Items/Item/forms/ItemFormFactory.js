@@ -3,7 +3,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 
 import { Form, Field } from "react-final-form";
-import AutoSave from "./AutoSave";
+import AutoSave from "../../../Form/AutoSave";
 
 import ImageFormFields from "./ImageFormFields";
 import CounterFormFields from "./CounterFormFields";
@@ -12,7 +12,7 @@ import RoundFormFields from "./RoundFormFields";
 import DiceFormFields from "./DiceFormFields";
 import NoteFormFields from "./NoteFormFields";
 
-import Label from "./Label";
+import Label from "../../../Form/Label";
 
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
