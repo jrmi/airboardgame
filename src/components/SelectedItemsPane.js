@@ -15,7 +15,7 @@ import "react-confirm-alert/src/react-confirm-alert.css";
 import { useTranslation } from "react-i18next";
 import { useUsers } from "./users";
 
-const SelectedPane = styled.div.attrs(() => ({ className: "casrd" }))`
+const SelectedPane = styled.div.attrs(() => ({ className: "card" }))`
   position: absolute;
   right: 0.5em;
   bottom: 0.5em;
@@ -23,6 +23,12 @@ const SelectedPane = styled.div.attrs(() => ({ className: "casrd" }))`
   padding: 0.5em;
   max-height: 66%;
   overflow-y: scroll;
+`;
+
+const CardContent = styled.div.attrs(() => ({ className: "content" }))`
+  display: flex;
+  flex-direction: column;
+  padding: 0.5em;
 `;
 
 export const SelectedItems = ({ edit }) => {
@@ -184,13 +190,13 @@ export const SelectedItems = ({ edit }) => {
               <header>
                 <h3>{t("Edit item")}</h3>
               </header>
-              <section className="content">
+              <CardContent>
                 <ItemFormFactory
                   item={item}
                   onSubmitHandler={onSubmitHandler}
                 />
                 <button onClick={onRemove}>{t("Remove")}</button>
-              </section>
+              </CardContent>
             </div>
           ))}
         {!edit &&
@@ -199,7 +205,7 @@ export const SelectedItems = ({ edit }) => {
               <header>
                 <h3>{t("Actions")}</h3>
               </header>
-              <section className="content">
+              <CardContent>
                 {item.type === "image" && item.backContent && (
                   <button onClick={toggleFlip}>
                     {item.flipped ? t("Reveal") : t("Hide")}
@@ -211,7 +217,7 @@ export const SelectedItems = ({ edit }) => {
                 <button onClick={toggleLock}>
                   {item.locked ? t("Unlock") : t("Lock")}
                 </button>
-              </section>
+              </CardContent>
             </div>
           ))}
       </SelectedPane>
@@ -223,13 +229,13 @@ export const SelectedItems = ({ edit }) => {
         <header>
           <h3>{t("items selected", { count: selectedItems.length })}</h3>
         </header>
-        <section className="content">
+        <CardContent>
           <button onClick={toggleFlip}>{t("Reveal") + "/" + t("Hide")}</button>
           <button onClick={toggleTap}>{t("Tap") + "/" + t("Untap")}</button>
           <button onClick={align}>{t("Stack")}</button>
           <button onClick={shuffleSelectedItems}>{t("Shuffle")}</button>
           {edit && <button onClick={onRemove}>{t("Remove all")}</button>}
-        </section>
+        </CardContent>
       </div>
     </SelectedPane>
   );

@@ -8,6 +8,7 @@ import { useC2C } from "../hooks/useC2C";
 import AvailableItems from "./AvailableItems";
 import { useItems } from "../components/Board/Items";
 import NewItems from "./NewItems";
+import BoardConfig from "./BoardConfig";
 
 import { BoardConfigAtom, AvailableItemListAtom } from "./Board/game/atoms";
 
@@ -52,7 +53,15 @@ export const GameController = () => {
     <LeftPane>
       <div className="card">
         <header>
-          <Title onClick={logGame}>{t("Add item")}</Title>
+          <Title onClick={logGame}>{t("Board config")}</Title>
+        </header>
+        <section className="content">
+          <BoardConfig />
+        </section>
+      </div>
+      <div className="card">
+        <header>
+          <Title>{t("Add item")}</Title>
         </header>
         <section className="content">
           <NewItems />

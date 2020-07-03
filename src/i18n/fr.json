@@ -57,5 +57,9 @@
   "Board interactions": "Interactions avec le plateau",
   "Item interactions": "Interactions avec les éléments",
   "helpBoard": "<0><0>Déplacez le plateau en cliquant avec le bouton du milieu. vous pouvez également utiliser le bouton gauche tout en maintenant la touche Alt de votre clavier.</0><1>Utilisez la molette pour zoomer.</1><2>Basculer en mode édition avec le bouton dédié afin d'éditer les éléments du jeu.</2><3>Vous pouvez enregistrer et charger vos parties en ouvrant le menu.</3></0>",
-  "helpItem": "<0><0>Double cliquez sur un élément pour le retourner.</0><1>La touche <0>t</0> vous permet d'engager les éléments sélectionnés</1><2>La touche <0>f</0> permet de retourner les éléments sélectionnés.</2><3>La touche <0>o</0> permet de révéler un élément uniquement pour vous.</3><4>La touche <0>l</0> permet de sélectionner un élément préalablement figé.</4></0>"
+  "helpItem": "<0><0>Double cliquez sur un élément pour le retourner.</0><1>La touche <0>t</0> vous permet d'engager les éléments sélectionnés</1><2>La touche <0>f</0> permet de retourner les éléments sélectionnés.</2><3>La touche <0>o</0> permet de révéler un élément uniquement pour vous.</3><4>La touche <0>l</0> permet de sélectionner un élément préalablement figé.</4></0>",
+  "Name": "Nom",
+  "Size": "Taille",
+  "Board config": "Configuration du jeu",
+  "Menu": "Menu"
 }
