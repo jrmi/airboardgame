@@ -8,7 +8,7 @@ const genGame = () => {
     text: "frontLabel",
     width: 100,
     x: 400,
-    y: 100,
+    y: 400,
   });
 
   items.push({
@@ -19,7 +19,7 @@ const genGame = () => {
     backText: "backLabel",
     width: 100,
     x: 410,
-    y: 100,
+    y: 400,
   });
 
   items.push({
@@ -29,7 +29,7 @@ const genGame = () => {
     overlay: { content: "/games/overlay.png" },
     width: 100,
     x: 420,
-    y: 100,
+    y: 400,
   });
   items.push({
     type: "rect",
@@ -74,7 +74,7 @@ const genGame = () => {
 
   return {
     items,
-    board: { size: 1000, scale: 0.5 },
+    board: { size: 1000, scale: 1 },
   };
 };
 

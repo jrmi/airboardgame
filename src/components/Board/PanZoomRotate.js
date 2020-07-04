@@ -18,6 +18,7 @@ const Pane = styled.div.attrs(({ translateX, translateY, scale, rotate }) => ({
   style: {
     transform: `translate(${translateX}px, ${translateY}px) scale(${scale}) rotate(${rotate}deg)`,
   },
+  className: "board-pane",
 }))`
   transform-origin: top left;
   display: inline-block;
@@ -53,7 +54,7 @@ const PanZoomRotate = ({ children }) => {
       return;
     }
 
-    const scaleMult = (e.deltaY * dim.scale) / 20;
+    const scaleMult = (e.deltaY < 0 ? -3 : 3 * dim.scale) / 20;
 
     setDim((prevDim) => {
       let newScale = scaleRef.current - scaleMult;
