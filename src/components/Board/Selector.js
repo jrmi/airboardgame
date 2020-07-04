@@ -92,20 +92,17 @@ const Selector = ({ children }) => {
     }
   };
 
-  const onMouseUp = React.useCallback(
-    (e) => {
-      if (e.buttons === 0 && stateRef.current.moving) {
-        const selected = findSelected(itemList, stateRef.current).map(
-          ({ id }) => id
-        );
-        setSelected(selected);
-        stateRef.current = { moving: false };
-        setSelector({ ...stateRef.current });
-        wrapperRef.current.style.cursor = "auto";
-      }
-    },
-    [itemList, setSelected]
-  );
+  const onMouseUp = React.useCallback(() => {
+    if (stateRef.current.moving) {
+      const selected = findSelected(itemList, stateRef.current).map(
+        ({ id }) => id
+      );
+      setSelected(selected);
+      stateRef.current = { moving: false };
+      setSelector({ ...stateRef.current });
+      wrapperRef.current.style.cursor = "auto";
+    }
+  }, [itemList, setSelected]);
 
   React.useEffect(() => {
     document.addEventListener("mouseup", onMouseUp);

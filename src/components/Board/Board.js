@@ -18,7 +18,7 @@ const Placeholder = styled.p`
   text-align: center;
 `;
 
-const StyledBoard = styled.div`
+const StyledBoard = styled.div.attrs(() => ({ className: "board" }))`
   position: relative;
   background: repeating-linear-gradient(
     45deg,

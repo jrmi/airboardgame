@@ -34,12 +34,12 @@ const Wrapper = styled.div`
 `;
 
 const FrontImage = styled.img`
-  transition: transform 200ms;
+  transition: transform 200ms, opacity 200ms;
   transform: rotateY(${({ visible }) => (visible ? 0 : 180)}deg);
-  backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
   pointer-events: none;
-  z-index: -1;
+  opacity: ${({ visible }) => (visible ? 1 : 0)};
 `;
 
 const BackImage = styled(FrontImage)`
@@ -112,14 +112,6 @@ const Image = ({
   return (
     <Wrapper onDoubleClick={onDblClick}>
       {unflippedFor === currentUser.id && <OnlyYouLabel>Only you</OnlyYouLabel>}
-      {overlay && overlay.content && (
-        <OverlayImage
-          src={overlay.content}
-          draggable={false}
-          alt=""
-          {...size}
-        />
-      )}
       {flippedForMe && backText && <Label>{backText}</Label>}
       {(!flippedForMe || !backText) && text && <Label>{text}</Label>}
       <FrontImage
@@ -136,6 +128,14 @@ const Image = ({
         draggable={false}
         {...size}
       />
+      {overlay && overlay.content && (
+        <OverlayImage
+          src={overlay.content}
+          draggable={false}
+          alt=""
+          {...size}
+        />
+      )}
     </Wrapper>
   );
 };

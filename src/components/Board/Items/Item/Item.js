@@ -32,8 +32,8 @@ const getComponent = (type) => {
   }
 };
 
-const ItemWrapper = styled.div.attrs(({ x, y, rotation }) => ({
-  className: "item",
+const ItemWrapper = styled.div.attrs(({ x, y, rotation, loaded }) => ({
+  className: loaded ? "item loaded" : "item",
   style: {
     left: `${x}px`,
     top: `${y}px`,
@@ -44,6 +44,10 @@ const ItemWrapper = styled.div.attrs(({ x, y, rotation }) => ({
   display: inline-block;
   transition: transform 200ms;
   z-index: ${({ layer }) => (layer || 0) + 3};
+  opacity: 0.5;
+  &.loaded {
+    opacity: 1;
+  }
   ${({ selected }) =>
     selected
       ? css`
@@ -67,6 +71,7 @@ const Item = ({ setState, state }) => {
   const itemRef = React.useRef(null);
   const sizeRef = React.useRef({});
   const [unlock, setUnlock] = React.useState(false);
+  const [loaded, setLoaded] = React.useState(false);
 
   // Allow to operate on locked item if key is pressed
   React.useEffect(() => {
@@ -110,6 +115,7 @@ const Item = ({ setState, state }) => {
           ) {
             sizeRef.current.actualWidth = width;
             sizeRef.current.actualHeight = height;
+            setLoaded(true);
             updateState(
               (prevState) => ({
                 ...prevState,
@@ -144,6 +150,7 @@ const Item = ({ setState, state }) => {
       selected={selectedItems.includes(state.id)}
       ref={itemRef}
       layer={state.layer}
+      loaded={loaded}
       id={state.id}
     >
       <Component {...state} x={0} y={0} setState={updateState} />
