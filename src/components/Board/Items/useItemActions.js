@@ -16,7 +16,7 @@ const getDefaultActionsFromItem = (item) => {
       } else {
         return ["tap", "lock", "remove", "stack"];
       }
-    case "rectangle":
+    case "rect":
     case "round":
     case "note":
     case "counter":
@@ -121,7 +121,7 @@ export const useItemActions = () => {
     (angle) => {
       batchUpdateItems(selectedItems, (item) => ({
         ...item,
-        rotation: item.rotation + angle,
+        rotation: (item.rotation || 0) + angle,
       }));
     },
     [selectedItems, batchUpdateItems]
