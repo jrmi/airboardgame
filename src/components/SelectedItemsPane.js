@@ -44,6 +44,7 @@ export const SelectedItems = ({ edit }) => {
     shuffle,
     selectedItemList,
     availableActions,
+    rotate,
   } = useItemActions();
 
   const { t } = useTranslation();
@@ -133,6 +134,42 @@ export const SelectedItems = ({ edit }) => {
           )}
           {availableActions.includes("tap") && (
             <button onClick={toggleTap}>{t("Tap") + "/" + t("Untap")}</button>
+          )}
+          {availableActions.includes("rotate90") && (
+            <button
+              onClick={() => {
+                rotate(90);
+              }}
+            >
+              {t("Rotate 90")}
+            </button>
+          )}
+          {availableActions.includes("rotate60") && (
+            <button
+              onClick={() => {
+                rotate(60);
+              }}
+            >
+              {t("Rotate 60")}
+            </button>
+          )}
+          {availableActions.includes("rotate45") && (
+            <button
+              onClick={() => {
+                rotate(45);
+              }}
+            >
+              {t("Rotate 45")}
+            </button>
+          )}
+          {availableActions.includes("rotate30") && (
+            <button
+              onClick={() => {
+                rotate(30);
+              }}
+            >
+              {t("Rotate 30")}
+            </button>
           )}
           {selectedItems.length > 1 && (
             <>
