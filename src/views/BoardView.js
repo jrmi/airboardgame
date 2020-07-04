@@ -40,6 +40,7 @@ export const BoardView = () => {
         isOpen={menuOpen}
         setMenuOpen={setMenuOpen}
         setShowLoadGameModal={setShowLoadGameModal}
+        edit={edit}
       />
       <BoardContainer>
         <UserList />

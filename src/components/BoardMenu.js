@@ -78,7 +78,7 @@ const fetchGame = async (url) => {
   return await result.json();
 };
 
-const BoardMenu = ({ setShowLoadGameModal, isOpen, setMenuOpen }) => {
+const BoardMenu = ({ setShowLoadGameModal, isOpen, setMenuOpen, edit }) => {
   const { t } = useTranslation();
   const [c2c, , isMaster] = useC2C();
   const [gameList, setGameList] = React.useState([]);
@@ -139,9 +139,11 @@ const BoardMenu = ({ setShowLoadGameModal, isOpen, setMenuOpen }) => {
       disableAutoFocus
     >
       <h3>{t("Games")}</h3>
-      <button className="button" onClick={newGame}>
-        {t("New Game")}
-      </button>
+      {edit && (
+        <button className="button" onClick={newGame}>
+          {t("New Game")}
+        </button>
+      )}
       {!isProduction && (
         <button className="button" onClick={loadTestGame}>
           {t("Test Game")}
