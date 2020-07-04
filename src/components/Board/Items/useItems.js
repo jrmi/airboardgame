@@ -6,7 +6,7 @@ import { shuffle as shuffleArray } from "../../../utils";
 
 import { ItemListAtom } from "../game/atoms";
 
-const useItemsAction = () => {
+const useItems = () => {
   const [c2c] = useC2C();
   const [itemList, setItemList] = useRecoilState(ItemListAtom);
   const selectedItems = useRecoilValue(selectedItemsAtom);
@@ -179,4 +179,4 @@ const useItemsAction = () => {
   };
 };
 
-export default useItemsAction;
+export default useItems;
