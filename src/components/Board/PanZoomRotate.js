@@ -1,6 +1,8 @@
 import React from "react";
+
 import { atom, useRecoilState, useRecoilValue } from "recoil";
 import { BoardConfigAtom } from "./game/atoms";
+import { isMacOS } from "../../deviceInfos";
 
 import styled from "styled-components";
 
@@ -50,13 +52,30 @@ const PanZoomRotate = ({ children }) => {
   }, [config, setDim]);
 
   const onWheel = (e) => {
-    if (e.altKey || e.ctrlKey) {
+    // On a trackpad, the pinch gesture sets the ctrlKey to true.
+    // In that situation, we want to use the custom scaling below, not the browser default zoom.
+    // Hence in this situation we avoid to return immediately.
+    if (e.altKey || (e.ctrlKey && !isMacOS())) {
       return;
     }
 
-    const scaleMult = (e.deltaY < 0 ? -3 : 3 * dim.scale) / 20;
+    // Made the scale multiplicator Mac specific, as the default one was zooming way too much on each gesture.
+    const scaleMult =
+      (e.deltaY < 0 ? -3 : 3 * dim.scale) / (isMacOS() ? 100 : 20);
 
     setDim((prevDim) => {
+      // On a trackpad, the pinch and pan events are differentiated by the crtlKey value.
+      // On a pinch gesture, the ctrlKey is set to true, so we want to have a scaling effect.
+      // If we are only moving the fingers in the same direction, a pan is needed.
+      // Ref: https://medium.com/@auchenberg/detecting-multi-touch-trackpad-gestures-in-javascript-a2505babb10e
+      if (isMacOS() && !e.ctrlKey) {
+        return {
+          ...prevDim,
+          translateX: prevDim.translateX - 2 * e.deltaX,
+          translateY: prevDim.translateY - 2 * e.deltaY,
+        };
+      }
+
       let newScale = scaleRef.current - scaleMult;
 
       if (newScale > 8) {
