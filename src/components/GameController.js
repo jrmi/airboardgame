@@ -3,8 +3,6 @@ import { useRecoilValue } from "recoil";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 
-import { useC2C } from "../hooks/useC2C";
-
 import AvailableItems from "./AvailableItems";
 import { useItems } from "../components/Board/Items";
 import NewItems from "./NewItems";
@@ -35,7 +33,6 @@ const Title = styled.h3``;
 
 export const GameController = () => {
   const { t } = useTranslation();
-  const [, , isMaster] = useC2C();
   const { itemList } = useItems();
 
   const availableItemList = useRecoilValue(AvailableItemListAtom);
@@ -45,7 +42,7 @@ export const GameController = () => {
     console.log(itemList);
   };
 
-  if (!isMaster || Object.keys(boardConfig).length === 0) {
+  if (Object.keys(boardConfig).length === 0) {
     return null;
   }
 
