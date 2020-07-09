@@ -65,8 +65,7 @@ const Image = ({
   flipped = false,
   setState,
   unflippedFor,
-  label,
-  text = label,
+  text,
   backText,
   overlay,
 }) => {

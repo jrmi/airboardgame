@@ -24,14 +24,9 @@ const NavBar = ({ setMenuOpen, setShowHelpModal, setEditMode, edit }) => {
       )}
 
       <div className="menu">
-        {isMaster && (
-          <button
-            className="pseudo"
-            onClick={() => setEditMode((prev) => !prev)}
-          >
-            {!edit ? t("Edit mode") : t("Play")}
-          </button>
-        )}
+        <button className="pseudo" onClick={() => setEditMode((prev) => !prev)}>
+          {!edit ? t("Edit mode") : t("Play")}
+        </button>
         <button onClick={() => setShowHelpModal((prev) => !prev)}>
           {t("Help")}
         </button>
