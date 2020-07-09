@@ -4,10 +4,16 @@
  * @param {string} className
  */
 export const insideClass = (element, className) => {
-  if (element.className && element.className.split(" ").includes(className))
+  if (
+    typeof element.className === "string" &&
+    element.className.split(" ").includes(className)
+  ) {
     return element;
-  if (!element.parentNode) return false;
-  return element.parentNode && insideClass(element.parentNode, className);
+  }
+  if (!element.parentNode) {
+    return false;
+  }
+  return insideClass(element.parentNode, className);
 };
 
 export const isPointInsideRect = (point, rect) => {
