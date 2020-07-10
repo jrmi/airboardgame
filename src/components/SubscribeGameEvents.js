@@ -32,7 +32,7 @@ export const SubscribeGameEvents = () => {
   gameRef.current = {
     items: itemList,
     board: boardConfig,
-    availableItem: availableItemList,
+    availableItems: availableItemList,
   };
 
   React.useEffect(() => {
