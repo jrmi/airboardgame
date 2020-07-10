@@ -19,12 +19,15 @@ const AvailableItem = memo(({ data }) => {
   );
 });
 
-AvailableItem.displayName = "NewItem";
+AvailableItem.displayName = "AvailableItem";
 
 const AvailableItems = () => {
   const availableItemList = useRecoilValue(AvailableItemListAtom);
 
-  const groupIds = [...new Set(availableItemList.map((item) => item.groupId))];
+  const groupIds = React.useMemo(
+    () => [...new Set(availableItemList.map((item) => item.groupId))],
+    [availableItemList]
+  );
 
   return (
     <>
@@ -50,4 +53,4 @@ const AvailableItems = () => {
   );
 };
 
-export default AvailableItems;
+export default memo(AvailableItems);
