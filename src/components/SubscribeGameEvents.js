@@ -7,6 +7,8 @@ import { useItems } from "../components/Board/Items";
 import { AvailableItemListAtom } from "./Board/game/atoms";
 import useBoardConfig from "./useBoardConfig";
 
+import { nanoid } from "nanoid";
+
 const fetchGame = async (url) => {
   const result = await fetch(url);
   return await result.json();
@@ -38,7 +40,6 @@ export const SubscribeGameEvents = () => {
   React.useEffect(() => {
     const unsub = [];
     if (joined && isMaster) {
-      console.log("Register");
       c2c
         .register("getGame", () => {
           return gameRef.current;
@@ -58,10 +59,14 @@ export const SubscribeGameEvents = () => {
       c2c.subscribe("loadGame", (game) => {
         if (game.board.url) {
           fetchGame(game.board.url).then((result) => {
-            setAvailableItemList(result.availableItems);
+            setAvailableItemList(
+              result.availableItems.map((item) => ({ id: nanoid(), ...item }))
+            );
           });
         } else {
-          setAvailableItemList(game.availableItems);
+          setAvailableItemList(
+            game.availableItems.map((item) => ({ id: nanoid(), ...item }))
+          );
         }
         setItemList(game.items);
         setBoardConfig(game.board);
