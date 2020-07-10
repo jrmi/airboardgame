@@ -61,15 +61,6 @@ const SubscribeUserEvents = () => {
           });
 
         unsub.push(
-          c2c.subscribe("userLeave", (userId) => {
-            usersRef.current = usersRef.current.filter(
-              ({ id }) => id !== userId
-            );
-            setUsers(usersRef.current);
-            c2c.publish("updateUserList", usersRef.current);
-          })
-        );
-        unsub.push(
           c2c.subscribe("userUpdate", (user) => {
             if (usersRef.current.find((u) => u.id === user.id)) {
               const newUsers = usersRef.current.map((u) =>
@@ -85,7 +76,15 @@ const SubscribeUserEvents = () => {
           })
         );
       }
-
+      unsub.push(
+        c2c.subscribe("userLeave", (userId) => {
+          usersRef.current = usersRef.current.filter(({ id }) => id !== userId);
+          setUsers(usersRef.current);
+          if (isMaster) {
+            c2c.publish("updateUserList", usersRef.current);
+          }
+        })
+      );
       unsub.push(
         c2c.subscribe("updateUserList", (newList) => {
           usersRef.current = newList;
