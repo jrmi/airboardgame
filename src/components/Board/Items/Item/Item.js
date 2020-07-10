@@ -183,4 +183,15 @@ const SyncedItem = ({ setState, state }) => {
   return <Item state={state} setState={setState} />;
 };
 
-export default memo(SyncedItem);
+export default memo(
+  SyncedItem,
+  (
+    { state: prevState, setState: prevSetState },
+    { state: nextState, setState: nextSetState }
+  ) => {
+    return (
+      JSON.stringify(prevState) === JSON.stringify(nextState) &&
+      prevSetState === nextSetState
+    );
+  }
+);
