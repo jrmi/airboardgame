@@ -8,6 +8,20 @@ export const SubcribeItemEvents = () => {
   const setItemList = useSetRecoilState(ItemListAtom);
 
   React.useEffect(() => {
+    const unsub = c2c.subscribe(`batchItemsUpdate`, (updatedItems) => {
+      setItemList((prevList) => {
+        return prevList.map((item) => {
+          if (item.id in updatedItems) {
+            return { ...item, ...updatedItems[item.id] };
+          }
+          return item;
+        });
+      });
+    });
+    return unsub;
+  }, [c2c, setItemList]);
+
+  React.useEffect(() => {
     const unsub = c2c.subscribe(`selectedItemsMove`, ({ itemIds, move }) => {
       setItemList((prevList) => {
         return prevList.map((item) => {

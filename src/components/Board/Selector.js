@@ -8,7 +8,7 @@ import {
 } from "recoil";
 import styled from "styled-components";
 
-import { PanZoomRotateAtom, ItemListAtom } from "./";
+import { PanZoomRotateAtom, ItemListAtom, BoardConfigAtom } from "./";
 import { insideClass, isPointInsideRect } from "../../utils";
 
 export const selectedItemsAtom = atom({
@@ -53,14 +53,23 @@ const Selector = ({ children }) => {
     moving: false,
   });
 
+  const config = useRecoilValue(BoardConfigAtom);
+
+  // Reset selection on game loading
+  React.useEffect(() => {
+    setSelected([]);
+  }, [config, setSelected]);
+
   const onMouseDown = (e) => {
     if (e.button === 0 && !e.altKey && !insideClass(e.target, "item")) {
       const { top, left } = e.currentTarget.getBoundingClientRect();
       const displayX = (e.clientX - left) / panZoomRotate.scale;
       const displayY = (e.clientY - top) / panZoomRotate.scale;
+
       stateRef.current.moving = true;
       stateRef.current.startX = displayX;
       stateRef.current.startY = displayY;
+
       setSelector({ ...stateRef.current });
       wrapperRef.current.style.cursor = "crosshair";
     } else {
@@ -74,9 +83,11 @@ const Selector = ({ children }) => {
   const onMouseMouve = (e) => {
     if (stateRef.current.moving) {
       if (selected.length) setSelected([]);
+
       const { top, left } = e.currentTarget.getBoundingClientRect();
       const currentX = (e.clientX - left) / panZoomRotate.scale;
       const currentY = (e.clientY - top) / panZoomRotate.scale;
+
       if (currentX > stateRef.current.startX) {
         stateRef.current.left = stateRef.current.startX;
         stateRef.current.width = currentX - stateRef.current.startX;
@@ -91,6 +102,7 @@ const Selector = ({ children }) => {
         stateRef.current.top = currentY;
         stateRef.current.height = -currentY + stateRef.current.startY;
       }
+
       setSelector({ ...stateRef.current });
       e.preventDefault();
     }
