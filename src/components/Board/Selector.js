@@ -72,11 +72,6 @@ const Selector = ({ children }) => {
 
       setSelector({ ...stateRef.current });
       wrapperRef.current.style.cursor = "crosshair";
-    } else {
-      if (selected.length) {
-        /* Should remove selection if clic another item */
-        /*setSelected([])*/
-      }
     }
   };
 
