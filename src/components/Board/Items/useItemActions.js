@@ -1,12 +1,13 @@
 import React from "react";
 
-import { useRecoilValue } from "recoil";
+import { useRecoilValue, useRecoilCallback } from "recoil";
 import { useItems } from "./";
 import { selectedItemsAtom } from "../Selector";
 
 import { useUsers } from "../../users";
 
 import intersection from "lodash.intersection";
+import { ItemListAtom } from "../";
 
 const getDefaultActionsFromItem = (item) => {
   switch (item.type) {
@@ -35,7 +36,6 @@ const getActionsFromItem = (item) => {
 
 export const useItemActions = () => {
   const {
-    itemList,
     batchUpdateItems,
     removeItem,
     reverseItemsOrder,
@@ -45,13 +45,51 @@ export const useItemActions = () => {
   const { currentUser } = useUsers();
 
   const selectedItems = useRecoilValue(selectedItemsAtom);
+  const [selectedItemList, setSelectedItemList] = React.useState([]);
+  const [availableActions, setAvailableActions] = React.useState([]);
+  const isMountedRef = React.useRef(false);
 
-  const selectedItemList = React.useMemo(() => {
-    return itemList.filter(({ id }) => selectedItems.includes(id));
-  }, [itemList, selectedItems]);
+  const updateSelectedItemList = useRecoilCallback(
+    async (snapshot) => {
+      const itemList = await snapshot.getPromise(ItemListAtom);
+      const newSelectedItemList = itemList.filter(({ id }) =>
+        selectedItems.includes(id)
+      );
+      // Prevent set state on unmounted component
+      if (isMountedRef.current) {
+        setSelectedItemList(newSelectedItemList);
+      }
+    },
+    [selectedItems]
+  );
+
+  React.useEffect(() => {
+    // Mounted guard
+    isMountedRef.current = true;
+    return () => {
+      isMountedRef.current = false;
+    };
+  }, []);
+
+  React.useEffect(() => {
+    updateSelectedItemList();
+  }, [updateSelectedItemList]);
+
+  // Update available actions when selection change
+  React.useEffect(() => {
+    if (selectedItemList.length > 0) {
+      setAvailableActions(
+        selectedItemList.reduce((acc, item) => {
+          return intersection(acc, getActionsFromItem(item));
+        }, getActionsFromItem(selectedItemList[0]))
+      );
+    } else {
+      setAvailableActions([]);
+    }
+  }, [selectedItemList]);
 
   // Align selection to center
-  const align = React.useCallback(() => {
+  const align = React.useCallback(async () => {
     // Compute
     const minMax = { min: {}, max: {} };
     minMax.min.x = Math.min(...selectedItemList.map(({ x }) => x));
@@ -78,7 +116,8 @@ export const useItemActions = () => {
     });
   }, [selectedItemList, selectedItems, batchUpdateItems]);
 
-  const toggleTap = React.useCallback(() => {
+  // Tap/Untap elements
+  const toggleTap = React.useCallback(async () => {
     const tappedCount = selectedItemList.filter(
       ({ rotation }) => rotation === 90
     ).length;
@@ -94,6 +133,7 @@ export const useItemActions = () => {
     }));
   }, [selectedItems, batchUpdateItems, selectedItemList]);
 
+  // Lock / unlock elements
   const toggleLock = React.useCallback(() => {
     batchUpdateItems(selectedItems, (item) => ({
       ...item,
@@ -101,7 +141,8 @@ export const useItemActions = () => {
     }));
   }, [selectedItems, batchUpdateItems]);
 
-  const toggleFlip = React.useCallback(() => {
+  // Flip / unflip elements
+  const toggleFlip = React.useCallback(async () => {
     const flippedCount = selectedItemList.filter(({ flipped }) => flipped)
       .length;
 
@@ -117,6 +158,7 @@ export const useItemActions = () => {
     reverseItemsOrder(selectedItems);
   }, [selectedItemList, selectedItems, batchUpdateItems, reverseItemsOrder]);
 
+  // Rotate element
   const rotate = React.useCallback(
     (angle) => {
       batchUpdateItems(selectedItems, (item) => ({
@@ -127,6 +169,7 @@ export const useItemActions = () => {
     [selectedItems, batchUpdateItems]
   );
 
+  // Reveal for player only
   const revealForMe = React.useCallback(() => {
     batchUpdateItems(selectedItems, (item) => ({
       ...item,
@@ -135,6 +178,7 @@ export const useItemActions = () => {
     }));
   }, [batchUpdateItems, selectedItems, currentUser.id]);
 
+  // Remove selected items
   const removeItems = React.useCallback(
     () =>
       selectedItems.forEach((id) => {
@@ -142,16 +186,6 @@ export const useItemActions = () => {
       }),
     [removeItem, selectedItems]
   );
-
-  const availableActions = React.useMemo(() => {
-    if (selectedItemList.length > 0) {
-      return selectedItemList.reduce((acc, item) => {
-        return intersection(acc, getActionsFromItem(item));
-      }, getActionsFromItem(selectedItemList[0]));
-    } else {
-      return [];
-    }
-  }, [selectedItemList]);
 
   return {
     align,
@@ -162,8 +196,8 @@ export const useItemActions = () => {
     toggleTap,
     shuffle: shuffleSelectedItems,
     rotate,
-    selectedItemList,
     availableActions,
+    selectedItemList,
   };
 };
 

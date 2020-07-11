@@ -1,13 +1,13 @@
 import React from "react";
 import { useRecoilValue } from "recoil";
-import { PanZoomRotateState } from "./PanZoomRotate";
+import { PanZoomRotateAtom } from "./PanZoomRotate";
 import { selectedItemsAtom } from "./Selector";
 import { useItems } from "./Items";
 import { useRecoilState } from "recoil";
 import { insideClass } from "../../utils";
 
 const ActionPane = ({ children }) => {
-  const panZoomRotate = useRecoilValue(PanZoomRotateState);
+  const panZoomRotate = useRecoilValue(PanZoomRotateAtom);
   const { putItemsOnTop, moveSelectedItems } = useItems();
   const [selectedItems, setSelectedItems] = useRecoilState(selectedItemsAtom);
   const wrapperRef = React.useRef(null);

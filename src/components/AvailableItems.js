@@ -1,19 +1,23 @@
 import React, { memo } from "react";
-import { useRecoilValue } from "recoil";
+import { useRecoilValue, useRecoilCallback } from "recoil";
 import { useItems } from "../components/Board/Items";
 import { nanoid } from "nanoid";
-import { AvailableItemListAtom } from "./Board/game/atoms";
+import { AvailableItemListAtom, PanZoomRotateAtom } from "./Board";
 
 const AvailableItem = memo(({ data }) => {
   const { label } = data;
   const { pushItem } = useItems();
 
-  const onClickHandler = () => {
-    pushItem({ ...data, x: 200, y: 50, id: nanoid() });
-  };
+  const addItem = useRecoilCallback(
+    async (snapshot) => {
+      const { centerX, centerY } = await snapshot.getPromise(PanZoomRotateAtom);
+      pushItem({ ...data, x: centerX, y: centerY, id: nanoid() });
+    },
+    [pushItem]
+  );
 
   return (
-    <span style={{ cursor: "pointer" }} onClick={onClickHandler}>
+    <span style={{ cursor: "pointer" }} onClick={addItem}>
       {label}
     </span>
   );
