@@ -20,13 +20,7 @@ const Placeholder = styled.p`
 
 const StyledBoard = styled.div.attrs(() => ({ className: "board" }))`
   position: relative;
-  background: repeating-linear-gradient(
-    45deg,
-    #606dbc60,
-    #606dbc60 10px,
-    #46529860 10px,
-    #46529860 20px
-  );
+  background-image: url(/board.png);
   width: ${({ size }) => size}px;
   height: ${({ size }) => size}px;
 `;
