@@ -2,8 +2,12 @@ import React from "react";
 
 import { useTranslation } from "react-i18next";
 
+import { useRecoilValue } from "recoil";
+
 import { Form, Field } from "react-final-form";
 import AutoSave from "../../../Form/AutoSave";
+
+import { ItemListAtom } from "../../../";
 
 import ImageFormFields from "./ImageFormFields";
 import CounterFormFields from "./CounterFormFields";
@@ -38,9 +42,12 @@ const getFormFieldComponent = (type) => {
   }
 };
 
-const ItemFormFactory = ({ item, onSubmitHandler }) => {
+const ItemFormFactory = ({ itemId, onSubmitHandler }) => {
   const { t } = useTranslation();
+  const itemList = useRecoilValue(ItemListAtom);
+  const item = itemList.find(({ id }) => id === itemId);
   const FieldsComponent = getFormFieldComponent(item.type);
+
   return (
     <Form
       onSubmit={onSubmitHandler}

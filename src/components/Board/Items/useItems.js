@@ -96,7 +96,6 @@ const useItems = () => {
         const itemsToReverse = prevItemList.filter(({ id }) =>
           itemIdsToReverse.includes(id)
         );
-        //itemsToReverse.reverse();
         const result = prevItemList.map((item) => {
           if (itemIdsToReverse.includes(item.id)) {
             return itemsToReverse.pop();
@@ -119,19 +118,22 @@ const useItems = () => {
       const shuffledSelectedItems = shuffleArray(
         prevItemList.filter(({ id }) => selectedItems.includes(id))
       );
-
+      const updatedItems = {};
       const result = prevItemList.map((item) => {
         if (selectedItems.includes(item.id)) {
+          const replaceBy = shuffledSelectedItems.pop();
           const newItem = {
-            ...shuffledSelectedItems.pop(),
+            ...replaceBy,
             x: item.x,
             y: item.y,
           };
-          c2c.publish(`itemStateUpdate.${newItem.id}`, newItem);
+          updatedItems[replaceBy.id] = { x: item.x, y: item.y };
           return newItem;
         }
         return item;
       });
+
+      c2c.publish(`batchItemsUpdate`, updatedItems);
 
       c2c.publish(
         `updateItemListOrder`,

@@ -42,7 +42,6 @@ export const SelectedItems = ({ edit }) => {
     toggleLock,
     toggleTap,
     shuffle,
-    selectedItemList,
     availableActions,
     rotate,
   } = useItemActions();
@@ -53,6 +52,8 @@ export const SelectedItems = ({ edit }) => {
 
   React.useEffect(() => {
     const onKeyUp = (e) => {
+      // Block shortcut if we are typing in a textarea or input
+      if (["INPUT", "TEXTAREA"].includes(e.target.tagName)) return;
       if (e.key === "f") {
         if (insideClass(e.target, "item")) return;
         toggleFlip();
@@ -82,7 +83,7 @@ export const SelectedItems = ({ edit }) => {
     [updateItem]
   );
 
-  if (selectedItemList.length === 0) {
+  if (selectedItems.length === 0) {
     return null;
   }
 
@@ -106,13 +107,16 @@ export const SelectedItems = ({ edit }) => {
   if (selectedItems.length === 1 && edit) {
     return (
       <SelectedPane>
-        {selectedItemList.map((item) => (
-          <div className="card" key={item.id}>
+        {selectedItems.map((itemId) => (
+          <div className="card" key={itemId}>
             <header>
               <h3>{t("Edit item")}</h3>
             </header>
             <CardContent>
-              <ItemFormFactory item={item} onSubmitHandler={onSubmitHandler} />
+              <ItemFormFactory
+                itemId={itemId}
+                onSubmitHandler={onSubmitHandler}
+              />
               <button onClick={onRemove}>{t("Remove")}</button>
             </CardContent>
           </div>
