@@ -15,14 +15,19 @@ const ActionPane = ({ children }) => {
 
   const onMouseDown = (e) => {
     if (e.button === 0 && !e.altKey) {
+      // Allow text selection instead of moving
+      if (["INPUT", "TEXTAREA"].includes(e.target.tagName)) return;
+
       const { top, left } = e.currentTarget.getBoundingClientRect();
       const point = {
         x: (e.clientX - left) / panZoomRotate.scale,
         y: (e.clientY - top) / panZoomRotate.scale,
       };
+
       const foundElement = insideClass(e.target, "item");
       if (foundElement) {
         let selectedItemsToMove = selectedItems;
+
         if (!selectedItems.includes(foundElement.id)) {
           if (e.ctrlKey || e.metaKey) {
             setSelectedItems((prev) => [...prev, foundElement.id]);
@@ -32,7 +37,9 @@ const ActionPane = ({ children }) => {
             selectedItemsToMove = [foundElement.id];
           }
         }
+
         putItemsOnTop(selectedItemsToMove);
+
         actionRef.current.moving = true;
         actionRef.current.startX = point.x;
         actionRef.current.startY = point.y;
@@ -40,6 +47,7 @@ const ActionPane = ({ children }) => {
         actionRef.current.prevY = point.y;
         actionRef.current.moving = true;
         actionRef.current.itemId = foundElement.id;
+
         wrapperRef.current.style.cursor = "move";
         e.stopPropagation();
       }
