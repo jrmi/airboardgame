@@ -1,13 +1,13 @@
 import React from "react";
 import Cursors from "./Cursors";
 import { useC2C } from "../../../hooks/useC2C";
-import { PanZoomRotateState } from "../PanZoomRotate";
+import { PanZoomRotateAtom } from "../PanZoomRotate";
 import { useRecoilValue } from "recoil";
 import throttle from "lodash.throttle";
 
 export const Board = ({ children, user, users }) => {
   const [c2c] = useC2C();
-  const panZoomRotate = useRecoilValue(PanZoomRotateState);
+  const panZoomRotate = useRecoilValue(PanZoomRotateAtom);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const throttledPublish = React.useCallback(

@@ -4,11 +4,9 @@ import { useTranslation } from "react-i18next";
 
 import useGameStorage from "./Board/game/useGameStorage";
 
-import { AvailableItemListAtom, BoardConfigAtom } from "./Board/game/atoms";
+import { AvailableItemListAtom, BoardConfigAtom, ItemListAtom } from "./Board/";
 
 import throttle from "lodash.throttle";
-
-import { useItems } from "../components/Board/Items";
 
 const generateDownloadURI = (data) => {
   return (
@@ -19,7 +17,7 @@ const generateDownloadURI = (data) => {
 export const DownloadGameLink = () => {
   const availableItemList = useRecoilValue(AvailableItemListAtom);
   const boardConfig = useRecoilValue(BoardConfigAtom);
-  const { itemList } = useItems();
+  const itemList = useRecoilValue(ItemListAtom);
 
   const { t } = useTranslation();
 

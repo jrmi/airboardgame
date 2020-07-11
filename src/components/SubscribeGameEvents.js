@@ -1,10 +1,10 @@
 import React from "react";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 
 import { useC2C } from "../hooks/useC2C";
 
 import { useItems } from "../components/Board/Items";
-import { AvailableItemListAtom } from "./Board/game/atoms";
+import { AvailableItemListAtom, ItemListAtom } from "./Board";
 import useBoardConfig from "./useBoardConfig";
 
 import { nanoid } from "nanoid";
@@ -16,7 +16,8 @@ const fetchGame = async (url) => {
 
 export const SubscribeGameEvents = () => {
   const [c2c, joined, isMaster] = useC2C();
-  const { itemList, setItemList } = useItems();
+  const { setItemList } = useItems();
+  const itemList = useRecoilValue(ItemListAtom);
   const [availableItemList, setAvailableItemList] = useRecoilState(
     AvailableItemListAtom
   );

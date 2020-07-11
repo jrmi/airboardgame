@@ -75,6 +75,16 @@ const genGame = () => {
 
   return {
     items,
+    availableItems: [
+      {
+        groupId: "Group",
+        label: "Rect",
+        type: "rect",
+        color: "#00D022",
+        width: 80,
+        height: 80,
+      },
+    ],
     board: { size: 1000, scale: 1 },
   };
 };

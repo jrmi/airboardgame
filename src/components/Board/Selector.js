@@ -1,11 +1,14 @@
 import React from "react";
 
-import { atom, useRecoilValue } from "recoil";
+import {
+  atom,
+  useRecoilValue,
+  useRecoilState,
+  useRecoilCallback,
+} from "recoil";
 import styled from "styled-components";
 
-import { PanZoomRotateState } from "./PanZoomRotate";
-import { useItems } from "./Items";
-import { useRecoilState } from "recoil";
+import { PanZoomRotateAtom, ItemListAtom } from "./";
 import { insideClass, isPointInsideRect } from "../../utils";
 
 export const selectedItemsAtom = atom({
@@ -40,10 +43,11 @@ const SelectorZone = styled.div.attrs(({ top, left, height, width }) => ({
 `;
 
 const Selector = ({ children }) => {
-  const panZoomRotate = useRecoilValue(PanZoomRotateState);
-  const { itemList } = useItems();
+  const panZoomRotate = useRecoilValue(PanZoomRotateAtom);
+
   const [selected, setSelected] = useRecoilState(selectedItemsAtom);
   const [selector, setSelector] = React.useState({});
+
   const wrapperRef = React.useRef(null);
   const stateRef = React.useRef({
     moving: false,
@@ -92,17 +96,21 @@ const Selector = ({ children }) => {
     }
   };
 
-  const onMouseUp = React.useCallback(() => {
-    if (stateRef.current.moving) {
-      const selected = findSelected(itemList, stateRef.current).map(
-        ({ id }) => id
-      );
-      setSelected(selected);
-      stateRef.current = { moving: false };
-      setSelector({ ...stateRef.current });
-      wrapperRef.current.style.cursor = "auto";
-    }
-  }, [itemList, setSelected]);
+  const onMouseUp = useRecoilCallback(
+    async (snapshot) => {
+      if (stateRef.current.moving) {
+        const itemList = await snapshot.getPromise(ItemListAtom);
+        const selected = findSelected(itemList, stateRef.current).map(
+          ({ id }) => id
+        );
+        setSelected(selected);
+        stateRef.current = { moving: false };
+        setSelector({ ...stateRef.current });
+        wrapperRef.current.style.cursor = "auto";
+      }
+    },
+    [setSelected]
+  );
 
   React.useEffect(() => {
     document.addEventListener("mouseup", onMouseUp);

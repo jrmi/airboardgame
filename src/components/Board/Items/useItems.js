@@ -1,14 +1,15 @@
 import React from "react";
 import { useC2C } from "../../../hooks/useC2C";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useSetRecoilState, useRecoilValue } from "recoil";
 import { selectedItemsAtom } from "../Selector";
 import { shuffle as shuffleArray } from "../../../utils";
 
-import { ItemListAtom } from "../game/atoms";
+import { ItemListAtom } from "../";
 
 const useItems = () => {
   const [c2c] = useC2C();
-  const [itemList, setItemList] = useRecoilState(ItemListAtom);
+
+  const setItemList = useSetRecoilState(ItemListAtom);
   const selectedItems = useRecoilValue(selectedItemsAtom);
 
   const batchUpdateItems = React.useCallback(
@@ -166,7 +167,6 @@ const useItems = () => {
   );
 
   return {
-    itemList,
     putItemsOnTop,
     batchUpdateItems,
     moveSelectedItems,

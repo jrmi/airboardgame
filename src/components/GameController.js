@@ -1,14 +1,13 @@
 import React from "react";
-import { useRecoilValue } from "recoil";
+import { useRecoilValue, useRecoilCallback } from "recoil";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 
 import AvailableItems from "./AvailableItems";
-import { useItems } from "../components/Board/Items";
 import NewItems from "./NewItems";
 import BoardConfig from "./BoardConfig";
 
-import { BoardConfigAtom, AvailableItemListAtom } from "./Board/game/atoms";
+import { BoardConfigAtom, AvailableItemListAtom, ItemListAtom } from "./Board/";
 
 const LeftPane = styled.div`
   position: absolute;
@@ -33,14 +32,14 @@ const Title = styled.h3``;
 
 export const GameController = () => {
   const { t } = useTranslation();
-  const { itemList } = useItems();
 
   const availableItemList = useRecoilValue(AvailableItemListAtom);
   const boardConfig = useRecoilValue(BoardConfigAtom);
 
-  const logGame = () => {
+  const logGame = useRecoilCallback(async (snapshot) => {
+    const itemList = await snapshot.getPromise(ItemListAtom);
     console.log(itemList);
-  };
+  }, []);
 
   if (Object.keys(boardConfig).length === 0) {
     return null;

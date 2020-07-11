@@ -1,18 +1,22 @@
 import React from "react";
 
 import { atom, useRecoilState, useRecoilValue } from "recoil";
-import { BoardConfigAtom } from "./game/atoms";
+import { BoardConfigAtom } from "./";
 import { isMacOS } from "../../deviceInfos";
 
 import styled from "styled-components";
 
-export const PanZoomRotateState = atom({
+import debounce from "lodash.debounce";
+
+export const PanZoomRotateAtom = atom({
   key: "PanZoomRotate",
   default: {
     translateX: 0,
     translateY: 0,
     scale: 1,
     rotate: 0,
+    centerX: 0,
+    centerY: 0,
   },
 });
 
@@ -27,7 +31,7 @@ const Pane = styled.div.attrs(({ translateX, translateY, scale, rotate }) => ({
 `;
 
 const PanZoomRotate = ({ children }) => {
-  const [dim, setDim] = useRecoilState(PanZoomRotateState);
+  const [dim, setDim] = useRecoilState(PanZoomRotateAtom);
   const config = useRecoilValue(BoardConfigAtom);
 
   const wrapperRef = React.useRef(null);
@@ -38,9 +42,7 @@ const PanZoomRotate = ({ children }) => {
     moving: false,
   });
 
-  /**
-   * Center board on game loading
-   */
+  // Center board on game loading
   React.useEffect(() => {
     const { innerHeight, innerWidth } = window;
     setDim((prev) => ({
@@ -132,6 +134,26 @@ const PanZoomRotate = ({ children }) => {
     stateRef.current.moving = false;
     wrapperRef.current.style.cursor = "auto";
   }, []);
+
+  // Debounce set center to avoid too many render
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const debouncedUpdateCenter = React.useCallback(
+    debounce(() => {
+      const { innerHeight, innerWidth } = window;
+      setDim((prevDim) => {
+        return {
+          ...prevDim,
+          centerX: (innerWidth / 2 - prevDim.translateX) / prevDim.scale,
+          centerY: (innerHeight / 2 - prevDim.translateY) / prevDim.scale,
+        };
+      });
+    }, 300),
+    [setDim]
+  );
+
+  React.useEffect(() => {
+    debouncedUpdateCenter();
+  }, [debouncedUpdateCenter, dim.translateX, dim.translateY]);
 
   React.useEffect(() => {
     document.addEventListener("mouseup", onMouseUp);

@@ -1,8 +1,11 @@
 import React, { memo } from "react";
-import { useItems } from "../components/Board/Items";
 import { nanoid } from "nanoid";
 import { useTranslation } from "react-i18next";
 import i18n from "../i18n";
+import { useRecoilCallback } from "recoil";
+
+import { useItems } from "../components/Board/Items";
+import { PanZoomRotateAtom } from "./Board";
 
 const itemTypes = [
   i18n.t("Rectangle"),
@@ -27,21 +30,23 @@ const NewItem = memo(({ type }) => {
 
   const { pushItem } = useItems();
 
-  const onClickHandler = () => {
-    const newItem = {
-      ...itemTemplates[type],
-      x: 200,
-      y: 50,
-      id: nanoid(),
-    };
-    pushItem(newItem);
-  };
-
+  const addItem = useRecoilCallback(
+    async (snapshot) => {
+      const { centerX, centerY } = await snapshot.getPromise(PanZoomRotateAtom);
+      pushItem({
+        ...itemTemplates[type],
+        x: centerX,
+        y: centerY,
+        id: nanoid(),
+      });
+    },
+    [pushItem]
+  );
   return (
     <button
       className="button"
       style={{ display: "block", width: "100%" }}
-      onClick={onClickHandler}
+      onClick={addItem}
     >
       {t(type)}
     </button>

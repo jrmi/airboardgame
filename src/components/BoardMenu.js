@@ -116,7 +116,6 @@ const BoardMenu = ({ setShowLoadGameModal, isOpen, setMenuOpen, edit }) => {
   }, [loadGame]);
 
   const loadTestGame = React.useCallback(() => {
-    testGame.availableItems = [];
     loadGame(testGame);
   }, [loadGame]);
 
