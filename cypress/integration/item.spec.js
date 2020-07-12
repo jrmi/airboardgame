@@ -2,6 +2,7 @@ describe("Item interactions", () => {
   beforeEach(() => {
     cy.viewport(1000, 600);
     cy.visit("/");
+    cy.contains("I want play...").click();
     cy.contains("Menu").click();
     cy.contains("Test game").click();
 
