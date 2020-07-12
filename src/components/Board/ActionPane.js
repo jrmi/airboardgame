@@ -69,20 +69,22 @@ const ActionPane = ({ children }) => {
     }
   };
 
-  const onMouseUp = () => {
+  const onMouseUp = React.useCallback(() => {
     if (actionRef.current.moving) {
       actionRef.current = { moving: false };
       wrapperRef.current.style.cursor = "auto";
     }
-  };
+  }, []);
+
+  React.useEffect(() => {
+    document.addEventListener("mouseup", onMouseUp);
+    return () => {
+      document.removeEventListener("mouseup", onMouseUp);
+    };
+  }, [onMouseUp]);
 
   return (
-    <div
-      onMouseDown={onMouseDown}
-      onMouseMove={onMouseMouve}
-      onMouseUp={onMouseUp}
-      ref={wrapperRef}
-    >
+    <div onMouseDown={onMouseDown} onMouseMove={onMouseMouve} ref={wrapperRef}>
       {children}
     </div>
   );
