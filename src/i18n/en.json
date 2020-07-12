@@ -61,5 +61,17 @@
   "Name": "Name",
   "Size": "Size",
   "Board config": "Board config",
-  "Menu": "Menu"
+  "Menu": "Menu",
+  "Rotate 90": "Rotate 90°",
+  "Rotate 60": "Rotate 60°",
+  "Rotate 45": "Rotate 45°",
+  "Rotate 30": "Rotate 30°",
+  "Welcome to Airboardgame": "Welcome to Airboardgame",
+  "What is it?": "What is it?",
+  "Invite your friends": "Invite your friends",
+  "More informations": "More informations",
+  "welcomeText": "<0>Airboardgame is a tabletop simulator to play your favorite board games with your friends online.</0>",
+  "InviteFriends": "<0>To invite other players to play with you, share the following links with your friends.</0>",
+  "moreInformation": "<0>For more informations, visit <2>github repository</2>.</0>",
+  "I want play...": "I want play..."
 }

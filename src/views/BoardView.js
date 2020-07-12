@@ -9,6 +9,7 @@ import SelectedItemsPane from "../components/SelectedItemsPane";
 import { useUsers, SubscribeUserEvents, UserList } from "../components/users";
 import LoadGameModal from "../components/LoadGameModal";
 import HelpModal from "../components/HelpModal";
+import WelcomeModal from "../components/WelcomeModal";
 import NavBar from "../components/NavBar";
 
 const BoardContainer = styled.div`
@@ -23,6 +24,7 @@ export const BoardView = () => {
   const { currentUser, users } = useUsers();
   const [showLoadGameModal, setShowLoadGameModal] = React.useState(false);
   const [showHelpModal, setShowHelpModal] = React.useState(false);
+  const [showWelcomeModal, setShowWelcomeModal] = React.useState(true);
   const [menuOpen, setMenuOpen] = React.useState(false);
   const [edit, setEdit] = React.useState(false);
 
@@ -53,6 +55,8 @@ export const BoardView = () => {
         />
         <HelpModal show={showHelpModal} setShow={setShowHelpModal} />
       </BoardContainer>
+
+      <WelcomeModal show={showWelcomeModal} setShow={setShowWelcomeModal} />
     </>
   );
 };
