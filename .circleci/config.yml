@@ -37,7 +37,7 @@ jobs:
           steps:
             - run: npm install
             - run: npm run lint
-            - run: npm run build
+            - run: SKIP_PREFLIGHT_CHECK=true npm run build
             - run:
                 name: Netlify Deploy
                 command: npx netlify deploy --site $NETLIFY_SITE_ID --auth $NETLIFY_ACCESS_TOKEN --dir=build --prod
