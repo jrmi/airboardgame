@@ -1,8 +1,10 @@
 version: 2.1
 orbs:
   node: circleci/node@1.1.6
+  cypress: cypress-io/cypress@1.25.0
+
 jobs:
-  build-and-test:
+  lint-and-build:
     executor:
       name: node/default
     environment:
@@ -16,7 +18,7 @@ jobs:
           steps:
             - run: npm install
             - run: npm run lint
-            - run: npm run build
+            - run: SKIP_PREFLIGHT_CHECK=true npm run build
             - run:
                 name: Netlify Deploy
                 command: npx netlify deploy --site $NETLIFY_SITE_ID --auth $NETLIFY_ACCESS_TOKEN --dir=build
@@ -41,9 +43,16 @@ jobs:
                 command: npx netlify deploy --site $NETLIFY_SITE_ID --auth $NETLIFY_ACCESS_TOKEN --dir=build --prod
 
 workflows:
+  e2etest:
+    jobs:
+      - cypress/run:
+          start: SKIP_PREFLIGHT_CHECK=true REACT_APP_SOCKET_URL=https://public.jeremiez.net/ REACT_APP_SOCKET_PATH=/wamp/socket.io CI=true npm start
+          wait-on: "http-get://localhost:3000"
+          no-workspace: true
+          store_artifacts: true
   build-and-test:
     jobs:
-      - build-and-test:
+      - lint-and-build:
           filters:
             branches:
               ignore:

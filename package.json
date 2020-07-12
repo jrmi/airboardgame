@@ -30,7 +30,7 @@
     "react-i18next": "^11.7.0",
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "3.4.1",
+    "react-scripts": "^3.4.0",
     "react-use-localstorage": "^3.4.1",
     "react-zoom-pan-pinch": "^1.6.1",
     "recoil": "0.0.7",
@@ -48,7 +48,8 @@
     "server": "nodemon src/server.js",
     "i18n:scanner": "i18next-scanner --config i18next-scanner.config.js 'src/**/*.{js,jsx}'",
     "cypress:open": "LANGUAGE=en cypress open",
-    "cypress:run": "LANGUAGE=en cypress run"
+    "cypress:run": "LANGUAGE=en cypress run",
+    "e2e": "npm start && wait-on http://localhost:3000 && LANGUAGE=en cypress run"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -78,6 +79,7 @@
     "i18next-scanner": "^2.11.0",
     "netlify-cli": "^2.54.0",
     "nodemon": "^2.0.4",
-    "prettier": "2.0.5"
+    "prettier": "2.0.5",
+    "wait-on": "^5.1.0"
   }
 }
