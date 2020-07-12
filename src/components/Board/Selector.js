@@ -130,7 +130,7 @@ const Selector = ({ children }) => {
     <div
       onMouseDown={onMouseDown}
       onMouseMove={onMouseMouve}
-      onMouseEnter={onMouseUp}
+      onMouseEnter={onMouseMouve}
       onMouseOut={onMouseMouve}
       ref={wrapperRef}
     >
