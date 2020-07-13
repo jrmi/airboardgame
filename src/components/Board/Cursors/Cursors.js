@@ -6,6 +6,8 @@ export const Cursors = ({ users }) => {
   const [c2c] = useC2C();
   const [cursors, setCursors] = React.useState({});
 
+  const preventRef = React.useRef(false);
+
   const usersById = React.useMemo(() => {
     return users.reduce((acc, user) => {
       acc[user.id] = user;
@@ -38,6 +40,9 @@ export const Cursors = ({ users }) => {
     const unsub = [];
     unsub.push(
       c2c.subscribe("cursorMove", ({ userId, pos }) => {
+        // Avoid move after cursor off
+        if (preventRef.current) return;
+
         setCursors((prevCursors) => {
           return {
             ...prevCursors,
@@ -55,6 +60,11 @@ export const Cursors = ({ users }) => {
           delete newCursors[userId];
           return newCursors;
         });
+        // Prevent next moves
+        preventRef.current = true;
+        setTimeout(() => {
+          preventRef.current = false;
+        }, 100);
       })
     );
     return () => {
