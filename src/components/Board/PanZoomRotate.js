@@ -63,7 +63,7 @@ const PanZoomRotate = ({ children }) => {
 
     // Made the scale multiplicator Mac specific, as the default one was zooming way too much on each gesture.
     const scaleMult =
-      (e.deltaY < 0 ? -3 : 3 * dim.scale) / (isMacOS() ? 100 : 20);
+      (e.deltaY < 0 ? -3 : 3 * dim.scale) / (isMacOS() ? 50 : 20);
 
     setDim((prevDim) => {
       // On a trackpad, the pinch and pan events are differentiated by the crtlKey value.
@@ -161,6 +161,20 @@ const PanZoomRotate = ({ children }) => {
       document.removeEventListener("mouseup", onMouseUp);
     };
   }, [onMouseUp]);
+
+  React.useEffect(() => {
+    // Chrome-related issue.
+    // Making the wheel event non-passive, which allows to use preventDefault() to prevent
+    // the browser original zoom  and therefore allowing our custom one.
+    // More detail at https://github.com/facebook/react/issues/14856
+    const cancelWheel = (event) => event.preventDefault();
+
+    document.body.addEventListener("wheel", cancelWheel, { passive: false });
+
+    return () => {
+      document.body.removeEventListener("wheel", cancelWheel);
+    };
+  }, []);
 
   return (
     <div
