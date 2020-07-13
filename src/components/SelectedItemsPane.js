@@ -66,12 +66,16 @@ export const SelectedItems = ({ edit }) => {
         if (insideClass(e.target, "item")) return;
         revealForMe();
       }
+      if (e.key === "r") {
+        if (insideClass(e.target, "item")) return;
+        remove();
+      }
     };
     document.addEventListener("keyup", onKeyUp);
     return () => {
       document.removeEventListener("keyup", onKeyUp);
     };
-  }, [revealForMe, toggleFlip, toggleTap]);
+  }, [revealForMe, toggleFlip, toggleTap, remove]);
 
   const onSubmitHandler = React.useCallback(
     (formValues) => {
