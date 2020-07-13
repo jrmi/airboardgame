@@ -8,7 +8,7 @@ import { selectedItemsAtom } from "../components/Board/Selector";
 
 import { insideClass } from "../utils";
 
-import ItemFormFactory from "./Board/Items/Item/forms/ItemFormFactory";
+import ItemFormFactory from "./Board/Items/Item/ItemFormFactory";
 
 import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";

@@ -5,45 +5,16 @@ import { useTranslation } from "react-i18next";
 import { useRecoilValue } from "recoil";
 
 import { Form, Field } from "react-final-form";
-import AutoSave from "../../../Form/AutoSave";
+import AutoSave from "../../Form/AutoSave";
 
-import { ItemListAtom } from "../../../";
+import { ItemListAtom } from "../../";
 
-import ImageFormFields from "./ImageFormFields";
-import CounterFormFields from "./CounterFormFields";
-import RectFormFields from "./RectFormFields";
-import RoundFormFields from "./RoundFormFields";
-import DiceFormFields from "./DiceFormFields";
-import NoteFormFields from "./NoteFormFields";
-import ZoneFormFields from "./ZoneFormFields";
+import Label from "../../Form/Label";
 
-import Label from "../../../Form/Label";
+import { getFormFieldComponent } from "./allItems";
 
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
-
-const getFormFieldComponent = (type) => {
-  switch (type) {
-    case "rect":
-      return RectFormFields;
-    case "round":
-      return RoundFormFields;
-    case "dice":
-      return DiceFormFields;
-    case "counter":
-      return CounterFormFields;
-    case "note":
-      return NoteFormFields;
-    case "image":
-      return ImageFormFields;
-    case "zone":
-      return ZoneFormFields;
-    default:
-      return () => {
-        return null;
-      };
-  }
-};
 
 const ItemFormFactory = ({ itemId, onSubmitHandler }) => {
   const { t } = useTranslation();
