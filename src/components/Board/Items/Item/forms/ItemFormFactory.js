@@ -15,6 +15,7 @@ import RectFormFields from "./RectFormFields";
 import RoundFormFields from "./RoundFormFields";
 import DiceFormFields from "./DiceFormFields";
 import NoteFormFields from "./NoteFormFields";
+import ZoneFormFields from "./ZoneFormFields";
 
 import Label from "../../../Form/Label";
 
@@ -35,6 +36,8 @@ const getFormFieldComponent = (type) => {
       return NoteFormFields;
     case "image":
       return ImageFormFields;
+    case "zone":
+      return ZoneFormFields;
     default:
       return () => {
         return null;

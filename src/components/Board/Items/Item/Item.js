@@ -12,6 +12,7 @@ import Image from "./Image";
 import Counter from "./Counter";
 import Dice from "./Dice";
 import Note from "./Note";
+import Zone from "./Zone";
 
 const getComponent = (type) => {
   switch (type) {
@@ -23,6 +24,8 @@ const getComponent = (type) => {
       return Image;
     case "counter":
       return Counter;
+    case "zone":
+      return Zone;
     case "dice":
       return Dice;
     case "note":

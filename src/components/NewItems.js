@@ -14,6 +14,7 @@ const itemTypes = [
   i18n.t("Note"),
   i18n.t("Counter"),
   i18n.t("Dice"),
+  i18n.t("Zone"),
 ];
 
 const itemTemplates = {
@@ -23,6 +24,7 @@ const itemTemplates = {
   [i18n.t("Note")]: { type: "note" },
   [i18n.t("Counter")]: { type: "counter" },
   [i18n.t("Dice")]: { type: "dice" },
+  [i18n.t("Zone")]: { type: "zone" },
 };
 
 const NewItem = memo(({ type }) => {
