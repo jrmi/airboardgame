@@ -33,14 +33,35 @@ const Pane = styled.div.attrs(({ translateX, translateY, scale, rotate }) => ({
 const PanZoomRotate = ({ children }) => {
   const [dim, setDim] = useRecoilState(PanZoomRotateAtom);
   const config = useRecoilValue(BoardConfigAtom);
+  const [scale, setScale] = React.useState({
+    scale: config.scale,
+    x: 0,
+    y: 0,
+  });
 
   const wrapperRef = React.useRef(null);
   const wrappedRef = React.useRef(null);
-  const scaleRef = React.useRef(dim.scale);
-  scaleRef.current = dim.scale;
   const stateRef = React.useRef({
     moving: false,
   });
+
+  // React on scale change
+  React.useEffect(() => {
+    setDim((prevDim) => {
+      const { top, left } = wrappedRef.current.getBoundingClientRect();
+      const displayX = scale.x - left;
+      const deltaX = displayX - (displayX / prevDim.scale) * scale.scale;
+      const displayY = scale.y - top;
+      const deltaY = displayY - (displayY / prevDim.scale) * scale.scale;
+
+      return {
+        ...prevDim,
+        scale: scale.scale,
+        translateX: prevDim.translateX + deltaX,
+        translateY: prevDim.translateY + deltaY,
+      };
+    });
+  }, [scale, setDim]);
 
   // Center board on game loading
   React.useEffect(() => {
@@ -61,48 +82,41 @@ const PanZoomRotate = ({ children }) => {
       return;
     }
 
-    // Made the scale multiplicator Mac specific, as the default one was zooming way too much on each gesture.
-    const scaleMult =
-      (e.deltaY < 0 ? -3 : 3 * dim.scale) / (isMacOS() ? 50 : 20);
+    const { deltaX, deltaY, clientX, clientY } = e;
 
-    setDim((prevDim) => {
-      // On a trackpad, the pinch and pan events are differentiated by the crtlKey value.
-      // On a pinch gesture, the ctrlKey is set to true, so we want to have a scaling effect.
-      // If we are only moving the fingers in the same direction, a pan is needed.
-      // Ref: https://medium.com/@auchenberg/detecting-multi-touch-trackpad-gestures-in-javascript-a2505babb10e
-      if (isMacOS() && !e.ctrlKey) {
+    // On a trackpad, the pinch and pan events are differentiated by the crtlKey value.
+    // On a pinch gesture, the ctrlKey is set to true, so we want to have a scaling effect.
+    // If we are only moving the fingers in the same direction, a pan is needed.
+    // Ref: https://medium.com/@auchenberg/detecting-multi-touch-trackpad-gestures-in-javascript-a2505babb10e
+    if (isMacOS() && !e.ctrlKey) {
+      setDim((prevDim) => {
         return {
           ...prevDim,
-          translateX: prevDim.translateX - 2 * e.deltaX,
-          translateY: prevDim.translateY - 2 * e.deltaY,
+          translateX: prevDim.translateX - 2 * deltaX,
+          translateY: prevDim.translateY - 2 * deltaY,
         };
-      }
+      });
+    } else {
+      setScale((prevScale) => {
+        // Made the scale multiplicator Mac specific, as the default one was zooming way too much on each gesture.
+        const scaleMult =
+          (deltaY < 0 ? -3 : 3 * prevScale.scale) / (isMacOS() ? 50 : 20);
+        let newScale = prevScale.scale - scaleMult;
 
-      let newScale = scaleRef.current - scaleMult;
+        if (newScale > 8) {
+          newScale = 8;
+        }
 
-      if (newScale > 8) {
-        newScale = 8;
-      }
-
-      if (newScale < 0.3) {
-        newScale = 0.3;
-      }
-
-      scaleRef.current = newScale;
-
-      const { top, left } = wrappedRef.current.getBoundingClientRect();
-      const displayX = e.clientX - left;
-      const deltaX = displayX - (displayX / dim.scale) * newScale;
-      const displayY = e.clientY - top;
-      const deltaY = displayY - (displayY / dim.scale) * newScale;
-
-      return {
-        ...prevDim,
-        scale: newScale,
-        translateX: prevDim.translateX + deltaX,
-        translateY: prevDim.translateY + deltaY,
-      };
-    });
+        if (newScale < 0.3) {
+          newScale = 0.3;
+        }
+        return {
+          scale: newScale,
+          x: clientX,
+          y: clientY,
+        };
+      });
+    }
   };
 
   const onMouseDown = (e) => {
