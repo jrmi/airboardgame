@@ -8,26 +8,7 @@ import { useUsers } from "../../users";
 
 import intersection from "lodash.intersection";
 import { ItemListAtom } from "../";
-
-const getDefaultActionsFromItem = (item) => {
-  switch (item.type) {
-    case "image":
-      if (item.backContent) {
-        return ["flip", "tap", "lock", "remove", "stack"];
-      } else {
-        return ["tap", "lock", "remove", "stack"];
-      }
-    case "rect":
-    case "round":
-    case "note":
-    case "counter":
-    case "dice":
-    case "zone":
-      return ["lock", "remove"];
-    default:
-      return [];
-  }
-};
+import { getDefaultActionsFromItem } from "./Item/allItems";
 
 const getActionsFromItem = (item) => {
   const defaultActions = getDefaultActionsFromItem(item);

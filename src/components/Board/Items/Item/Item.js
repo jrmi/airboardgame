@@ -6,34 +6,7 @@ import debounce from "lodash.debounce";
 
 import styled, { css } from "styled-components";
 
-import Rect from "./Rect";
-import Round from "./Round";
-import Image from "./Image";
-import Counter from "./Counter";
-import Dice from "./Dice";
-import Note from "./Note";
-import Zone from "./Zone";
-
-const getComponent = (type) => {
-  switch (type) {
-    case "rect":
-      return Rect;
-    case "round":
-      return Round;
-    case "image":
-      return Image;
-    case "counter":
-      return Counter;
-    case "zone":
-      return Zone;
-    case "dice":
-      return Dice;
-    case "note":
-      return Note;
-    default:
-      return Rect;
-  }
-};
+import { getComponent } from "./allItems";
 
 const ItemWrapper = styled.div.attrs(({ x, y, rotation, loaded }) => ({
   className: loaded ? "item loaded" : "item",
