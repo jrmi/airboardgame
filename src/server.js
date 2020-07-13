@@ -8,7 +8,7 @@ var handleC2C = require("client2client.io").handleC2C;
 
 app.use(cors());
 
-const port = process.env.PORT || 4000;
+const port = process.env.SERVER_PORT || 4000;
 
 const socketPath = process.env.REACT_APP_SOCKET_PATH || "/socket.io";
 
