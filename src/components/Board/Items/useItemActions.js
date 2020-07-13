@@ -22,6 +22,7 @@ const getDefaultActionsFromItem = (item) => {
     case "note":
     case "counter":
     case "dice":
+    case "zone":
       return ["lock", "remove"];
     default:
       return [];

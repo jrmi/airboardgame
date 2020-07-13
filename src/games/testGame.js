@@ -73,6 +73,16 @@ const genGame = () => {
     y: 200,
   });
 
+  items.push({
+    label: "My zone",
+    type: "zone",
+    layer: -1,
+    width: 500,
+    height: 300,
+    x: 200,
+    y: 600,
+  });
+
   return {
     items,
     availableItems: [
