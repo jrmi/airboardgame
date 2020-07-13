@@ -1,16 +1,15 @@
 import React from "react";
 import { useC2C } from "../../../hooks/useC2C";
-import { useSetRecoilState, useRecoilValue } from "recoil";
-import { selectedItemsAtom } from "../Selector";
+import { useSetRecoilState, useRecoilState } from "recoil";
 import { shuffle as shuffleArray } from "../../../utils";
 
-import { ItemListAtom } from "../";
+import { ItemListAtom, selectedItemsAtom } from "../";
 
 const useItems = () => {
   const [c2c] = useC2C();
 
   const setItemList = useSetRecoilState(ItemListAtom);
-  const selectedItems = useRecoilValue(selectedItemsAtom);
+  const [selectedItems, setSelectItems] = useRecoilState(selectedItemsAtom);
 
   const batchUpdateItems = React.useCallback(
     (ids, callbackOrItem, sync = true) => {
@@ -159,13 +158,18 @@ const useItems = () => {
   );
 
   const removeItem = React.useCallback(
-    (itemId) => {
+    (itemIdToRemove) => {
+      if (selectedItems.includes(itemIdToRemove)) {
+        setSelectItems((prev) => [
+          ...prev.filter((id) => id !== itemIdToRemove),
+        ]);
+      }
       setItemList((prevItemList) => {
-        c2c.publish(`removeItem`, itemId);
-        return prevItemList.filter((item) => item.id !== itemId);
+        c2c.publish(`removeItem`, itemIdToRemove);
+        return prevItemList.filter((item) => item.id !== itemIdToRemove);
       });
     },
-    [c2c, setItemList]
+    [c2c, selectedItems, setItemList, setSelectItems]
   );
 
   return {

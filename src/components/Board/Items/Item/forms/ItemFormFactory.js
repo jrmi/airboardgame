@@ -45,7 +45,10 @@ const getFormFieldComponent = (type) => {
 const ItemFormFactory = ({ itemId, onSubmitHandler }) => {
   const { t } = useTranslation();
   const itemList = useRecoilValue(ItemListAtom);
+
   const item = itemList.find(({ id }) => id === itemId);
+  if (!item) return null;
+
   const FieldsComponent = getFormFieldComponent(item.type);
 
   return (
