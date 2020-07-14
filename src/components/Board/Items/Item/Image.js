@@ -2,16 +2,27 @@ import React, { memo } from "react";
 import { useUsers } from "../../../../components/users";
 import styled from "styled-components";
 
-const OnlyYouLabel = styled.div`
+import eye from "../../../../images/eye.svg";
+
+const UnflippedFor = styled.div`
   position: absolute;
-  top: -20px;
+  top: -34px;
   right: 2px;
   color: #555;
   font-size: 0.6em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
-  background-color: #cccccca0;
   pointer-events: none;
   line-height: 1.5em;
+`;
+
+const UnflippedForUser = styled.img`
+  background-color: ${({ color }) => color};
+  border-radius: 2px;
+  padding: 2px;
+  margin: 2px;
 `;
 
 const Label = styled.div`
@@ -68,8 +79,10 @@ const Image = ({
   backText,
   overlay,
 }) => {
-  const { currentUser } = useUsers();
+  const { currentUser, users } = useUsers();
+
   const size = {};
+
   if (width) {
     size.width = width;
   }
@@ -77,12 +90,27 @@ const Image = ({
     size.height = height;
   }
 
+  const unflippedForUsers = React.useMemo(() => {
+    if (Array.isArray(unflippedFor)) {
+      return unflippedFor
+        .filter((userId) => users.find(({ id }) => userId === id))
+        .map((userId) => users.find(({ id }) => userId === id));
+    }
+    return [];
+  }, [unflippedFor, users]);
+
   const flippedForMe =
-    backContent && flipped && unflippedFor !== currentUser.id;
+    backContent &&
+    flipped &&
+    (!Array.isArray(unflippedFor) || !unflippedFor.includes(currentUser.id));
 
   return (
     <Wrapper>
-      {unflippedFor === currentUser.id && <OnlyYouLabel>Only you</OnlyYouLabel>}
+      <UnflippedFor>
+        {unflippedForUsers.map(({ color, id }) => {
+          return <UnflippedForUser key={id} src={eye} color={color} />;
+        })}
+      </UnflippedFor>
       {flippedForMe && backText && <Label>{backText}</Label>}
       {(!flippedForMe || !backText) && text && <Label>{text}</Label>}
       <FrontImage
