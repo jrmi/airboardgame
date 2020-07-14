@@ -3,6 +3,7 @@ import React from "react";
 import { atom, useRecoilState, useRecoilValue } from "recoil";
 import { BoardConfigAtom } from "./";
 import { isMacOS } from "../../deviceInfos";
+import { insideClass } from "../../utils/";
 
 import styled from "styled-components";
 
@@ -181,7 +182,9 @@ const PanZoomRotate = ({ children }) => {
     // Making the wheel event non-passive, which allows to use preventDefault() to prevent
     // the browser original zoom  and therefore allowing our custom one.
     // More detail at https://github.com/facebook/react/issues/14856
-    const cancelWheel = (event) => event.preventDefault();
+    const cancelWheel = (event) => {
+      if (insideClass(event.target, "board")) event.preventDefault();
+    };
 
     document.body.addEventListener("wheel", cancelWheel, { passive: false });
 
