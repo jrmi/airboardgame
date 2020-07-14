@@ -82,6 +82,46 @@ const genGame = () => {
     x: 200,
     y: 600,
   });
+  items.push({
+    label: "My cube",
+    type: "cube",
+    size: 70,
+    color: "#ff0000",
+    x: 400,
+    y: 550,
+  });
+  items.push({
+    label: "My token",
+    type: "token",
+    size: 70,
+    color: "#00ff00",
+    x: 450,
+    y: 600,
+  });
+  items.push({
+    label: "My meeple",
+    type: "meeple",
+    size: 70,
+    color: "#0000ff",
+    x: 600,
+    y: 650,
+  });
+  items.push({
+    label: "My jewel",
+    type: "jewel",
+    size: 70,
+    color: "#00ffff",
+    x: 650,
+    y: 550,
+  });
+  items.push({
+    label: "My jewel",
+    type: "jewel",
+    size: 70,
+    color: "#ff0000",
+    x: 650,
+    y: 600,
+  });
 
   return {
     items,

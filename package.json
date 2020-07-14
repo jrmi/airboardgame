@@ -3,9 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@color2k/compat": "^1.0.0-rc.5",
     "@scripters/use-socket.io": "^1.6.0",
     "@welldone-software/why-did-you-render": "^4.2.5",
     "client2client.io": "^1.2.1",
+    "color2k": "^1.0.0-rc.5",
     "cors": "^2.8.5",
     "final-form": "^4.20.0",
     "i18next": "^19.4.5",
