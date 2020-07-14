@@ -11,6 +11,7 @@ import LoadGameModal from "../components/LoadGameModal";
 import HelpModal from "../components/HelpModal";
 import WelcomeModal from "../components/WelcomeModal";
 import NavBar from "../components/NavBar";
+import AutoSave from "../components/AutoSave";
 
 const BoardContainer = styled.div`
   width: 100%;
@@ -32,6 +33,7 @@ export const BoardView = () => {
     <>
       <SubscribeUserEvents />
       <SubscribeGameEvents />
+      <AutoSave />
       <NavBar
         setMenuOpen={setMenuOpen}
         setShowHelpModal={setShowHelpModal}
@@ -53,9 +55,9 @@ export const BoardView = () => {
           showModal={showLoadGameModal}
           setShowModal={setShowLoadGameModal}
         />
-        <HelpModal show={showHelpModal} setShow={setShowHelpModal} />
       </BoardContainer>
 
+      <HelpModal show={showHelpModal} setShow={setShowHelpModal} />
       <WelcomeModal show={showWelcomeModal} setShow={setShowWelcomeModal} />
     </>
   );
