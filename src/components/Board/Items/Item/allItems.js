@@ -35,9 +35,17 @@ export const itemMap = {
     component: Image,
     defaultActions: (item) => {
       if (item.backContent) {
-        return ["flip", "tap", "lock", "remove", "stack"];
+        return [
+          "flip",
+          "flipSelf",
+          "tap",
+          "stack",
+          "shuffle",
+          "lock",
+          "remove",
+        ];
       } else {
-        return ["tap", "lock", "remove", "stack"];
+        return ["tap", "stack", "shuffle", "lock", "remove"];
       }
     },
     form: ImageFormFields,

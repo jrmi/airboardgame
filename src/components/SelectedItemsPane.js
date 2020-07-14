@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { useRecoilValue } from "recoil";
 import { useItems } from "./Board/Items";
 import { useItemActions } from "./Board/Items";
-import { selectedItemsAtom } from "../components/Board/Selector";
+import { selectedItemsAtom } from "../components/Board/";
 
 import { insideClass } from "../utils";
 
@@ -50,32 +50,90 @@ export const SelectedItems = ({ edit }) => {
 
   const selectedItems = useRecoilValue(selectedItemsAtom);
 
+  const actionMap = React.useMemo(
+    () => ({
+      flip: {
+        action: toggleFlip,
+        label: t("Reveal") + "/" + t("Hide"),
+        shortcut: "f",
+      },
+      flipSelf: {
+        action: revealForMe,
+        label: t("Reveal for me"),
+        shortcut: "o",
+      },
+      tap: {
+        action: toggleTap,
+        label: t("Tap") + "/" + t("Untap"),
+        shortcut: "t",
+      },
+      rotate90: {
+        action: rotate.bind(null, 90),
+        label: t("Rotate 90"),
+      },
+      rotate60: {
+        action: rotate.bind(null, 60),
+        label: t("Rotate 60"),
+      },
+      rotate45: {
+        action: rotate.bind(null, 45),
+        label: t("Rotate 45"),
+      },
+      rotate30: {
+        action: rotate.bind(null, 30),
+        label: t("Rotate 30"),
+      },
+      stack: {
+        action: align,
+        label: t("Stack"),
+        shortcut: "",
+        multiple: true,
+      },
+      shuffle: {
+        action: shuffle,
+        label: t("Shuffle"),
+        shortcut: "",
+        multiple: true,
+      },
+      lock: {
+        action: toggleLock,
+        label: t("Unlock") + "/" + t("Lock"),
+      },
+      remove: {
+        action: remove,
+        label: t("Remove all"),
+        shortcut: "r",
+        edit: true,
+      },
+    }),
+    [
+      align,
+      remove,
+      revealForMe,
+      rotate,
+      shuffle,
+      t,
+      toggleFlip,
+      toggleLock,
+      toggleTap,
+    ]
+  );
+
   React.useEffect(() => {
     const onKeyUp = (e) => {
       // Block shortcut if we are typing in a textarea or input
       if (["INPUT", "TEXTAREA"].includes(e.target.tagName)) return;
-      if (e.key === "f") {
-        if (insideClass(e.target, "item")) return;
-        toggleFlip();
-      }
-      if (e.key === "t") {
-        if (insideClass(e.target, "item")) return;
-        toggleTap();
-      }
-      if (e.key === "o") {
-        if (insideClass(e.target, "item")) return;
-        revealForMe();
-      }
-      if (e.key === "r") {
-        if (insideClass(e.target, "item")) return;
-        remove();
-      }
+      Object.values(actionMap).forEach(({ shortcut, action }) => {
+        if (e.key === shortcut) {
+          action();
+        }
+      });
     };
     document.addEventListener("keyup", onKeyUp);
     return () => {
       document.removeEventListener("keyup", onKeyUp);
     };
-  }, [revealForMe, toggleFlip, toggleTap, remove]);
+  }, [actionMap]);
 
   const onSubmitHandler = React.useCallback(
     (formValues) => {
@@ -86,6 +144,29 @@ export const SelectedItems = ({ edit }) => {
     },
     [updateItem]
   );
+
+  const onDblClick = React.useCallback(
+    (e) => {
+      const foundElement = insideClass(e.target, "item");
+      // We dblclick oustside of an element
+      if (!foundElement) return;
+
+      if (e.ctrlKey && availableActions.length > 1) {
+        // Use second action
+        actionMap[availableActions[1]].action();
+      } else {
+        actionMap[availableActions[0]].action();
+      }
+    },
+    [actionMap, availableActions]
+  );
+
+  React.useEffect(() => {
+    document.addEventListener("dblclick", onDblClick);
+    return () => {
+      document.removeEventListener("dblclick", onDblClick);
+    };
+  }, [onDblClick]);
 
   if (selectedItems.length === 0) {
     return null;
@@ -135,62 +216,21 @@ export const SelectedItems = ({ edit }) => {
           <h3>{t("items selected", { count: selectedItems.length })}</h3>
         </header>
         <CardContent>
-          {availableActions.includes("flip") && (
-            <button onClick={toggleFlip}>
-              {t("Reveal") + "/" + t("Hide")}
-            </button>
-          )}
-          {availableActions.includes("tap") && (
-            <button onClick={toggleTap}>{t("Tap") + "/" + t("Untap")}</button>
-          )}
-          {availableActions.includes("rotate90") && (
-            <button
-              onClick={() => {
-                rotate(90);
-              }}
-            >
-              {t("Rotate 90")}
-            </button>
-          )}
-          {availableActions.includes("rotate60") && (
-            <button
-              onClick={() => {
-                rotate(60);
-              }}
-            >
-              {t("Rotate 60")}
-            </button>
-          )}
-          {availableActions.includes("rotate45") && (
-            <button
-              onClick={() => {
-                rotate(45);
-              }}
-            >
-              {t("Rotate 45")}
-            </button>
-          )}
-          {availableActions.includes("rotate30") && (
-            <button
-              onClick={() => {
-                rotate(30);
-              }}
-            >
-              {t("Rotate 30")}
-            </button>
-          )}
-          {selectedItems.length > 1 && (
-            <>
-              <button onClick={align}>{t("Stack")}</button>
-              <button onClick={shuffle}>{t("Shuffle")}</button>
-            </>
-          )}
-          {availableActions.includes("lock") && (
-            <button onClick={toggleLock}>
-              {t("Unlock") + "/" + t("Lock")}
-            </button>
-          )}
-          {edit && <button onClick={onRemove}>{t("Remove all")}</button>}
+          {availableActions.map((action) => {
+            const {
+              label,
+              action: handler,
+              multiple,
+              edit: onlyEdit,
+            } = actionMap[action];
+            if (multiple && selectedItems.length < 2) return null;
+            if (onlyEdit && !edit) return null;
+            return (
+              <button key={action} onClick={handler}>
+                {label}
+              </button>
+            );
+          })}
         </CardContent>
       </div>
     </SelectedPane>
