@@ -63,7 +63,6 @@ const Image = ({
   content = "/default.png",
   backContent,
   flipped = false,
-  setState,
   unflippedFor,
   text,
   backText,
@@ -78,38 +77,11 @@ const Image = ({
     size.height = height;
   }
 
-  const onDblClick = React.useCallback(
-    (e) => {
-      if (!backContent) return;
-      if (e.ctrlKey) {
-        // Reveal only for current player
-        setState((prevItem) => {
-          if (prevItem.unflippedFor !== undefined) {
-            return { ...prevItem, unflippedFor: undefined };
-          } else {
-            return {
-              ...prevItem,
-              unflippedFor: currentUser.id,
-              flipped: true,
-            };
-          }
-        });
-      } else {
-        setState((prevItem) => ({
-          ...prevItem,
-          flipped: !prevItem.flipped,
-          unflippedFor: undefined,
-        }));
-      }
-    },
-    [setState, currentUser.id, backContent]
-  );
-
   const flippedForMe =
     backContent && flipped && unflippedFor !== currentUser.id;
 
   return (
-    <Wrapper onDoubleClick={onDblClick}>
+    <Wrapper>
       {unflippedFor === currentUser.id && <OnlyYouLabel>Only you</OnlyYouLabel>}
       {flippedForMe && backText && <Label>{backText}</Label>}
       {(!flippedForMe || !backText) && text && <Label>{text}</Label>}
