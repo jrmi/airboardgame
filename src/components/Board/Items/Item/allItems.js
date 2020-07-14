@@ -1,12 +1,16 @@
 import i18n from "../../../../i18n";
 
 import Rect from "./Rect";
+import Cube from "./Cube";
 import Round from "./Round";
+import Token from "./Token";
 import Image from "./Image";
 import Counter from "./Counter";
 import Dice from "./Dice";
 import Note from "./Note";
 import Zone from "./Zone";
+import Meeple from "./Meeple";
+import Jewel from "./Jewel";
 
 import ImageFormFields from "./forms/ImageFormFields";
 import CounterFormFields from "./forms/CounterFormFields";
@@ -24,11 +28,39 @@ export const itemMap = {
     label: i18n.t("Rectangle"),
     template: {},
   },
+  cube: {
+    component: Cube,
+    defaultActions: ["lock", "remove"],
+    form: RectFormFields,
+    label: i18n.t("Cube"),
+    template: {},
+  },
   round: {
     component: Round,
     defaultActions: ["lock", "remove"],
     form: RoundFormFields,
     label: i18n.t("Round"),
+    template: {},
+  },
+  token: {
+    component: Token,
+    defaultActions: ["lock", "remove"],
+    form: RectFormFields,
+    label: i18n.t("Token"),
+    template: {},
+  },
+  meeple: {
+    component: Meeple,
+    defaultActions: ["lock", "remove"],
+    form: RectFormFields,
+    label: i18n.t("Meeple"),
+    template: {},
+  },
+  jewel: {
+    component: Jewel,
+    defaultActions: ["lock", "remove"],
+    form: RectFormFields,
+    label: i18n.t("Jewel"),
     template: {},
   },
   image: {
