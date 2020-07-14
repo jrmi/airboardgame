@@ -37,8 +37,8 @@ export const SelectedItems = ({ edit }) => {
   const {
     align,
     remove,
-    revealForMe,
     toggleFlip,
+    toggleFlipSelf,
     toggleLock,
     toggleTap,
     shuffle,
@@ -58,7 +58,7 @@ export const SelectedItems = ({ edit }) => {
         shortcut: "f",
       },
       flipSelf: {
-        action: revealForMe,
+        action: toggleFlipSelf,
         label: t("Reveal for me"),
         shortcut: "o",
       },
@@ -109,7 +109,7 @@ export const SelectedItems = ({ edit }) => {
     [
       align,
       remove,
-      revealForMe,
+      toggleFlipSelf,
       rotate,
       shuffle,
       t,

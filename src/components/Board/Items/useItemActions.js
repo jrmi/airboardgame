@@ -164,13 +164,41 @@ export const useItemActions = () => {
   );
 
   // Reveal for player only
-  const revealForMe = React.useCallback(() => {
-    batchUpdateItems(selectedItems, (item) => ({
-      ...item,
-      flipped: true,
-      unflippedFor: currentUser.id,
-    }));
-  }, [batchUpdateItems, selectedItems, currentUser.id]);
+  const toggleFlipSelf = useRecoilCallback(
+    async (snapshot) => {
+      const selectedItemList = await getSelectedItemList(snapshot);
+      const flippedSelfCount = selectedItemList.filter(
+        ({ unflippedFor }) =>
+          Array.isArray(unflippedFor) && unflippedFor.includes(currentUser.id)
+      ).length;
+
+      let flipSelf = true;
+      if (flippedSelfCount > selectedItems.length / 2) {
+        flipSelf = false;
+      }
+
+      batchUpdateItems(selectedItems, (item) => {
+        let unflippedFor;
+        if (!Array.isArray(item.unflippedFor)) {
+          unflippedFor = [];
+        } else {
+          unflippedFor = [...item.unflippedFor];
+        }
+        if (flipSelf && !unflippedFor.includes(currentUser.id)) {
+          unflippedFor.push(currentUser.id);
+        }
+        if (!flipSelf && unflippedFor.includes(currentUser.id)) {
+          unflippedFor = unflippedFor.filter((id) => id !== currentUser.id);
+        }
+        return {
+          ...item,
+          flipped: true,
+          unflippedFor,
+        };
+      });
+    },
+    [batchUpdateItems, selectedItems, currentUser.id]
+  );
 
   // Remove selected items
   const removeItems = React.useCallback(
@@ -184,8 +212,8 @@ export const useItemActions = () => {
   return {
     align,
     remove: removeItems,
-    revealForMe,
     toggleFlip,
+    toggleFlipSelf,
     toggleLock,
     toggleTap,
     shuffle: shuffleSelectedItems,

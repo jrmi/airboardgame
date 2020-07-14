@@ -73,5 +73,8 @@
   "welcomeText": "<0>Airboardgame est un simulateur de table de jeu qui vous permet de jouer en ligne avec vos amis à vos jeux de société préférés.</0>",
   "InviteFriends": "<0>Pour inviter d'autres joueurs, partagez le lien suivant avec vos amis.</0>",
   "moreInformation": "<0>Pour plus d'informations, visitez le <2>dépôt github</2>.</0>",
-  "I want play...": "Je veux jouer..."
+  "I want play...": "Je veux jouer...",
+  "Zone": "Zone",
+  "Reveal for me": "Retourner pour moi",
+  "Waiting for connection…": "En attente d'une connection…"
 }
