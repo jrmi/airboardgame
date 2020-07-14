@@ -48,6 +48,7 @@ const Item = ({ setState, state }) => {
   const sizeRef = React.useRef({});
   const [unlock, setUnlock] = React.useState(false);
   const [loaded, setLoaded] = React.useState(false);
+  const isMountedRef = React.useRef(false);
 
   // Allow to operate on locked item if key is pressed
   React.useEffect(() => {
@@ -82,6 +83,7 @@ const Item = ({ setState, state }) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const actualSizeCallback = React.useCallback(
     debounce((entries) => {
+      if (!isMountedRef.current) return;
       entries.forEach((entry) => {
         if (entry.contentRect) {
           const { width, height } = entry.contentRect;
@@ -106,6 +108,14 @@ const Item = ({ setState, state }) => {
     }, 1000),
     [updateState]
   );
+
+  // Update actual size when update
+  React.useEffect(() => {
+    isMountedRef.current = true;
+    return () => {
+      isMountedRef.current = false;
+    };
+  }, []);
 
   // Update actual size when update
   React.useEffect(() => {
