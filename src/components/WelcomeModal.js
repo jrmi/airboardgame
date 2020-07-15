@@ -20,7 +20,7 @@ const WelcomeModal = ({ show, setShow }) => {
           }}
           className="button"
         >
-          {t("I want play...")}
+          {t("I want to play...")}
         </button>
       }
     >
@@ -34,16 +34,16 @@ const WelcomeModal = ({ show, setShow }) => {
       <h3>{t("Invite your friends")}</h3>
       <Trans i18nKey="InviteFriends">
         <p>
-          To invite other players to play with you, share the following links
+          To invite other players to play with you, share the following link
           with your friends.
         </p>
       </Trans>
       <span>{currentUrl}</span>
 
-      <h3>{t("More informations")}</h3>
+      <h3>{t("More information")}</h3>
       <Trans i18nKey="moreInformation">
         <p>
-          For more informations, visit{" "}
+          For more information, visit{" "}
           <a href="https://github.com/jrmi/airboardgame/">github repository</a>.
         </p>
       </Trans>
