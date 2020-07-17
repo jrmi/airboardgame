@@ -76,5 +76,10 @@
   "I want to play...": "Je veux jouer...",
   "Zone": "Zone",
   "Reveal for me": "Retourner pour moi",
-  "Waiting for connection…": "En attente d'une connection…"
+  "Waiting for connection…": "En attente d'une connection…",
+  "Cube": "Cube",
+  "Token": "Jeton",
+  "Meeple": "Meeple",
+  "Jewel": "Ressource",
+  "Clone": "Dupliquer"
 }

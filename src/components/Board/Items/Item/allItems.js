@@ -30,35 +30,35 @@ export const itemMap = {
   },
   cube: {
     component: Cube,
-    defaultActions: ["lock", "remove"],
+    defaultActions: ["clone", "lock", "remove"],
     form: RectFormFields,
     label: i18n.t("Cube"),
     template: {},
   },
   round: {
     component: Round,
-    defaultActions: ["lock", "remove"],
+    defaultActions: ["clone", "lock", "remove"],
     form: RoundFormFields,
     label: i18n.t("Round"),
     template: {},
   },
   token: {
     component: Token,
-    defaultActions: ["lock", "remove"],
+    defaultActions: ["clone", "lock", "remove"],
     form: RectFormFields,
     label: i18n.t("Token"),
     template: {},
   },
   meeple: {
     component: Meeple,
-    defaultActions: ["lock", "remove"],
+    defaultActions: ["clone", "lock", "remove"],
     form: RectFormFields,
     label: i18n.t("Meeple"),
     template: {},
   },
   jewel: {
     component: Jewel,
-    defaultActions: ["lock", "remove"],
+    defaultActions: ["clone", "lock", "remove"],
     form: RectFormFields,
     label: i18n.t("Jewel"),
     template: {},
@@ -73,11 +73,12 @@ export const itemMap = {
           "tap",
           "stack",
           "shuffle",
+          "clone",
           "lock",
           "remove",
         ];
       } else {
-        return ["tap", "stack", "shuffle", "lock", "remove"];
+        return ["tap", "stack", "shuffle", "clone", "lock", "remove"];
       }
     },
     form: ImageFormFields,
@@ -86,28 +87,28 @@ export const itemMap = {
   },
   counter: {
     component: Counter,
-    defaultActions: ["lock", "remove"],
+    defaultActions: ["clone", "lock", "remove"],
     form: CounterFormFields,
     label: i18n.t("Counter"),
     template: {},
   },
   dice: {
     component: Dice,
-    defaultActions: ["lock", "remove"],
+    defaultActions: ["clone", "lock", "remove"],
     form: DiceFormFields,
     label: i18n.t("Dice"),
     template: {},
   },
   note: {
     component: Note,
-    defaultActions: ["lock", "remove"],
+    defaultActions: ["clone", "lock", "remove"],
     form: NoteFormFields,
     label: i18n.t("Note"),
     template: {},
   },
   zone: {
     component: Zone,
-    defaultActions: ["lock", "remove"],
+    defaultActions: ["clone", "lock", "remove"],
     form: ZoneFormFields,
     label: i18n.t("Zone"),
     template: {},

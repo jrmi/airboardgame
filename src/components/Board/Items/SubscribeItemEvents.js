@@ -69,6 +69,27 @@ export const SubcribeItemEvents = () => {
   }, [c2c, setItemList]);
 
   React.useEffect(() => {
+    const unsub = c2c.subscribe(`insertItemBefore`, ([newItem, beforeId]) => {
+      setItemList((prevItemList) => {
+        if (beforeId) {
+          const insertAt = prevItemList.findIndex(({ id }) => id === beforeId);
+          const newItemList = [...prevItemList];
+          newItemList.splice(insertAt, 0, { ...newItem });
+          return newItemList;
+        } else {
+          return [
+            ...prevItemList,
+            {
+              ...newItem,
+            },
+          ];
+        }
+      });
+    });
+    return unsub;
+  }, [c2c, setItemList]);
+
+  React.useEffect(() => {
     const unsub = c2c.subscribe(`removeItem`, (itemId) => {
       setItemList((prevItemList) =>
         prevItemList.filter((item) => item.id !== itemId)
