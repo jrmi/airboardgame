@@ -46,7 +46,9 @@ export const SubcribeItemEvents = () => {
           return prev;
         }, {});
         const result = prevList.map((item, index) => {
-          return itemsMap[itemIds[index]];
+          // Fix #114 crash when pushing new item and receive update list order
+          // If item id doesn't exists in map, we keep the current item
+          return itemsMap[itemIds[index]] || item;
         });
         return result;
       });
