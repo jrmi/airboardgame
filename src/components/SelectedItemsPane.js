@@ -34,90 +34,11 @@ const CardContent = styled.div.attrs(() => ({ className: "content" }))`
 export const SelectedItems = ({ edit }) => {
   const { updateItem } = useItems();
 
-  const {
-    align,
-    remove,
-    toggleFlip,
-    toggleFlipSelf,
-    toggleLock,
-    toggleTap,
-    shuffle,
-    availableActions,
-    rotate,
-  } = useItemActions();
+  const { remove, availableActions, actionMap } = useItemActions();
 
   const { t } = useTranslation();
 
   const selectedItems = useRecoilValue(selectedItemsAtom);
-
-  const actionMap = React.useMemo(
-    () => ({
-      flip: {
-        action: toggleFlip,
-        label: t("Reveal") + "/" + t("Hide"),
-        shortcut: "f",
-      },
-      flipSelf: {
-        action: toggleFlipSelf,
-        label: t("Reveal for me"),
-        shortcut: "o",
-      },
-      tap: {
-        action: toggleTap,
-        label: t("Tap") + "/" + t("Untap"),
-        shortcut: "t",
-      },
-      rotate90: {
-        action: rotate.bind(null, 90),
-        label: t("Rotate 90"),
-      },
-      rotate60: {
-        action: rotate.bind(null, 60),
-        label: t("Rotate 60"),
-      },
-      rotate45: {
-        action: rotate.bind(null, 45),
-        label: t("Rotate 45"),
-      },
-      rotate30: {
-        action: rotate.bind(null, 30),
-        label: t("Rotate 30"),
-      },
-      stack: {
-        action: align,
-        label: t("Stack"),
-        shortcut: "",
-        multiple: true,
-      },
-      shuffle: {
-        action: shuffle,
-        label: t("Shuffle"),
-        shortcut: "",
-        multiple: true,
-      },
-      lock: {
-        action: toggleLock,
-        label: t("Unlock") + "/" + t("Lock"),
-      },
-      remove: {
-        action: remove,
-        label: t("Remove all"),
-        shortcut: "r",
-        edit: true,
-      },
-    }),
-    [
-      align,
-      remove,
-      toggleFlipSelf,
-      rotate,
-      shuffle,
-      t,
-      toggleFlip,
-      toggleLock,
-      toggleTap,
-    ]
-  );
 
   React.useEffect(() => {
     const onKeyUp = (e) => {
@@ -151,11 +72,17 @@ export const SelectedItems = ({ edit }) => {
       // We dblclick oustside of an element
       if (!foundElement) return;
 
-      if (e.ctrlKey && availableActions.length > 1) {
+      const filteredActions = availableActions.filter(
+        (action) => !actionMap[action].disableDblclick
+      );
+
+      if (e.ctrlKey && filteredActions.length > 1) {
         // Use second action
-        actionMap[availableActions[1]].action();
+        actionMap[filteredActions[1]].action();
       } else {
-        actionMap[availableActions[0]].action();
+        if (filteredActions.length > 0) {
+          actionMap[filteredActions[0]].action();
+        }
       }
     },
     [actionMap, availableActions]

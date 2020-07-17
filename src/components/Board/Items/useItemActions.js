@@ -10,6 +10,8 @@ import intersection from "lodash.intersection";
 import { ItemListAtom } from "../";
 import { getDefaultActionsFromItem } from "./Item/allItems";
 
+import { useTranslation } from "react-i18next";
+
 const getActionsFromItem = (item) => {
   const defaultActions = getDefaultActionsFromItem(item);
   const { actions = [] } = item;
@@ -23,6 +25,8 @@ export const useItemActions = () => {
     reverseItemsOrder,
     shuffleSelectedItems,
   } = useItems();
+
+  const { t } = useTranslation();
 
   const { currentUser } = useUsers();
 
@@ -209,6 +213,77 @@ export const useItemActions = () => {
     [removeItem, selectedItems]
   );
 
+  const actionMap = React.useMemo(
+    () => ({
+      flip: {
+        action: toggleFlip,
+        label: t("Reveal") + "/" + t("Hide"),
+        shortcut: "f",
+      },
+      flipSelf: {
+        action: toggleFlipSelf,
+        label: t("Reveal for me"),
+        shortcut: "o",
+      },
+      tap: {
+        action: toggleTap,
+        label: t("Tap") + "/" + t("Untap"),
+        shortcut: "t",
+      },
+      rotate90: {
+        action: rotate.bind(null, 90),
+        label: t("Rotate 90"),
+      },
+      rotate60: {
+        action: rotate.bind(null, 60),
+        label: t("Rotate 60"),
+      },
+      rotate45: {
+        action: rotate.bind(null, 45),
+        label: t("Rotate 45"),
+      },
+      rotate30: {
+        action: rotate.bind(null, 30),
+        label: t("Rotate 30"),
+      },
+      stack: {
+        action: align,
+        label: t("Stack"),
+        shortcut: "",
+        multiple: true,
+      },
+      shuffle: {
+        action: shuffleSelectedItems,
+        label: t("Shuffle"),
+        shortcut: "",
+        multiple: true,
+      },
+      lock: {
+        action: toggleLock,
+        label: t("Unlock") + "/" + t("Lock"),
+        disableDblclick: true,
+      },
+      remove: {
+        action: removeItems,
+        label: t("Remove all"),
+        shortcut: "r",
+        edit: true,
+        disableDblclick: true,
+      },
+    }),
+    [
+      toggleFlip,
+      t,
+      toggleFlipSelf,
+      toggleTap,
+      rotate,
+      align,
+      shuffleSelectedItems,
+      toggleLock,
+      removeItems,
+    ]
+  );
+
   return {
     align,
     remove: removeItems,
@@ -218,6 +293,7 @@ export const useItemActions = () => {
     toggleTap,
     shuffle: shuffleSelectedItems,
     rotate,
+    actionMap,
     availableActions,
   };
 };
