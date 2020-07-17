@@ -10,7 +10,7 @@ import { insideClass } from "../utils";
 
 import ItemFormFactory from "./Board/Items/Item/ItemFormFactory";
 
-import { confirmAlert } from "react-confirm-alert";
+// import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
 
 import { useTranslation } from "react-i18next";
@@ -34,7 +34,7 @@ const CardContent = styled.div.attrs(() => ({ className: "content" }))`
 export const SelectedItems = ({ edit }) => {
   const { updateItem } = useItems();
 
-  const { remove, availableActions, actionMap } = useItemActions();
+  const { availableActions, actionMap } = useItemActions();
 
   const { t } = useTranslation();
 
@@ -44,17 +44,19 @@ export const SelectedItems = ({ edit }) => {
     const onKeyUp = (e) => {
       // Block shortcut if we are typing in a textarea or input
       if (["INPUT", "TEXTAREA"].includes(e.target.tagName)) return;
-      Object.values(actionMap).forEach(({ shortcut, action }) => {
-        if (e.key === shortcut) {
-          action();
+      Object.values(actionMap).forEach(
+        ({ shortcut, action, edit: whileEdit }) => {
+          if (e.key === shortcut && edit === !!whileEdit) {
+            action();
+          }
         }
-      });
+      );
     };
     document.addEventListener("keyup", onKeyUp);
     return () => {
       document.removeEventListener("keyup", onKeyUp);
     };
-  }, [actionMap]);
+  }, [actionMap, edit]);
 
   const onSubmitHandler = React.useCallback(
     (formValues) => {
@@ -99,7 +101,8 @@ export const SelectedItems = ({ edit }) => {
     return null;
   }
 
-  const onRemove = () => {
+  // Keep this code for later
+  /*const onRemove = () => {
     confirmAlert({
       title: t("Confirmation"),
       message: t("Do you really want to remove selected items ?"),
@@ -114,7 +117,7 @@ export const SelectedItems = ({ edit }) => {
         },
       ],
     });
-  };
+  };*/
 
   if (selectedItems.length === 1 && edit) {
     return (
@@ -129,7 +132,15 @@ export const SelectedItems = ({ edit }) => {
                 itemId={itemId}
                 onSubmitHandler={onSubmitHandler}
               />
-              <button onClick={onRemove}>{t("Remove")}</button>
+              {availableActions.map((action) => {
+                const { label, action: handler, multiple } = actionMap[action];
+                if (multiple && selectedItems.length < 2) return null;
+                return (
+                  <button key={action} onClick={handler}>
+                    {label}
+                  </button>
+                );
+              })}
             </CardContent>
           </div>
         ))}

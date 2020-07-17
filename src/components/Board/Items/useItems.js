@@ -142,19 +142,38 @@ const useItems = () => {
     });
   }, [c2c, setItemList, selectedItems]);
 
-  const pushItem = React.useCallback(
-    (newItem) => {
+  const insertItemBefore = React.useCallback(
+    (newItem, beforeId, sync = true) => {
       setItemList((prevItemList) => {
-        c2c.publish(`pushItem`, newItem);
-        return [
-          ...prevItemList,
-          {
-            ...newItem,
-          },
-        ];
+        if (beforeId) {
+          const insertAt = prevItemList.findIndex(({ id }) => id === beforeId);
+          if (sync) {
+            c2c.publish(`insertItemBefore`, [newItem, beforeId]);
+          }
+          const newItemList = [...prevItemList];
+          newItemList.splice(insertAt, 0, { ...newItem });
+          return newItemList;
+        } else {
+          if (sync) {
+            c2c.publish(`insertItemBefore`, newItem);
+          }
+          return [
+            ...prevItemList,
+            {
+              ...newItem,
+            },
+          ];
+        }
       });
     },
     [c2c, setItemList]
+  );
+
+  const pushItem = React.useCallback(
+    (newItem) => {
+      insertItemBefore(newItem);
+    },
+    [insertItemBefore]
   );
 
   const removeItem = React.useCallback(
@@ -182,6 +201,7 @@ const useItems = () => {
     setItemList,
     pushItem,
     removeItem,
+    insertItemBefore,
   };
 };
 

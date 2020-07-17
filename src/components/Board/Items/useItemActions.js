@@ -11,6 +11,7 @@ import { ItemListAtom } from "../";
 import { getDefaultActionsFromItem } from "./Item/allItems";
 
 import { useTranslation } from "react-i18next";
+import { nanoid } from "nanoid";
 
 const getActionsFromItem = (item) => {
   const defaultActions = getDefaultActionsFromItem(item);
@@ -22,6 +23,7 @@ export const useItemActions = () => {
   const {
     batchUpdateItems,
     removeItem,
+    insertItemBefore,
     reverseItemsOrder,
     shuffleSelectedItems,
   } = useItems();
@@ -213,6 +215,18 @@ export const useItemActions = () => {
     [removeItem, selectedItems]
   );
 
+  const cloneItem = useRecoilCallback(
+    async (snapshot) => {
+      const selectedItemList = await getSelectedItemList(snapshot);
+      selectedItemList.forEach((itemToClone) => {
+        const newItem = JSON.parse(JSON.stringify(itemToClone));
+        newItem.id = nanoid();
+        insertItemBefore(newItem, itemToClone.id);
+      });
+    },
+    [selectedItems, insertItemBefore]
+  );
+
   const actionMap = React.useMemo(
     () => ({
       flip: {
@@ -258,6 +272,13 @@ export const useItemActions = () => {
         shortcut: "",
         multiple: true,
       },
+      clone: {
+        action: cloneItem,
+        label: t("Clone"),
+        shortcut: " ",
+        disableDblclick: true,
+        edit: true,
+      },
       lock: {
         action: toggleLock,
         label: t("Unlock") + "/" + t("Lock"),
@@ -279,6 +300,7 @@ export const useItemActions = () => {
       rotate,
       align,
       shuffleSelectedItems,
+      cloneItem,
       toggleLock,
       removeItems,
     ]
