@@ -55,7 +55,7 @@ describe("Item interactions", () => {
       .parents(".item")
       .click(500, 500, { force: true });
 
-    cy.contains("Hide").click();
+    cy.get('[title = "Reveal/Hide"]').click();
 
     // Check after
     cy.get("img[src='/games/JC.jpg']").should("have.css", "opacity", "0");
@@ -75,7 +75,7 @@ describe("Item interactions", () => {
       .parents(".item")
       .click(500, 500, { force: true });
 
-    cy.contains("Tap").click();
+    cy.get('[title = "Tap/Untap"]').click();
 
     // Check after
     cy.get("img[src='/games/JC.jpg']")

@@ -13,6 +13,16 @@ import { getDefaultActionsFromItem } from "./Item/allItems";
 import { useTranslation } from "react-i18next";
 import { nanoid } from "nanoid";
 
+import deleteIcon from "../../../images/delete.svg";
+import stackIcon from "../../../images/stack.svg";
+import duplicateIcon from "../../../images/duplicate.svg";
+import seeIcon from "../../../images/see.svg";
+import flipIcon from "../../../images/flip.svg";
+import lockIcon from "../../../images/lock.svg";
+import rotateIcon from "../../../images/rotate.svg";
+import shuffleIcon from "../../../images/shuffle.svg";
+import tapIcon from "../../../images/tap.svg";
+
 const getActionsFromItem = (item) => {
   const defaultActions = getDefaultActionsFromItem(item);
   const { actions = [] } = item;
@@ -233,44 +243,53 @@ export const useItemActions = () => {
         action: toggleFlip,
         label: t("Reveal") + "/" + t("Hide"),
         shortcut: "f",
+        icon: flipIcon,
       },
       flipSelf: {
         action: toggleFlipSelf,
         label: t("Reveal for me"),
         shortcut: "o",
+        icon: seeIcon,
       },
       tap: {
         action: toggleTap,
         label: t("Tap") + "/" + t("Untap"),
         shortcut: "t",
+        icon: tapIcon,
       },
       rotate90: {
         action: rotate.bind(null, 90),
         label: t("Rotate 90"),
+        icon: rotateIcon,
       },
       rotate60: {
         action: rotate.bind(null, 60),
         label: t("Rotate 60"),
+        icon: rotateIcon,
       },
       rotate45: {
         action: rotate.bind(null, 45),
         label: t("Rotate 45"),
+        icon: rotateIcon,
       },
       rotate30: {
         action: rotate.bind(null, 30),
         label: t("Rotate 30"),
+        icon: rotateIcon,
       },
       stack: {
         action: align,
         label: t("Stack"),
         shortcut: "",
         multiple: true,
+        icon: stackIcon,
       },
       shuffle: {
         action: shuffleSelectedItems,
         label: t("Shuffle"),
         shortcut: "",
         multiple: true,
+        icon: shuffleIcon,
       },
       clone: {
         action: cloneItem,
@@ -278,11 +297,13 @@ export const useItemActions = () => {
         shortcut: " ",
         disableDblclick: true,
         edit: true,
+        icon: duplicateIcon,
       },
       lock: {
         action: toggleLock,
         label: t("Unlock") + "/" + t("Lock"),
         disableDblclick: true,
+        icon: lockIcon,
       },
       remove: {
         action: removeItems,
@@ -290,6 +311,7 @@ export const useItemActions = () => {
         shortcut: "r",
         edit: true,
         disableDblclick: true,
+        icon: deleteIcon,
       },
     }),
     [
