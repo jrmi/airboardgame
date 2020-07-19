@@ -25,6 +25,23 @@ const SelectedPane = styled.div.attrs(() => ({ className: "card" }))`
   overflow-y: scroll;
 `;
 
+const ActionPane = styled.div`
+  position: fixed;
+  left: 0em;
+  top: 5px;
+  display: flex;
+  background-color: transparent;
+  justify-content: center;
+  width: 50%;
+  z-index: 10001;
+  margin: 0 25%;
+  & button{
+    margin 0 6px;
+    padding: 0.4em;
+    height: 40px
+  }
+`;
+
 const CardContent = styled.div.attrs(() => ({ className: "content" }))`
   display: flex;
   flex-direction: column;
@@ -119,59 +136,51 @@ export const SelectedItems = ({ edit }) => {
     });
   };*/
 
-  if (selectedItems.length === 1 && edit) {
-    return (
-      <SelectedPane>
-        {selectedItems.map((itemId) => (
-          <div className="card" key={itemId}>
-            <header>
-              <h3>{t("Edit item")}</h3>
-            </header>
-            <CardContent>
-              <ItemFormFactory
-                itemId={itemId}
-                onSubmitHandler={onSubmitHandler}
-              />
-              {availableActions.map((action) => {
-                const { label, action: handler, multiple } = actionMap[action];
-                if (multiple && selectedItems.length < 2) return null;
-                return (
-                  <button key={action} onClick={handler}>
-                    {label}
-                  </button>
-                );
-              })}
-            </CardContent>
-          </div>
-        ))}
-      </SelectedPane>
-    );
-  }
+  const showEditPane = selectedItems.length === 1 && edit;
+
   return (
-    <SelectedPane>
-      <div className="card">
-        <header>
-          <h3>{t("items selected", { count: selectedItems.length })}</h3>
-        </header>
-        <CardContent>
-          {availableActions.map((action) => {
-            const {
-              label,
-              action: handler,
-              multiple,
-              edit: onlyEdit,
-            } = actionMap[action];
-            if (multiple && selectedItems.length < 2) return null;
-            if (onlyEdit && !edit) return null;
-            return (
-              <button key={action} onClick={handler}>
-                {label}
-              </button>
-            );
-          })}
-        </CardContent>
-      </div>
-    </SelectedPane>
+    <>
+      {showEditPane && (
+        <SelectedPane>
+          {selectedItems.map((itemId) => (
+            <div className="card" key={itemId}>
+              <header>
+                <h3>{t("Edit item")}</h3>
+              </header>
+              <CardContent>
+                <ItemFormFactory
+                  itemId={itemId}
+                  onSubmitHandler={onSubmitHandler}
+                />
+              </CardContent>
+            </div>
+          ))}
+        </SelectedPane>
+      )}
+      <ActionPane>
+        <h3>#{selectedItems.length}</h3>
+        {availableActions.map((action) => {
+          const {
+            label,
+            action: handler,
+            multiple,
+            edit: onlyEdit,
+            icon,
+          } = actionMap[action];
+          if (multiple && selectedItems.length < 2) return null;
+          if (onlyEdit && !edit) return null;
+          return (
+            <button key={action} onClick={handler} title={label}>
+              <img
+                src={icon}
+                style={{ width: "25px", height: "24px" }}
+                alt={label}
+              />
+            </button>
+          );
+        })}
+      </ActionPane>
+    </>
   );
 };
 
