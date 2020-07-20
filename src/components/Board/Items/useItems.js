@@ -155,7 +155,7 @@ const useItems = () => {
           return newItemList;
         } else {
           if (sync) {
-            c2c.publish(`insertItemBefore`, newItem);
+            c2c.publish(`insertItemBefore`, [newItem]);
           }
           return [
             ...prevItemList,
