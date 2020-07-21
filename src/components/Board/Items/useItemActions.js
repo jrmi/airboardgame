@@ -13,6 +13,8 @@ import { getDefaultActionsFromItem } from "./Item/allItems";
 import { useTranslation } from "react-i18next";
 import { nanoid } from "nanoid";
 
+import { shuffle as shuffleArray } from "../../../utils";
+
 import deleteIcon from "../../../images/delete.svg";
 import stackIcon from "../../../images/stack.svg";
 import duplicateIcon from "../../../images/duplicate.svg";
@@ -32,10 +34,10 @@ const getActionsFromItem = (item) => {
 export const useItemActions = () => {
   const {
     batchUpdateItems,
-    removeItem,
+    removeItems,
     insertItemBefore,
     reverseItemsOrder,
-    shuffleSelectedItems,
+    swapItems,
   } = useItems();
 
   const { t } = useTranslation();
@@ -118,6 +120,11 @@ export const useItemActions = () => {
     [selectedItems, batchUpdateItems]
   );
 
+  const shuffleSelectedItems = React.useCallback(() => {
+    const shuffledItems = shuffleArray([...selectedItems]);
+    swapItems(selectedItems, shuffledItems);
+  }, [selectedItems, swapItems]);
+
   // Tap/Untap elements
   const toggleTap = useRecoilCallback(
     async (snapshot) => {
@@ -161,7 +168,7 @@ export const useItemActions = () => {
       batchUpdateItems(selectedItems, (item) => ({
         ...item,
         flipped: flip,
-        unflippedFor: undefined,
+        unflippedFor: [],
       }));
       reverseItemsOrder(selectedItems);
     },
@@ -216,13 +223,9 @@ export const useItemActions = () => {
     [batchUpdateItems, selectedItems, currentUser.id]
   );
 
-  // Remove selected items
-  const removeItems = React.useCallback(
-    () =>
-      selectedItems.forEach((id) => {
-        removeItem(id);
-      }),
-    [removeItem, selectedItems]
+  const removeSelectedItems = React.useCallback(
+    () => removeItems(selectedItems),
+    [removeItems, selectedItems]
   );
 
   const cloneItem = useRecoilCallback(
@@ -306,7 +309,7 @@ export const useItemActions = () => {
         icon: lockIcon,
       },
       remove: {
-        action: removeItems,
+        action: removeSelectedItems,
         label: t("Remove all"),
         shortcut: "r",
         edit: true,
@@ -324,13 +327,13 @@ export const useItemActions = () => {
       shuffleSelectedItems,
       cloneItem,
       toggleLock,
-      removeItems,
+      removeSelectedItems,
     ]
   );
 
   return {
     align,
-    remove: removeItems,
+    remove: removeSelectedItems,
     toggleFlip,
     toggleFlipSelf,
     toggleLock,

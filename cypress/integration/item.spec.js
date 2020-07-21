@@ -22,7 +22,11 @@ describe("Item interactions", () => {
       .should("have.css", "top", "400px")
       .should("have.css", "left", "420px");
 
-    // cy.get(".board")
+    // Select card
+    cy.get("img[src='/games/JC.jpg']")
+      .parents(".item")
+      .click(500, 500, { force: true });
+
     cy.get("img[src='/games/JC.jpg']")
       .parents(".item")
       .trigger("mousedown", {
