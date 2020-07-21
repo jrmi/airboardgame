@@ -81,5 +81,8 @@
   "Token": "Jeton",
   "Meeple": "Meeple",
   "Jewel": "Ressource",
-  "Clone": "Dupliquer"
+  "Clone": "Dupliquer",
+  "Info": "Informations",
+  "Game information": "Informations sur le jeu",
+  "No information": "Aucune information"
 }
