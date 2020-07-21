@@ -1,5 +1,4 @@
 import React, { memo } from "react";
-import { useC2C } from "../../../../hooks/useC2C";
 import { useRecoilValue } from "recoil";
 import { selectedItemsAtom } from "../../Selector";
 import debounce from "lodash.debounce";
@@ -144,33 +143,8 @@ const Item = ({ setState, state }) => {
   );
 };
 
-const SyncedItem = ({ setState, state }) => {
-  const [c2c] = useC2C();
-
-  React.useEffect(() => {
-    const unsub = c2c.subscribe(
-      `itemStateUpdate.${state.id}`,
-      (newItemState) => {
-        setState(
-          state.id,
-          (prevState) => ({
-            ...newItemState,
-            // Ignore some modifications
-            actualWidth: prevState.actualWidth,
-            actualHeight: prevState.actualHeight,
-          }),
-          false
-        );
-      }
-    );
-    return unsub;
-  }, [c2c, setState, state]);
-
-  return <Item state={state} setState={setState} />;
-};
-
 export default memo(
-  SyncedItem,
+  Item,
   (
     { state: prevState, setState: prevSetState },
     { state: nextState, setState: nextSetState }
