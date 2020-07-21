@@ -4,7 +4,13 @@ import { useTranslation } from "react-i18next";
 
 import { useC2C } from "../hooks/useC2C";
 
-const NavBar = ({ setMenuOpen, setShowHelpModal, setEditMode, edit }) => {
+const NavBar = ({
+  setMenuOpen,
+  setShowHelpModal,
+  setShowInfoModal,
+  setEditMode,
+  edit,
+}) => {
   const { t } = useTranslation();
 
   const [, , isMaster] = useC2C();
@@ -26,6 +32,9 @@ const NavBar = ({ setMenuOpen, setShowHelpModal, setEditMode, edit }) => {
       <div className="menu">
         <button className="pseudo" onClick={() => setEditMode((prev) => !prev)}>
           {!edit ? t("Edit mode") : t("Play")}
+        </button>
+        <button onClick={() => setShowInfoModal((prev) => !prev)}>
+          {t("Info")}
         </button>
         <button onClick={() => setShowHelpModal((prev) => !prev)}>
           {t("Help")}

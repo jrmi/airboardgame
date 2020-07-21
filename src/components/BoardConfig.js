@@ -47,6 +47,15 @@ const BoardConfig = () => {
               initialValue={boardConfig.size}
             />
           </Label>
+
+          <Label>
+            {t("Info")}
+            <Field
+              name="info"
+              component="textarea"
+              initialValue={boardConfig.info}
+            />
+          </Label>
         </div>
       )}
     />

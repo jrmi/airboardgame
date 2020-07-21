@@ -1,3 +1,11 @@
+const infoText = `# Test game
+
+This is a test game.
+
+With a [link](https://github.com/jrmi/airboardgame/).
+
+`;
+
 const genGame = () => {
   const items = [];
 
@@ -135,7 +143,11 @@ const genGame = () => {
         height: 80,
       },
     ],
-    board: { size: 1000, scale: 1 },
+    board: {
+      size: 1000,
+      scale: 1,
+      info: infoText,
+    },
   };
 };
 

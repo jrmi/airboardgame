@@ -10,6 +10,7 @@ import { useUsers, SubscribeUserEvents, UserList } from "../components/users";
 import LoadGameModal from "../components/LoadGameModal";
 import HelpModal from "../components/HelpModal";
 import WelcomeModal from "../components/WelcomeModal";
+import InfoModal from "../components/InfoModal";
 import NavBar from "../components/NavBar";
 import AutoSave from "../components/AutoSave";
 
@@ -25,6 +26,7 @@ export const BoardView = () => {
   const { currentUser, users } = useUsers();
   const [showLoadGameModal, setShowLoadGameModal] = React.useState(false);
   const [showHelpModal, setShowHelpModal] = React.useState(false);
+  const [showInfoModal, setShowInfoModal] = React.useState(false);
   const [showWelcomeModal, setShowWelcomeModal] = React.useState(true);
   const [menuOpen, setMenuOpen] = React.useState(false);
   const [edit, setEdit] = React.useState(false);
@@ -37,6 +39,7 @@ export const BoardView = () => {
       <NavBar
         setMenuOpen={setMenuOpen}
         setShowHelpModal={setShowHelpModal}
+        setShowInfoModal={setShowInfoModal}
         setEditMode={setEdit}
         edit={edit}
       />
@@ -58,6 +61,7 @@ export const BoardView = () => {
       </BoardContainer>
 
       <HelpModal show={showHelpModal} setShow={setShowHelpModal} />
+      <InfoModal show={showInfoModal} setShow={setShowInfoModal} />
       <WelcomeModal show={showWelcomeModal} setShow={setShowWelcomeModal} />
     </>
   );

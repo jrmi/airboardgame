@@ -81,5 +81,8 @@
   "Token": "Token",
   "Meeple": "Meeple",
   "Jewel": "Jewel",
-  "Clone": "Clone"
+  "Clone": "Clone",
+  "Info": "Information",
+  "Game information": "Game information",
+  "No information": "No information"
 }
