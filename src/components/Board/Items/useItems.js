@@ -1,7 +1,6 @@
 import React from "react";
 import { useC2C } from "../../../hooks/useC2C";
-import { useSetRecoilState, useRecoilState } from "recoil";
-import { shuffle as shuffleArray } from "../../../utils";
+import { useSetRecoilState } from "recoil";
 
 import { ItemListAtom, selectedItemsAtom } from "../";
 
@@ -9,7 +8,7 @@ const useItems = () => {
   const [c2c] = useC2C();
 
   const setItemList = useSetRecoilState(ItemListAtom);
-  const [selectedItems, setSelectItems] = useRecoilState(selectedItemsAtom);
+  const setSelectItems = useSetRecoilState(selectedItemsAtom);
 
   const batchUpdateItems = React.useCallback(
     (ids, callbackOrItem, sync = true) => {
@@ -46,15 +45,11 @@ const useItems = () => {
     [batchUpdateItems]
   );
 
-  const moveSelectedItems = React.useCallback(
-    (itemId, posDelta) => {
-      let ids = [itemId];
-      if (selectedItems.includes(itemId)) {
-        ids = selectedItems;
-      }
+  const moveItems = React.useCallback(
+    (itemIds, posDelta, sync = true) => {
       setItemList((prevList) => {
         const newItemList = prevList.map((item) => {
-          if (ids.includes(item.id)) {
+          if (itemIds.includes(item.id)) {
             const x = item.x + posDelta.x;
             const y = item.y + posDelta.y;
             const newItem = { ...item, x, y };
@@ -62,14 +57,40 @@ const useItems = () => {
           }
           return item;
         });
-        c2c.publish(`selectedItemsMove`, {
-          itemIds: ids,
-          move: posDelta,
-        });
+        if (sync) {
+          c2c.publish(`selectedItemsMove`, {
+            itemIds,
+            posDelta,
+          });
+        }
         return newItemList;
       });
     },
-    [setItemList, selectedItems, c2c]
+    [setItemList, c2c]
+  );
+
+  const updateItemOrder = React.useCallback(
+    (newOrder, sync = true) => {
+      setItemList((prevList) => {
+        const itemsMap = prevList.reduce((prev, item) => {
+          prev[item.id] = item;
+          return prev;
+        }, {});
+        const result = prevList.map((item, index) => {
+          // Fix #114 crash when pushing new item and receive update list order
+          // If item id doesn't exists in map, we keep the current item
+          return itemsMap[newOrder[index]] || item;
+        });
+        if (sync) {
+          c2c.publish(
+            `updateItemListOrder`,
+            result.map(({ id }) => id)
+          );
+        }
+        return result;
+      });
+    },
+    [c2c, setItemList]
   );
 
   const putItemsOnTop = React.useCallback(
@@ -114,36 +135,42 @@ const useItems = () => {
     [setItemList, c2c]
   );
 
-  // Shuffle selection
-  const shuffleSelectedItems = React.useCallback(() => {
-    setItemList((prevItemList) => {
-      const shuffledSelectedItems = shuffleArray(
-        prevItemList.filter(({ id }) => selectedItems.includes(id))
-      );
-      const updatedItems = {};
-      const result = prevItemList.map((item) => {
-        if (selectedItems.includes(item.id)) {
-          const replaceBy = shuffledSelectedItems.pop();
-          const newItem = {
-            ...replaceBy,
-            x: item.x,
-            y: item.y,
-          };
-          updatedItems[replaceBy.id] = { x: item.x, y: item.y };
-          return newItem;
-        }
-        return item;
+  const swapItems = React.useCallback(
+    (fromIds, toIds) => {
+      setItemList((prevItemList) => {
+        const swappedItems = toIds.map((toId) =>
+          prevItemList.find(({ id }) => id === toId)
+        );
+
+        const updatedItems = {};
+        const result = prevItemList.map((item) => {
+          if (fromIds.includes(item.id)) {
+            const replaceBy = swappedItems.shift();
+            const newItem = {
+              ...replaceBy,
+              x: item.x,
+              y: item.y,
+            };
+            updatedItems[replaceBy.id] = {
+              x: item.x,
+              y: item.y,
+            };
+            return newItem;
+          }
+          return item;
+        });
+
+        c2c.publish(`batchItemsUpdate`, updatedItems);
+
+        c2c.publish(
+          `updateItemListOrder`,
+          result.map(({ id }) => id)
+        );
+        return result;
       });
-
-      c2c.publish(`batchItemsUpdate`, updatedItems);
-
-      c2c.publish(
-        `updateItemListOrder`,
-        result.map(({ id }) => id)
-      );
-      return result;
-    });
-  }, [c2c, setItemList, selectedItems]);
+    },
+    [c2c, setItemList]
+  );
 
   const insertItemBefore = React.useCallback(
     (newItem, beforeId, sync = true) => {
@@ -154,7 +181,9 @@ const useItems = () => {
             c2c.publish(`insertItemBefore`, [newItem, beforeId]);
           }
           const newItemList = [...prevItemList];
-          newItemList.splice(insertAt, 0, { ...newItem });
+          newItemList.splice(insertAt, 0, {
+            ...newItem,
+          });
           return newItemList;
         } else {
           if (sync) {
@@ -172,38 +201,34 @@ const useItems = () => {
     [c2c, setItemList]
   );
 
-  const pushItem = React.useCallback(
-    (newItem) => {
-      insertItemBefore(newItem);
-    },
-    [insertItemBefore]
-  );
-
-  const removeItem = React.useCallback(
-    (itemIdToRemove) => {
-      if (selectedItems.includes(itemIdToRemove)) {
-        setSelectItems((prev) => [
-          ...prev.filter((id) => id !== itemIdToRemove),
-        ]);
-      }
+  const removeItems = React.useCallback(
+    (itemsIdToRemove, sync = true) => {
       setItemList((prevItemList) => {
-        c2c.publish(`removeItem`, itemIdToRemove);
-        return prevItemList.filter((item) => item.id !== itemIdToRemove);
+        if (sync) {
+          c2c.publish(`removeItems`, itemsIdToRemove);
+        }
+        return prevItemList.filter(
+          (item) => !itemsIdToRemove.includes(item.id)
+        );
+      });
+      setSelectItems((prevList) => {
+        return prevList.filter((id) => !itemsIdToRemove.includes(id));
       });
     },
-    [c2c, selectedItems, setItemList, setSelectItems]
+    [c2c, setItemList, setSelectItems]
   );
 
   return {
     putItemsOnTop,
     batchUpdateItems,
-    moveSelectedItems,
+    updateItemOrder,
+    moveItems,
     updateItem,
-    shuffleSelectedItems,
+    swapItems,
     reverseItemsOrder,
     setItemList,
-    pushItem,
-    removeItem,
+    pushItem: insertItemBefore,
+    removeItems,
     insertItemBefore,
   };
 };
