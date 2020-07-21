@@ -18,19 +18,22 @@ const useItems = () => {
         callback = () => callbackOrItem;
       }
       setItemList((prevList) => {
-        return prevList.map((item) => {
+        const updatedItems = {};
+        const updatedList = prevList.map((item) => {
           if (ids.includes(item.id)) {
             const newItem = {
               ...callback(item),
               id: item.id,
             };
-            if (sync) {
-              c2c.publish(`itemStateUpdate.${newItem.id}`, newItem);
-            }
+            updatedItems[newItem.id] = newItem;
             return newItem;
           }
           return item;
         });
+        if (sync) {
+          c2c.publish(`batchItemsUpdate`, updatedItems);
+        }
+        return updatedList;
       });
     },
     [c2c, setItemList]
