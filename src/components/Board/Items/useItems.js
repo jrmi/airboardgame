@@ -175,20 +175,18 @@ const useItems = () => {
   const insertItemBefore = React.useCallback(
     (newItem, beforeId, sync = true) => {
       setItemList((prevItemList) => {
+        if (sync) {
+          c2c.publish(`insertItemBefore`, [newItem, beforeId]);
+        }
         if (beforeId) {
           const insertAt = prevItemList.findIndex(({ id }) => id === beforeId);
-          if (sync) {
-            c2c.publish(`insertItemBefore`, [newItem, beforeId]);
-          }
+
           const newItemList = [...prevItemList];
           newItemList.splice(insertAt, 0, {
             ...newItem,
           });
           return newItemList;
         } else {
-          if (sync) {
-            c2c.publish(`insertItemBefore`, [newItem]);
-          }
           return [
             ...prevItemList,
             {
