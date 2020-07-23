@@ -9,7 +9,6 @@ const StyledCursor = styled.div.attrs(({ top, left }) => ({
   },
 }))`
   position: fixed;
-  transition: all 100ms;
   opacity: 0.7;
   display: flex;
   flex-direction: row;
