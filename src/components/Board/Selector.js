@@ -61,7 +61,11 @@ const Selector = ({ children }) => {
   }, [config, setSelected]);
 
   const onMouseDown = (e) => {
-    if (e.button === 0 && !e.altKey && !insideClass(e.target, "item")) {
+    if (
+      e.button === 0 &&
+      !e.altKey &&
+      (!insideClass(e.target, "item") || insideClass(e.target, "locked"))
+    ) {
       const { top, left } = e.currentTarget.getBoundingClientRect();
       const displayX = (e.clientX - left) / panZoomRotate.scale;
       const displayY = (e.clientY - top) / panZoomRotate.scale;

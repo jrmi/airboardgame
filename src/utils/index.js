@@ -3,11 +3,13 @@
  * @param {DOMElement} element
  * @param {string} className
  */
+
+export const hasClass = (element, className) =>
+  typeof element.className === "string" &&
+  element.className.split(" ").includes(className);
+
 export const insideClass = (element, className) => {
-  if (
-    typeof element.className === "string" &&
-    element.className.split(" ").includes(className)
-  ) {
+  if (hasClass(element, className)) {
     return element;
   }
   if (!element.parentNode) {

@@ -4,7 +4,7 @@ import { PanZoomRotateAtom } from "./PanZoomRotate";
 import { selectedItemsAtom } from "./Selector";
 import { useItems } from "./Items";
 import { useRecoilState } from "recoil";
-import { insideClass } from "../../utils";
+import { insideClass, hasClass } from "../../utils";
 
 const ActionPane = ({ children }) => {
   const panZoomRotate = useRecoilValue(PanZoomRotateAtom);
@@ -25,7 +25,8 @@ const ActionPane = ({ children }) => {
       };
 
       const foundElement = insideClass(e.target, "item");
-      if (foundElement) {
+
+      if (foundElement && !hasClass(foundElement, "locked")) {
         let selectedItemsToMove = selectedItems;
 
         if (!selectedItems.includes(foundElement.id)) {
