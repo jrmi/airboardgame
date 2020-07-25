@@ -1,5 +1,5 @@
 import React from "react";
-import { BlockPicker } from "react-color";
+import { SketchPicker } from "react-color";
 
 import styled from "styled-components";
 
@@ -8,14 +8,21 @@ const Color = styled.div`
   width: 20px;
   height: 20px;
   margin: 5px;
-  cursor: ${({ editable }) => (editable ? "pointer" : "auto")};
+  cursor: "pointer";
 `;
 
 const ColorPickerWrapper = styled.div`
-  position: absolute;
-  top: 38px;
-  left: -53px;
-  z-index: 1000;
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  background-color: #151515b0;
+  right: 0px;
+  bottom: 0px;
+  z-index: 10002;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 `;
 
 const ColorPicker = ({ value, onChange }) => {
@@ -32,15 +39,20 @@ const ColorPicker = ({ value, onChange }) => {
     [onChange]
   );
 
+  const handleClick = React.useCallback(() => {
+    setShowPicker(false);
+  }, []);
+
   return (
-    <div style={{ position: "relative" }}>
+    <>
       <Color color={value} onClick={showColorPicker} />
       {showPicker && (
         <ColorPickerWrapper>
-          <BlockPicker color={value} onChangeComplete={handleChange} />
+          <SketchPicker color={value} onChangeComplete={handleChange} />
+          <button onClick={handleClick}>Close</button>
         </ColorPickerWrapper>
       )}
-    </div>
+    </>
   );
 };
 
