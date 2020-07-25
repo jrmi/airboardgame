@@ -4,23 +4,38 @@ import { selectedItemsAtom } from "../../Selector";
 import debounce from "lodash.debounce";
 
 import styled, { css } from "styled-components";
+import lockIcon from "../../../../images/lock.svg";
 
 import { getComponent } from "./allItems";
 
-const ItemWrapper = styled.div.attrs(({ rotation, loaded }) => ({
-  className: loaded ? "item loaded" : "item",
-  style: {
-    transform: `rotate(${rotation}deg)`,
-  },
-}))`
+const ItemWrapper = styled.div.attrs(({ rotation, loaded, locked }) => {
+  let className = "item";
+  if (loaded) {
+    className += " loaded";
+  }
+  if (locked) {
+    className += " locked";
+  }
+  return {
+    //className: loaded ? "item loaded" : "item",
+    className,
+    style: {
+      transform: `rotate(${rotation}deg)`,
+    },
+  };
+})`
   position: absolute;
+  top: 0;
+  left: 0;
   display: inline-block;
   transition: transform 200ms;
+  user-select: none;
   z-index: ${({ layer }) => (layer || 0) + 3};
   opacity: 0.5;
   &.loaded {
     opacity: 1;
   }
+
   ${({ selected }) =>
     selected
       ? css`
@@ -34,8 +49,24 @@ const ItemWrapper = styled.div.attrs(({ rotation, loaded }) => ({
   ${({ locked }) =>
     locked &&
     css`
-      pointer-events: none;
-      user-select: none;
+      &::after {
+        content: "";
+        position: absolute;
+        width: 24px;
+        height: 30px;
+        top: 4px;
+        right: 4px;
+        opacity: 0.3;
+        background-image: url(${lockIcon});
+        background-size: cover;
+        user-select: none;
+      }
+
+      &:hover {
+        &::after {
+          opacity: 0.8;
+        }
+      }
     `}
 `;
 
