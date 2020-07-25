@@ -19,8 +19,8 @@ describe("Item interactions", () => {
   it("should move item", () => {
     cy.get("img[src='/games/JC.jpg']")
       .parents(".item")
-      .should("have.css", "top", "400px")
-      .should("have.css", "left", "420px");
+      .parent()
+      .should("have.css", "transform", "matrix(1, 0, 0, 1, 420, 400)");
 
     // Select card
     cy.get("img[src='/games/JC.jpg']")
@@ -43,8 +43,8 @@ describe("Item interactions", () => {
       });
     cy.get("img[src='/games/JC.jpg']")
       .parents(".item")
-      .should("have.css", "top", "320px")
-      .should("have.css", "left", "146px");
+      .parent()
+      .should("have.css", "transform", "matrix(1, 0, 0, 1, 146, 320)");
   });
 
   it("should flip item", () => {
