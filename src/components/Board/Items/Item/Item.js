@@ -7,11 +7,9 @@ import styled, { css } from "styled-components";
 
 import { getComponent } from "./allItems";
 
-const ItemWrapper = styled.div.attrs(({ x, y, rotation, loaded }) => ({
+const ItemWrapper = styled.div.attrs(({ rotation, loaded }) => ({
   className: loaded ? "item loaded" : "item",
   style: {
-    left: `${x}px`,
-    top: `${y}px`,
     transform: `rotate(${rotation}deg)`,
   },
 }))`
@@ -127,19 +125,24 @@ const Item = ({ setState, state }) => {
   }, [actualSizeCallback]);
 
   return (
-    <ItemWrapper
-      x={state.x}
-      y={state.y}
-      rotation={rotation}
-      locked={state.locked && !unlock}
-      selected={selectedItems.includes(state.id)}
-      ref={itemRef}
-      layer={state.layer}
-      loaded={loaded}
-      id={state.id}
+    <div
+      style={{
+        transform: `translate(${state.x}px, ${state.y}px)`,
+        display: "inline-block",
+      }}
     >
-      <Component {...state} x={0} y={0} setState={updateState} />
-    </ItemWrapper>
+      <ItemWrapper
+        rotation={rotation}
+        locked={state.locked && !unlock}
+        selected={selectedItems.includes(state.id)}
+        ref={itemRef}
+        layer={state.layer}
+        loaded={loaded}
+        id={state.id}
+      >
+        <Component {...state} x={0} y={0} setState={updateState} />
+      </ItemWrapper>
+    </div>
   );
 };
 
