@@ -56,7 +56,7 @@ const ItemWrapper = styled.div.attrs(({ rotation, loaded, locked }) => {
         height: 30px;
         top: 4px;
         right: 4px;
-        opacity: 0.3;
+        opacity: 0.1;
         background-image: url(${lockIcon});
         background-size: cover;
         user-select: none;
@@ -64,7 +64,7 @@ const ItemWrapper = styled.div.attrs(({ rotation, loaded, locked }) => {
 
       &:hover {
         &::after {
-          opacity: 0.8;
+          opacity: 0.3;
         }
       }
     `}
