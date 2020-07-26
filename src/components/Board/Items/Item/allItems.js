@@ -15,10 +15,14 @@ import Jewel from "./Jewel";
 import ImageFormFields from "./forms/ImageFormFields";
 import CounterFormFields from "./forms/CounterFormFields";
 import RectFormFields from "./forms/RectFormFields";
+import CubeFormFields from "./forms/CubeFormFields";
 import RoundFormFields from "./forms/RoundFormFields";
 import DiceFormFields from "./forms/DiceFormFields";
 import NoteFormFields from "./forms/NoteFormFields";
 import ZoneFormFields from "./forms/ZoneFormFields";
+import TokenFormFields from "./forms/TokenFormFields";
+import MeepleFormFields from "./forms/MeepleFormFields";
+import JewelFormFields from "./forms/JewelFormFields";
 
 export const itemMap = {
   rect: {
@@ -31,7 +35,7 @@ export const itemMap = {
   cube: {
     component: Cube,
     defaultActions: ["clone", "lock", "remove"],
-    form: RectFormFields,
+    form: CubeFormFields,
     label: i18n.t("Cube"),
     template: {},
   },
@@ -45,21 +49,21 @@ export const itemMap = {
   token: {
     component: Token,
     defaultActions: ["clone", "lock", "remove"],
-    form: RectFormFields,
+    form: TokenFormFields,
     label: i18n.t("Token"),
     template: {},
   },
   meeple: {
     component: Meeple,
     defaultActions: ["clone", "lock", "remove"],
-    form: RectFormFields,
+    form: MeepleFormFields,
     label: i18n.t("Meeple"),
     template: {},
   },
   jewel: {
     component: Jewel,
     defaultActions: ["clone", "lock", "remove"],
-    form: RectFormFields,
+    form: JewelFormFields,
     label: i18n.t("Jewel"),
     template: {},
   },
