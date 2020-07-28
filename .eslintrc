@@ -21,7 +21,12 @@
   "parser": "babel-eslint",
   "rules": {
     "semi": "error",
-    "react/prop-types": "off"
+    "react/prop-types": "off",
+    "react-hooks/exhaustive-deps": [
+      "warn", {
+        "additionalHooks": "useRecoilCallback"
+      }
+    ]
   },
   "plugins": ["react-hooks"],
   "extends": [

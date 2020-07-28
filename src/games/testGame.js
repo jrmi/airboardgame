@@ -40,9 +40,19 @@ const genGame = () => {
     x: 420,
     y: 400,
   });
+
   items.push({
     type: "rect",
     color: "#00D022",
+    width: 100,
+    height: 100,
+    x: 0,
+    y: 0,
+  });
+
+  items.push({
+    type: "rect",
+    color: "#22D022",
     width: 80,
     height: 80,
     x: 10,
@@ -87,6 +97,7 @@ const genGame = () => {
     layer: -1,
     width: 500,
     height: 300,
+    locked: true,
     x: 200,
     y: 600,
   });

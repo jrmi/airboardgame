@@ -3,7 +3,7 @@ import React from "react";
 import {
   atom,
   useRecoilValue,
-  useRecoilState,
+  useSetRecoilState,
   useRecoilCallback,
 } from "recoil";
 import styled from "styled-components";
@@ -31,21 +31,19 @@ const findSelected = (items, rect) => {
 
 const SelectorZone = styled.div.attrs(({ top, left, height, width }) => ({
   style: {
-    top: `${top}px`,
-    left: `${left}px`,
+    transform: `translate(${left}px, ${top}px)`,
     height: `${height}px`,
     width: `${width}px`,
   },
 }))`
   z-index: 100;
   position: absolute;
-  background-color: #ff000050;
+  background-color: hsla(0, 40%, 50%, 10%);
+  border: 2px solid hsl(0, 55%, 40%);
 `;
 
 const Selector = ({ children }) => {
-  const panZoomRotate = useRecoilValue(PanZoomRotateAtom);
-
-  const [selected, setSelected] = useRecoilState(selectedItemsAtom);
+  const setSelected = useSetRecoilState(selectedItemsAtom);
   const [selector, setSelector] = React.useState({});
 
   const wrapperRef = React.useRef(null);
@@ -60,15 +58,18 @@ const Selector = ({ children }) => {
     setSelected([]);
   }, [config, setSelected]);
 
-  const onMouseDown = (e) => {
+  const onMouseDown = useRecoilCallback(async (snapshot, e) => {
     if (
       e.button === 0 &&
       !e.altKey &&
       (!insideClass(e.target, "item") || insideClass(e.target, "locked"))
     ) {
       const { top, left } = e.currentTarget.getBoundingClientRect();
-      const displayX = (e.clientX - left) / panZoomRotate.scale;
-      const displayY = (e.clientY - top) / panZoomRotate.scale;
+      const { clientX, clientY } = e;
+
+      const panZoomRotate = await snapshot.getPromise(PanZoomRotateAtom);
+      const displayX = (clientX - left) / panZoomRotate.scale;
+      const displayY = (clientY - top) / panZoomRotate.scale;
 
       stateRef.current.moving = true;
       stateRef.current.startX = displayX;
@@ -77,15 +78,40 @@ const Selector = ({ children }) => {
       setSelector({ ...stateRef.current });
       wrapperRef.current.style.cursor = "crosshair";
     }
-  };
+  }, []);
 
-  const onMouseMouve = (e) => {
+  const throttledSetSelected = useRecoilCallback(
+    async (snapshot, selector) => {
+      if (stateRef.current.moving) {
+        const itemList = await snapshot.getPromise(ItemListAtom);
+
+        const selected = findSelected(itemList, selector).map(({ id }) => id);
+        setSelected((prevSelected) => {
+          if (JSON.stringify(prevSelected) !== JSON.stringify(selected)) {
+            return selected;
+          }
+          return prevSelected;
+        });
+      }
+    },
+    [setSelected]
+  );
+
+  // Reset selection on game loading
+  React.useEffect(() => {
+    throttledSetSelected(selector);
+  }, [selector, throttledSetSelected]);
+
+  const onMouseMove = useRecoilCallback(async (snapshot, e) => {
     if (stateRef.current.moving) {
-      if (selected.length) setSelected([]);
-
       const { top, left } = e.currentTarget.getBoundingClientRect();
-      const currentX = (e.clientX - left) / panZoomRotate.scale;
-      const currentY = (e.clientY - top) / panZoomRotate.scale;
+      const { clientX, clientY } = e;
+      e.preventDefault();
+
+      const panZoomRotate = await snapshot.getPromise(PanZoomRotateAtom);
+
+      const currentX = (clientX - left) / panZoomRotate.scale;
+      const currentY = (clientY - top) / panZoomRotate.scale;
 
       if (currentX > stateRef.current.startX) {
         stateRef.current.left = stateRef.current.startX;
@@ -103,9 +129,8 @@ const Selector = ({ children }) => {
       }
 
       setSelector({ ...stateRef.current });
-      e.preventDefault();
     }
-  };
+  }, []);
 
   const onMouseUp = useRecoilCallback(
     async (snapshot) => {
@@ -133,9 +158,9 @@ const Selector = ({ children }) => {
   return (
     <div
       onMouseDown={onMouseDown}
-      onMouseMove={onMouseMouve}
-      onMouseEnter={onMouseMouve}
-      onMouseOut={onMouseMouve}
+      onMouseMove={onMouseMove}
+      onMouseEnter={onMouseMove}
+      onMouseOut={onMouseMove}
       ref={wrapperRef}
     >
       {selector.moving && (
