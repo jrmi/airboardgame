@@ -24,9 +24,6 @@ const ItemWrapper = styled.div.attrs(({ rotation, loaded, locked }) => {
     },
   };
 })`
-  position: absolute;
-  top: 0;
-  left: 0;
   display: inline-block;
   transition: transform 200ms;
   user-select: none;
@@ -70,8 +67,7 @@ const ItemWrapper = styled.div.attrs(({ rotation, loaded, locked }) => {
     `}
 `;
 
-const Item = ({ setState, state }) => {
-  const selectedItems = useRecoilValue(selectedItemsAtom);
+const Item = ({ setState, state, isSelected }) => {
   const itemRef = React.useRef(null);
   const sizeRef = React.useRef({});
   const [unlock, setUnlock] = React.useState(false);
@@ -160,12 +156,15 @@ const Item = ({ setState, state }) => {
       style={{
         transform: `translate(${state.x}px, ${state.y}px)`,
         display: "inline-block",
+        position: "absolute",
+        top: 0,
+        left: 0,
       }}
     >
       <ItemWrapper
         rotation={rotation}
         locked={state.locked && !unlock}
-        selected={selectedItems.includes(state.id)}
+        selected={isSelected}
         ref={itemRef}
         layer={state.layer}
         loaded={loaded}
@@ -177,15 +176,29 @@ const Item = ({ setState, state }) => {
   );
 };
 
-export default memo(
+const MemoizedItem = memo(
   Item,
   (
-    { state: prevState, setState: prevSetState },
-    { state: nextState, setState: nextSetState }
+    { state: prevState, setState: prevSetState, isSelected: prevIsSelected },
+    { state: nextState, setState: nextSetState, isSelected: nextIsSelected }
   ) => {
     return (
       JSON.stringify(prevState) === JSON.stringify(nextState) &&
-      prevSetState === nextSetState
+      prevSetState === nextSetState &&
+      prevIsSelected === nextIsSelected
     );
   }
 );
+
+const BaseItem = ({ setState, state }) => {
+  const selectedItems = useRecoilValue(selectedItemsAtom);
+  return (
+    <MemoizedItem
+      state={state}
+      setState={setState}
+      isSelected={selectedItems.includes(state.id)}
+    />
+  );
+};
+
+export default BaseItem;
