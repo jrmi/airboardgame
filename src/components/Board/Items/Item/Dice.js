@@ -7,14 +7,17 @@ const DicePane = styled.div`
     background-color: ${color};
     width: 5em;
     padding: 0.3em;
-    padding-bottom: 1em;
     text-align: center;
     fontsize: ${fontSize}px;
     display: flex;
     justify-content: space-between;
     flex-direction: column;
-    border-radius: 0.5em;
-    box-shadow: 10px 10px 13px 0px rgb(0, 0, 0, 0.3);
+    border-radius: 3px;
+    box-shadow: 3px 3px 8px 0px rgb(0, 0, 0, 0.3);
+    h3 {
+      user-select: none;
+      padding: 0;
+    }
   `}
 `;
 
@@ -59,8 +62,8 @@ const Dice = ({
 
   return (
     <DicePane color={color} fontSize={fontSize}>
+      <h3>{label}</h3>
       <label style={{ userSelect: "none" }}>
-        {label}
         <input
           style={{
             textColor,
@@ -77,11 +80,7 @@ const Dice = ({
           onChange={setValue}
         />
       </label>
-      <span
-        style={{
-          paddingTop: "1em",
-        }}
-      >
+      <span>
         <button onClick={roll} style={{ fontSize: fontSize + "px" }}>
           {t("Roll")}
         </button>
