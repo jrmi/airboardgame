@@ -22,12 +22,14 @@ const BoardContainer = styled.div`
   background-color: #202b38;
 `;
 
+const SHOW_WELCOME = process.env.REACT_APP_NO_WELCOME !== "1";
+
 export const BoardView = () => {
   const { currentUser, users } = useUsers();
   const [showLoadGameModal, setShowLoadGameModal] = React.useState(false);
   const [showHelpModal, setShowHelpModal] = React.useState(false);
   const [showInfoModal, setShowInfoModal] = React.useState(false);
-  const [showWelcomeModal, setShowWelcomeModal] = React.useState(true);
+  const [showWelcomeModal, setShowWelcomeModal] = React.useState(SHOW_WELCOME);
   const [menuOpen, setMenuOpen] = React.useState(false);
   const [edit, setEdit] = React.useState(false);
 
