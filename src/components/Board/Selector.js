@@ -58,30 +58,33 @@ const Selector = ({ children }) => {
     setSelected([]);
   }, [config, setSelected]);
 
-  const onMouseDown = useRecoilCallback(async (snapshot, e) => {
-    if (
-      e.button === 0 &&
-      !e.altKey &&
-      (!insideClass(e.target, "item") || insideClass(e.target, "locked"))
-    ) {
-      const { top, left } = e.currentTarget.getBoundingClientRect();
-      const { clientX, clientY } = e;
+  const onMouseDown = useRecoilCallback(
+    ({ snapshot }) => async (e) => {
+      if (
+        e.button === 0 &&
+        !e.altKey &&
+        (!insideClass(e.target, "item") || insideClass(e.target, "locked"))
+      ) {
+        const { top, left } = e.currentTarget.getBoundingClientRect();
+        const { clientX, clientY } = e;
 
-      const panZoomRotate = await snapshot.getPromise(PanZoomRotateAtom);
-      const displayX = (clientX - left) / panZoomRotate.scale;
-      const displayY = (clientY - top) / panZoomRotate.scale;
+        const panZoomRotate = await snapshot.getPromise(PanZoomRotateAtom);
+        const displayX = (clientX - left) / panZoomRotate.scale;
+        const displayY = (clientY - top) / panZoomRotate.scale;
 
-      stateRef.current.moving = true;
-      stateRef.current.startX = displayX;
-      stateRef.current.startY = displayY;
+        stateRef.current.moving = true;
+        stateRef.current.startX = displayX;
+        stateRef.current.startY = displayY;
 
-      setSelector({ ...stateRef.current });
-      wrapperRef.current.style.cursor = "crosshair";
-    }
-  }, []);
+        setSelector({ ...stateRef.current });
+        wrapperRef.current.style.cursor = "crosshair";
+      }
+    },
+    []
+  );
 
   const throttledSetSelected = useRecoilCallback(
-    async (snapshot, selector) => {
+    ({ snapshot }) => async (selector) => {
       if (stateRef.current.moving) {
         const itemList = await snapshot.getPromise(ItemListAtom);
 
@@ -102,38 +105,41 @@ const Selector = ({ children }) => {
     throttledSetSelected(selector);
   }, [selector, throttledSetSelected]);
 
-  const onMouseMove = useRecoilCallback(async (snapshot, e) => {
-    if (stateRef.current.moving) {
-      const { top, left } = e.currentTarget.getBoundingClientRect();
-      const { clientX, clientY } = e;
-      e.preventDefault();
+  const onMouseMove = useRecoilCallback(
+    ({ snapshot }) => async (e) => {
+      if (stateRef.current.moving) {
+        const { top, left } = e.currentTarget.getBoundingClientRect();
+        const { clientX, clientY } = e;
+        e.preventDefault();
 
-      const panZoomRotate = await snapshot.getPromise(PanZoomRotateAtom);
+        const panZoomRotate = await snapshot.getPromise(PanZoomRotateAtom);
 
-      const currentX = (clientX - left) / panZoomRotate.scale;
-      const currentY = (clientY - top) / panZoomRotate.scale;
+        const currentX = (clientX - left) / panZoomRotate.scale;
+        const currentY = (clientY - top) / panZoomRotate.scale;
 
-      if (currentX > stateRef.current.startX) {
-        stateRef.current.left = stateRef.current.startX;
-        stateRef.current.width = currentX - stateRef.current.startX;
-      } else {
-        stateRef.current.left = currentX;
-        stateRef.current.width = -currentX + stateRef.current.startX;
+        if (currentX > stateRef.current.startX) {
+          stateRef.current.left = stateRef.current.startX;
+          stateRef.current.width = currentX - stateRef.current.startX;
+        } else {
+          stateRef.current.left = currentX;
+          stateRef.current.width = -currentX + stateRef.current.startX;
+        }
+        if (currentY > stateRef.current.startY) {
+          stateRef.current.top = stateRef.current.startY;
+          stateRef.current.height = currentY - stateRef.current.startY;
+        } else {
+          stateRef.current.top = currentY;
+          stateRef.current.height = -currentY + stateRef.current.startY;
+        }
+
+        setSelector({ ...stateRef.current });
       }
-      if (currentY > stateRef.current.startY) {
-        stateRef.current.top = stateRef.current.startY;
-        stateRef.current.height = currentY - stateRef.current.startY;
-      } else {
-        stateRef.current.top = currentY;
-        stateRef.current.height = -currentY + stateRef.current.startY;
-      }
-
-      setSelector({ ...stateRef.current });
-    }
-  }, []);
+    },
+    []
+  );
 
   const onMouseUp = useRecoilCallback(
-    async (snapshot) => {
+    ({ snapshot }) => async () => {
       if (stateRef.current.moving) {
         const itemList = await snapshot.getPromise(ItemListAtom);
         const selected = findSelected(itemList, stateRef.current).map(

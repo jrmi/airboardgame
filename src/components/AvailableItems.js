@@ -9,11 +9,11 @@ const AvailableItem = memo(({ data }) => {
   const { pushItem } = useItems();
 
   const addItem = useRecoilCallback(
-    async (snapshot) => {
+    ({ snapshot }) => async () => {
       const { centerX, centerY } = await snapshot.getPromise(PanZoomRotateAtom);
       pushItem({ ...data, x: centerX, y: centerY, id: nanoid() });
     },
-    [pushItem]
+    [data, pushItem]
   );
 
   return (

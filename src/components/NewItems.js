@@ -11,7 +11,7 @@ const NewItem = memo(({ type }) => {
   const { pushItem } = useItems();
 
   const addItem = useRecoilCallback(
-    async (snapshot) => {
+    ({ snapshot }) => async () => {
       const { centerX, centerY } = await snapshot.getPromise(PanZoomRotateAtom);
       pushItem({
         ...itemMap[type].template,
@@ -21,7 +21,7 @@ const NewItem = memo(({ type }) => {
         type,
       });
     },
-    [pushItem]
+    [pushItem, type]
   );
 
   return (

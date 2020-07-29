@@ -1,5 +1,5 @@
 import React from "react";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue, useRecoilCallback } from "recoil";
 
 import { useC2C } from "../hooks/useC2C";
 
@@ -53,6 +53,28 @@ export const SubscribeGameEvents = () => {
       unsub.forEach((u) => u());
     };
   }, [c2c, isMaster, joined]);
+
+  /*const loadGame = useRecoilCallback(
+    async (snapshot, game) => {
+      if (game.board.url) {
+        fetchGame(game.board.url).then((result) => {
+          setAvailableItemList(
+            result.availableItems.map((item) => ({ id: nanoid(), ...item }))
+          );
+        });
+      } else {
+        setAvailableItemList(
+          game.availableItems.map((item) => ({ id: nanoid(), ...item }))
+        );
+      }
+      setItemList(game.items);
+      game.items.forEach((item)=>{
+        const setItemPosition = await snapshot.getPromise();
+      });
+      setBoardConfig(game.board);
+    },
+    [setAvailableItemList, setBoardConfig, setItemList]
+  );*/
 
   React.useEffect(() => {
     const unsub = [];

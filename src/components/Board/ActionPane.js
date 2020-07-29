@@ -13,7 +13,7 @@ const ActionPane = ({ children }) => {
   const actionRef = React.useRef({});
 
   const onMouseDown = useRecoilCallback(
-    async (snapshot, e) => {
+    ({ snapshot }) => async (e) => {
       if (e.button === 0 && !e.altKey) {
         // Allow text selection instead of moving
         if (["INPUT", "TEXTAREA"].includes(e.target.tagName)) return;
@@ -62,7 +62,7 @@ const ActionPane = ({ children }) => {
   );
 
   const onMouseMouve = useRecoilCallback(
-    async (snapshot, e) => {
+    ({ snapshot }) => async (e) => {
       if (actionRef.current.moving) {
         const { top, left } = e.currentTarget.getBoundingClientRect();
         const { clientX, clientY } = e;
