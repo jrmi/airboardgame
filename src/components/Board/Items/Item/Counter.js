@@ -4,16 +4,24 @@ import styled, { css } from "styled-components";
 const CounterPane = styled.div`
   ${({ color, fontSize }) => css`
     background-color: ${color};
-    width: 6em;
     padding: 0.5em;
-    padding-bottom: 2em;
     text-align: center;
-    fontsize: ${fontSize}px;
-    display: flex;
-    justify-content: space-between;
-    flex-direction: column;
-    border-radius: 0.5em;
-    box-shadow: 10px 10px 13px 0px rgb(0, 0, 0, 0.3);
+    font-size: ${fontSize}px;
+
+    border-radius: 3px;
+    box-shadow: 4px 4px 5px 0px rgb(0, 0, 0, 0.3);
+    input {
+      width: 3em;
+    }
+    h3 {
+      user-select: none;
+      padding: 0;
+    }
+    div {
+      display: flex;
+      justify-content: space-between;
+      flex-direction: row;
+    }
   `}
 `;
 
@@ -53,42 +61,38 @@ const Counter = ({
 
   return (
     <CounterPane color={color} fontSize={fontSize}>
-      <label style={{ userSelect: "none" }}>
-        {label}
-        <input
-          style={{
-            textColor,
-            width: "100%",
-            display: "block",
-            textAlign: "center",
-            border: "none",
-            margin: "0.2em 0",
-            padding: "0.2em 0",
-            fontSize: fontSize + "px",
-            userSelect: "none",
-          }}
-          value={value}
-          onChange={setValue}
-        />
-      </label>
-      <span
-        style={{
-          paddingTop: "1em",
-        }}
-      >
-        <button
-          onClick={increment}
-          style={{ fontSize: fontSize + "px", margin: "2px" }}
-        >
-          +
-        </button>
+      <h3>{label}</h3>
+      <div>
         <button
           onClick={decrement}
           style={{ fontSize: fontSize + "px", margin: "2px" }}
         >
           -
         </button>
-      </span>
+        <label style={{ userSelect: "none" }}>
+          <input
+            style={{
+              textColor,
+              width: "4em",
+              display: "block",
+              textAlign: "center",
+              border: "none",
+              margin: "0.2em 0",
+              padding: "0.2em 0",
+              fontSize: fontSize + "px",
+              userSelect: "none",
+            }}
+            value={value}
+            onChange={setValue}
+          />
+        </label>
+        <button
+          onClick={increment}
+          style={{ fontSize: fontSize + "px", margin: "2px" }}
+        >
+          +
+        </button>
+      </div>
     </CounterPane>
   );
 };
