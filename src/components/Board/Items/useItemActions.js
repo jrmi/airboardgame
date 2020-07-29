@@ -65,10 +65,9 @@ export const useItemActions = () => {
   }, []);
 
   const updateAvailableActions = useRecoilCallback(
-    async (snapshot) => {
+    ({ snapshot }) => async () => {
+      const selectedItemList = await getSelectedItemList(snapshot);
       if (selectedItems.length > 0) {
-        const selectedItemList = await getSelectedItemList(snapshot);
-
         // Prevent set state on unmounted component
         if (!isMountedRef.current) return;
         setAvailableActions(
@@ -80,7 +79,7 @@ export const useItemActions = () => {
         setAvailableActions([]);
       }
     },
-    [selectedItems]
+    [getSelectedItemList, selectedItems.length]
   );
 
   // Update available actions when selection change
@@ -90,7 +89,7 @@ export const useItemActions = () => {
 
   // Align selection to center
   const align = useRecoilCallback(
-    async (snapshot) => {
+    ({ snapshot }) => async () => {
       const selectedItemList = await getSelectedItemList(snapshot);
       // Compute
       const minMax = { min: {}, max: {} };
@@ -117,7 +116,7 @@ export const useItemActions = () => {
         };
       });
     },
-    [selectedItems, batchUpdateItems]
+    [getSelectedItemList, batchUpdateItems, selectedItems]
   );
 
   const shuffleSelectedItems = React.useCallback(() => {
@@ -127,7 +126,7 @@ export const useItemActions = () => {
 
   // Tap/Untap elements
   const toggleTap = useRecoilCallback(
-    async (snapshot) => {
+    ({ snapshot }) => async () => {
       const selectedItemList = await getSelectedItemList(snapshot);
       const tappedCount = selectedItemList.filter(
         ({ rotation }) => rotation === 90
@@ -143,7 +142,7 @@ export const useItemActions = () => {
         rotation: untap ? 0 : 90,
       }));
     },
-    [selectedItems, batchUpdateItems]
+    [getSelectedItemList, selectedItems, batchUpdateItems]
   );
 
   // Lock / unlock elements
@@ -156,7 +155,7 @@ export const useItemActions = () => {
 
   // Flip / unflip elements
   const toggleFlip = useRecoilCallback(
-    async (snapshot) => {
+    ({ snapshot }) => async () => {
       const selectedItemList = await getSelectedItemList(snapshot);
       const flippedCount = selectedItemList.filter(({ flipped }) => flipped)
         .length;
@@ -172,7 +171,7 @@ export const useItemActions = () => {
       }));
       reverseItemsOrder(selectedItems);
     },
-    [selectedItems, batchUpdateItems, reverseItemsOrder]
+    [getSelectedItemList, selectedItems, batchUpdateItems, reverseItemsOrder]
   );
 
   // Rotate element
@@ -188,7 +187,7 @@ export const useItemActions = () => {
 
   // Reveal for player only
   const toggleFlipSelf = useRecoilCallback(
-    async (snapshot) => {
+    ({ snapshot }) => async () => {
       const selectedItemList = await getSelectedItemList(snapshot);
       const flippedSelfCount = selectedItemList.filter(
         ({ unflippedFor }) =>
@@ -220,7 +219,7 @@ export const useItemActions = () => {
         };
       });
     },
-    [batchUpdateItems, selectedItems, currentUser.id]
+    [getSelectedItemList, selectedItems, batchUpdateItems, currentUser.id]
   );
 
   const removeSelectedItems = React.useCallback(
@@ -229,7 +228,7 @@ export const useItemActions = () => {
   );
 
   const cloneItem = useRecoilCallback(
-    async (snapshot) => {
+    ({ snapshot }) => async () => {
       const selectedItemList = await getSelectedItemList(snapshot);
       selectedItemList.forEach((itemToClone) => {
         const newItem = JSON.parse(JSON.stringify(itemToClone));
@@ -237,7 +236,7 @@ export const useItemActions = () => {
         insertItemBefore(newItem, itemToClone.id);
       });
     },
-    [selectedItems, insertItemBefore]
+    [getSelectedItemList, insertItemBefore]
   );
 
   const actionMap = React.useMemo(

@@ -36,10 +36,13 @@ export const GameController = () => {
   const availableItemList = useRecoilValue(AvailableItemListAtom);
   const boardConfig = useRecoilValue(BoardConfigAtom);
 
-  const logGame = useRecoilCallback(async (snapshot) => {
-    const itemList = await snapshot.getPromise(ItemListAtom);
-    console.log(itemList);
-  }, []);
+  const logGame = useRecoilCallback(
+    ({ snapshot }) => async () => {
+      const itemList = await snapshot.getPromise(ItemListAtom);
+      console.log(itemList);
+    },
+    []
+  );
 
   if (Object.keys(boardConfig).length === 0) {
     return null;
