@@ -1,40 +1,49 @@
 import React from "react";
-import { useRecoilValue } from "recoil";
+import { useRecoilCallback } from "recoil";
 
 import useGameStorage from "./Board/game/useGameStorage";
 
-import { AvailableItemListAtom, BoardConfigAtom, ItemListAtom } from "./Board/";
-
-import throttle from "lodash.throttle";
+import {
+  AvailableItemListAtom,
+  BoardConfigAtom,
+  AllItemsSelector,
+} from "./Board/";
 
 export const AutoSave = () => {
-  const availableItemList = useRecoilValue(AvailableItemListAtom);
-  const boardConfig = useRecoilValue(BoardConfigAtom);
-  const itemList = useRecoilValue(ItemListAtom);
-
   const [, setGameLocalSave] = useGameStorage();
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const updateAutoSave = React.useCallback(
-    throttle(
-      (game) => {
-        if (game.items.length) {
-          setGameLocalSave(game);
-        }
-      },
-      5000,
-      { trailing: true }
-    ),
-    []
+  const updateAutoSave = useRecoilCallback(
+    ({ snapshot }) => async () => {
+      const availableItemList = await snapshot.getPromise(
+        AvailableItemListAtom
+      );
+      const boardConfig = await snapshot.getPromise(BoardConfigAtom);
+      const itemList = await snapshot.getPromise(AllItemsSelector);
+      const game = {
+        items: itemList,
+        board: boardConfig,
+        availableItems: availableItemList,
+      };
+      if (game.items.length) {
+        setGameLocalSave(game);
+      }
+    },
+    [setGameLocalSave]
   );
 
   React.useEffect(() => {
-    updateAutoSave({
-      items: itemList,
-      board: boardConfig,
-      availableItems: availableItemList,
-    });
-  }, [itemList, boardConfig, availableItemList, updateAutoSave]);
+    let mounted = true;
+
+    const cancel = setInterval(() => {
+      if (!mounted) return;
+      updateAutoSave();
+    }, 5000);
+
+    return () => {
+      mounted = false;
+      clearInterval(cancel);
+    };
+  }, [updateAutoSave]);
 
   return null;
 };

@@ -1,6 +1,7 @@
 import React, { memo } from "react";
 import { useRecoilValue } from "recoil";
 import { selectedItemsAtom } from "../../Selector";
+import { ItemsFamily } from "../../";
 import debounce from "lodash.debounce";
 
 import styled, { css } from "styled-components";
@@ -67,7 +68,11 @@ const ItemWrapper = styled.div.attrs(({ rotation, loaded, locked }) => {
     `}
 `;
 
-const Item = ({ setState, state, isSelected }) => {
+const Item = ({
+  setState,
+  state: { type, x, y, rotation = 0, id, locked, layer, ...rest },
+  isSelected,
+}) => {
   const itemRef = React.useRef(null);
   const sizeRef = React.useRef({});
   const [unlock, setUnlock] = React.useState(false);
@@ -94,13 +99,11 @@ const Item = ({ setState, state, isSelected }) => {
     };
   }, []);
 
-  const Component = getComponent(state.type);
-
-  const rotation = state.rotation || 0;
+  const Component = getComponent(type);
 
   const updateState = React.useCallback(
-    (callbackOrItem, sync = true) => setState(state.id, callbackOrItem, sync),
-    [setState, state.id]
+    (callbackOrItem, sync = true) => setState(id, callbackOrItem, sync),
+    [setState, id]
   );
 
   // Update actual dimension. Usefull when image with own dimensions.
@@ -154,7 +157,7 @@ const Item = ({ setState, state, isSelected }) => {
   return (
     <div
       style={{
-        transform: `translate(${state.x}px, ${state.y}px)`,
+        transform: `translate(${x}px, ${y}px)`,
         display: "inline-block",
         position: "absolute",
         top: 0,
@@ -163,14 +166,14 @@ const Item = ({ setState, state, isSelected }) => {
     >
       <ItemWrapper
         rotation={rotation}
-        locked={state.locked && !unlock}
+        locked={locked && !unlock}
         selected={isSelected}
         ref={itemRef}
-        layer={state.layer}
+        layer={layer}
         loaded={loaded}
-        id={state.id}
+        id={id}
       >
-        <Component {...state} x={0} y={0} setState={updateState} />
+        <Component {...rest} x={0} y={0} setState={updateState} />
       </ItemWrapper>
     </div>
   );
@@ -192,9 +195,10 @@ const MemoizedItem = memo(
 
 const BaseItem = ({ setState, state }) => {
   const selectedItems = useRecoilValue(selectedItemsAtom);
+  const realState = useRecoilValue(ItemsFamily(state.id));
   return (
     <MemoizedItem
-      state={state}
+      state={realState}
       setState={setState}
       isSelected={selectedItems.includes(state.id)}
     />

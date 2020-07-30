@@ -8,7 +8,7 @@ import {
 } from "recoil";
 import styled from "styled-components";
 
-import { PanZoomRotateAtom, ItemListAtom, BoardConfigAtom } from "./";
+import { PanZoomRotateAtom, BoardConfigAtom, AllItemsSelector } from "./";
 import { insideClass, isPointInsideRect } from "../../utils";
 
 export const selectedItemsAtom = atom({
@@ -86,7 +86,7 @@ const Selector = ({ children }) => {
   const throttledSetSelected = useRecoilCallback(
     ({ snapshot }) => async (selector) => {
       if (stateRef.current.moving) {
-        const itemList = await snapshot.getPromise(ItemListAtom);
+        const itemList = await snapshot.getPromise(AllItemsSelector);
 
         const selected = findSelected(itemList, selector).map(({ id }) => id);
         setSelected((prevSelected) => {
@@ -141,7 +141,7 @@ const Selector = ({ children }) => {
   const onMouseUp = useRecoilCallback(
     ({ snapshot }) => async () => {
       if (stateRef.current.moving) {
-        const itemList = await snapshot.getPromise(ItemListAtom);
+        const itemList = await snapshot.getPromise(AllItemsSelector);
         const selected = findSelected(itemList, stateRef.current).map(
           ({ id }) => id
         );

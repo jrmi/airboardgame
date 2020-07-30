@@ -1,10 +1,10 @@
 import React from "react";
-import { useRecoilState, useRecoilValue, useRecoilCallback } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 
 import { useC2C } from "../hooks/useC2C";
 
 import { useItems } from "../components/Board/Items";
-import { AvailableItemListAtom, ItemListAtom } from "./Board";
+import { AvailableItemListAtom, AllItemsSelector } from "./Board";
 import useBoardConfig from "./useBoardConfig";
 
 import { nanoid } from "nanoid";
@@ -17,7 +17,7 @@ const fetchGame = async (url) => {
 export const SubscribeGameEvents = () => {
   const [c2c, joined, isMaster] = useC2C();
   const { setItemList } = useItems();
-  const itemList = useRecoilValue(ItemListAtom);
+  const itemList = useRecoilValue(AllItemsSelector);
   const [availableItemList, setAvailableItemList] = useRecoilState(
     AvailableItemListAtom
   );
@@ -54,8 +54,8 @@ export const SubscribeGameEvents = () => {
     };
   }, [c2c, isMaster, joined]);
 
-  /*const loadGame = useRecoilCallback(
-    async (snapshot, game) => {
+  const loadGame = React.useCallback(
+    (game) => {
       if (game.board.url) {
         fetchGame(game.board.url).then((result) => {
           setAvailableItemList(
@@ -68,31 +68,17 @@ export const SubscribeGameEvents = () => {
         );
       }
       setItemList(game.items);
-      game.items.forEach((item)=>{
-        const setItemPosition = await snapshot.getPromise();
-      });
+
       setBoardConfig(game.board);
     },
     [setAvailableItemList, setBoardConfig, setItemList]
-  );*/
+  );
 
   React.useEffect(() => {
     const unsub = [];
     unsub.push(
       c2c.subscribe("loadGame", (game) => {
-        if (game.board.url) {
-          fetchGame(game.board.url).then((result) => {
-            setAvailableItemList(
-              result.availableItems.map((item) => ({ id: nanoid(), ...item }))
-            );
-          });
-        } else {
-          setAvailableItemList(
-            game.availableItems.map((item) => ({ id: nanoid(), ...item }))
-          );
-        }
-        setItemList(game.items);
-        setBoardConfig(game.board);
+        loadGame(game);
       })
     );
     unsub.push(
@@ -103,7 +89,7 @@ export const SubscribeGameEvents = () => {
     return () => {
       unsub.forEach((u) => u());
     };
-  }, [c2c, setAvailableItemList, setItemList, setBoardConfig]);
+  }, [c2c, setBoardConfig, loadGame]);
 
   // Load game from master if any
   React.useEffect(() => {
