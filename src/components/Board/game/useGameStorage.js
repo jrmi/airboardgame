@@ -1,6 +1,10 @@
 import { useRecoilValue } from "recoil";
 
-import { AvailableItemListAtom, BoardConfigAtom, ItemListAtom } from "./atoms";
+import {
+  AvailableItemListAtom,
+  BoardConfigAtom,
+  AllItemsSelector,
+} from "./atoms";
 
 import useLocalStorage from "../../../hooks/useLocalStorage";
 //import useLocalStorage from 'react-use-localstorage';
@@ -8,7 +12,7 @@ import useLocalStorage from "../../../hooks/useLocalStorage";
 export const useGameStorage = () => {
   const availableItemList = useRecoilValue(AvailableItemListAtom);
   const boardConfig = useRecoilValue(BoardConfigAtom);
-  const itemList = useRecoilValue(ItemListAtom);
+  const itemList = useRecoilValue(AllItemsSelector);
 
   const [gameLocalSave, setGameLocalSave] = useLocalStorage("savedGame", {
     items: itemList,

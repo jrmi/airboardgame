@@ -9,7 +9,7 @@ const ItemList = () => {
   const itemList = useRecoilValue(ItemListAtom);
 
   return itemList.map((item) => (
-    <Item key={item.id} state={item} setState={updateItem} />
+    <Item key={item.id} state={{ id: item.id }} setState={updateItem} />
   ));
 };
 

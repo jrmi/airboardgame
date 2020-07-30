@@ -1,12 +1,14 @@
 import React from "react";
-import { useRecoilValue } from "recoil";
+import { useRecoilCallback } from "recoil";
 import { useTranslation } from "react-i18next";
 
 import useGameStorage from "./Board/game/useGameStorage";
 
-import { AvailableItemListAtom, BoardConfigAtom, ItemListAtom } from "./Board/";
-
-import throttle from "lodash.throttle";
+import {
+  AvailableItemListAtom,
+  BoardConfigAtom,
+  AllItemsSelector,
+} from "./Board/";
 
 const generateDownloadURI = (data) => {
   return (
@@ -15,10 +17,6 @@ const generateDownloadURI = (data) => {
 };
 
 export const DownloadGameLink = () => {
-  const availableItemList = useRecoilValue(AvailableItemListAtom);
-  const boardConfig = useRecoilValue(BoardConfigAtom);
-  const itemList = useRecoilValue(ItemListAtom);
-
   const { t } = useTranslation();
 
   const [downloadURI, setDownloadURI] = React.useState({});
@@ -26,29 +24,40 @@ export const DownloadGameLink = () => {
 
   const [, setGameLocalSave] = useGameStorage();
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const updateSaveLink = React.useCallback(
-    throttle(
-      (game) => {
-        if (game.items.length) {
-          setDownloadURI(generateDownloadURI(game));
-          setDate(Date.now());
-          setGameLocalSave(game);
-        }
-      },
-      5000,
-      { trailing: true }
-    ),
-    []
+  const updateSaveLink = useRecoilCallback(
+    ({ snapshot }) => async () => {
+      const availableItemList = await snapshot.getPromise(
+        AvailableItemListAtom
+      );
+      const boardConfig = await snapshot.getPromise(BoardConfigAtom);
+      const itemList = await snapshot.getPromise(AllItemsSelector);
+      const game = {
+        items: itemList,
+        board: boardConfig,
+        availableItems: availableItemList,
+      };
+      if (game.items.length) {
+        setDownloadURI(generateDownloadURI(game));
+        setDate(Date.now());
+        setGameLocalSave(game);
+      }
+    },
+    [setGameLocalSave]
   );
 
   React.useEffect(() => {
-    updateSaveLink({
-      items: itemList,
-      board: boardConfig,
-      availableItems: availableItemList,
-    });
-  }, [itemList, boardConfig, availableItemList, updateSaveLink]);
+    let mounted = true;
+
+    const cancel = setInterval(() => {
+      if (!mounted) return;
+      updateSaveLink();
+    }, 5000);
+
+    return () => {
+      mounted = false;
+      clearInterval(cancel);
+    };
+  }, [updateSaveLink]);
 
   return (
     <a

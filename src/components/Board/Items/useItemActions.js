@@ -7,7 +7,7 @@ import { selectedItemsAtom } from "../Selector";
 import { useUsers } from "../../users";
 
 import intersection from "lodash.intersection";
-import { ItemListAtom } from "../";
+import { ItemsFamily } from "../";
 import { getDefaultActionsFromItem } from "./Item/allItems";
 
 import { useTranslation } from "react-i18next";
@@ -48,10 +48,11 @@ export const useItemActions = () => {
   const [availableActions, setAvailableActions] = React.useState([]);
   const isMountedRef = React.useRef(false);
 
-  const getSelectedItemList = React.useCallback(
-    async (snapshot) => {
-      const itemList = await snapshot.getPromise(ItemListAtom);
-      return itemList.filter(({ id }) => selectedItems.includes(id));
+  const getSelectedItemList = useRecoilCallback(
+    ({ snapshot }) => async () => {
+      return await Promise.all(
+        selectedItems.map((id) => snapshot.getPromise(ItemsFamily(id)))
+      );
     },
     [selectedItems]
   );

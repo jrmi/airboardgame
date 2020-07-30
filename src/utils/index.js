@@ -47,16 +47,3 @@ export const shuffle = (a) => {
   }
   return a;
 };
-
-export const shuffleSelectedItems = (itemList, selectedItemIds) => {
-  const shuffledSelectedItems = shuffle(
-    itemList.filter(({ id }) => selectedItemIds.includes(id))
-  );
-
-  return itemList.map((item) => {
-    if (selectedItemIds.includes(item.id)) {
-      return { ...shuffledSelectedItems.pop(), x: item.x, y: item.y };
-    }
-    return item;
-  });
-};
