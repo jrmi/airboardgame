@@ -172,7 +172,7 @@ const Item = ({
         loaded={loaded}
         id={id}
       >
-        <Component {...rest} x={0} y={0} setState={updateState} />
+        <Component {...rest} setState={updateState} />
       </ItemWrapper>
     </div>
   );
@@ -192,14 +192,14 @@ const MemoizedItem = memo(
   }
 );
 
-const BaseItem = ({ setState, state }) => {
+const BaseItem = ({ setState, itemId }) => {
   const selectedItems = useRecoilValue(selectedItemsAtom);
-  const realState = useRecoilValue(ItemsFamily(state.id));
+  const state = useRecoilValue(ItemsFamily(itemId));
   return (
     <MemoizedItem
-      state={realState}
+      state={state}
       setState={setState}
-      isSelected={selectedItems.includes(state.id)}
+      isSelected={selectedItems.includes(itemId)}
     />
   );
 };
