@@ -1,10 +1,14 @@
 import React from "react";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useSetRecoilState, useRecoilCallback } from "recoil";
 
 import { useC2C } from "../hooks/useC2C";
 
 import { useItems } from "../components/Board/Items";
-import { AvailableItemListAtom, AllItemsSelector } from "./Board";
+import {
+  AvailableItemListAtom,
+  AllItemsSelector,
+  BoardConfigAtom,
+} from "./Board";
 import useBoardConfig from "./useBoardConfig";
 
 import { nanoid } from "nanoid";
@@ -17,42 +21,11 @@ const fetchGame = async (url) => {
 export const SubscribeGameEvents = () => {
   const [c2c, joined, isMaster] = useC2C();
   const { setItemList } = useItems();
-  const itemList = useRecoilValue(AllItemsSelector);
-  const [availableItemList, setAvailableItemList] = useRecoilState(
-    AvailableItemListAtom
-  );
-  const [boardConfig, setBoardConfig] = useBoardConfig();
+  const setAvailableItemList = useSetRecoilState(AvailableItemListAtom);
+  const [, setBoardConfig] = useBoardConfig();
 
   const [gameLoaded, setGameLoaded] = React.useState(false);
   const gameLoadingRef = React.useRef(false);
-
-  const gameRef = React.useRef({
-    items: itemList,
-    board: boardConfig,
-    availableItems: availableItemList,
-  });
-
-  gameRef.current = {
-    items: itemList,
-    board: boardConfig,
-    availableItems: availableItemList,
-  };
-
-  React.useEffect(() => {
-    const unsub = [];
-    if (joined && isMaster) {
-      c2c
-        .register("getGame", () => {
-          return gameRef.current;
-        })
-        .then((unregister) => {
-          unsub.push(unregister);
-        });
-    }
-    return () => {
-      unsub.forEach((u) => u());
-    };
-  }, [c2c, isMaster, joined]);
 
   const loadGame = React.useCallback(
     (game) => {
@@ -68,12 +41,46 @@ export const SubscribeGameEvents = () => {
         );
       }
       setItemList(game.items);
-
       setBoardConfig(game.board);
     },
     [setAvailableItemList, setBoardConfig, setItemList]
   );
 
+  const getCurrentGame = useRecoilCallback(
+    ({ snapshot }) => async () => {
+      const availableItemList = await snapshot.getPromise(
+        AvailableItemListAtom
+      );
+      const boardConfig = await snapshot.getPromise(BoardConfigAtom);
+      const itemList = await snapshot.getPromise(AllItemsSelector);
+      const game = {
+        items: itemList,
+        board: boardConfig,
+        availableItems: availableItemList,
+      };
+      return game;
+    },
+    []
+  );
+
+  // if first player register callback to allow other use to load game
+  React.useEffect(() => {
+    const unsub = [];
+    if (joined && isMaster) {
+      c2c
+        .register("getGame", async () => {
+          return await getCurrentGame();
+        })
+        .then((unregister) => {
+          unsub.push(unregister);
+        });
+    }
+    return () => {
+      unsub.forEach((u) => u());
+    };
+  }, [c2c, getCurrentGame, isMaster, joined]);
+
+  // Subscribe loadGame and updateBoardConfig events
   React.useEffect(() => {
     const unsub = [];
     unsub.push(
@@ -98,22 +105,12 @@ export const SubscribeGameEvents = () => {
       c2c.call("getGame").then(
         (game) => {
           setGameLoaded(true);
-          setAvailableItemList(game.availableItems);
-          setItemList(game.items);
-          setBoardConfig(game.board);
+          loadGame(game);
         },
         () => {}
       );
     }
-  }, [
-    c2c,
-    isMaster,
-    joined,
-    setAvailableItemList,
-    setItemList,
-    setBoardConfig,
-    gameLoaded,
-  ]);
+  }, [c2c, isMaster, joined, gameLoaded, loadGame]);
   return null;
 };
 

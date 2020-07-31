@@ -16,19 +16,15 @@ export const C2CProvider = ({ room, ...props }) => {
   const roomRef = React.useRef(null);
 
   React.useEffect(() => {
-    const connect = () => {
-      // Do nothing for now. Need c2c handling reconnection.
-      // setJoined(true);
-    };
     const disconnect = () => {
-      console.log("disconnected");
+      console.log("Disconnected");
       setJoined(false);
+      setIsMaster(false);
     };
-    socket.on("connect", connect);
+
     socket.on("disconnect", disconnect);
     return () => {
       socket.off("disconnect", disconnect);
-      socket.off("connect", connect);
     };
   }, [socket]);
 
@@ -36,21 +32,29 @@ export const C2CProvider = ({ room, ...props }) => {
     if (!socket) {
       return;
     }
-    join(socket, room, () => {
-      console.log("isMaster");
-      setIsMaster(true);
-    }).then((newRoom) => {
-      console.log("Connected…");
-      roomRef.current = newRoom;
+    join({
+      socket,
+      room,
+      onMaster: () => {
+        console.log("Is now first player…");
+        setIsMaster(true);
+      },
+      onJoined: (newRoom) => {
+        console.log("Connected…");
+        roomRef.current = newRoom;
 
-      setC2c(newRoom);
+        setC2c(newRoom);
 
-      setJoined(true);
+        setJoined(true);
 
-      return () => {
-        socket.disconnect();
-      };
+        return () => {
+          socket.disconnect();
+        };
+      },
     });
+    return () => {
+      socket.disconnect();
+    };
   }, [room, socket]);
 
   if (!joined || !c2c) {
