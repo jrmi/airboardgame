@@ -41,7 +41,7 @@ export const SubscribeGameEvents = () => {
         );
       }
       setItemList(game.items);
-      setBoardConfig(game.board);
+      setBoardConfig(game.board, false);
     },
     [setAvailableItemList, setBoardConfig, setItemList]
   );
