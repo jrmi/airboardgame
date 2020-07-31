@@ -18,7 +18,6 @@ const ItemWrapper = styled.div.attrs(({ rotation, loaded, locked }) => {
     className += " locked";
   }
   return {
-    //className: loaded ? "item loaded" : "item",
     className,
     style: {
       transform: `rotate(${rotation}deg)`,
@@ -28,7 +27,6 @@ const ItemWrapper = styled.div.attrs(({ rotation, loaded, locked }) => {
   display: inline-block;
   transition: transform 200ms;
   user-select: none;
-  z-index: ${({ layer }) => (layer || 0) + 3};
   opacity: 0.5;
   &.loaded {
     opacity: 1;
@@ -159,6 +157,7 @@ const Item = ({
       style={{
         transform: `translate(${x}px, ${y}px)`,
         display: "inline-block",
+        zIndex: (layer || 0) + 3,
         position: "absolute",
         top: 0,
         left: 0,
