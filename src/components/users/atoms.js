@@ -9,7 +9,7 @@ export const getUser = () => {
       ...JSON.parse(localStorage.user),
     };
     // Id is given by server
-    delete localUser.id;
+    // delete localUser.id;
     persistUser(localUser);
     return localUser;
   }
