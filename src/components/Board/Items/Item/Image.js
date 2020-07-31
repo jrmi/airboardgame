@@ -27,7 +27,7 @@ const UnflippedForUser = styled.img`
 
 const Label = styled.div`
   position: absolute;
-  top: 1px;
+  top: -20px;
   right: 1px;
   padding: 0 3px;
   background-color: black;
