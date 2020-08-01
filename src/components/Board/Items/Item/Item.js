@@ -1,7 +1,4 @@
 import React, { memo } from "react";
-import { useRecoilValue } from "recoil";
-import { selectedItemsAtom } from "../../Selector";
-import { ItemsFamily } from "../../";
 import debounce from "lodash.debounce";
 
 import styled, { css } from "styled-components";
@@ -68,7 +65,7 @@ const ItemWrapper = styled.div.attrs(({ rotation, loaded, locked }) => {
 
 const Item = ({
   setState,
-  state: { type, x, y, rotation = 0, id, locked, layer, ...rest },
+  state: { type, x, y, rotation = 0, id, locked, layer, ...rest } = {},
   isSelected,
 }) => {
   const itemRef = React.useRef(null);
@@ -192,16 +189,4 @@ const MemoizedItem = memo(
   }
 );
 
-const BaseItem = ({ setState, itemId }) => {
-  const selectedItems = useRecoilValue(selectedItemsAtom);
-  const state = useRecoilValue(ItemsFamily(itemId));
-  return (
-    <MemoizedItem
-      state={state}
-      setState={setState}
-      isSelected={selectedItems.includes(itemId)}
-    />
-  );
-};
-
-export default BaseItem;
+export default MemoizedItem;

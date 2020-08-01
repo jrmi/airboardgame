@@ -1,4 +1,4 @@
-import { atom, atomFamily, selector } from "recoil";
+import { atom, selector } from "recoil";
 
 export const AvailableItemListAtom = atom({
   key: "availableItemList",
@@ -14,21 +14,23 @@ export const ItemListAtom = atom({
   key: "itemList",
   default: [],
 });
-
-export const ItemsFamily = atomFamily({
-  key: "Items",
-  default: () => {},
+export const ItemMapAtom = atom({
+  key: "ItemMap",
+  default: {},
 });
 
 export const AllItemsSelector = selector({
   key: "AllItemsSelector",
-  get: ({ get }) => get(ItemListAtom).map(({ id }) => get(ItemsFamily(id))),
+  get: ({ get }) => {
+    const itemMap = get(ItemMapAtom);
+    return get(ItemListAtom).map((id) => itemMap[id]);
+  },
 });
 
 export default {
   ItemListAtom,
   BoardConfigAtom,
   AvailableItemListAtom,
-  ItemsFamily,
   AllItemsSelector,
+  ItemMapAtom,
 };

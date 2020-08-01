@@ -40,6 +40,7 @@ export const SubscribeGameEvents = () => {
           game.availableItems.map((item) => ({ id: nanoid(), ...item }))
         );
       }
+
       setItemList(game.items);
       setBoardConfig(game.board, false);
     },

@@ -7,7 +7,7 @@ import { selectedItemsAtom } from "../Selector";
 import { useUsers } from "../../users";
 
 import intersection from "lodash.intersection";
-import { ItemsFamily } from "../";
+import { ItemMapAtom } from "../";
 import { getDefaultActionsFromItem } from "./Item/allItems";
 
 import { useTranslation } from "react-i18next";
@@ -50,9 +50,8 @@ export const useItemActions = () => {
 
   const getSelectedItemList = useRecoilCallback(
     ({ snapshot }) => async () => {
-      return await Promise.all(
-        selectedItems.map((id) => snapshot.getPromise(ItemsFamily(id)))
-      );
+      const itemMap = await snapshot.getPromise(ItemMapAtom);
+      return selectedItems.map((id) => itemMap[id]);
     },
     [selectedItems]
   );

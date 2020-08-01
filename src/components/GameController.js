@@ -7,7 +7,11 @@ import AvailableItems from "./AvailableItems";
 import NewItems from "./NewItems";
 import BoardConfig from "./BoardConfig";
 
-import { BoardConfigAtom, AvailableItemListAtom, ItemListAtom } from "./Board/";
+import {
+  BoardConfigAtom,
+  AvailableItemListAtom,
+  AllItemsSelector,
+} from "./Board/";
 
 const LeftPane = styled.div`
   position: absolute;
@@ -38,7 +42,7 @@ export const GameController = () => {
 
   const logGame = useRecoilCallback(
     ({ snapshot }) => async () => {
-      const itemList = await snapshot.getPromise(ItemListAtom);
+      const itemList = await snapshot.getPromise(AllItemsSelector);
       console.log(itemList);
     },
     []

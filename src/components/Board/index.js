@@ -5,6 +5,6 @@ export {
   AvailableItemListAtom,
   BoardConfigAtom,
   ItemListAtom,
-  ItemsFamily,
+  ItemMapAtom,
   AllItemsSelector,
 } from "./game/atoms";

@@ -7,7 +7,7 @@ import { useRecoilValue } from "recoil";
 import { Form, Field } from "react-final-form";
 import AutoSave from "../../Form/AutoSave";
 
-import { ItemsFamily } from "../../";
+import { ItemMapAtom } from "../../";
 
 import Label from "../../Form/Label";
 
@@ -19,7 +19,9 @@ import "rc-slider/assets/index.css";
 const ItemFormFactory = ({ itemId, onSubmitHandler }) => {
   const { t } = useTranslation();
 
-  const item = useRecoilValue(ItemsFamily(itemId));
+  const itemMap = useRecoilValue(ItemMapAtom);
+  const item = itemMap[itemId];
+
   if (!item) return null;
 
   const FieldsComponent = getFormFieldComponent(item.type);

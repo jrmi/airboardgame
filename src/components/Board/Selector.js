@@ -8,8 +8,10 @@ import {
 } from "recoil";
 import styled from "styled-components";
 
-import { PanZoomRotateAtom, BoardConfigAtom, AllItemsSelector } from "./";
+import { PanZoomRotateAtom, BoardConfigAtom, ItemMapAtom } from "./";
 import { insideClass, isPointInsideRect } from "../../utils";
+
+import throttle from "lodash.throttle";
 
 export const selectedItemsAtom = atom({
   key: "selectedItems",
@@ -86,9 +88,11 @@ const Selector = ({ children }) => {
   const throttledSetSelected = useRecoilCallback(
     ({ snapshot }) => async (selector) => {
       if (stateRef.current.moving) {
-        const itemList = await snapshot.getPromise(AllItemsSelector);
+        const itemMap = await snapshot.getPromise(ItemMapAtom);
 
-        const selected = findSelected(itemList, selector).map(({ id }) => id);
+        const selected = findSelected(Object.values(itemMap), selector).map(
+          ({ id }) => id
+        );
         setSelected((prevSelected) => {
           if (JSON.stringify(prevSelected) !== JSON.stringify(selected)) {
             return selected;
@@ -100,7 +104,6 @@ const Selector = ({ children }) => {
     [setSelected]
   );
 
-  // Reset selection on game loading
   React.useEffect(() => {
     throttledSetSelected(selector);
   }, [selector, throttledSetSelected]);
@@ -141,10 +144,12 @@ const Selector = ({ children }) => {
   const onMouseUp = useRecoilCallback(
     ({ snapshot }) => async () => {
       if (stateRef.current.moving) {
-        const itemList = await snapshot.getPromise(AllItemsSelector);
-        const selected = findSelected(itemList, stateRef.current).map(
-          ({ id }) => id
-        );
+        const itemMap = await snapshot.getPromise(ItemMapAtom);
+
+        const selected = findSelected(
+          Object.values(itemMap),
+          stateRef.current
+        ).map(({ id }) => id);
         setSelected(selected);
         stateRef.current = { moving: false };
         setSelector({ ...stateRef.current });
