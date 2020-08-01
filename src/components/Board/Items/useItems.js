@@ -12,17 +12,20 @@ const useItems = () => {
   const setSelectItems = useSetRecoilState(selectedItemsAtom);
 
   const batchUpdateItems = useRecoilCallback(
-    () => (itemIds, callbackOrItem, sync = true) => {
+    ({ snapshot }) => async (itemIds, callbackOrItem, sync = true) => {
       let callback = callbackOrItem;
       if (typeof callbackOrItem === "object") {
         callback = () => callbackOrItem;
       }
+      const itemList = await snapshot.getPromise(ItemListAtom);
+
+      const orderedItemIds = itemList.filter((id) => itemIds.includes(id));
 
       setItemMap((prevItemMap) => {
         const result = { ...prevItemMap };
         const updatedItems = {};
-        itemIds.forEach((id) => {
-          const newItem = { ...callback(prevItemMap[id]), id };
+        orderedItemIds.forEach((id) => {
+          const newItem = { ...callback(prevItemMap[id]) };
           result[id] = newItem;
           updatedItems[id] = newItem;
         });
@@ -93,13 +96,13 @@ const useItems = () => {
   const putItemsOnTop = React.useCallback(
     (itemIdsToMove) => {
       setItemList((prevItemList) => {
-        const itemsToMove = prevItemList.filter((id) =>
+        const filtered = prevItemList.filter(
+          (id) => !itemIdsToMove.includes(id)
+        );
+        const toBePutOnTop = prevItemList.filter((id) =>
           itemIdsToMove.includes(id)
         );
-        const result = [
-          ...prevItemList.filter((id) => !itemIdsToMove.includes(id)),
-          ...itemsToMove,
-        ];
+        const result = [...filtered, ...toBePutOnTop];
         c2c.publish(`updateItemListOrder`, result);
         return result;
       });
@@ -110,12 +113,12 @@ const useItems = () => {
   const reverseItemsOrder = React.useCallback(
     (itemIdsToReverse) => {
       setItemList((prevItemList) => {
-        const itemsToReverse = prevItemList.filter((id) =>
+        const toBeReversed = prevItemList.filter((id) =>
           itemIdsToReverse.includes(id)
         );
         const result = prevItemList.map((itemId) => {
           if (itemIdsToReverse.includes(itemId)) {
-            return itemsToReverse.pop();
+            return toBeReversed.pop();
           }
           return itemId;
         });
@@ -160,17 +163,12 @@ const useItems = () => {
       setItemList((prevItemList) => {
         const result = prevItemList.map((itemId) => {
           if (fromIds.includes(itemId)) {
-            return {
-              id: replaceMap[itemId],
-            };
+            return replaceMap[itemId];
           }
           return itemId;
         });
 
-        c2c.publish(
-          `updateItemListOrder`,
-          result.map(({ id }) => id)
-        );
+        c2c.publish(`updateItemListOrder`, result);
         return result;
       });
     }

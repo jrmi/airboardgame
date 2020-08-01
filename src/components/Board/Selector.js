@@ -11,8 +11,6 @@ import styled from "styled-components";
 import { PanZoomRotateAtom, BoardConfigAtom, ItemMapAtom } from "./";
 import { insideClass, isPointInsideRect } from "../../utils";
 
-import throttle from "lodash.throttle";
-
 export const selectedItemsAtom = atom({
   key: "selectedItems",
   default: [],
