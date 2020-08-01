@@ -6,6 +6,10 @@ import lockIcon from "../../../../images/lock.svg";
 
 import { getComponent } from "./allItems";
 
+import { ResizeObserver as ResizeObserverPolyfill } from "@juggle/resize-observer";
+
+const ResizeObserver = window.ResizeObserver || ResizeObserverPolyfill;
+
 const ItemWrapper = styled.div.attrs(({ rotation, loaded, locked }) => {
   let className = "item";
   if (loaded) {
