@@ -167,7 +167,10 @@ export const useItemActions = () => {
       batchUpdateItems(selectedItems, (item) => ({
         ...item,
         flipped: flip,
-        unflippedFor: [],
+        unflippedFor:
+          !Array.isArray(item.unflippedFor) || item.unflippedFor.length > 0
+            ? []
+            : item.unflippedFor,
       }));
       reverseItemsOrder(selectedItems);
     },
@@ -200,14 +203,14 @@ export const useItemActions = () => {
       }
 
       batchUpdateItems(selectedItems, (item) => {
-        let unflippedFor;
+        let { unflippedFor = [] } = item;
+
         if (!Array.isArray(item.unflippedFor)) {
           unflippedFor = [];
-        } else {
-          unflippedFor = [...item.unflippedFor];
         }
+
         if (flipSelf && !unflippedFor.includes(currentUser.id)) {
-          unflippedFor.push(currentUser.id);
+          unflippedFor = [...unflippedFor, currentUser.id];
         }
         if (!flipSelf && unflippedFor.includes(currentUser.id)) {
           unflippedFor = unflippedFor.filter((id) => id !== currentUser.id);
