@@ -1,12 +1,14 @@
 import React from "react";
 import { useC2C } from "../../../hooks/useC2C";
 import useItems from "./useItems";
-import { useRecoilCallback } from "recoil";
+import { useSetRecoilState } from "recoil";
 
-import { ItemsFamily } from "../";
+import { ItemMapAtom } from "../";
 
 export const SubcribeItemEvents = () => {
   const [c2c] = useC2C();
+
+  const setItemMap = useSetRecoilState(ItemMapAtom);
 
   const {
     updateItemOrder,
@@ -15,13 +17,13 @@ export const SubcribeItemEvents = () => {
     insertItemBefore,
   } = useItems();
 
-  const batchUpdate = useRecoilCallback(
-    ({ set }) => (updatedItems) => {
-      for (const [id, newItem] of Object.entries(updatedItems)) {
-        set(ItemsFamily(id), (item) => ({ ...item, ...newItem }));
-      }
+  const batchUpdate = React.useCallback(
+    (updatedItems) => {
+      setItemMap((prevItemMap) => {
+        return { ...prevItemMap, ...updatedItems };
+      });
     },
-    []
+    [setItemMap]
   );
 
   React.useEffect(() => {

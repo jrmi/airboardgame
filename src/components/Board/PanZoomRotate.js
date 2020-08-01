@@ -105,11 +105,11 @@ const PanZoomRotate = ({ children }) => {
         let newScale = prevScale.scale - scaleMult;
 
         if (newScale > 8) {
-          newScale = 12;
+          newScale = 8;
         }
 
-        if (newScale < 0.3) {
-          newScale = 0.3;
+        if (newScale < 0.1) {
+          newScale = 0.1;
         }
         return {
           scale: newScale,

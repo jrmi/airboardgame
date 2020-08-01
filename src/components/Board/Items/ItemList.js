@@ -1,15 +1,22 @@
 import React from "react";
 import { Item } from "./Item";
 import useItems from "./useItems";
-import { ItemListAtom } from "../";
+import { ItemListAtom, ItemMapAtom, selectedItemsAtom } from "../";
 import { useRecoilValue } from "recoil";
 
 const ItemList = () => {
   const { updateItem } = useItems();
   const itemList = useRecoilValue(ItemListAtom);
+  const itemMap = useRecoilValue(ItemMapAtom);
+  const selectedItems = useRecoilValue(selectedItemsAtom);
 
-  return itemList.map((item) => (
-    <Item key={item.id} itemId={item.id} setState={updateItem} />
+  return itemList.map((itemId) => (
+    <Item
+      key={itemId}
+      state={itemMap[itemId]}
+      setState={updateItem}
+      isSelected={selectedItems.includes(itemId)}
+    />
   ));
 };
 

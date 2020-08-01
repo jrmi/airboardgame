@@ -19,6 +19,7 @@ export const AutoSave = () => {
       );
       const boardConfig = await snapshot.getPromise(BoardConfigAtom);
       const itemList = await snapshot.getPromise(AllItemsSelector);
+
       const game = {
         items: itemList,
         board: boardConfig,
