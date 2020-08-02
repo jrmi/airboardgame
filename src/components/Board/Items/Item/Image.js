@@ -27,7 +27,7 @@ const UnflippedForUser = styled.img`
 
 const Label = styled.div`
   position: absolute;
-  top: -20px;
+  top: 1px;
   right: 1px;
   padding: 0 3px;
   background-color: black;
@@ -111,8 +111,6 @@ const Image = ({
           return <UnflippedForUser key={id} src={eye} color={color} />;
         })}
       </UnflippedFor>
-      {flippedForMe && backText && <Label>{backText}</Label>}
-      {(!flippedForMe || !backText) && text && <Label>{text}</Label>}
       <FrontImage
         visible={!flippedForMe}
         src={content}
@@ -135,6 +133,8 @@ const Image = ({
           {...size}
         />
       )}
+      {flippedForMe && backText && <Label>{backText}</Label>}
+      {(!flippedForMe || !backText) && text && <Label>{text}</Label>}
     </Wrapper>
   );
 };
