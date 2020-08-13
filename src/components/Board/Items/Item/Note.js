@@ -39,9 +39,10 @@ const Note = ({
   setState,
 }) => {
   const setValue = (e) => {
+    const value = e.target.value;
     setState((prevState) => ({
       ...prevState,
-      value: e.target.value,
+      value,
     }));
   };
 
