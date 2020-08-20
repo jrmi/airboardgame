@@ -4,6 +4,8 @@ import { useTranslation } from "react-i18next";
 
 import Label from "../../../Form/Label";
 
+import ImageField from "../../../Form/ImageField";
+
 const ImageForm = ({ initialValues }) => {
   const { t } = useTranslation();
   return (
@@ -54,29 +56,33 @@ const ImageForm = ({ initialValues }) => {
       </Label>
       <Label>
         {t("Front image")}
-        <Field
-          name="content"
-          component="input"
-          initialValue={initialValues.content}
-        />
+        <Field name="content" initialValue={initialValues.content}>
+          {({ input: { value, onChange } }) => {
+            return <ImageField value={value} onChange={onChange} />;
+          }}
+        </Field>
       </Label>
+
       <Label>
         {t("Back image")}
-        <Field
-          name="backContent"
-          component="input"
-          initialValue={initialValues.backContent}
-        />
+        <Field name="backContent" initialValue={initialValues.backContent}>
+          {({ input: { value, onChange } }) => {
+            return <ImageField value={value} onChange={onChange} />;
+          }}
+        </Field>
       </Label>
       <Label>
         {t("Overlay image")}
         <Field
           name="overlay.content"
-          component="input"
           initialValue={
             initialValues.overlay ? initialValues.overlay.content : ""
           }
-        />
+        >
+          {({ input: { value, onChange } }) => {
+            return <ImageField value={value} onChange={onChange} />;
+          }}
+        </Field>
       </Label>
     </>
   );
