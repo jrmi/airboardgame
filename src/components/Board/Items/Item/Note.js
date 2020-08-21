@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import React, { memo, useEffect } from "react";
 import styled, { css } from "styled-components";
 
 const NotePane = styled.div`
@@ -38,19 +38,28 @@ const Note = ({
   fontSize = "20",
   setState,
 }) => {
+  // To avoid this behaviour https://github.com/facebook/react/issues/955
+  // We have a local state and a use effect when incoming update occurs
+  const [currentValue, setCurrentValue] = React.useState(value);
+
   const setValue = (e) => {
     const value = e.target.value;
+    setCurrentValue(value);
     setState((prevState) => ({
       ...prevState,
       value,
     }));
   };
 
+  useEffect(() => {
+    setCurrentValue(value);
+  }, [value]);
+
   return (
     <NotePane color={color} fontSize={fontSize} textColor={textColor}>
       <label style={{ userSelect: "none" }}>
         <h2>{label}</h2>
-        <textarea value={value} onChange={setValue} />
+        <textarea value={currentValue} onChange={setValue} />
       </label>
     </NotePane>
   );
