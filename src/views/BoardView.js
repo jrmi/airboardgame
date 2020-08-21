@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
+import { SHOW_WELCOME } from "../utils/settings";
 import BoardMenu from "../components/BoardMenu";
 import GameController from "../components/GameController";
 import SubscribeGameEvents from "../components/SubscribeGameEvents";
@@ -13,6 +14,7 @@ import WelcomeModal from "../components/WelcomeModal";
 import InfoModal from "../components/InfoModal";
 import NavBar from "../components/NavBar";
 import AutoSave from "../components/AutoSave";
+import ImageDropNPaste from "../components/ImageDropNPaste";
 
 const BoardContainer = styled.div`
   width: 100%;
@@ -21,8 +23,6 @@ const BoardContainer = styled.div`
   box-sizing: border-box;
   background-color: #202b38;
 `;
-
-const SHOW_WELCOME = process.env.REACT_APP_NO_WELCOME !== "1";
 
 export const BoardView = () => {
   const { currentUser, users } = useUsers();
@@ -34,7 +34,7 @@ export const BoardView = () => {
   const [edit, setEdit] = React.useState(false);
 
   return (
-    <>
+    <ImageDropNPaste>
       <SubscribeUserEvents />
       <SubscribeGameEvents />
       <AutoSave />
@@ -65,7 +65,7 @@ export const BoardView = () => {
       <HelpModal show={showHelpModal} setShow={setShowHelpModal} />
       <InfoModal show={showInfoModal} setShow={setShowInfoModal} />
       <WelcomeModal show={showWelcomeModal} setShow={setShowWelcomeModal} />
-    </>
+    </ImageDropNPaste>
   );
 };
 

@@ -17,8 +17,7 @@ import BoardView from "./views/BoardView";
 
 import Waiter from "./components/Waiter";
 
-const SOCKET_URL = process.env.REACT_APP_SOCKET_URL || "http://localhost:4000";
-const SOCKET_PATH = process.env.REACT_APP_SOCKET_PATH || "/socket.io";
+import { SOCKET_URL, SOCKET_PATH } from "./utils/settings";
 
 const SOCKET_OPTIONS = {
   forceNew: true,

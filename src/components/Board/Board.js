@@ -16,6 +16,7 @@ const Placeholder = styled.p`
   top: 40vh;
   width: 100vw;
   text-align: center;
+  color: hsl(0, 0%, 70%);
 `;
 
 const StyledBoard = styled.div.attrs(() => ({ className: "board" }))`
