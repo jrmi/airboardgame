@@ -2,15 +2,10 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import { useDropzone } from "react-dropzone";
-
-const API_ENDPOINT =
-  process.env.REACT_APP_API_ENDPOINT || "http://localhost:3001";
-
-const uploadURI = `${API_ENDPOINT}/upload`;
+import { uploadImage } from "../../../utils/api";
 
 const Thumbnail = styled.img`
   height: 50px;
-  max-width: 50px;
 `;
 
 const RemoveButton = styled.span`
@@ -27,16 +22,9 @@ const ImageField = ({ value, onChange }) => {
     async (acceptedFiles) => {
       const file = acceptedFiles[0];
       setUploading(true);
-      const payload = new FormData();
-      payload.append("file", file);
-      const result = await fetch(uploadURI, {
-        method: "POST",
-        body: payload, // this sets the `Content-Type` header to `multipart/form-data`
-      });
-
-      const location = await result.text();
-      setUploading(false);
+      const location = await uploadImage(file);
       onChange(location);
+      setUploading(false);
     },
     [onChange]
   );
