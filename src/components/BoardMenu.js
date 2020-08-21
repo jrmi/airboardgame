@@ -6,6 +6,7 @@ import { useC2C } from "../hooks/useC2C";
 import { nanoid } from "nanoid";
 
 import testGame from "../games/testGame";
+import perfGame from "../games/perfGame";
 
 import LoadLastGameLink from "../components/LoadLastGameLink";
 import DownloadGameLink from "../components/DownloadGameLink";
@@ -119,6 +120,10 @@ const BoardMenu = ({ setShowLoadGameModal, isOpen, setMenuOpen, edit }) => {
     loadGame(testGame);
   }, [loadGame]);
 
+  const loadPerfGame = React.useCallback(() => {
+    loadGame(perfGame);
+  }, [loadGame]);
+
   const handleStateChange = React.useCallback(
     (state) => {
       setMenuOpen(state.isOpen);
@@ -144,9 +149,15 @@ const BoardMenu = ({ setShowLoadGameModal, isOpen, setMenuOpen, edit }) => {
         </button>
       )}
       {!isProduction && (
-        <button className="button" onClick={loadTestGame}>
-          {t("Test Game")}
-        </button>
+        <>
+          <button className="button" onClick={loadTestGame}>
+            {t("Test Game")}
+          </button>
+
+          <button className="button" onClick={loadPerfGame}>
+            {t("Perf Game")}
+          </button>
+        </>
       )}
       {gameList.map(({ name, url }) => (
         <button
