@@ -12,7 +12,7 @@ const DicePane = styled.div`
     display: flex;
     justify-content: space-between;
     flex-direction: column;
-    border-radius: 10px;
+    border-radius: 3px;
     box-shadow: 3px 3px 8px 0px rgb(0, 0, 0, 0.3);
     h3 {
       user-select: none;
