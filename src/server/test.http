@@ -1,0 +1,96 @@
+@api_url = http://localhost:3001/store
+
+### LIST
+
+GET {{api_url}}/boxId/ HTTP/1.1
+
+### CREATE FOO
+
+# @name createElem
+POST {{api_url}}/boxId/ HTTP/1.1
+content-type: application/json
+
+{
+    "name": "foo"
+}
+
+### CREATE BAR
+
+POST {{api_url}}/boxId/ HTTP/1.1
+content-type: application/json
+
+{
+    "name": "bar"
+}
+
+
+### GET
+
+@elemId = {{createElem.response.body.$._id}}
+
+GET {{api_url}}/boxId/{{elemId}} HTTP/1.1
+
+### UPDATE
+
+@elemId = {{createElem.response.body.$._id}}
+
+PUT {{api_url}}/boxId/{{elemId}} HTTP/1.1
+content-type: application/json
+
+{
+    "other": "baz"
+}
+
+### DELETE
+
+@elemId = {{createElem.response.body.$._id}}
+
+DELETE {{api_url}}/boxId/{{elemId}} HTTP/1.1
+
+# With authentication ########################
+
+### CREATE TIP
+
+# @name createElemKey
+
+POST {{api_url}}/boxId/?key=testkey HTTP/1.1
+content-type: application/json
+
+{
+    "name": "tip"
+}
+
+### UPDATE with good key
+
+@elemIdWithKey = {{createElemKey.response.body.$._id}}
+
+PUT {{api_url}}/boxId/{{elemIdWithKey}}?key=testkey HTTP/1.1
+content-type: application/json
+
+{
+    "other": "baz"
+}
+
+
+### UPDATE with bad key
+
+@elemIdWithKey = {{createElemKey.response.body.$._id}}
+
+PUT {{api_url}}/boxId/{{elemIdWithKey}}?key=badkey HTTP/1.1
+content-type: application/json
+
+{
+    "other": "baz"
+}
+
+### DELETE with bad key
+
+@elemIdWithKey = {{createElemKey.response.body.$._id}}
+
+DELETE {{api_url}}/boxId/{{elemIdWithKey}}?key=badkey HTTP/1.1
+
+### DELETE with good key
+
+@elemIdWithKey = {{createElemKey.response.body.$._id}}
+
+DELETE {{api_url}}/boxId/{{elemIdWithKey}}?key=testkey HTTP/1.1
