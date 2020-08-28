@@ -2,6 +2,7 @@
   "name": "airgameboard",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "dependencies": {
     "@color2k/compat": "^1.0.0-rc.5",
     "@juggle/resize-observer": "^3.2.0",
@@ -54,7 +55,7 @@
     "lint": "eslint src/",
     "prettier": "prettier --write src/",
     "eject": "react-scripts eject",
-    "server": "nodemon src/server.js",
+    "server": "nodemon  --exec babel-node src/server/index.js ",
     "i18n:scanner": "i18next-scanner --config i18next-scanner.config.js 'src/**/*.{js,jsx}'",
     "cypress:open": "LANGUAGE=en cypress open",
     "cypress:run": "LANGUAGE=en cypress run",
@@ -76,6 +77,10 @@
     ]
   },
   "devDependencies": {
+    "@babel/cli": "^7.10.5",
+    "@babel/core": "^7.11.4",
+    "@babel/node": "^7.10.5",
+    "@babel/preset-env": "^7.11.0",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
