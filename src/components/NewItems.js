@@ -5,7 +5,7 @@ import { useRecoilCallback } from "recoil";
 import { useItems } from "../components/Board/Items";
 import { PanZoomRotateAtom } from "./Board";
 
-import { itemMap } from "./Board/Items/Item/allItems";
+import { itemMap } from "./boardComponents";
 
 const NewItem = memo(({ type }) => {
   const { pushItem } = useItems();

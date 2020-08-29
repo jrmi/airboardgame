@@ -5,13 +5,13 @@ import { useTranslation } from "react-i18next";
 import { useRecoilValue } from "recoil";
 
 import { Form, Field } from "react-final-form";
-import AutoSave from "../../Form/AutoSave";
+import AutoSave from "../../ui/formUtils/AutoSave";
 
-import { ItemMapAtom } from "../../";
+import { ItemMapAtom } from "../Board/";
 
-import Label from "../../Form/Label";
+import Label from "../../ui/formUtils/Label";
 
-import { getFormFieldComponent } from "./allItems";
+import { getFormFieldComponent } from ".";
 
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css";

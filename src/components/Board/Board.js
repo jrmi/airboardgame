@@ -26,7 +26,7 @@ const StyledBoard = styled.div.attrs(() => ({ className: "board" }))`
   height: ${({ size }) => size}px;
 `;
 
-export const Board = ({ user, users }) => {
+export const Board = ({ user, users, getComponent }) => {
   const { t } = useTranslation();
 
   const config = useRecoilValue(BoardConfigAtom);
@@ -43,7 +43,7 @@ export const Board = ({ user, users }) => {
           <ActionPane>
             <CursorPane user={user} users={users}>
               <StyledBoard size={config.size}>
-                <ItemList />
+                <ItemList getComponent={getComponent} />
               </StyledBoard>
             </CursorPane>
           </ActionPane>

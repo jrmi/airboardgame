@@ -3,7 +3,7 @@ import { useSocket } from "@scripters/use-socket.io";
 import { join } from "client2client.io";
 import { useTranslation } from "react-i18next";
 
-import Waiter from "../components/Waiter";
+import Waiter from "../ui/Waiter";
 
 export const C2CContext = React.createContext([null, false]);
 

@@ -2,8 +2,8 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 
 import { Form, Field } from "react-final-form";
-import AutoSave from "./Board/Form/AutoSave";
-import Label from "./Board/Form/Label";
+import AutoSave from "../ui/formUtils/AutoSave";
+import Label from "../ui/formUtils/Label";
 import useBoardConfig from "./useBoardConfig";
 
 const BoardConfig = () => {

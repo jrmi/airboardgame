@@ -2,9 +2,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { Field } from "react-final-form";
 
-import Label from "../../../Form/Label";
-
-import ColorPicker from "../../../Form/ColorPicker";
+import Label from "../../../ui/formUtils/Label";
 
 const Form = ({ initialValues }) => {
   const { t } = useTranslation();
@@ -19,22 +17,23 @@ const Form = ({ initialValues }) => {
         />
       </Label>
       <Label>
-        {t("Size")}
-        <Field name="size" component="input" initialValue={initialValues.size}>
+        {t("Width")}
+        <Field
+          name="width"
+          component="input"
+          initialValue={initialValues.width}
+        >
           {(props) => <input {...props.input} type="number" />}
         </Field>
       </Label>
-
       <Label>
-        {t("Color")}
+        {t("Height")}
         <Field
-          name="color"
+          name="height"
           component="input"
-          initialValue={initialValues.color}
+          initialValue={initialValues.height}
         >
-          {({ input: { onChange, value } }) => (
-            <ColorPicker value={value} onChange={onChange} />
-          )}
+          {(props) => <input {...props.input} type="number" />}
         </Field>
       </Label>
     </>

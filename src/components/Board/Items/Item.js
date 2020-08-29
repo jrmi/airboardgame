@@ -2,9 +2,7 @@ import React, { memo } from "react";
 import debounce from "lodash.debounce";
 
 import styled, { css } from "styled-components";
-import lockIcon from "../../../../images/lock.svg";
-
-import { getComponent } from "./allItems";
+import lockIcon from "../../../images/lock.svg";
 
 import { ResizeObserver as ResizeObserverPolyfill } from "@juggle/resize-observer";
 
@@ -71,6 +69,7 @@ const Item = ({
   setState,
   state: { type, x, y, rotation = 0, id, locked, layer, ...rest } = {},
   isSelected,
+  getComponent,
 }) => {
   const itemRef = React.useRef(null);
   const sizeRef = React.useRef({});
