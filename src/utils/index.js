@@ -27,15 +27,6 @@ export const isPointInsideRect = (point, rect) => {
   );
 };
 
-export const isPointInsideItem = (point, item) => {
-  return isPointInsideRect(point, {
-    left: item.x,
-    top: item.y,
-    width: item.actualWidth,
-    height: item.actualHeight,
-  });
-};
-
 /**
  * Shuffles array in place.
  * @param {Array} a items An array containing the items.

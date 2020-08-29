@@ -91,15 +91,20 @@ export const useItemActions = () => {
   const align = useRecoilCallback(
     ({ snapshot }) => async () => {
       const selectedItemList = await getSelectedItemList(snapshot);
+
       // Compute
       const minMax = { min: {}, max: {} };
       minMax.min.x = Math.min(...selectedItemList.map(({ x }) => x));
       minMax.min.y = Math.min(...selectedItemList.map(({ y }) => y));
       minMax.max.x = Math.max(
-        ...selectedItemList.map(({ x, actualWidth }) => x + actualWidth)
+        ...selectedItemList.map(
+          ({ x, id }) => x + document.getElementById(id).clientWidth
+        )
       );
       minMax.max.y = Math.max(
-        ...selectedItemList.map(({ y, actualHeight }) => y + actualHeight)
+        ...selectedItemList.map(
+          ({ y, id }) => y + document.getElementById(id).clientWidth
+        )
       );
 
       const [newX, newY] = [
@@ -109,10 +114,11 @@ export const useItemActions = () => {
       let index = -1;
       batchUpdateItems(selectedItems, (item) => {
         index += 1;
+        const { clientWidth, clientHeight } = document.getElementById(item.id);
         return {
           ...item,
-          x: newX - item.actualWidth / 2 + index,
-          y: newY - item.actualHeight / 2 - index,
+          x: newX - clientWidth / 2 + index,
+          y: newY - clientHeight / 2 - index,
         };
       });
     },
@@ -169,7 +175,7 @@ export const useItemActions = () => {
         flipped: flip,
         unflippedFor:
           !Array.isArray(item.unflippedFor) || item.unflippedFor.length > 0
-            ? []
+            ? null
             : item.unflippedFor,
       }));
       reverseItemsOrder(selectedItems);

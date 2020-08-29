@@ -11,8 +11,6 @@ describe("Selection action", () => {
       "transform",
       "matrix(1, 0, 0, 1, 0, -200)"
     );
-    // Wait for actual size to be defined
-    cy.get("img[src='/games/JC.jpg']").parents(".item.loaded");
   });
 
   it("should select multiple items with left click ", () => {
