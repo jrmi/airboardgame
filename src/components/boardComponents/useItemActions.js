@@ -1,29 +1,29 @@
 import React from "react";
 
 import { useRecoilValue, useRecoilCallback } from "recoil";
-import { useItems } from "./";
-import { selectedItemsAtom } from "../Selector";
+import { useItems } from "../Board/Items";
+import { selectedItemsAtom } from "../Board/Selector";
 
-import { useUsers } from "../../users";
+import { useUsers } from "../users";
 
 import intersection from "lodash.intersection";
-import { ItemMapAtom } from "../";
-import { getDefaultActionsFromItem } from "./Item/allItems";
+import { ItemMapAtom } from "../Board";
+import { getDefaultActionsFromItem } from "./";
 
 import { useTranslation } from "react-i18next";
 import { nanoid } from "nanoid";
 
-import { shuffle as shuffleArray } from "../../../utils";
+import { shuffle as shuffleArray } from "../../utils";
 
-import deleteIcon from "../../../images/delete.svg";
-import stackIcon from "../../../images/stack.svg";
-import duplicateIcon from "../../../images/duplicate.svg";
-import seeIcon from "../../../images/see.svg";
-import flipIcon from "../../../images/flip.svg";
-import lockIcon from "../../../images/lock.svg";
-import rotateIcon from "../../../images/rotate.svg";
-import shuffleIcon from "../../../images/shuffle.svg";
-import tapIcon from "../../../images/tap.svg";
+import deleteIcon from "../../images/delete.svg";
+import stackIcon from "../../images/stack.svg";
+import duplicateIcon from "../../images/duplicate.svg";
+import seeIcon from "../../images/see.svg";
+import flipIcon from "../../images/flip.svg";
+import lockIcon from "../../images/lock.svg";
+import rotateIcon from "../../images/rotate.svg";
+import shuffleIcon from "../../images/shuffle.svg";
+import tapIcon from "../../images/tap.svg";
 
 const getActionsFromItem = (item) => {
   const defaultActions = getDefaultActionsFromItem(item);

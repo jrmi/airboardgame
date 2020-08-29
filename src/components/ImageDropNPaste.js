@@ -1,6 +1,6 @@
 import React from "react";
 
-import Waiter from "./Waiter";
+import Waiter from "../ui/Waiter";
 import { useDropzone } from "react-dropzone";
 import { uploadImage } from "../utils/api";
 import { PanZoomRotateAtom } from "./Board";
