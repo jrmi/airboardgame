@@ -1,18 +1,10 @@
 import React, { memo } from "react";
-import debounce from "lodash.debounce";
 
 import styled, { css } from "styled-components";
 import lockIcon from "../../../images/lock.svg";
 
-import { ResizeObserver as ResizeObserverPolyfill } from "@juggle/resize-observer";
-
-const ResizeObserver = window.ResizeObserver || ResizeObserverPolyfill;
-
-const ItemWrapper = styled.div.attrs(({ rotation, loaded, locked }) => {
+const ItemWrapper = styled.div.attrs(({ rotation, locked }) => {
   let className = "item";
-  if (loaded) {
-    className += " loaded";
-  }
   if (locked) {
     className += " locked";
   }
@@ -26,10 +18,6 @@ const ItemWrapper = styled.div.attrs(({ rotation, loaded, locked }) => {
   display: inline-block;
   transition: transform 200ms;
   user-select: none;
-  opacity: 0.5;
-  &.loaded {
-    opacity: 1;
-  }
 
   ${({ selected }) =>
     selected
@@ -72,9 +60,7 @@ const Item = ({
   getComponent,
 }) => {
   const itemRef = React.useRef(null);
-  const sizeRef = React.useRef({});
   const [unlock, setUnlock] = React.useState(false);
-  const [loaded, setLoaded] = React.useState(false);
   const isMountedRef = React.useRef(false);
 
   // Allow to operate on locked item if key is pressed
@@ -104,36 +90,6 @@ const Item = ({
     [setState, id]
   );
 
-  // Update actual dimension. Usefull when image with own dimensions.
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const actualSizeCallback = React.useCallback(
-    debounce((entries) => {
-      if (!isMountedRef.current) return;
-      entries.forEach((entry) => {
-        if (entry.contentRect) {
-          const { width, height } = entry.contentRect;
-          if (
-            sizeRef.current.actualWidth !== width ||
-            sizeRef.current.actualHeight !== height
-          ) {
-            sizeRef.current.actualWidth = width;
-            sizeRef.current.actualHeight = height;
-            setLoaded(true);
-            updateState(
-              (prevState) => ({
-                ...prevState,
-                actualWidth: width,
-                actualHeight: height,
-              }),
-              false // Don't want to sync that.
-            );
-          }
-        }
-      });
-    }, 1000),
-    [updateState]
-  );
-
   // Update actual size when update
   React.useEffect(() => {
     isMountedRef.current = true;
@@ -141,16 +97,6 @@ const Item = ({
       isMountedRef.current = false;
     };
   }, []);
-
-  // Update actual size when update
-  React.useEffect(() => {
-    const currentElem = itemRef.current;
-    const observer = new ResizeObserver(actualSizeCallback);
-    observer.observe(currentElem);
-    return () => {
-      observer.unobserve(currentElem);
-    };
-  }, [actualSizeCallback]);
 
   return (
     <div
@@ -169,7 +115,6 @@ const Item = ({
         selected={isSelected}
         ref={itemRef}
         layer={layer}
-        loaded={loaded}
         id={id}
       >
         <Component {...rest} setState={updateState} />

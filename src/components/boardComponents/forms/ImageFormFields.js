@@ -39,7 +39,7 @@ const ImageForm = ({ initialValues }) => {
         <Field
           name="width"
           component="input"
-          initialValue={initialValues.width || initialValues.actualWidth}
+          initialValue={initialValues.width}
         >
           {(props) => <input {...props.input} type="number" />}
         </Field>
@@ -49,7 +49,7 @@ const ImageForm = ({ initialValues }) => {
         <Field
           name="height"
           component="input"
-          initialValue={initialValues.height || initialValues.actualHeight}
+          initialValue={initialValues.height}
         >
           {(props) => <input {...props.input} type="number" />}
         </Field>

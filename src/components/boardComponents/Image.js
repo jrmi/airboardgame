@@ -96,7 +96,7 @@ const Image = ({
         .filter((userId) => users.find(({ id }) => userId === id))
         .map((userId) => users.find(({ id }) => userId === id));
     }
-    return [];
+    return null;
   }, [unflippedFor, users]);
 
   const flippedForMe =
@@ -107,9 +107,10 @@ const Image = ({
   return (
     <Wrapper>
       <UnflippedFor>
-        {unflippedForUsers.map(({ color, id }) => {
-          return <UnflippedForUser key={id} src={eye} color={color} />;
-        })}
+        {unflippedForUsers &&
+          unflippedForUsers.map(({ color, id }) => {
+            return <UnflippedForUser key={id} src={eye} color={color} />;
+          })}
       </UnflippedFor>
       <FrontImage
         visible={!flippedForMe}

@@ -149,15 +149,14 @@ const BoardMenu = ({ setShowLoadGameModal, isOpen, setMenuOpen, edit }) => {
         </button>
       )}
       {!isProduction && (
-        <>
-          <button className="button" onClick={loadTestGame}>
-            {t("Test Game")}
-          </button>
-
-          <button className="button" onClick={loadPerfGame}>
-            {t("Perf Game")}
-          </button>
-        </>
+        <button className="button" onClick={loadTestGame}>
+          {t("Test Game")}
+        </button>
+      )}
+      {!isProduction && (
+        <button className="button" onClick={loadPerfGame}>
+          {t("Perf Game")}
+        </button>
       )}
       {gameList.map(({ name, url }) => (
         <button

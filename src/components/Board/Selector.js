@@ -16,17 +16,21 @@ export const selectedItemsAtom = atom({
   default: [],
 });
 
-const findSelected = (items, rect) => {
-  return items.filter((item) => {
-    return (
-      !item.locked &&
-      isPointInsideRect({ x: item.x, y: item.y }, rect) &&
-      isPointInsideRect(
-        { x: item.x + item.actualWidth, y: item.y + item.actualHeight },
-        rect
-      )
-    );
-  });
+const findSelected = (itemMap, rect) => {
+  return Array.from(document.getElementsByClassName("item"))
+    .filter((elem) => {
+      const { clientHeight, clientWidth, id } = elem;
+      const item = itemMap[id];
+      return (
+        !item.locked &&
+        isPointInsideRect({ x: item.x, y: item.y }, rect) &&
+        isPointInsideRect(
+          { x: item.x + clientWidth, y: item.y + clientHeight },
+          rect
+        )
+      );
+    })
+    .map((elem) => elem.id);
 };
 
 const SelectorZone = styled.div.attrs(({ top, left, height, width }) => ({
@@ -88,9 +92,7 @@ const Selector = ({ children }) => {
       if (stateRef.current.moving) {
         const itemMap = await snapshot.getPromise(ItemMapAtom);
 
-        const selected = findSelected(Object.values(itemMap), selector).map(
-          ({ id }) => id
-        );
+        const selected = findSelected(itemMap, selector);
         setSelected((prevSelected) => {
           if (JSON.stringify(prevSelected) !== JSON.stringify(selected)) {
             return selected;
@@ -144,10 +146,7 @@ const Selector = ({ children }) => {
       if (stateRef.current.moving) {
         const itemMap = await snapshot.getPromise(ItemMapAtom);
 
-        const selected = findSelected(
-          Object.values(itemMap),
-          stateRef.current
-        ).map(({ id }) => id);
+        const selected = findSelected(itemMap, stateRef.current);
         setSelected(selected);
         stateRef.current = { moving: false };
         setSelector({ ...stateRef.current });
