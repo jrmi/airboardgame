@@ -2,7 +2,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { Field } from "react-final-form";
 
-import Label from "../../../Form/Label";
+import Label from "../../../ui/formUtils/Label";
 
 const Form = ({ initialValues }) => {
   const { t } = useTranslation();
@@ -15,16 +15,6 @@ const Form = ({ initialValues }) => {
           component="input"
           initialValue={initialValues.label}
         />
-      </Label>
-      <Label>
-        {t("Radius")}
-        <Field
-          name="radius"
-          component="input"
-          initialValue={initialValues.radius}
-        >
-          {(props) => <input {...props.input} type="number" />}
-        </Field>
       </Label>
     </>
   );

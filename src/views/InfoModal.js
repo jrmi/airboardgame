@@ -3,9 +3,9 @@ import { useTranslation } from "react-i18next";
 
 import { useRecoilValue } from "recoil";
 
-import Modal from "./Modal";
+import Modal from "../ui/Modal";
 
-import { BoardConfigAtom } from "./Board/";
+import { BoardConfigAtom } from "../components/Board/";
 
 import marked from "marked";
 

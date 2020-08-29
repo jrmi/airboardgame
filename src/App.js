@@ -15,7 +15,7 @@ import { useParams } from "react-router-dom";
 import { C2CProvider } from "./hooks/useC2C";
 import BoardView from "./views/BoardView";
 
-import Waiter from "./components/Waiter";
+import Waiter from "./ui/Waiter";
 
 import { SOCKET_URL, SOCKET_PATH } from "./utils/settings";
 

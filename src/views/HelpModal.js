@@ -4,7 +4,7 @@ import { Trans } from "react-i18next";
 
 import styled from "styled-components";
 
-import Modal from "./Modal";
+import Modal from "../ui/Modal";
 
 const Kbd = styled.kbd`
   background-color: #eee;

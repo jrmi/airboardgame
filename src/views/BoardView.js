@@ -9,12 +9,13 @@ import { Board } from "../components/Board";
 import SelectedItemsPane from "../components/SelectedItemsPane";
 import { useUsers, SubscribeUserEvents, UserList } from "../components/users";
 import LoadGameModal from "../components/LoadGameModal";
-import HelpModal from "../components/HelpModal";
-import WelcomeModal from "../components/WelcomeModal";
-import InfoModal from "../components/InfoModal";
-import NavBar from "../components/NavBar";
+import HelpModal from "./HelpModal";
+import WelcomeModal from "./WelcomeModal";
+import InfoModal from "./InfoModal";
+import NavBar from "./NavBar";
 import AutoSave from "../components/AutoSave";
 import ImageDropNPaste from "../components/ImageDropNPaste";
+import { getComponent } from "../components/boardComponents";
 
 const BoardContainer = styled.div`
   width: 100%;
@@ -53,7 +54,7 @@ export const BoardView = () => {
       />
       <BoardContainer>
         <UserList />
-        <Board user={currentUser} users={users} />
+        <Board user={currentUser} users={users} getComponent={getComponent} />
         <SelectedItemsPane edit={edit} />
         {edit && <GameController />}
         <LoadGameModal

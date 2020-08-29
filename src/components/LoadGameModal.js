@@ -6,7 +6,7 @@ import { nanoid } from "nanoid";
 
 import LoadGame from "./LoadGame";
 
-import Modal from "./Modal";
+import Modal from "../ui/Modal";
 
 export const LoadGameModal = ({ setShowModal, showModal }) => {
   const { t } = useTranslation();

@@ -3,12 +3,12 @@ import styled from "styled-components";
 
 import { useRecoilValue } from "recoil";
 import { useItems } from "./Board/Items";
-import { useItemActions } from "./Board/Items";
+import { useItemActions } from "./boardComponents/useItemActions";
 import { selectedItemsAtom } from "../components/Board/";
 
 import { insideClass } from "../utils";
 
-import ItemFormFactory from "./Board/Items/Item/ItemFormFactory";
+import ItemFormFactory from "./boardComponents/ItemFormFactory";
 
 // import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
