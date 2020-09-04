@@ -4,7 +4,6 @@ import styled from "styled-components";
 import { SHOW_WELCOME } from "../utils/settings";
 import BoardMenu from "../components/BoardMenu";
 import GameController from "../components/GameController";
-import SubscribeGameEvents from "../components/SubscribeGameEvents";
 import { Board } from "../components/Board";
 import SelectedItemsPane from "../components/SelectedItemsPane";
 import { useUsers, SubscribeUserEvents, UserList } from "../components/users";
@@ -37,7 +36,6 @@ export const BoardView = () => {
   return (
     <ImageDropNPaste>
       <SubscribeUserEvents />
-      <SubscribeGameEvents />
       <AutoSave />
       <NavBar
         setMenuOpen={setMenuOpen}

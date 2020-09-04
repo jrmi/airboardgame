@@ -11,6 +11,8 @@ import perfGame from "../games/perfGame";
 import LoadLastGameLink from "../components/LoadLastGameLink";
 import DownloadGameLink from "../components/DownloadGameLink";
 
+import { GAMELIST_URL, IS_PRODUCTION } from "../utils/settings";
+
 const styles = {
   bmBurgerButton: {
     display: "none",
@@ -65,9 +67,6 @@ const styles = {
     background: "rgba(0, 0, 0, 0.3)",
   },
 };
-
-const GAMELIST_URL = process.env.REACT_APP_GAMELIST_URL || "/gamelist.json";
-const isProduction = process.env.NODE_ENV === "production";
 
 const loadGameList = async () => {
   const result = await fetch(GAMELIST_URL);
@@ -148,12 +147,12 @@ const BoardMenu = ({ setShowLoadGameModal, isOpen, setMenuOpen, edit }) => {
           {t("New Game")}
         </button>
       )}
-      {!isProduction && (
+      {!IS_PRODUCTION && (
         <button className="button" onClick={loadTestGame}>
           {t("Test Game")}
         </button>
       )}
-      {!isProduction && (
+      {!IS_PRODUCTION && (
         <button className="button" onClick={loadPerfGame}>
           {t("Perf Game")}
         </button>
