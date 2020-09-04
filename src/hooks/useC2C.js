@@ -17,7 +17,7 @@ export const C2CProvider = ({ room, ...props }) => {
 
   React.useEffect(() => {
     const disconnect = () => {
-      console.log("Disconnected");
+      console.log("Disconnected…");
       setJoined(false);
       setIsMaster(false);
     };
@@ -31,6 +31,9 @@ export const C2CProvider = ({ room, ...props }) => {
   React.useEffect(() => {
     if (!socket) {
       return;
+    }
+    if (!socket.connected) {
+      socket.connect();
     }
     join({
       socket,

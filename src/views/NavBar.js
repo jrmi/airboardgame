@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 import { useTranslation } from "react-i18next";
 
@@ -17,7 +18,9 @@ const NavBar = ({
   return (
     <nav style={{ backgroundColor: "#FFFFFF40" }}>
       <span className="brand">
-        <span>AirBoard</span>
+        <Link to="/games/">
+          <span>AirBoard</span>
+        </Link>
       </span>
 
       {isMaster && (

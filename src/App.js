@@ -14,6 +14,8 @@ import { useParams } from "react-router-dom";
 
 import { C2CProvider } from "./hooks/useC2C";
 import BoardView from "./views/BoardView";
+import GamesView from "./views/GamesView";
+import GameSessionView from "./views/GameSessionView";
 
 import Waiter from "./ui/Waiter";
 
@@ -32,9 +34,26 @@ export const ConnectedBoardView = () => {
   const { room } = useParams();
 
   return (
-    <C2CProvider room={room}>
-      <BoardView />
-    </C2CProvider>
+    <Provider url={SOCKET_URL} options={SOCKET_OPTIONS}>
+      <C2CProvider room={room}>
+        <BoardView />
+      </C2CProvider>
+    </Provider>
+  );
+};
+
+/**
+ * Micro component to give room url parameters to C2CProvider
+ */
+export const ConnectedGameSessionView = () => {
+  const { room, gameId } = useParams();
+
+  return (
+    <Provider url={SOCKET_URL} options={SOCKET_OPTIONS}>
+      <C2CProvider room={room}>
+        <GameSessionView gameId={gameId} room={room} />
+      </C2CProvider>
+    </Provider>
   );
 };
 
@@ -45,14 +64,21 @@ function App() {
         <Provider url={SOCKET_URL} options={SOCKET_OPTIONS}>
           <Router>
             <Switch>
-              <Route path="/room/:room/">
+              <Route path="/session/:room/">
                 <ConnectedBoardView />
               </Route>
-              <Redirect path="/room/" to={`/room/${nanoid()}`} />
-              {/*<Route exact path='/home'>
-                  <HomePage />
-              </Route>*/}
-              <Redirect from="/" to="/room/" />
+              <Route path="/game/:gameId/session/:room/">
+                <ConnectedGameSessionView />
+              </Route>
+              <Redirect path="/session/" to={`/session/${nanoid()}`} />
+              <Redirect
+                path="/game/:gameId/session/"
+                to={`/game/:gameId/session/${nanoid()}`}
+              />
+              <Route exact path="/games">
+                <GamesView />
+              </Route>
+              <Redirect from="/" to="/games/" />
             </Switch>
           </Router>
         </Provider>
