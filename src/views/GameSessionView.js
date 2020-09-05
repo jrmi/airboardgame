@@ -1,5 +1,4 @@
-import React from "react";
-import { BoardView } from "./BoardView";
+import React, { useContext } from "react";
 
 import { useC2C } from "../hooks/useC2C";
 import { getGame } from "../utils/api";
@@ -19,7 +18,9 @@ import useBoardConfig from "../components/useBoardConfig";
 
 import { nanoid } from "nanoid";
 
-export const GameSessionView = ({ gameId, room }) => {
+export const GameContext = React.createContext({});
+
+export const GameSessionView = ({ gameId, room, children }) => {
   const [c2c, joined, isMaster] = useC2C();
   const { setItemList } = useItems();
   const setAvailableItemList = useSetRecoilState(AvailableItemListAtom);
@@ -39,18 +40,20 @@ export const GameSessionView = ({ gameId, room }) => {
   const setGame = React.useCallback(
     async (game) => {
       setGameLoaded(true);
-      const originalGame = await getGame(game.id);
+      const originalGame = await getGame(gameId);
       if (originalGame) {
         setAvailableItemList(
-          originalGame.availableItems.map((item) => ({ id: nanoid(), ...item }))
+          originalGame.availableItems.map((item) => ({ ...item, id: nanoid() }))
         );
       } else {
-        setAvailableItemList(game.availableItems);
+        setAvailableItemList(
+          game.availableItems.map((item) => ({ ...item, id: nanoid() }))
+        );
       }
       setItemList(game.items);
       setBoardConfig(game.board, false);
     },
-    [setAvailableItemList, setBoardConfig, setItemList]
+    [setAvailableItemList, setBoardConfig, setItemList, gameId]
   );
 
   const getCurrentGame = useRecoilCallback(
@@ -72,11 +75,16 @@ export const GameSessionView = ({ gameId, room }) => {
 
   React.useEffect(() => {
     const loadGameData = async () => {
-      const gameData = await getGame(gameId);
-      setGame(gameData);
-      sendLoadGameEvent(gameData);
+      try {
+        console.log(gameId);
+        const gameData = await getGame(gameId);
+        setGame(gameData);
+        sendLoadGameEvent(gameData);
+      } catch (e) {
+        console.log(e);
+      }
     };
-    if (isMaster && !gameLoaded) {
+    if (gameId && isMaster && !gameLoaded) {
       gameLoadingRef.current = true;
       loadGameData();
     }
@@ -91,11 +99,15 @@ export const GameSessionView = ({ gameId, room }) => {
   }, [c2c, isMaster, joined, gameLoaded, setGame]);
 
   return (
-    <>
-      <BoardView />
+    <GameContext.Provider value={{ setGame, getGame: getCurrentGame, gameId }}>
+      {children}
       <SubscribeGameEvents getGame={getCurrentGame} setGame={setGame} />
-    </>
+    </GameContext.Provider>
   );
+};
+
+export const useGame = () => {
+  return useContext(GameContext);
 };
 
 export default GameSessionView;

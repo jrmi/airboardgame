@@ -3,6 +3,7 @@ import styled from "styled-components";
 
 import { SHOW_WELCOME } from "../utils/settings";
 import BoardMenu from "../components/BoardMenu";
+import BoardMenuEdit from "../components/BoardMenuEdit";
 import GameController from "../components/GameController";
 import { Board } from "../components/Board";
 import SelectedItemsPane from "../components/SelectedItemsPane";
@@ -24,19 +25,19 @@ const BoardContainer = styled.div`
   background-color: #202b38;
 `;
 
-export const BoardView = () => {
+export const BoardView = ({ editMode = false }) => {
   const { currentUser, users } = useUsers();
   const [showLoadGameModal, setShowLoadGameModal] = React.useState(false);
   const [showHelpModal, setShowHelpModal] = React.useState(false);
   const [showInfoModal, setShowInfoModal] = React.useState(false);
-  const [showWelcomeModal, setShowWelcomeModal] = React.useState(SHOW_WELCOME);
+  const [showWelcomeModal, setShowWelcomeModal] = React.useState(
+    SHOW_WELCOME && !editMode
+  );
   const [menuOpen, setMenuOpen] = React.useState(false);
-  const [edit, setEdit] = React.useState(false);
+  const [edit, setEdit] = React.useState(editMode);
 
   return (
-    <ImageDropNPaste>
-      <SubscribeUserEvents />
-      <AutoSave />
+    <>
       <NavBar
         setMenuOpen={setMenuOpen}
         setShowHelpModal={setShowHelpModal}
@@ -44,27 +45,40 @@ export const BoardView = () => {
         setEditMode={setEdit}
         edit={edit}
       />
-      <BoardMenu
-        isOpen={menuOpen}
-        setMenuOpen={setMenuOpen}
-        setShowLoadGameModal={setShowLoadGameModal}
-        edit={edit}
-      />
-      <BoardContainer>
-        <UserList />
-        <Board user={currentUser} users={users} getComponent={getComponent} />
-        <SelectedItemsPane edit={edit} />
-        {edit && <GameController />}
-        <LoadGameModal
-          showModal={showLoadGameModal}
-          setShowModal={setShowLoadGameModal}
+      {!editMode && (
+        <BoardMenu
+          isOpen={menuOpen}
+          setMenuOpen={setMenuOpen}
+          setShowLoadGameModal={setShowLoadGameModal}
+          edit={edit}
         />
-      </BoardContainer>
-
+      )}
+      {editMode && (
+        <BoardMenuEdit
+          isOpen={menuOpen}
+          setMenuOpen={setMenuOpen}
+          edit={edit}
+        />
+      )}
       <HelpModal show={showHelpModal} setShow={setShowHelpModal} />
       <InfoModal show={showInfoModal} setShow={setShowInfoModal} />
       <WelcomeModal show={showWelcomeModal} setShow={setShowWelcomeModal} />
-    </ImageDropNPaste>
+
+      <ImageDropNPaste>
+        <SubscribeUserEvents />
+        <AutoSave />
+        <BoardContainer>
+          {!editMode && <UserList />}
+          <Board user={currentUser} users={users} getComponent={getComponent} />
+          <SelectedItemsPane edit={edit} />
+          {edit && <GameController />}
+          <LoadGameModal
+            showModal={showLoadGameModal}
+            setShowModal={setShowLoadGameModal}
+          />
+        </BoardContainer>
+      </ImageDropNPaste>
+    </>
   );
 };
 

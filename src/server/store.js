@@ -13,6 +13,7 @@ const errorGuard = (func) => (req, res, next) => {
   try {
     return func(req, res, next);
   } catch (error) {
+    console.log(error);
     next(error);
   }
 };
@@ -27,6 +28,16 @@ export const memoryBackend = () => {
       data[boxId] = {};
     }
     return data[boxId];
+  };
+
+  const filterObjectProperties = (obj, propArr) => {
+    const newObj = {};
+    for (let key in obj) {
+      if (propArr.includes(key)) {
+        newObj[key] = obj[key];
+      }
+    }
+    return newObj;
   };
 
   return {
@@ -60,14 +71,48 @@ export const memoryBackend = () => {
         );
       }
     },
-    get(boxId, id) {
+    list(boxId, { limit = 50, sort, skip = 0, onlyFields = [], q }) {
       if (data[boxId] === undefined) {
         return [];
       }
-      if (id) {
-        return data[boxId][id];
+      let result = Object.values(data[boxId]);
+
+      let sortProperty = sort;
+      let asc = true;
+
+      // If prefixed with '-' inverse order
+      if (sort[0] === "-") {
+        sortProperty = sort.substring(1);
+        asc = false;
       }
-      return Object.values(data[boxId]);
+
+      result.sort((resource1, resource2) => {
+        if (resource1[sortProperty] < resource2[sortProperty]) {
+          return asc ? -1 : 1;
+        }
+        if (resource1[sortProperty] > resource2[sortProperty]) {
+          return asc ? 1 : -1;
+        }
+        return 0;
+      });
+
+      result = result.slice(skip, skip + limit);
+
+      if (onlyFields.length) {
+        result = result.map((resource) =>
+          filterObjectProperties(resource, onlyFields)
+        );
+      }
+      return result;
+    },
+    get(boxId, id) {
+      if (data[boxId] === undefined) {
+        throwError("Box not found", 404);
+      }
+      if (!data[boxId][id]) {
+        throwError("Ressource not found", 404);
+      }
+      return data[boxId][id];
     },
     create(boxId, data) {
       const newRessource = { ...data, _id: nanoid(), _createdOn: new Date() };
@@ -75,7 +120,7 @@ export const memoryBackend = () => {
       return newRessource;
     },
     update(boxId, id, body) {
-      console.log(boxId, id, body);
+      //console.log(boxId, id, body);
       // To prevent created modification
       if (!data[boxId]) {
         throwError("Box not found", 404);
@@ -112,12 +157,27 @@ export const store = (prefix = "/store", backend = memoryBackend()) => {
     `${prefix}/:boxId/`,
     errorGuard((req, res) => {
       const { boxId } = req.params;
-      /*const { readWrite, write } = req.query;
-      if (!backend.checkSecurity(boxId, null, readWrite, write)) {
-        throwError("You need read access for this box", 403);
-      }*/
-      const result = backend.get(boxId);
-      return res.json(result);
+      const {
+        limit = "50",
+        sort = "_createdOn",
+        skip = "0",
+        q,
+        fields,
+      } = req.query;
+
+      const onlyFields = fields ? fields.split(",") : [];
+
+      const parsedLimit = parseInt(limit, 10);
+      const parsedSkip = parseInt(skip, 10);
+
+      const result = backend.list(boxId, {
+        sort,
+        limit: parsedLimit,
+        skip: parsedSkip,
+        onlyFields: onlyFields,
+        q,
+      });
+      res.json(result);
     })
   );
 
@@ -126,15 +186,11 @@ export const store = (prefix = "/store", backend = memoryBackend()) => {
     `${prefix}/:boxId/:id`,
     errorGuard((req, res) => {
       const { boxId, id } = req.params;
-      /*const { readWrite, write } = req.query;
-      if (!backend.checkSecurity(boxId, id, readWrite, write)) {
-        throwError("You need read access for this ressource", 403);
-      }*/
       const result = backend.get(boxId, id);
       if (result === undefined) {
         throwError("Box or ressource not found", 404);
       }
-      return res.json(result);
+      res.json(result);
     })
   );
 
@@ -142,7 +198,7 @@ export const store = (prefix = "/store", backend = memoryBackend()) => {
   router.post(
     `${prefix}/:boxId/`,
     errorGuard((req, res) => {
-      console.log(req.body);
+      //console.log(req.body);
       const { boxId } = req.params;
       /*const { key } = req.query;
       if (!backend.checkSecurity(boxId, null, key)) {

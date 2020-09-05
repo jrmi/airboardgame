@@ -45,6 +45,7 @@ const AvailableItems = () => {
                   .filter((item) => item.groupId === groupId)
                   .map((item) => (
                     <li key={item.id}>
+                      {item.id}
                       <AvailableItem data={item} />
                     </li>
                   ))}

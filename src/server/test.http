@@ -23,6 +23,9 @@ content-type: application/json
     "name": "bar"
 }
 
+### LIST with limit, skip and sort
+
+GET {{api_url}}/boxId/?limit=2&sort=-name&skip=1&fields=name,_id HTTP/1.1
 
 ### GET
 

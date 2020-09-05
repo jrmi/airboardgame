@@ -158,6 +158,7 @@ const genGame = () => {
       size: 1000,
       scale: 1,
       info: infoText,
+      name: "Test game",
     },
   };
 };
