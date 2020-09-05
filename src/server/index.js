@@ -21,7 +21,6 @@ import {
 
 const app = express();
 const httpServer = createServer(app);
-
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -39,7 +38,9 @@ app.use(
     },
   })
 );
-app.use(store);
+
+app.use(store());
+
 defineSocket(httpServer);
 
 const __dirname = path.resolve();

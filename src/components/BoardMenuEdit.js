@@ -1,11 +1,11 @@
-import React from "react";
+import React, { useContext } from "react";
 import { slide as Menu } from "react-burger-menu";
 import { useTranslation } from "react-i18next";
 
 import { useC2C } from "../hooks/useC2C";
 
-import LoadLastGameLink from "../components/LoadLastGameLink";
-import DownloadGameLink from "../components/DownloadGameLink";
+import { updateGame, createGame } from "../utils/api";
+import { GameContext } from "../views/GameSessionView";
 
 const styles = {
   bmBurgerButton: {
@@ -62,9 +62,10 @@ const styles = {
   },
 };
 
-const BoardMenu = ({ setShowLoadGameModal, isOpen, setMenuOpen }) => {
+const BoardMenuEdit = ({ isOpen, setMenuOpen }) => {
   const { t } = useTranslation();
   const [, , isMaster] = useC2C();
+  const { gameId, setGame, getGame } = useContext(GameContext);
 
   const handleStateChange = React.useCallback(
     (state) => {
@@ -77,6 +78,18 @@ const BoardMenu = ({ setShowLoadGameModal, isOpen, setMenuOpen }) => {
     return null;
   }
 
+  const handleSave = async () => {
+    const currentGame = await getGame();
+    if (gameId && gameId.length > 8) {
+      // FIXME
+      console.log(gameId);
+      await updateGame(gameId, currentGame);
+    } else {
+      await createGame(currentGame);
+    }
+    setMenuOpen(false);
+  };
+
   return (
     <Menu
       isOpen={isOpen}
@@ -85,20 +98,9 @@ const BoardMenu = ({ setShowLoadGameModal, isOpen, setMenuOpen }) => {
       disableAutoFocus
     >
       <h3>{t("Save")}</h3>
-      <LoadLastGameLink />
-      <button
-        className="button"
-        onClick={() => {
-          setShowLoadGameModal(true);
-          setMenuOpen(false);
-        }}
-      >
-        {t("Load game")}
-      </button>
-
-      <DownloadGameLink />
+      <button onClick={handleSave}>Save</button>
     </Menu>
   );
 };
 
-export default BoardMenu;
+export default BoardMenuEdit;

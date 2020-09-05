@@ -1,4 +1,3 @@
-import path from "path";
 import aws from "aws-sdk";
 import bodyParser from "body-parser";
 import multer from "multer";
@@ -6,18 +5,6 @@ import multerS3 from "multer-s3";
 import mime from "mime-types";
 import { nanoid } from "nanoid";
 import express from "express";
-
-const checkFileType = (file, cb) => {
-  const filetypes = /jpeg|jpg|png|gif/;
-  const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
-  const mimetype = filetypes.test(file.mimetype);
-
-  if (mimetype && extname) {
-    return cb(null, true);
-  } else {
-    cb("Error: Images Only!");
-  }
-};
 
 export const fileStorage = ({ type, config }) => {
   const app = express.Router();
@@ -87,9 +74,6 @@ export const fileStorage = ({ type, config }) => {
         },
       }),
       limits: { fileSize: 1024 * 1024 * 5 }, // 5MB
-      fileFilter: (req, file, cb) => {
-        checkFileType(file, cb);
-      },
     });
 
     app.post("/upload", upload.single("file"), (req, res) => {

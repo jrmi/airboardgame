@@ -6,6 +6,7 @@ import perfGame from "../games/perfGame";
 
 const uploadURI = `${API_ENDPOINT}/upload`;
 const gameURI = `${API_ENDPOINT}/store/game`;
+const gameListURI = `${API_ENDPOINT}/store/gameList`;
 
 export const uploadImage = async (file) => {
   const payload = new FormData();
@@ -20,21 +21,37 @@ export const uploadImage = async (file) => {
 
 // TODO Add delete Image
 
+const handleStatus = (response) => {
+  switch (response.status) {
+    case 404:
+      throw new Error("Resource not found");
+  }
+};
+
 export const getGames = async () => {
   const result = await fetch(GAMELIST_URL);
   let gameList = await result.json();
 
+  const fetchParams = new URLSearchParams({
+    fields: "_id,board",
+  });
+  const result2 = await fetch(`${gameURI}?${"" + fetchParams}`);
+  const serverGame = await result2.json();
+
   if (!IS_PRODUCTION) {
     gameList = [
-      { name: "Test Game", data: testGame, id: "-1" },
-      { name: "Perf Test", data: perfGame, id: "-2" },
-      ...gameList,
+      { name: "Test Game", data: testGame, id: "test" },
+      { name: "Perf Test", data: perfGame, id: "perf" },
+      ...gameList.map((game, index) => ({ ...game, id: "" + index })),
+      ...serverGame.map((game) => ({
+        name: game.board.name,
+        id: game._id,
+        url: `${gameURI}/${game._id}`,
+      })),
     ];
   }
 
-  return gameList.map((game, index) => ({ ...game, id: "" + index }));
-  /*const result = await fetch(gameURI);
-  return await result.json();*/
+  return gameList;
 };
 
 const fetchGame = async (url) => {
@@ -45,7 +62,9 @@ const fetchGame = async (url) => {
 export const getGame = async (gameId) => {
   const games = await getGames();
   const game = games.find(({ id }) => id === gameId);
-  if (!game) return null;
+  if (!game) {
+    throw new Error("Resource not found");
+  }
 
   const { url, data } = game;
 
@@ -58,7 +77,7 @@ export const getGame = async (gameId) => {
   return await result.json();*/
 };
 
-export const newGame = async (data) => {
+export const createGame = async (data) => {
   const result = await fetch(`${gameURI}/`, {
     method: "POST",
     headers: {
@@ -79,6 +98,9 @@ export const updateGame = async (id, data) => {
     },
     body: JSON.stringify(data),
   });
+  if (result.status === 404) {
+    throw new Error("Resource not found");
+  }
   return await result.json();
 };
 

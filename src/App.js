@@ -16,6 +16,7 @@ import { C2CProvider } from "./hooks/useC2C";
 import BoardView from "./views/BoardView";
 import GamesView from "./views/GamesView";
 import GameSessionView from "./views/GameSessionView";
+import GameView from "./views/GameSessionView";
 
 import Waiter from "./ui/Waiter";
 
@@ -51,7 +52,28 @@ export const ConnectedGameSessionView = () => {
   return (
     <Provider url={SOCKET_URL} options={SOCKET_OPTIONS}>
       <C2CProvider room={room}>
-        <GameSessionView gameId={gameId} room={room} />
+        <GameSessionView gameId={gameId} room={room}>
+          <BoardView />
+        </GameSessionView>
+      </C2CProvider>
+    </Provider>
+  );
+};
+
+/**
+ * Micro component to give room url parameters to C2CProvider
+ */
+export const ConnectedGameView = () => {
+  const { gameId } = useParams();
+
+  const room = nanoid();
+
+  return (
+    <Provider url={SOCKET_URL} options={SOCKET_OPTIONS}>
+      <C2CProvider room={room}>
+        <GameSessionView gameId={gameId} room={room}>
+          <BoardView editMode={true} />
+        </GameSessionView>
       </C2CProvider>
     </Provider>
   );
@@ -64,17 +86,16 @@ function App() {
         <Provider url={SOCKET_URL} options={SOCKET_OPTIONS}>
           <Router>
             <Switch>
-              <Route path="/session/:room/">
-                <ConnectedBoardView />
-              </Route>
               <Route path="/game/:gameId/session/:room/">
                 <ConnectedGameSessionView />
               </Route>
-              <Redirect path="/session/" to={`/session/${nanoid()}`} />
               <Redirect
                 path="/game/:gameId/session/"
                 to={`/game/:gameId/session/${nanoid()}`}
               />
+              <Route path="/game/:gameId/">
+                <ConnectedGameView />
+              </Route>
               <Route exact path="/games">
                 <GamesView />
               </Route>
