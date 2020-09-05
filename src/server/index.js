@@ -7,6 +7,8 @@ import fileStorage from "./fileStorage.js";
 import store from "./store.js";
 import { defineSocket } from "./socket.js";
 
+import { NeDBBackend } from "./storeBackends.js";
+
 import {
   HOST,
   PORT,
@@ -39,7 +41,7 @@ app.use(
   })
 );
 
-app.use(store());
+app.use(store({ backend: NeDBBackend({ dirname: "/tmp/db/" }) }));
 
 defineSocket(httpServer);
 

@@ -76,7 +76,6 @@ export const GameSessionView = ({ gameId, room, children }) => {
   React.useEffect(() => {
     const loadGameData = async () => {
       try {
-        console.log(gameId);
         const gameData = await getGame(gameId);
         setGame(gameData);
         sendLoadGameEvent(gameData);
