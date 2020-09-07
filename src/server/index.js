@@ -19,6 +19,9 @@ import {
   S3_ACCESS_KEY,
   S3_BUCKET,
   S3_ENDPOINT,
+  STORE_BACKEND,
+  STORE_PREFIX,
+  NEDB_BACKEND_DIRNAME,
 } from "./settings.js";
 
 const app = express();
@@ -41,7 +44,18 @@ app.use(
   })
 );
 
-app.use(store({ backend: NeDBBackend({ dirname: "/tmp/db/" }) }));
+switch (STORE_BACKEND) {
+  case "nedb":
+    app.use(
+      store({
+        prefix: STORE_PREFIX,
+        backend: NeDBBackend({ dirname: NEDB_BACKEND_DIRNAME }),
+      })
+    );
+    break;
+  default:
+    app.use(store({ prefix: STORE_PREFIX }));
+}
 
 defineSocket(httpServer);
 

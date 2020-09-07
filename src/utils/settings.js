@@ -12,3 +12,9 @@ export const GAMELIST_URL =
   process.env.REACT_APP_GAMELIST_URL || "/gamelist.json";
 
 export const IS_PRODUCTION = process.env.NODE_ENV === "production";
+
+export const SOCKET_OPTIONS = {
+  forceNew: true,
+  path: SOCKET_PATH,
+  transports: ["websocket"],
+};

@@ -1,24 +1,32 @@
-import React, { useContext } from "react";
+import React, { useContext, useRef } from "react";
+import { useParams, useHistory } from "react-router-dom";
+import { useSetRecoilState, useRecoilCallback } from "recoil";
+import { nanoid } from "nanoid";
+import { Provider } from "@scripters/use-socket.io";
 
-import { useC2C } from "../hooks/useC2C";
-import { getGame } from "../utils/api";
+import { useC2C, C2CProvider } from "../hooks/useC2C";
+import { getGame, createGame } from "../utils/api";
+import { SOCKET_URL, SOCKET_OPTIONS } from "../utils/settings";
 
 import SubscribeGameEvents from "../components/SubscribeGameEvents";
-import { useSetRecoilState, useRecoilCallback } from "recoil";
-
 import { useItems } from "../components/Board/Items";
-
 import {
   AvailableItemListAtom,
   AllItemsSelector,
   BoardConfigAtom,
 } from "../components/Board";
-
 import useBoardConfig from "../components/useBoardConfig";
 
-import { nanoid } from "nanoid";
+import BoardView from "../views/BoardView";
+import Waiter from "../ui/Waiter";
 
 export const GameContext = React.createContext({});
+
+const newGameData = {
+  items: [],
+  availableItems: [],
+  board: { size: 1000, scale: 1, name: "New game" },
+};
 
 export const GameSessionView = ({ gameId, room, children }) => {
   const [c2c, joined, isMaster] = useC2C();
@@ -74,9 +82,12 @@ export const GameSessionView = ({ gameId, room, children }) => {
   );
 
   React.useEffect(() => {
+    let isMounted = true;
+
     const loadGameData = async () => {
       try {
         const gameData = await getGame(gameId);
+        if (!isMounted) return;
         setGame(gameData);
         sendLoadGameEvent(gameData);
       } catch (e) {
@@ -87,6 +98,9 @@ export const GameSessionView = ({ gameId, room, children }) => {
       gameLoadingRef.current = true;
       loadGameData();
     }
+    return () => {
+      isMounted = false;
+    };
   }, [gameId, sendLoadGameEvent, isMaster, gameLoaded, setGame]);
 
   // Load game from master if any
@@ -109,4 +123,39 @@ export const useGame = () => {
   return useContext(GameContext);
 };
 
-export default GameSessionView;
+export const ConnectedGameSessionView = ({
+  create = false,
+  editMode = false,
+}) => {
+  const { room = nanoid(), gameId } = useParams();
+  const history = useHistory();
+  const creationRef = useRef(false);
+
+  // Create a new game as asked and redirect to it
+  React.useEffect(() => {
+    const createNewGame = async () => {
+      const { _id: newGameId } = await createGame(newGameData);
+      history.push(`/game/${newGameId}/`);
+    };
+    if (create && !creationRef.current) {
+      createNewGame();
+      creationRef.current = true;
+    }
+  }, [create, history]);
+
+  if (create) {
+    return <Waiter message={"Loading…"} />;
+  }
+
+  return (
+    <Provider url={SOCKET_URL} options={SOCKET_OPTIONS}>
+      <C2CProvider room={room}>
+        <GameSessionView gameId={gameId} room={room}>
+          <BoardView editMode={editMode} />
+        </GameSessionView>
+      </C2CProvider>
+    </Provider>
+  );
+};
+
+export default ConnectedGameSessionView;

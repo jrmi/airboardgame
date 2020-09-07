@@ -27,7 +27,10 @@ const errorGuard = (func) => async (req, res, next) => {
 };
 
 // Store Middleware
-export const store = ({ prefix = "/store", backend = memoryBackend() }) => {
+export const store = ({
+  prefix = "/store",
+  backend = memoryBackend(),
+} = {}) => {
   const router = express.Router();
 
   // Resource list

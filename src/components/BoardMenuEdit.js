@@ -65,7 +65,7 @@ const styles = {
 const BoardMenuEdit = ({ isOpen, setMenuOpen }) => {
   const { t } = useTranslation();
   const [, , isMaster] = useC2C();
-  const { gameId, setGame, getGame } = useContext(GameContext);
+  const { gameId, getGame } = useContext(GameContext);
 
   const handleStateChange = React.useCallback(
     (state) => {
