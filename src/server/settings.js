@@ -15,3 +15,7 @@ export const S3_ACCESS_KEY = process.env.S3_ACCESS_KEY;
 export const S3_SECRET_KEY = process.env.S3_SECRET_KEY;
 export const S3_ENDPOINT = process.env.S3_ENDPOINT;
 export const S3_BUCKET = process.env.S3_BUCKET;
+
+export const STORE_BACKEND = process.env.STORE_BACKEND || "memory";
+export const STORE_PREFIX = process.env.STORE_PREFIX || "/store";
+export const NEDB_BACKEND_DIRNAME = process.env.NEDB_BACKEND_DIRNAME || "/tmp/";

@@ -6,7 +6,6 @@ import perfGame from "../games/perfGame";
 
 const uploadURI = `${API_ENDPOINT}/upload`;
 const gameURI = `${API_ENDPOINT}/store/game`;
-const gameListURI = `${API_ENDPOINT}/store/gameList`;
 
 export const uploadImage = async (file) => {
   const payload = new FormData();
@@ -20,13 +19,6 @@ export const uploadImage = async (file) => {
 };
 
 // TODO Add delete Image
-
-const handleStatus = (response) => {
-  switch (response.status) {
-    case 404:
-      throw new Error("Resource not found");
-  }
-};
 
 export const getGames = async () => {
   const result = await fetch(GAMELIST_URL);
