@@ -7,7 +7,9 @@ import fileStorage from "./fileStorage.js";
 import store from "./store.js";
 import { defineSocket } from "./socket.js";
 
-import { NeDBBackend } from "./storeBackends.js";
+import { NeDBBackend, memoryBackend } from "./storeBackends.js";
+
+import exec from "./exec.js";
 
 import {
   HOST,
@@ -44,18 +46,24 @@ app.use(
   })
 );
 
+let storeBackend;
+
 switch (STORE_BACKEND) {
   case "nedb":
+    storeBackend = NeDBBackend({ dirname: NEDB_BACKEND_DIRNAME });
     app.use(
       store({
         prefix: STORE_PREFIX,
-        backend: NeDBBackend({ dirname: NEDB_BACKEND_DIRNAME }),
+        backend: storeBackend,
       })
     );
     break;
   default:
-    app.use(store({ prefix: STORE_PREFIX }));
+    storeBackend = memoryBackend();
+    app.use(store({ prefix: STORE_PREFIX, backend: storeBackend }));
 }
+
+app.use(exec({ context: { store: storeBackend } }));
 
 defineSocket(httpServer);
 

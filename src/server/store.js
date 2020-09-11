@@ -90,12 +90,12 @@ export const store = ({
     `${prefix}/:boxId/`,
     errorGuard(async (req, res) => {
       //console.log(req.body);
-      const { boxId } = req.params;
+      const { boxId, body } = req.params;
       /*const { key } = req.query;
       if (!backend.checkSecurity(boxId, null, key)) {
         throwError("You need write access for this box", 403);
       }*/
-      const result = await backend.create(boxId, req.body);
+      const result = await backend.create(boxId, body);
       return res.json(result);
     })
   );
