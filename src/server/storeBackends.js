@@ -60,7 +60,10 @@ export const memoryBackend = () => {
         );
       }
     },
-    async list(boxId, { limit, sort, asc, skip, onlyFields, q }) {
+    async list(
+      boxId,
+      { limit = 50, sort = "_id", asc = true, skip = 0, onlyFields = [], q }
+    ) {
       if (data[boxId] === undefined) {
         return [];
       }
@@ -174,7 +177,10 @@ export const NeDBBackend = (options) => {
     async checkSecurity(boxId, id, key) {
       return true;
     },
-    async list(boxId, { limit, sort, asc, skip, onlyFields, q }) {
+    async list(
+      boxId,
+      { limit = 50, sort = "_id", asc = true, skip = 0, onlyFields = [], q }
+    ) {
       const boxRecord = await getBoxRecord(boxId);
       if (!boxRecord) {
         return [];

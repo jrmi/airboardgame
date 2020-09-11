@@ -1,4 +1,5 @@
 @api_url = http://localhost:3001/store
+@exec_url = http://localhost:3001/execution
 
 ### LIST
 
@@ -97,3 +98,10 @@ DELETE {{api_url}}/boxId/{{elemIdWithKey}}?key=badkey HTTP/1.1
 @elemIdWithKey = {{createElemKey.response.body.$._id}}
 
 DELETE {{api_url}}/boxId/{{elemIdWithKey}}?key=testkey HTTP/1.1
+
+
+# Execution module
+
+### just get test
+
+GET {{exec_url}}/test/?param1=toto HTTP/1.1
