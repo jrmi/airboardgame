@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import { useDropzone } from "react-dropzone";
 import { uploadImage } from "../../utils/api";
+import { useGame } from "../../views/GameSessionView";
 
 const Thumbnail = styled.img`
   height: 50px;
@@ -17,16 +18,17 @@ const RemoveButton = styled.span`
 const ImageField = ({ value, onChange }) => {
   const { t } = useTranslation();
   const [uploading, setUploading] = React.useState(false);
+  const { gameId } = useGame();
 
   const onDrop = React.useCallback(
     async (acceptedFiles) => {
       const file = acceptedFiles[0];
       setUploading(true);
-      const location = await uploadImage(file);
+      const location = await uploadImage(gameId, file);
       onChange(location);
       setUploading(false);
     },
-    [onChange]
+    [gameId, onChange]
   );
 
   const { getRootProps, getInputProps } = useDropzone({ onDrop });

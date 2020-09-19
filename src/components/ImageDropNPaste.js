@@ -9,7 +9,7 @@ import { nanoid } from "nanoid";
 
 import { useRecoilCallback } from "recoil";
 
-const ImageDropNPaste = ({ children }) => {
+const ImageDropNPaste = ({ namespace, children }) => {
   const [uploading, setUploading] = React.useState(false);
   const { pushItem } = useItems();
 
@@ -32,13 +32,13 @@ const ImageDropNPaste = ({ children }) => {
       setUploading(true);
       await Promise.all(
         acceptedFiles.map(async (file) => {
-          const location = await uploadImage(file);
+          const location = await uploadImage(namespace, file);
           await addImageItem(location);
         })
       );
       setUploading(false);
     },
-    [addImageItem]
+    [addImageItem, namespace]
   );
 
   const { getRootProps } = useDropzone({ onDrop });
@@ -51,13 +51,13 @@ const ImageDropNPaste = ({ children }) => {
         const item = items[i];
         if (item.type.indexOf("image") !== -1) {
           const file = item.getAsFile();
-          const location = await uploadImage(file);
+          const location = await uploadImage(namespace, file);
           await addImageItem(location);
         }
       }
       setUploading(false);
     },
-    [addImageItem]
+    [addImageItem, namespace]
   );
 
   React.useEffect(() => {

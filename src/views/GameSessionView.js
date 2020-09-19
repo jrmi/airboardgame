@@ -28,7 +28,7 @@ const newGameData = {
   board: { size: 1000, scale: 1, name: "New game" },
 };
 
-export const GameSessionView = ({ gameId, room, children }) => {
+export const GameSessionView = ({ gameId, children }) => {
   const [c2c, joined, isMaster] = useC2C();
   const { setItemList } = useItems();
   const setAvailableItemList = useSetRecoilState(AvailableItemListAtom);
@@ -131,6 +131,13 @@ export const ConnectedGameSessionView = ({
   const history = useHistory();
   const creationRef = useRef(false);
 
+  React.useEffect(() => {
+    const doIt = async () => {
+      await fetch("/execution/test");
+    };
+    doIt();
+  }, []);
+
   // Create a new game as asked and redirect to it
   React.useEffect(() => {
     const createNewGame = async () => {
@@ -151,7 +158,7 @@ export const ConnectedGameSessionView = ({
     <Provider url={SOCKET_URL} options={SOCKET_OPTIONS}>
       <C2CProvider room={room}>
         <GameSessionView gameId={gameId} room={room}>
-          <BoardView editMode={editMode} />
+          <BoardView namespace={gameId} editMode={editMode} />
         </GameSessionView>
       </C2CProvider>
     </Provider>

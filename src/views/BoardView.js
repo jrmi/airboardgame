@@ -25,7 +25,7 @@ const BoardContainer = styled.div`
   background-color: #202b38;
 `;
 
-export const BoardView = ({ editMode = false }) => {
+export const BoardView = ({ namespace, editMode = false }) => {
   const { currentUser, users } = useUsers();
   const [showLoadGameModal, setShowLoadGameModal] = React.useState(false);
   const [showHelpModal, setShowHelpModal] = React.useState(false);
@@ -64,7 +64,7 @@ export const BoardView = ({ editMode = false }) => {
       <InfoModal show={showInfoModal} setShow={setShowInfoModal} />
       <WelcomeModal show={showWelcomeModal} setShow={setShowWelcomeModal} />
 
-      <ImageDropNPaste>
+      <ImageDropNPaste namespace={namespace}>
         <SubscribeUserEvents />
         <AutoSave />
         <BoardContainer>
