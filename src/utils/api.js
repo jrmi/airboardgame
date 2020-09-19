@@ -4,13 +4,13 @@ import { API_ENDPOINT, GAMELIST_URL, IS_PRODUCTION } from "./settings";
 import testGame from "../games/testGame";
 import perfGame from "../games/perfGame";
 
-const uploadURI = `${API_ENDPOINT}/upload`;
+const uploadURI = `${API_ENDPOINT}/file`;
 const gameURI = `${API_ENDPOINT}/store/game`;
 
-export const uploadImage = async (file) => {
+export const uploadImage = async (namespace, file) => {
   const payload = new FormData();
   payload.append("file", file);
-  const result = await fetch(uploadURI, {
+  const result = await fetch(`${uploadURI}/${namespace}/`, {
     method: "POST",
     body: payload, // this sets the `Content-Type` header to `multipart/form-data`
   });
