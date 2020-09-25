@@ -17,6 +17,12 @@ import AutoSave from "../components/AutoSave";
 import ImageDropNPaste from "../components/ImageDropNPaste";
 import { getComponent } from "../components/boardComponents";
 
+const StyledBoardView = styled.div`
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+`;
+
 const BoardContainer = styled.div`
   width: 100%;
   height: 100%;
@@ -37,7 +43,7 @@ export const BoardView = ({ namespace, editMode = false }) => {
   const [edit, setEdit] = React.useState(editMode);
 
   return (
-    <>
+    <StyledBoardView>
       <NavBar
         setMenuOpen={setMenuOpen}
         setShowHelpModal={setShowHelpModal}
@@ -78,7 +84,7 @@ export const BoardView = ({ namespace, editMode = false }) => {
           />
         </BoardContainer>
       </ImageDropNPaste>
-    </>
+    </StyledBoardView>
   );
 };
 
