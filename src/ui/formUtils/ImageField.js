@@ -43,12 +43,17 @@ const ImageField = ({ value, onChange }) => {
     [onChange]
   );
 
+  const handleInputChange = (e) => {
+    onChange(e.target.value);
+  };
+
   return (
     <div style={{ position: "relative" }}>
       {!value && !uploading && <p>{t("No image")}</p>}
       {uploading && <p>{t("Sending file...")}</p>}
       {value && <Thumbnail src={value} />}
       {value && <RemoveButton onClick={handleRemove}>X</RemoveButton>}
+      <input value={value} onChange={handleInputChange} />
       <div
         {...getRootProps()}
         style={{

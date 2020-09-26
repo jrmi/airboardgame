@@ -11,7 +11,6 @@ import "react-confirm-alert/src/react-confirm-alert.css";
 import styled from "styled-components";
 
 const GameView = styled.ul`
-  /*width: 50%;*/
   margin: 0 auto;
   position: relative;
   & .new-game {
@@ -60,8 +59,8 @@ const Game = styled.li`
 
   & .extra-actions {
     position: absolute;
-    top: 0.5em;
-    right: 0.5em;
+    bottom: 0.5em;
+    left: 0.5em;
     display: none;
   }
 
@@ -109,7 +108,7 @@ const GamesView = () => {
       <Link to={`/game/`} className="button new-game">
         {t("Create new game")}
       </Link>
-      <h1>{t("Game list")}</h1>
+      <h1>AirBoardGame</h1>
       <GameList>
         {gameList.map(({ name, id }) => (
           <Game key={id}>

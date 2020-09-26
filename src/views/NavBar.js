@@ -19,7 +19,7 @@ const NavBar = ({
     <nav style={{ backgroundColor: "#FFFFFF40" }}>
       <span className="brand">
         <Link to="/games/">
-          <span>AirBoard</span>
+          <span>{t("Back to home")}</span>
         </Link>
       </span>
 
