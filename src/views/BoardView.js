@@ -16,7 +16,7 @@ import NavBar from "./NavBar";
 import AutoSave from "../components/AutoSave";
 import ImageDropNPaste from "../components/ImageDropNPaste";
 import { getComponent } from "../components/boardComponents";
-import { useGame } from "../views/GameProvider";
+import { useGame } from "../hooks/useGame";
 
 const StyledBoardView = styled.div`
   width: 100vw;
@@ -32,7 +32,7 @@ const BoardContainer = styled.div`
   background-color: #202b38;
 `;
 
-export const BoardView = ({ namespace, editMode = false }) => {
+export const BoardView = ({ namespace, edit: editMode = false }) => {
   const { currentUser, users } = useUsers();
   const [showLoadGameModal, setShowLoadGameModal] = React.useState(false);
   const [showHelpModal, setShowHelpModal] = React.useState(false);

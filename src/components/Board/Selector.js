@@ -163,6 +163,13 @@ const Selector = ({ children }) => {
     };
   }, [onMouseUp]);
 
+  // Reset selected on unmount
+  React.useEffect(() => {
+    return () => {
+      setSelected([]);
+    };
+  }, [setSelected]);
+
   return (
     <div
       onMouseDown={onMouseDown}

@@ -8,10 +8,12 @@ const useAuth = () => {
     false
   );
   const [userId, setUserId] = useLocalStorage("userId", null);
+  const mountedRef = React.useRef(true);
 
   const login = React.useCallback(
     async (userHash, token) => {
       await loginAPI(userHash, token);
+      if (!mountedRef.current) return;
       setIsAuthenticated(true);
       setUserId(userHash);
     },
@@ -20,9 +22,16 @@ const useAuth = () => {
 
   const logout = React.useCallback(async () => {
     await logoutAPI();
+    if (!mountedRef.current) return;
     setIsAuthenticated(false);
     setUserId(null);
   }, [setIsAuthenticated, setUserId]);
+
+  React.useEffect(() => {
+    return () => {
+      mountedRef.current = false;
+    };
+  }, []);
 
   return {
     isAuthenticated,

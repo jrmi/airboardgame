@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import { useDropzone } from "react-dropzone";
 import { uploadImage } from "../../utils/api";
-import { useGame } from "../../views/GameProvider";
+import { useGame } from "../../hooks/useGame";
 
 const Thumbnail = styled.img`
   height: 50px;

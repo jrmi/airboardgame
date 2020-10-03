@@ -10,7 +10,7 @@ import {
 import { RecoilRoot } from "recoil";
 import { nanoid } from "nanoid";
 
-import GamesView from "./views/GamesView";
+import GameListView from "./views/GameListView";
 import GameView from "./views/GameView";
 import LoginView from "./views/LoginView";
 import AuthView from "./views/AuthView";
@@ -30,18 +30,11 @@ function App() {
               path="/game/:gameId/session/"
               to={`/game/:gameId/session/${nanoid()}`}
             />
-            <Redirect path="/game/" to={`/game/${nanoid()}/new`} />
-            {/*<Route exact path="/game/">
-              <GameSessionView create editMode />
-  </Route>*/}
-            <Route path="/game/:gameId/new">
-              <GameView create editMode />
-            </Route>
-            <Route path="/game/:gameId/">
-              <GameView editMode />
+            <Route path="/game/:gameId?">
+              <GameView edit />
             </Route>
             <Route exact path="/games">
-              <GamesView />
+              <GameListView />
             </Route>
             <Route exact path="/login">
               <LoginView />
