@@ -78,22 +78,22 @@ export const BoardView = ({ namespace, edit: editMode = false }) => {
         setShowModal={setShowLoadGameModal}
       />
 
-      <ImageDropNPaste namespace={namespace}>
-        <SubscribeUserEvents />
-        <AutoSave />
-        {gameLoaded && (
-          <BoardContainer>
-            {!editMode && <UserList />}
+      <SubscribeUserEvents />
+      <AutoSave />
+      {gameLoaded && (
+        <BoardContainer>
+          {!editMode && <UserList />}
+          <ImageDropNPaste namespace={namespace}>
             <Board
               user={currentUser}
               users={users}
               getComponent={getComponent}
             />
-            <SelectedItemsPane edit={edit} />
-            {edit && <GameController />}
-          </BoardContainer>
-        )}
-      </ImageDropNPaste>
+          </ImageDropNPaste>
+          <SelectedItemsPane edit={edit} />
+          {edit && <GameController />}
+        </BoardContainer>
+      )}
     </StyledBoardView>
   );
 };
