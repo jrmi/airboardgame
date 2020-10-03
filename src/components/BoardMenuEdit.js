@@ -1,11 +1,11 @@
-import React, { useContext } from "react";
+import React from "react";
 import { slide as Menu } from "react-burger-menu";
 import { useTranslation } from "react-i18next";
 
 import { useC2C } from "../hooks/useC2C";
 
 import { updateGame, createGame } from "../utils/api";
-import { GameContext } from "../views/GameSessionView";
+import { useGame } from "../views/GameProvider";
 
 import DownloadGameLink from "../components/DownloadGameLink";
 
@@ -67,7 +67,7 @@ const styles = {
 const BoardMenuEdit = ({ isOpen, setMenuOpen, setShowLoadGameModal }) => {
   const { t } = useTranslation();
   const [, , isMaster] = useC2C();
-  const { gameId, getGame } = useContext(GameContext);
+  const { gameId, getGame } = useGame();
 
   const handleStateChange = React.useCallback(
     (state) => {

@@ -6,13 +6,8 @@ import styled from "styled-components";
 import AvailableItems from "./AvailableItems";
 import NewItems from "./NewItems";
 import BoardConfig from "./BoardConfig";
-import useBoardConfig from "./useBoardConfig";
 
-import {
-  BoardConfigAtom,
-  AvailableItemListAtom,
-  AllItemsSelector,
-} from "./Board/";
+import { AvailableItemListAtom, AllItemsSelector } from "./Board/";
 
 const LeftPane = styled.div`
   position: absolute;
@@ -39,7 +34,6 @@ export const GameController = () => {
   const { t } = useTranslation();
 
   const availableItemList = useRecoilValue(AvailableItemListAtom);
-  //const [boardConfig] = useBoardConfig();
 
   const logGame = useRecoilCallback(
     ({ snapshot }) => async () => {
@@ -48,10 +42,6 @@ export const GameController = () => {
     },
     []
   );
-
-  /*if (Object.keys(boardConfig).length === 0) {
-    return null;
-  }*/
 
   return (
     <LeftPane>
