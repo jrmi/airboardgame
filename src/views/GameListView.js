@@ -70,7 +70,7 @@ const Game = styled.li`
   }
 `;
 
-const GamesView = () => {
+const GameListView = () => {
   const { t } = useTranslation();
   const [gameList, setGameList] = React.useState([]);
   const { isAuthenticated, userId } = useAuth();
@@ -137,4 +137,4 @@ const GamesView = () => {
   );
 };
 
-export default GamesView;
+export default GameListView;

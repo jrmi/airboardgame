@@ -9,11 +9,19 @@ const AuthView = () => {
   const { login } = useAuth();
 
   React.useEffect(() => {
+    let isMounted = true;
+
     const verify = async () => {
       await login(userHash, token);
+      if (!isMounted) return;
       setLogged(true);
     };
+
     verify();
+
+    return () => {
+      isMounted = false;
+    };
   }, [login, token, userHash]);
 
   if (logged) {

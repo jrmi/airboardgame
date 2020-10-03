@@ -1,5 +1,5 @@
 import React from "react";
-import useLocalStorage from "react-use-localstorage";
+import useLocalStorage from "../../../hooks/useLocalStorage";
 
 export const useGameStorage = () => {
   const [gameLocalSave, setGameLocalSave] = useLocalStorage("savedGame", {});

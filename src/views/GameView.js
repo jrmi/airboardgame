@@ -1,16 +1,18 @@
-import React, { useRef } from "react";
-import { useParams, useHistory } from "react-router-dom";
+import React from "react";
+import { useParams } from "react-router-dom";
 import { nanoid } from "nanoid";
 import { Provider } from "@scripters/use-socket.io";
 
-import { C2CProvider } from "../hooks/useC2C";
+import { C2CProvider, useC2C } from "../hooks/useC2C";
 import { SOCKET_URL, SOCKET_OPTIONS } from "../utils/settings";
-import { createGame } from "../utils/api";
 
 import BoardView from "../views/BoardView";
 import Waiter from "../ui/Waiter";
 
-import GameProvider from "./GameProvider";
+import { getGame } from "../utils/api";
+
+import GameProvider from "../hooks/useGame";
+import { useTranslation } from "react-i18next";
 
 const newGameData = {
   items: [],
@@ -18,42 +20,90 @@ const newGameData = {
   board: { size: 1000, scale: 1, name: "New game" },
 };
 
-export const ConnectedGameProvider = ({ create = false, editMode = false }) => {
-  const { room = nanoid(), gameId } = useParams();
-  const history = useHistory();
-  const creationRef = useRef(false);
+export const GameView = ({ edit }) => {
+  const [c2c, joined, isMaster] = useC2C();
+  const { gameId } = useParams();
+  const [realGameId, setRealGameId] = React.useState();
+  const [gameLoaded, setGameLoaded] = React.useState(false);
+  const [game, setGame] = React.useState(null);
+  const gameLoadingRef = React.useRef(false);
+  const { t } = useTranslation();
 
-  // 3 cas
-  // Create -> jeux vide
-  // Edit -> on va chercher du serveur
-  // Play master -> on va chercher du serveur
-  // Play slave -> on récupère du master
-
-  // Create a new game as asked and redirect to it
   React.useEffect(() => {
-    const createNewGame = async () => {
-      const { _id: newGameId } = await createGame(newGameData);
-      history.push(`/game/${newGameId}/`);
-    };
-    if (create && !creationRef.current) {
-      createNewGame();
-      creationRef.current = true;
-    }
-  }, [create, history]);
+    let isMounted = true;
 
-  if (create) {
-    return <Waiter message={"Loading…"} />;
+    const loadGameData = async () => {
+      try {
+        let gameData;
+
+        if (!gameId) {
+          // Create new game
+          gameData = JSON.parse(JSON.stringify(newGameData));
+          setRealGameId(nanoid());
+        } else {
+          // Load game from server
+          gameData = await getGame(gameId);
+          setRealGameId(gameId);
+        }
+
+        // Add id if necessary
+        gameData.items = gameData.items.map((item) => ({
+          ...item,
+          id: nanoid(),
+        }));
+
+        if (!isMounted) return;
+
+        setGame(gameData);
+        // Send loadGame event for other user
+        c2c.publish("loadGame", gameData);
+        setGameLoaded(true);
+      } catch (e) {
+        console.log(e);
+      }
+    };
+
+    if (joined && isMaster && !gameLoaded && !gameLoadingRef.current) {
+      gameLoadingRef.current = true;
+      loadGameData();
+    }
+
+    return () => {
+      isMounted = false;
+    };
+  }, [c2c, gameId, gameLoaded, isMaster, joined]);
+
+  // Load game from master if any
+  React.useEffect(() => {
+    if (joined && !isMaster && !gameLoaded && !gameLoadingRef.current) {
+      gameLoadingRef.current = true;
+      c2c.call("getGame").then((receivedGame) => {
+        setGame(receivedGame);
+        setGameLoaded(true);
+      });
+    }
+  }, [c2c, isMaster, joined, gameLoaded]);
+
+  if (!gameLoaded) {
+    return <Waiter message={t("Game loading...")} />;
   }
 
   return (
+    <GameProvider game={game} gameId={realGameId}>
+      <BoardView namespace={gameId} edit={edit} />
+    </GameProvider>
+  );
+};
+
+const ConnectedGameView = ({ edit = false }) => {
+  const { room = nanoid() } = useParams();
+  return (
     <Provider url={SOCKET_URL} options={SOCKET_OPTIONS}>
       <C2CProvider room={room}>
-        <GameProvider gameId={gameId} room={room} create={create}>
-          <BoardView namespace={gameId} editMode={editMode} />
-        </GameProvider>
+        <GameView edit={edit} />
       </C2CProvider>
     </Provider>
   );
 };
 
-export default ConnectedGameProvider;
+export default ConnectedGameView;

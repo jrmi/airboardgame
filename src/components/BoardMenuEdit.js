@@ -4,8 +4,8 @@ import { useTranslation } from "react-i18next";
 
 import { useC2C } from "../hooks/useC2C";
 
-import { updateGame, createGame } from "../utils/api";
-import { useGame } from "../views/GameProvider";
+import { updateGame } from "../utils/api";
+import { useGame } from "../hooks/useGame";
 
 import DownloadGameLink from "../components/DownloadGameLink";
 
@@ -83,11 +83,9 @@ const BoardMenuEdit = ({ isOpen, setMenuOpen, setShowLoadGameModal }) => {
   const handleSave = async () => {
     const currentGame = await getGame();
     if (gameId && gameId.length > 8) {
-      // FIXME
-      console.log(gameId);
       await updateGame(gameId, currentGame);
     } else {
-      await createGame(currentGame);
+      console.log("Game not created. It's not a real one.");
     }
     setMenuOpen(false);
   };
