@@ -12,6 +12,8 @@ import { nanoid } from "nanoid";
 
 import GamesView from "./views/GamesView";
 import GameSessionView from "./views/GameSessionView";
+import LoginView from "./views/LoginView";
+import AuthView from "./views/AuthView";
 
 import Waiter from "./ui/Waiter";
 
@@ -36,6 +38,12 @@ function App() {
             </Route>
             <Route exact path="/games">
               <GamesView />
+            </Route>
+            <Route exact path="/login">
+              <LoginView />
+            </Route>
+            <Route exact path="/login/:userHash/:token">
+              <AuthView />
             </Route>
             <Redirect from="/" to="/games/" />
           </Switch>

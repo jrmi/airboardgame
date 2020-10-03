@@ -73,7 +73,7 @@ const PanZoomRotate = ({ children }) => {
       translateX: innerWidth / 2 - (config.size / 2) * config.scale,
       translateY: innerHeight / 2 - (config.size / 2) * config.scale,
     }));
-  }, [config, setDim]);
+  }, [config.size, config.scale, setDim]);
 
   const onWheel = (e) => {
     // On a trackpad, the pinch gesture sets the ctrlKey to true.

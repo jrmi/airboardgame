@@ -2,8 +2,6 @@ import React from "react";
 import { useRecoilCallback } from "recoil";
 import { useTranslation } from "react-i18next";
 
-import useGameStorage from "./Board/game/useGameStorage";
-
 import {
   AvailableItemListAtom,
   BoardConfigAtom,
@@ -22,8 +20,6 @@ export const DownloadGameLink = () => {
   const [downloadURI, setDownloadURI] = React.useState({});
   const [date, setDate] = React.useState(Date.now());
 
-  const [, setGameLocalSave] = useGameStorage();
-
   const updateSaveLink = useRecoilCallback(
     ({ snapshot }) => async () => {
       const availableItemList = await snapshot.getPromise(
@@ -39,10 +35,9 @@ export const DownloadGameLink = () => {
       if (game.items.length) {
         setDownloadURI(generateDownloadURI(game));
         setDate(Date.now());
-        setGameLocalSave(game);
       }
     },
-    [setGameLocalSave]
+    []
   );
 
   React.useEffect(() => {
@@ -64,9 +59,9 @@ export const DownloadGameLink = () => {
       className="bm-item button"
       style={{ display: "block" }}
       href={downloadURI}
-      download={`save_${date}.json`}
+      download={`airboardgame_${date}.json`}
     >
-      {t("Save game")}
+      {t("Export game")}
     </a>
   );
 };

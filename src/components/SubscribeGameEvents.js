@@ -6,9 +6,10 @@ import useBoardConfig from "./useBoardConfig";
 
 export const SubscribeGameEvents = ({ getGame, setGame }) => {
   const [c2c, joined, isMaster] = useC2C();
+
   const [, setBoardConfig] = useBoardConfig();
 
-  // if first player register callback to allow other use to load game
+  // if first player register callback to allow other user to load game
   React.useEffect(() => {
     const unsub = [];
     if (joined && isMaster) {

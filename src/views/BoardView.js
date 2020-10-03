@@ -16,6 +16,7 @@ import NavBar from "./NavBar";
 import AutoSave from "../components/AutoSave";
 import ImageDropNPaste from "../components/ImageDropNPaste";
 import { getComponent } from "../components/boardComponents";
+import { useGame } from "../views/GameSessionView";
 
 const StyledBoardView = styled.div`
   width: 100vw;
@@ -42,6 +43,8 @@ export const BoardView = ({ namespace, editMode = false }) => {
   const [menuOpen, setMenuOpen] = React.useState(false);
   const [edit, setEdit] = React.useState(editMode);
 
+  const { gameLoaded } = useGame();
+
   return (
     <StyledBoardView>
       <NavBar
@@ -63,26 +66,33 @@ export const BoardView = ({ namespace, editMode = false }) => {
         <BoardMenuEdit
           isOpen={menuOpen}
           setMenuOpen={setMenuOpen}
+          setShowLoadGameModal={setShowLoadGameModal}
           edit={edit}
         />
       )}
       <HelpModal show={showHelpModal} setShow={setShowHelpModal} />
       <InfoModal show={showInfoModal} setShow={setShowInfoModal} />
       <WelcomeModal show={showWelcomeModal} setShow={setShowWelcomeModal} />
+      <LoadGameModal
+        showModal={showLoadGameModal}
+        setShowModal={setShowLoadGameModal}
+      />
 
       <ImageDropNPaste namespace={namespace}>
         <SubscribeUserEvents />
         <AutoSave />
-        <BoardContainer>
-          {!editMode && <UserList />}
-          <Board user={currentUser} users={users} getComponent={getComponent} />
-          <SelectedItemsPane edit={edit} />
-          {edit && <GameController />}
-          <LoadGameModal
-            showModal={showLoadGameModal}
-            setShowModal={setShowLoadGameModal}
-          />
-        </BoardContainer>
+        {gameLoaded && (
+          <BoardContainer>
+            {!editMode && <UserList />}
+            <Board
+              user={currentUser}
+              users={users}
+              getComponent={getComponent}
+            />
+            <SelectedItemsPane edit={edit} />
+            {edit && <GameController />}
+          </BoardContainer>
+        )}
       </ImageDropNPaste>
     </StyledBoardView>
   );
