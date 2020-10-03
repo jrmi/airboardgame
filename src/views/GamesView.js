@@ -2,8 +2,9 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
-import { IS_PRODUCTION } from "../utils/settings";
 import { getGames, deleteGame } from "../utils/api";
+import Account from "../components/Account";
+import useAuth from "../hooks/useAuth";
 
 import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
@@ -72,16 +73,13 @@ const Game = styled.li`
 const GamesView = () => {
   const { t } = useTranslation();
   const [gameList, setGameList] = React.useState([]);
+  const { isAuthenticated, userId } = useAuth();
 
   React.useEffect(() => {
     getGames().then((content) => {
-      if (!IS_PRODUCTION) {
-        setGameList(content);
-        return;
-      }
       setGameList(content);
     });
-  }, [t]);
+  }, [isAuthenticated]);
 
   const handleRemove = (idToRemove) => async () => {
     confirmAlert({
@@ -105,28 +103,33 @@ const GamesView = () => {
 
   return (
     <GameView>
-      <Link to={`/game/`} className="button new-game">
-        {t("Create new game")}
-      </Link>
+      {isAuthenticated && (
+        <Link to={`/game/`} className="button new-game">
+          {t("Create new game")}
+        </Link>
+      )}
+      <Account />
       <h1>AirBoardGame</h1>
       <GameList>
-        {gameList.map(({ name, id }) => (
+        {gameList.map(({ name, id, owner }) => (
           <Game key={id}>
             <h2 className="game-name">{name}</h2>
             <Link to={`/game/${id}/session/`} className="button success play">
               {t("Play")}
             </Link>
-            <div className="extra-actions">
-              <Link to={`/game/${id}/edit`} className="button edit">
-                {t("Edit")}
-              </Link>
-              <button
-                onClick={handleRemove(id)}
-                className="button error delete"
-              >
-                X
-              </button>
-            </div>
+            {userId === owner && (
+              <div className="extra-actions">
+                <Link to={`/game/${id}/edit`} className="button edit">
+                  {t("Edit")}
+                </Link>
+                <button
+                  onClick={handleRemove(id)}
+                  className="button error delete"
+                >
+                  X
+                </button>
+              </div>
+            )}
           </Game>
         ))}
       </GameList>

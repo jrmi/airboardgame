@@ -10,12 +10,15 @@ const BoardConfig = () => {
   const { t } = useTranslation();
   const [boardConfig, setBoardConfig] = useBoardConfig();
 
-  const onSubmitHandler = (data) => {
-    setBoardConfig((prev) => ({
-      ...prev,
-      ...data,
-    }));
-  };
+  const onSubmitHandler = React.useCallback(
+    (data) => {
+      setBoardConfig((prev) => ({
+        ...prev,
+        ...data,
+      }));
+    },
+    [setBoardConfig]
+  );
 
   return (
     <Form

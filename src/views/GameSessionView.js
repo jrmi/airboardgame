@@ -47,7 +47,6 @@ export const GameSessionView = ({ gameId, children }) => {
 
   const setGame = React.useCallback(
     async (game) => {
-      setGameLoaded(true);
       const originalGame = await getGame(gameId);
       if (originalGame) {
         setAvailableItemList(
@@ -60,6 +59,7 @@ export const GameSessionView = ({ gameId, children }) => {
       }
       setItemList(game.items);
       setBoardConfig(game.board, false);
+      setGameLoaded(true);
     },
     [setAvailableItemList, setBoardConfig, setItemList, gameId]
   );
@@ -94,14 +94,25 @@ export const GameSessionView = ({ gameId, children }) => {
         console.log(e);
       }
     };
+
     if (gameId && isMaster && !gameLoaded) {
       gameLoadingRef.current = true;
       loadGameData();
     }
+
     return () => {
       isMounted = false;
     };
   }, [gameId, sendLoadGameEvent, isMaster, gameLoaded, setGame]);
+
+  React.useEffect(() => {
+    return () => {
+      setItemList([]);
+      setBoardConfig({}, false);
+      setAvailableItemList([]);
+      setGameLoaded(false);
+    };
+  }, [setAvailableItemList, setBoardConfig, setItemList]);
 
   // Load game from master if any
   React.useEffect(() => {
@@ -112,7 +123,9 @@ export const GameSessionView = ({ gameId, children }) => {
   }, [c2c, isMaster, joined, gameLoaded, setGame]);
 
   return (
-    <GameContext.Provider value={{ setGame, getGame: getCurrentGame, gameId }}>
+    <GameContext.Provider
+      value={{ setGame, getGame: getCurrentGame, gameId, gameLoaded }}
+    >
       {children}
       <SubscribeGameEvents getGame={getCurrentGame} setGame={setGame} />
     </GameContext.Provider>
@@ -130,13 +143,6 @@ export const ConnectedGameSessionView = ({
   const { room = nanoid(), gameId } = useParams();
   const history = useHistory();
   const creationRef = useRef(false);
-
-  React.useEffect(() => {
-    const doIt = async () => {
-      await fetch("/execution/test");
-    };
-    doIt();
-  }, []);
 
   // Create a new game as asked and redirect to it
   React.useEffect(() => {

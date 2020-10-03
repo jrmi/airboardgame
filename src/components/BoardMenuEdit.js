@@ -7,6 +7,8 @@ import { useC2C } from "../hooks/useC2C";
 import { updateGame, createGame } from "../utils/api";
 import { GameContext } from "../views/GameSessionView";
 
+import DownloadGameLink from "../components/DownloadGameLink";
+
 const styles = {
   bmBurgerButton: {
     display: "none",
@@ -62,7 +64,7 @@ const styles = {
   },
 };
 
-const BoardMenuEdit = ({ isOpen, setMenuOpen }) => {
+const BoardMenuEdit = ({ isOpen, setMenuOpen, setShowLoadGameModal }) => {
   const { t } = useTranslation();
   const [, , isMaster] = useC2C();
   const { gameId, getGame } = useContext(GameContext);
@@ -99,6 +101,16 @@ const BoardMenuEdit = ({ isOpen, setMenuOpen }) => {
     >
       <h3>{t("Save")}</h3>
       <button onClick={handleSave}>Save</button>
+      <button
+        className="button"
+        onClick={() => {
+          setShowLoadGameModal(true);
+          setMenuOpen(false);
+        }}
+      >
+        {t("Import game")}
+      </button>
+      <DownloadGameLink />
     </Menu>
   );
 };
