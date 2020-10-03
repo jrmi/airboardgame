@@ -16,7 +16,7 @@ import NavBar from "./NavBar";
 import AutoSave from "../components/AutoSave";
 import ImageDropNPaste from "../components/ImageDropNPaste";
 import { getComponent } from "../components/boardComponents";
-import { useGame } from "../views/GameSessionView";
+import { useGame } from "../views/GameProvider";
 
 const StyledBoardView = styled.div`
   width: 100vw;
