@@ -12,6 +12,8 @@ jobs:
       REACT_APP_SOCKET_URL: https://public.jeremiez.net/
       REACT_APP_SOCKET_PATH: /wamp/socket.io
       REACT_APP_GAMELIST_URL: https://airgames.netlify.app/gameList.json
+      REACT_APP_API_ENDPOINT: https://public.jeremiez.net/airboardgame
+      CYPRESS_INSTALL_BINARY: 0
     steps:
       - checkout
       - node/with-cache:
@@ -31,6 +33,7 @@ jobs:
       REACT_APP_SOCKET_URL: https://public.jeremiez.net/
       REACT_APP_SOCKET_PATH: /wamp/socket.io
       REACT_APP_GAMELIST_URL: https://airgames.netlify.app/gameList.json
+      REACT_APP_API_ENDPOINT: https://public.jeremiez.net/airboardgame
     steps:
       - checkout
       - node/with-cache:
@@ -46,7 +49,7 @@ workflows:
   e2etest:
     jobs:
       - cypress/run:
-          start: SKIP_PREFLIGHT_CHECK=true REACT_APP_SOCKET_URL=https://public.jeremiez.net/ REACT_APP_SOCKET_PATH=/wamp/socket.io CI=true npm start
+          start: SKIP_PREFLIGHT_CHECK=true REACT_APP_SOCKET_URL=https://public.jeremiez.net/ REACT_APP_SOCKET_PATH=/wamp/socket.io REACT_APP_API_ENDPOINT=https://public.jeremiez.net/airboardgame/ CI=true npm start
           wait-on: "http-get://localhost:3000"
           no-workspace: true
           store_artifacts: true
