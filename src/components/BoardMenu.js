@@ -78,26 +78,28 @@ const BoardMenu = ({ setShowLoadGameModal, isOpen, setMenuOpen }) => {
   }
 
   return (
-    <Menu
-      isOpen={isOpen}
-      styles={styles}
-      onStateChange={handleStateChange}
-      disableAutoFocus
-    >
-      <h3>{t("Save")}</h3>
-      <LoadLastGameLink />
-      <button
-        className="button"
-        onClick={() => {
-          setShowLoadGameModal(true);
-          setMenuOpen(false);
-        }}
+    <>
+      <Menu
+        isOpen={isOpen}
+        styles={styles}
+        onStateChange={handleStateChange}
+        disableAutoFocus
       >
-        {t("Load game")}
-      </button>
+        <h3>{t("Save")}</h3>
+        <LoadLastGameLink />
+        <button
+          className="button"
+          onClick={() => {
+            setShowLoadGameModal(true);
+            setMenuOpen(false);
+          }}
+        >
+          {t("Load game")}
+        </button>
 
-      <DownloadGameLink />
-    </Menu>
+        <DownloadGameLink />
+      </Menu>
+    </>
   );
 };
 
