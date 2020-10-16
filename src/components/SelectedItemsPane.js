@@ -4,7 +4,13 @@ import styled from "styled-components";
 import { useRecoilValue } from "recoil";
 import { useItems } from "./Board/Items";
 import { useItemActions } from "./boardComponents/useItemActions";
-import { selectedItemsAtom } from "../components/Board/";
+import {
+  selectedItemsAtom,
+  PanZoomRotateAtom,
+  ItemMapAtom,
+} from "../components/Board/";
+
+import debounce from "lodash.debounce";
 
 import { insideClass } from "../utils";
 
@@ -25,16 +31,17 @@ const SelectedPane = styled.div.attrs(() => ({ className: "card" }))`
   overflow-y: scroll;
 `;
 
-const ActionPane = styled.div`
-  position: fixed;
-  left: 0em;
-  top: 5px;
+const ActionPane = styled.div.attrs(({ top, left }) => ({
+  style: {
+    top: `${top - 50}px`,
+    left: `${left}px`,
+  },
+}))`
+  position: absolute;
   display: flex;
   background-color: transparent;
   justify-content: center;
-  width: 50%;
-  z-index: 10001;
-  margin: 0 25%;
+  //z-index: 1;
   & button{
     margin 0 6px;
     padding: 0.4em;
@@ -48,14 +55,117 @@ const CardContent = styled.div.attrs(() => ({ className: "content" }))`
   padding: 0.5em;
 `;
 
+const BoundingBoxZone = styled.div.attrs(({ top, left, height, width }) => ({
+  style: {
+    transform: `translate(${left}px, ${top}px)`,
+    height: `${height}px`,
+    width: `${width}px`,
+  },
+}))`
+  top: 0;
+  left: 0;
+  z-index: 10;
+  position: fixed;
+  background-color: hsla(0, 40%, 50%, 0%);
+  border: 1px dashed hsl(20, 55%, 40%);
+  pointer-events: none;
+`;
+
 export const SelectedItems = ({ edit }) => {
   const { updateItem } = useItems();
 
   const { availableActions, actionMap } = useItemActions();
+  const [showAction, setShowAction] = React.useState(false);
 
   const { t } = useTranslation();
 
   const selectedItems = useRecoilValue(selectedItemsAtom);
+  const itemMap = useRecoilValue(ItemMapAtom);
+  const panZoomRotate = useRecoilValue(PanZoomRotateAtom);
+  const [boundingBoxLast, setBoundingBoxLast] = React.useState(null);
+
+  // Show/Hide action after delay to avoid flip/flop
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const showActionDelay = React.useCallback(
+    debounce((show) => {
+      setShowAction(show);
+    }, 400),
+    [setShowAction]
+  );
+
+  // Update bounding box
+  const updateBox = React.useCallback(() => {
+    let boundingBox = null;
+
+    selectedItems.forEach((itemId) => {
+      const elem = document.getElementById(itemId);
+
+      const {
+        right: x2,
+        bottom: y2,
+        top: y,
+        left: x,
+      } = elem.getBoundingClientRect();
+
+      if (!boundingBox) {
+        boundingBox = {};
+        boundingBox.x = x;
+        boundingBox.y = y;
+        boundingBox.x2 = x2;
+        boundingBox.y2 = y2;
+      } else {
+        if (x < boundingBox.x) {
+          boundingBox.x = x;
+        }
+        if (y < boundingBox.y) {
+          boundingBox.y = y;
+        }
+        if (x2 > boundingBox.x2) {
+          boundingBox.x2 = x2;
+        }
+        if (y2 > boundingBox.y2) {
+          boundingBox.y2 = y2;
+        }
+      }
+    });
+
+    setBoundingBoxLast(
+      boundingBox
+        ? {
+            top: boundingBox.y,
+            left: boundingBox.x,
+            height: boundingBox.y2 - boundingBox.y,
+            width: boundingBox.x2 - boundingBox.x,
+          }
+        : null
+    );
+  }, [selectedItems]);
+
+  // Debounced version of update box
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const updateBoxDelay = React.useCallback(
+    debounce(() => {
+      updateBox();
+    }, 300),
+    [updateBox]
+  );
+
+  React.useEffect(() => {
+    // Update selected elemnts bounding box
+    updateBox();
+    updateBoxDelay(); // Delay to update after animation like tap.
+  }, [selectedItems, itemMap, panZoomRotate, updateBox, updateBoxDelay]);
+
+  React.useEffect(() => {
+    // Show on selection
+    showActionDelay(true);
+  }, [selectedItems, showActionDelay]);
+
+  React.useEffect(() => {
+    // Hide when moving something
+    setShowAction(false);
+    showActionDelay(true);
+  }, [itemMap, panZoomRotate, showActionDelay]);
 
   React.useEffect(() => {
     const onKeyUp = (e) => {
@@ -157,29 +267,32 @@ export const SelectedItems = ({ edit }) => {
           ))}
         </SelectedPane>
       )}
-      <ActionPane>
-        <h3>#{selectedItems.length}</h3>
-        {availableActions.map((action) => {
-          const {
-            label,
-            action: handler,
-            multiple,
-            edit: onlyEdit,
-            icon,
-          } = actionMap[action];
-          if (multiple && selectedItems.length < 2) return null;
-          if (onlyEdit && !edit) return null;
-          return (
-            <button key={action} onClick={handler} title={label}>
-              <img
-                src={icon}
-                style={{ width: "25px", height: "24px" }}
-                alt={label}
-              />
-            </button>
-          );
-        })}
-      </ActionPane>
+      {showAction && (
+        <ActionPane {...boundingBoxLast}>
+          <h3>#{selectedItems.length}</h3>
+          {availableActions.map((action) => {
+            const {
+              label,
+              action: handler,
+              multiple,
+              edit: onlyEdit,
+              icon,
+            } = actionMap[action];
+            if (multiple && selectedItems.length < 2) return null;
+            if (onlyEdit && !edit) return null;
+            return (
+              <button key={action} onClick={handler} title={label}>
+                <img
+                  src={icon}
+                  style={{ width: "25px", height: "24px" }}
+                  alt={label}
+                />
+              </button>
+            );
+          })}
+        </ActionPane>
+      )}
+      {boundingBoxLast && <BoundingBoxZone {...boundingBoxLast} />}
     </>
   );
 };

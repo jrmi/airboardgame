@@ -16,6 +16,19 @@ export const selectedItemsAtom = atom({
   default: [],
 });
 
+const SelectorZone = styled.div.attrs(({ top, left, height, width }) => ({
+  style: {
+    transform: `translate(${left}px, ${top}px)`,
+    height: `${height}px`,
+    width: `${width}px`,
+  },
+}))`
+  z-index: 100;
+  position: absolute;
+  background-color: hsla(0, 40%, 50%, 10%);
+  border: 2px solid hsl(0, 55%, 40%);
+`;
+
 const findSelected = (itemMap, rect) => {
   return Array.from(document.getElementsByClassName("item"))
     .filter((elem) => {
@@ -32,19 +45,6 @@ const findSelected = (itemMap, rect) => {
     })
     .map((elem) => elem.id);
 };
-
-const SelectorZone = styled.div.attrs(({ top, left, height, width }) => ({
-  style: {
-    transform: `translate(${left}px, ${top}px)`,
-    height: `${height}px`,
-    width: `${width}px`,
-  },
-}))`
-  z-index: 100;
-  position: absolute;
-  background-color: hsla(0, 40%, 50%, 10%);
-  border: 2px solid hsl(0, 55%, 40%);
-`;
 
 const Selector = ({ children }) => {
   const setSelected = useSetRecoilState(selectedItemsAtom);
@@ -180,10 +180,7 @@ const Selector = ({ children }) => {
     >
       {selector.moving && (
         <SelectorZone
-          top={selector.top}
-          left={selector.left}
-          height={selector.height}
-          width={selector.width}
+          {...selector}
           onMouseEnter={(e) => e.stopPropagation()}
           onMouseOut={(e) => e.stopPropagation()}
         />
