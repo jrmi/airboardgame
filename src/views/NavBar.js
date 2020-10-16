@@ -11,7 +11,13 @@ import HelpModal from "../views/HelpModal";
 import InfoModal from "../views/InfoModal";
 import LoadSaveModal from "../views/LoadSaveModal";
 
-const StyledNavBar = styled.div.attrs(() => ({ className: "nav" }))``;
+const StyledNavBar = styled.div.attrs(() => ({ className: "nav" }))`
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background-color: var(--color-grey);
+  z-index: 10;
+`;
 
 const NavBar = ({}) => {
   const { t } = useTranslation();
