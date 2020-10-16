@@ -2,8 +2,12 @@ import "./wdyr";
 
 import React from "react";
 import ReactDOM from "react-dom";
+
+//import "chota/dist/chota.css";
 import "./index.css";
-import "./i18n"; // Keep this import
+
+import "./i18n"; // load translation system
+
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 

@@ -5,45 +5,61 @@ import { useTranslation } from "react-i18next";
 
 import { useC2C } from "../hooks/useC2C";
 
-const NavBar = ({
-  setMenuOpen,
-  setShowHelpModal,
-  setShowInfoModal,
-  setEditMode,
-  edit,
-}) => {
+import styled from "styled-components";
+
+import HelpModal from "../views/HelpModal";
+import InfoModal from "../views/InfoModal";
+import LoadSaveModal from "../views/LoadSaveModal";
+
+const StyledNavBar = styled.div.attrs(() => ({ className: "nav" }))``;
+
+const NavBar = ({}) => {
   const { t } = useTranslation();
 
-  const [, , isMaster] = useC2C();
+  const [showLoadGameModal, setShowLoadGameModal] = React.useState(false);
+  const [showHelpModal, setShowHelpModal] = React.useState(false);
+  const [showInfoModal, setShowInfoModal] = React.useState(false);
+
   return (
-    <nav style={{ backgroundColor: "#FFFFFF40" }}>
-      <span className="brand">
-        <Link to="/games/">
-          <span>{t("Back to home")}</span>
-        </Link>
-      </span>
+    <>
+      <StyledNavBar>
+        <div className="nav-left">
+          <Link to="/games/" className="brand">
+            <span>{t("Home")}</span>
+          </Link>
+          <a
+            className="button outline"
+            onClick={() => setShowLoadGameModal((prev) => !prev)}
+          >
+            {t("Load/Save")}
+          </a>
+        </div>
 
-      {isMaster && (
-        <button
-          className="pseudo button"
-          onClick={() => setMenuOpen((prev) => !prev)}
-        >
-          {t("Menu")}
-        </button>
-      )}
+        <div className="nav-center">
+          <h3>Air Board Game</h3>
+          <a
+            className="button outline"
+            onClick={() => setShowInfoModal((prev) => !prev)}
+          >
+            {t("Info")}
+          </a>
+        </div>
 
-      <div className="menu">
-        <button className="pseudo" onClick={() => setEditMode((prev) => !prev)}>
-          {!edit ? t("Edit mode") : t("Play")}
-        </button>
-        <button onClick={() => setShowInfoModal((prev) => !prev)}>
-          {t("Info")}
-        </button>
-        <button onClick={() => setShowHelpModal((prev) => !prev)}>
-          {t("Help")}
-        </button>
-      </div>
-    </nav>
+        <div className="nav-right">
+          <a
+            className="button outline"
+            onClick={() => setShowHelpModal((prev) => !prev)}
+          >
+            {t("Help")}
+          </a>
+        </div>
+
+        <div className="menu"></div>
+      </StyledNavBar>
+      <HelpModal show={showHelpModal} setShow={setShowHelpModal} />
+      <InfoModal show={showInfoModal} setShow={setShowInfoModal} />
+      <LoadSaveModal show={showLoadGameModal} setShow={setShowLoadGameModal} />
+    </>
   );
 };
 
