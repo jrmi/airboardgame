@@ -64,7 +64,7 @@ const BoundingBoxZone = styled.div.attrs(({ top, left, height, width }) => ({
 }))`
   top: 0;
   left: 0;
-  z-index: 10;
+  z-index: 6;
   position: fixed;
   background-color: hsla(0, 40%, 50%, 0%);
   border: 1px dashed hsl(20, 55%, 40%);

@@ -4,7 +4,7 @@ import styled from "styled-components";
 
 const StyledModal = styled.div`
   position: fixed;
-  z-index: 1;
+  z-index: 20;
   left: 0;
   top: 0;
   width: 100%;
