@@ -28,7 +28,6 @@ const StyledModal = styled.div`
 `;
 
 export const Modal = ({ setShow, show, children, footer, title }) => {
-  console.log(show);
   if (!show) {
     return null;
   }
