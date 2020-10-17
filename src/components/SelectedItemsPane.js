@@ -21,31 +21,47 @@ import "react-confirm-alert/src/react-confirm-alert.css";
 
 import { useTranslation } from "react-i18next";
 
-const SelectedPane = styled.div.attrs(() => ({ className: "card" }))`
+const SelectedPane = styled.div`
   position: absolute;
-  right: 0.5em;
+  left: 0.5em;
   bottom: 0.5em;
-  background-color: #ffffffe0;
-  padding: 0.5em;
-  max-height: 66%;
+  top: 4.5em;
+  background-color: transparent;
   overflow-y: scroll;
+  transform: scaleX(-1);
+  & > div {
+    transform: scaleX(-1);
+  }
 `;
 
 const ActionPane = styled.div.attrs(({ top, left }) => ({
   style: {
-    top: `${top - 50}px`,
+    top: `${top - 55}px`,
     left: `${left}px`,
   },
 }))`
   position: absolute;
   display: flex;
-  background-color: transparent;
+  background-color: #333333ff;
   justify-content: center;
-  //z-index: 1;
+  border-radius: 4px;
+  padding: 0.5em;
+  box-shadow: rgba(0, 0, 0, 0.15) 0px 3px 3px 0px;
   & button{
     margin 0 6px;
     padding: 0.4em;
     height: 40px
+  }
+  & .count{
+    color: var(--color-secondary);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    line-height: 0.8em;
+  }
+  & .number{
+    font-size: 1.5em;
+    line-height: 1em;
   }
 `;
 
@@ -53,6 +69,7 @@ const CardContent = styled.div.attrs(() => ({ className: "content" }))`
   display: flex;
   flex-direction: column;
   padding: 0.5em;
+  background-color: var(--bg-secondary-color);
 `;
 
 const BoundingBoxZone = styled.div.attrs(({ top, left, height, width }) => ({
@@ -71,11 +88,12 @@ const BoundingBoxZone = styled.div.attrs(({ top, left, height, width }) => ({
   pointer-events: none;
 `;
 
-export const SelectedItems = ({ edit }) => {
+export const SelectedItems = () => {
   const { updateItem } = useItems();
 
   const { availableActions, actionMap } = useItemActions();
   const [showAction, setShowAction] = React.useState(false);
+  const [showEdit, setShowEdit] = React.useState(false);
 
   const { t } = useTranslation();
 
@@ -99,6 +117,8 @@ export const SelectedItems = ({ edit }) => {
 
     selectedItems.forEach((itemId) => {
       const elem = document.getElementById(itemId);
+
+      if (!elem) return;
 
       const {
         right: x2,
@@ -159,6 +179,7 @@ export const SelectedItems = ({ edit }) => {
   React.useEffect(() => {
     // Show on selection
     showActionDelay(true);
+    setShowEdit(false);
   }, [selectedItems, showActionDelay]);
 
   React.useEffect(() => {
@@ -173,7 +194,7 @@ export const SelectedItems = ({ edit }) => {
       if (["INPUT", "TEXTAREA"].includes(e.target.tagName)) return;
       Object.values(actionMap).forEach(
         ({ shortcut, action, edit: whileEdit }) => {
-          if (e.key === shortcut && edit === !!whileEdit) {
+          if (e.key === shortcut && showEdit === !!whileEdit) {
             action();
           }
         }
@@ -183,7 +204,7 @@ export const SelectedItems = ({ edit }) => {
     return () => {
       document.removeEventListener("keyup", onKeyUp);
     };
-  }, [actionMap, edit]);
+  }, [actionMap, showEdit]);
 
   const onSubmitHandler = React.useCallback(
     (formValues) => {
@@ -246,7 +267,7 @@ export const SelectedItems = ({ edit }) => {
     });
   };*/
 
-  const showEditPane = selectedItems.length === 1 && edit;
+  const showEditPane = selectedItems.length === 1 && showEdit;
 
   return (
     <>
@@ -269,7 +290,12 @@ export const SelectedItems = ({ edit }) => {
       )}
       {showAction && (
         <ActionPane {...boundingBoxLast}>
-          <h3>#{selectedItems.length}</h3>
+          {selectedItems.length > 1 && (
+            <div className="count">
+              <span className="number">{selectedItems.length}</span>
+              <span>Items</span>
+            </div>
+          )}
           {availableActions.map((action) => {
             const {
               label,
@@ -279,9 +305,14 @@ export const SelectedItems = ({ edit }) => {
               icon,
             } = actionMap[action];
             if (multiple && selectedItems.length < 2) return null;
-            if (onlyEdit && !edit) return null;
+            if (onlyEdit && !showEdit) return null;
             return (
-              <button key={action} onClick={handler} title={label}>
+              <button
+                className="icon-only"
+                key={action}
+                onClick={handler}
+                title={label}
+              >
                 <img
                   src={icon}
                   style={{ width: "25px", height: "24px" }}
@@ -290,6 +321,17 @@ export const SelectedItems = ({ edit }) => {
               </button>
             );
           })}
+
+          <button
+            className="icon-only"
+            onClick={() => setShowEdit((prev) => !prev)}
+            title="Edit"
+          >
+            <img
+              src="https://icongr.am/feather/edit.svg?size=25&color=000000"
+              alt="Edit"
+            />
+          </button>
         </ActionPane>
       )}
       {boundingBoxLast && <BoundingBoxZone {...boundingBoxLast} />}

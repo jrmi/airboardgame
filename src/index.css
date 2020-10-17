@@ -5,11 +5,12 @@ body {
 
 :root {
   --bg-color: #2a2a2aff;
-  --bg-secondary-color: #00a698ff;
+  --bg-secondary-color: #404040ff;
   --font-color: #f9fbfaff;
   --color-grey: #404040ff;
   --color-darkGrey: #777;
   --color-primary: #db5034ff;
+  --color-secondary: #00a698ff;
   --color-lightGrey: #9a9a9aff;
   --color-error: #d43939;
   --color-success: #28bd14;
