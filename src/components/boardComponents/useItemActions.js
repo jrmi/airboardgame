@@ -319,7 +319,7 @@ export const useItemActions = () => {
       remove: {
         action: removeSelectedItems,
         label: t("Remove all"),
-        shortcut: "r",
+        shortcut: "Delete",
         edit: true,
         disableDblclick: true,
         icon: deleteIcon,

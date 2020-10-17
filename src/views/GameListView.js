@@ -35,7 +35,7 @@ const GameList = styled.ul`
 
 const Game = styled.li`
   width: 100%;
-  background-color: hsl(210, 26%, 19%);
+  background-color: var(--bg-secondary-color);
   color: hsl(210, 14%, 75%);
   position: relative;
   min-width: 300px;

@@ -12,6 +12,7 @@ const StyledModal = styled.div`
   overflow: auto;
   background-color: rgb(0, 0, 0);
   background-color: rgba(0, 0, 0, 0.4);
+  border-radius: 5px;
   .modal-content {
     max-width: 50%;
     position: relative;
@@ -19,6 +20,8 @@ const StyledModal = styled.div`
     padding: 8px 8px 8px 8px;
     border-radius: 2px;
     background: var(--bg-secondary-color);
+    box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px,
+      rgba(0, 0, 0, 0.23) 0px 6px 6px;
   }
   .close {
     position: absolute;

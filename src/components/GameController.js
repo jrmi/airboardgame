@@ -14,7 +14,7 @@ const LeftPane = styled.div`
   left: 0.5em;
   top: 4em;
   bottom: 0.5em;
-  background-color: #ffffff10;
+  background-color: var(--bg-secondary-color);
   width: 20%;
   padding: 0.5em;
   text-align: center;
