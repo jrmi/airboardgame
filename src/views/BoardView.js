@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { SHOW_WELCOME } from "../utils/settings";
 import { Board } from "../components/Board";
 import SelectedItemsPane from "../components/SelectedItemsPane";
-import { useUsers, SubscribeUserEvents, UserList } from "../components/users";
+import { useUsers, SubscribeUserEvents } from "../components/users";
 
 import WelcomeModal from "./WelcomeModal";
 import NavBar from "./NavBar";

@@ -12,7 +12,6 @@ const StyledModal = styled.div.attrs(() => ({ className: "overlay" }))`
   width: 100%;
   height: 100%;
   overflow: auto;
-  background-color: rgb(0, 0, 0);
   background-color: rgba(0, 0, 0, 0.4);
   border-radius: 5px;
   .modal-content {
@@ -29,6 +28,9 @@ const StyledModal = styled.div.attrs(() => ({ className: "overlay" }))`
     position: absolute;
     top: 0.5em;
     right: 0.5em;
+  }
+  footer {
+    margin-top: 1em;
   }
 `;
 
@@ -48,12 +50,12 @@ export const Modal = ({ setShow, show, children, footer, title }) => {
           <header>
             <h3 className="title">{title}</h3>
             <button
+              className="button clear icon-only close"
               onClick={() => {
                 setShow(false);
               }}
-              className="close"
             >
-              &times;
+              <img src="https://icongr.am/feather/x.svg?size=30&color=ffffff" />
             </button>
           </header>
           <section className="content">{children}</section>
