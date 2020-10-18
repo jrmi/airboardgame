@@ -2,7 +2,9 @@ import React from "react";
 
 import styled from "styled-components";
 
-const StyledModal = styled.div`
+import { hasClass } from "../utils";
+
+const StyledModal = styled.div.attrs(() => ({ className: "overlay" }))`
   position: fixed;
   z-index: 20;
   left: 0;
@@ -37,17 +39,11 @@ export const Modal = ({ setShow, show, children, footer, title }) => {
 
   return (
     <StyledModal
-      onClick={() => {
-        setShow(false);
+      onClick={(e) => {
+        if (hasClass(e.target, "overlay")) setShow(false);
       }}
     >
       <div className="modal-content">
-        <div
-          className="overlay"
-          onClick={() => {
-            setShow(false);
-          }}
-        ></div>
         <article>
           <header>
             <h3 className="title">{title}</h3>

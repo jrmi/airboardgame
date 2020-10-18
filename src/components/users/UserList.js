@@ -5,19 +5,13 @@ import useUsers from "./useUsers";
 import styled from "styled-components";
 
 const UserList = styled.ul.attrs(() => ({ className: "uk-card" }))`
-  position: absolute;
-  right: 0;
-  top: 4em;
-  background-color: #ffffff40;
-  padding: 0.2em;
   list-style: none;
   margin: 0;
-  z-index: 1;
+  display: flex;
 `;
 
 const UserListItem = styled.li`
   display: flex;
-  position: relative;
   align-items: center;
 `;
 

@@ -1,7 +1,9 @@
 import React from "react";
-import { BlockPicker } from "react-color";
+import { SketchPicker } from "react-color";
 
 import styled from "styled-components";
+
+import Modal from "../../ui/Modal";
 
 const UserColor = styled.div`
   background-color: ${({ color }) => color};
@@ -9,65 +11,67 @@ const UserColor = styled.div`
   height: 30px;
   margin: 2px;
   margin-right: 0.5em;
+  border-radius: 100%;
   text-align: center;
   line-height: 30px;
-  cursor: ${({ editable }) => (editable ? "pointer" : "auto")};
+  cursor: ${({ editable }) => (editable ? "pointer" : "default")};
 `;
 
-const ColorPickerWrapper = styled.div`
-  position: absolute;
-  top: 45px;
-  left: -68px;
-  z-index: 1000;
-`;
-
-const StyledInputName = styled.input.attrs(() => ({ className: "uk-input" }))`
+const StyledInputName = styled.input`
   width: 7em;
 `;
 
-const StyledName = styled.span`
-  padding-left: 0.5em;
-`;
+const emptyStyle = {};
+const emptyColors = [];
 
 const UserConfig = ({ user, setUser, editable, index }) => {
   const [name, setName] = React.useState(user.name);
-  const [showPicker, setShowPicker] = React.useState(false);
+  const [color, setColor] = React.useState(user.color);
+  const [showDetails, setShowDetails] = React.useState(false);
 
-  const handleChange = (e) => {
-    setName(e.target.value);
-    setUser({ ...user, name: e.target.value });
-  };
+  const handleChange = React.useCallback(
+    (e) => {
+      setName(e.target.value);
+      setUser((prevUser) => ({ ...prevUser, name: e.target.value }));
+    },
+    [setUser]
+  );
 
-  const handleChangecolor = (newColor) => {
-    setUser({ ...user, color: newColor.hex });
-    setShowPicker(false);
-  };
+  const handleChangecolor = React.useCallback((newColor) => {
+    setColor(newColor.hex);
+  }, []);
 
-  const showColorPicker = () => {
-    if (editable) {
-      setShowPicker((prev) => !prev);
-    }
-  };
+  const handleChangecolorComplete = React.useCallback(
+    (newColor) => {
+      setColor(newColor.hex);
+      setUser((prevUser) => ({ ...prevUser, color: newColor.hex }));
+    },
+    [setUser]
+  );
 
   return (
     <>
       <UserColor
         color={user.color}
         editable={editable}
-        onClick={showColorPicker}
+        onClick={() => setShowDetails(true)}
+        title={user.name}
       >
-        {index}
+        {user.name ? user.name[0] : index}
+        {editable ? "*" : ""}
       </UserColor>
-      {showPicker && (
-        <ColorPickerWrapper>
-          <BlockPicker
-            color={user.color}
-            onChangeComplete={handleChangecolor}
-          />
-        </ColorPickerWrapper>
-      )}
-      {editable && <StyledInputName value={name} onChange={handleChange} />}
-      {!editable && <StyledName>{user.name}</StyledName>}
+      <Modal title={"User details"} show={showDetails} setShow={setShowDetails}>
+        <StyledInputName value={name} onChange={handleChange} />
+        <SketchPicker
+          disableAlpha
+          presetColors={emptyColors}
+          color={color}
+          onChange={handleChangecolor}
+          onChangeComplete={handleChangecolorComplete}
+          styles={emptyStyle}
+          width={160}
+        />
+      </Modal>
     </>
   );
 };
