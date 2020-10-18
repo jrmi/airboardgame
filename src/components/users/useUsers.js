@@ -7,9 +7,16 @@ const useUsers = () => {
   const users = useRecoilValue(usersAtom);
 
   const setCurrentUser = React.useCallback(
-    (newUser) => {
-      setCurrentUserState((prevUser) => ({ ...newUser, id: prevUser.id }));
-      persistUser(newUser);
+    (callbackOrUser) => {
+      let callback = callbackOrUser;
+      if (typeof callbackOrUser === "object") {
+        callback = () => callbackOrUser;
+      }
+      setCurrentUserState((prevUser) => {
+        const newUser = { ...callback(prevUser), id: prevUser.id };
+        persistUser(newUser);
+        return newUser;
+      });
     },
     [setCurrentUserState]
   );

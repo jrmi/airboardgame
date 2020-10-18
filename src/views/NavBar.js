@@ -1,13 +1,12 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-import { useTranslation } from "react-i18next";
-
 import styled from "styled-components";
 
 import HelpModal from "../views/HelpModal";
 import InfoModal from "../views/InfoModal";
 import LoadSaveModal from "../views/LoadSaveModal";
+import { UserList } from "../components/users";
 
 import logo from "../images/logo.png";
 
@@ -20,9 +19,7 @@ const StyledNavBar = styled.div.attrs(() => ({ className: "nav" }))`
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 `;
 
-const NavBar = () => {
-  const { t } = useTranslation();
-
+const NavBar = ({ editMode }) => {
   const [showLoadGameModal, setShowLoadGameModal] = React.useState(false);
   const [showHelpModal, setShowHelpModal] = React.useState(false);
   const [showInfoModal, setShowInfoModal] = React.useState(false);
@@ -53,6 +50,7 @@ const NavBar = () => {
         </div>
 
         <div className="nav-right">
+          {!editMode && <UserList />}
           <a
             className="button clear icon-only"
             onClick={() => setShowHelpModal((prev) => !prev)}

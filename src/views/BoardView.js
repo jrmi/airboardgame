@@ -33,19 +33,17 @@ export const BoardView = ({ namespace, edit: editMode = false }) => {
   const [showWelcomeModal, setShowWelcomeModal] = React.useState(
     SHOW_WELCOME && !editMode
   );
-  const [edit, setEdit] = React.useState(editMode);
 
   const { gameLoaded } = useGame();
 
   return (
     <StyledBoardView>
-      <NavBar setEditMode={setEdit} edit={edit} />
+      <NavBar editMode={editMode} />
       <WelcomeModal show={showWelcomeModal} setShow={setShowWelcomeModal} />
       <SubscribeUserEvents />
       <AutoSave />
       {gameLoaded && (
         <BoardContainer>
-          {!editMode && <UserList />}
           <ImageDropNPaste namespace={namespace}>
             <Board
               user={currentUser}
@@ -53,7 +51,7 @@ export const BoardView = ({ namespace, edit: editMode = false }) => {
               getComponent={getComponent}
             />
           </ImageDropNPaste>
-          <SelectedItemsPane edit={edit} />
+          <SelectedItemsPane />
         </BoardContainer>
       )}
       <AddItemButton />
