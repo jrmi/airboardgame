@@ -56,8 +56,7 @@ export const DownloadGameLink = () => {
 
   return (
     <a
-      className="bm-item button"
-      style={{ display: "block" }}
+      className="button primary"
       href={downloadURI}
       download={`airboardgame_${date}.json`}
     >

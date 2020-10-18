@@ -32,7 +32,7 @@ const LoadGame = ({ onLoad = () => {} }) => {
   return (
     <div
       {...getRootProps()}
-      style={{ border: "3px dashed black", margin: "0.5em", padding: "0.5em" }}
+      style={{ border: "2px dashed black", margin: "0.5em", padding: "0.5em" }}
     >
       <input {...getInputProps()} />
       <p>{t("Dragn drop file here")}</p>

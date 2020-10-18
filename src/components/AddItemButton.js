@@ -19,7 +19,7 @@ const StyledButton = styled.div.attrs(() => ({
 const AddItemPane = styled.div`
   position: absolute;
   right: 0.5em;
-  top: 7em;
+  top: 4.5em;
   bottom: 4em;
   background-color: var(--bg-secondary-color);
   width: 20%;
@@ -50,21 +50,30 @@ const AddItemButton = () => {
   return (
     <>
       <StyledButton onClick={() => setShowAddPanel((prev) => !prev)}>
-        <img src="https://icongr.am/feather/plus-circle.svg?size=46&color=db5034" />
+        <img
+          src="https://icongr.am/feather/plus-circle.svg?size=46&color=db5034"
+          alt="Add item"
+        />
       </StyledButton>
       {showAddPanel && (
         <AddItemPane>
           <nav className="tabs">
-            <a
-              onClick={() => setTab("standard")}
-              className={tab === "standard" ? "active" : ""}
-            >
-              Standard
-            </a>
+            {
+              // eslint-disable-next-line
+              <a
+                onClick={() => setTab("standard")}
+                className={tab === "standard" ? "active" : ""}
+                href="#"
+              >
+                Standard
+              </a>
+            }
             {availableItemList && availableItemList.length > 0 && (
+              // eslint-disable-next-line
               <a
                 onClick={() => setTab("other")}
                 className={tab === "other" ? "active" : ""}
+                href="#"
               >
                 Other
               </a>

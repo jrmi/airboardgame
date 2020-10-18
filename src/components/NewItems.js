@@ -27,7 +27,7 @@ const NewItem = memo(({ type }) => {
   return (
     <button
       className="button"
-      style={{ display: "block", width: "100%" }}
+      //style={{ display: "block", width: "100%" }}
       onClick={addItem}
     >
       {itemMap[type].label}

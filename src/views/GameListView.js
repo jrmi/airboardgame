@@ -8,26 +8,60 @@ import useAuth from "../hooks/useAuth";
 
 import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
+import logo from "../images/logo.png";
+import header from "../images/header.jpg";
 
 import styled from "styled-components";
 
-const GameView = styled.ul`
-  margin: 0 auto;
-  position: relative;
+const Header = styled.div`
+  height: 15em;
+  padding-top: 1em;
+  margin-bottom: 2em;
+  background-color: var(--bg-secondary-color);
+  background-image: url(${header});
+  & .baseline {
+    font-family: "Merriweather Sans", sans-serif;
+    margin-top: 3.2em;
+    text-align: center;
+    background-color: #00000099;
+  }
+`;
+
+const Brand = styled.div`
+  background-color: var(--color-secondary);
+  display: flex;
+  width: 550px;
+  align-items: center;
+  padding: 0.4em;
+  & h1 {
+    font-size: 4em;
+    margin: 0;
+    padding: 0;
+    line-height: 75px;
+    margin-left: 0em;
+    letter-spacing: -4px;
+    font-weight: bold;
+  }
+  & img {
+    height: 55px;
+    margin-top: 8px;
+  }
+`;
+
+const GameView = styled.div`
   & .new-game {
     position: absolute;
     top: 1em;
     right: 1em;
   }
-  & h1 {
-    color: hsl(210, 14%, 75%);
-  }
 `;
 
 const GameList = styled.ul`
+  width: 960px;
   list-style: none;
   margin: 0;
-  padding: 0;
+  margin: 0 auto;
+  padding: 0 2em;
   display: flex;
   flex-wrap: wrap;
   flex-direction: row;
@@ -38,11 +72,11 @@ const Game = styled.li`
   background-color: var(--bg-secondary-color);
   color: hsl(210, 14%, 75%);
   position: relative;
-  min-width: 300px;
-  max-width: 350px;
+  min-width: 250px;
+  max-width: 440px;
   height: 150px;
-  padding: 1em;
-  margin: 1em;
+  padding: 0.5em;
+  margin: 0.3em;
   flex: 1 1 0%;
   width: & .game-name {
     margin: 0 1em;
@@ -50,6 +84,7 @@ const Game = styled.li`
 
   & .button {
     margin: 0 2px;
+    background-color: var(--color-secondary);
   }
 
   & .play {
@@ -73,6 +108,7 @@ const Game = styled.li`
 const GameListView = () => {
   const { t } = useTranslation();
   const [gameList, setGameList] = React.useState([]);
+  const [allowAuth] = React.useState(false);
   const { isAuthenticated, userId } = useAuth();
 
   React.useEffect(() => {
@@ -103,18 +139,28 @@ const GameListView = () => {
 
   return (
     <GameView>
-      {isAuthenticated && (
-        <Link to={`/game/`} className="button new-game">
-          {t("Create new game")}
-        </Link>
-      )}
-      <Account />
-      <h1>AirBoardGame</h1>
+      <Header>
+        {isAuthenticated && (
+          <Link to={`/game/`} className="button new-game">
+            {t("Create new game")}
+          </Link>
+        )}
+        {allowAuth && <Account />}
+        <Brand className="brand">
+          <a href="/">
+            <img src={logo} />
+          </a>
+          <h1>Air Board Game</h1>
+        </Brand>
+        <h2 className="baseline">
+          Play your favorite games online with your friends
+        </h2>
+      </Header>
       <GameList>
         {gameList.map(({ name, id, owner }) => (
           <Game key={id}>
             <h2 className="game-name">{name}</h2>
-            <Link to={`/game/${id}/session/`} className="button success play">
+            <Link to={`/game/${id}/session/`} className="button play">
               {t("Play")}
             </Link>
             {userId === owner && (

@@ -30,14 +30,16 @@ const HelpModal = ({ show, setShow }) => {
       setShow={setShow}
       show={show}
       footer={
-        <button
-          onClick={() => {
-            setShow(false);
-          }}
-          className="button"
-        >
-          {t("Close")}
-        </button>
+        <div style={{ display: "flex", justifyContent: "end" }}>
+          <button
+            onClick={() => {
+              setShow(false);
+            }}
+            className="button"
+          >
+            {t("Close")}
+          </button>
+        </div>
       }
     >
       <h3>{t("Board interactions")}</h3>
