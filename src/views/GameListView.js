@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 import { getGames, deleteGame } from "../utils/api";
@@ -8,7 +8,7 @@ import useAuth from "../hooks/useAuth";
 
 import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
-import logo from "../images/logo.png";
+import logo from "../images/logo-mono.png";
 import header from "../images/header.jpg";
 
 import styled from "styled-components";
@@ -19,11 +19,27 @@ const Header = styled.div`
   margin-bottom: 2em;
   background-color: var(--bg-secondary-color);
   background-image: url(${header});
+  position: relative;
   & .baseline {
     font-family: "Merriweather Sans", sans-serif;
-    margin-top: 3.2em;
     text-align: center;
+    position: absolute;
+    bottom: 0px;
     background-color: #00000099;
+    width: 100%;
+    margin: 0;
+  }
+  & .login {
+    float: right;
+    margin-right: 0.5em;
+  }
+  & .login button {
+    background-color: var(--color-primary);
+  }
+  & .new-game {
+    position: absolute;
+    right: 8em;
+    background-color: var(--color-secondary);
   }
 `;
 
@@ -32,7 +48,7 @@ const Brand = styled.div`
   display: flex;
   width: 550px;
   align-items: center;
-  padding: 0.4em;
+  padding: 0 1em;
   & h1 {
     font-size: 4em;
     margin: 0;
@@ -41,6 +57,7 @@ const Brand = styled.div`
     margin-left: 0em;
     letter-spacing: -4px;
     font-weight: bold;
+    padding-left: 0.2em;
   }
   & img {
     height: 55px;
@@ -48,13 +65,7 @@ const Brand = styled.div`
   }
 `;
 
-const GameView = styled.div`
-  & .new-game {
-    position: absolute;
-    top: 1em;
-    right: 1em;
-  }
-`;
+const GameView = styled.div``;
 
 const GameList = styled.ul`
   width: 960px;
@@ -70,7 +81,6 @@ const GameList = styled.ul`
 const Game = styled.li`
   width: 100%;
   background-color: var(--bg-secondary-color);
-  color: hsl(210, 14%, 75%);
   position: relative;
   min-width: 250px;
   max-width: 440px;
@@ -105,10 +115,16 @@ const Game = styled.li`
   }
 `;
 
+function useQuery() {
+  return new URLSearchParams(useLocation().search);
+}
+
 const GameListView = () => {
   const { t } = useTranslation();
+  let query = useQuery();
+  const beta = query.get("beta") === "true";
+
   const [gameList, setGameList] = React.useState([]);
-  const [allowAuth] = React.useState(false);
   const { isAuthenticated, userId } = useAuth();
 
   React.useEffect(() => {
@@ -136,19 +152,20 @@ const GameListView = () => {
       ],
     });
   };
+  console.log(beta);
 
   return (
     <GameView>
       <Header>
-        {isAuthenticated && (
+        {beta && isAuthenticated && (
           <Link to={`/game/`} className="button new-game">
             {t("Create new game")}
           </Link>
         )}
-        {allowAuth && <Account />}
+        {beta && <Account className="login" />}
         <Brand className="brand">
           <a href="/">
-            <img src={logo} />
+            <img src={logo} alt="logo" />
           </a>
           <h1>Air Board Game</h1>
         </Brand>
@@ -163,7 +180,7 @@ const GameListView = () => {
             <Link to={`/game/${id}/session/`} className="button play">
               {t("Play")}
             </Link>
-            {userId === owner && (
+            {beta && userId === owner && (
               <div className="extra-actions">
                 <Link to={`/game/${id}/edit`} className="button edit">
                   {t("Edit")}

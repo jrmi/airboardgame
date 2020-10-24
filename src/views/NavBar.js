@@ -5,8 +5,11 @@ import styled from "styled-components";
 
 import HelpModal from "../views/HelpModal";
 import InfoModal from "../views/InfoModal";
+import InfoEditModal from "../views/InfoEditModal";
 import LoadSaveModal from "../views/LoadSaveModal";
 import { UserList } from "../components/users";
+
+import useBoardConfig from "../components/useBoardConfig";
 
 import logo from "../images/logo.png";
 
@@ -17,12 +20,21 @@ const StyledNavBar = styled.div.attrs(() => ({ className: "nav" }))`
   background-color: rgba(26, 26, 26, 0.7);
   z-index: 10;
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  & .nav-center {
+    display: flex;
+    align-items: center;
+    & h3 {
+      margin: 0;
+    }
+  }
 `;
 
 const NavBar = ({ editMode }) => {
   const [showLoadGameModal, setShowLoadGameModal] = React.useState(false);
   const [showHelpModal, setShowHelpModal] = React.useState(false);
   const [showInfoModal, setShowInfoModal] = React.useState(false);
+
+  const [boardConfig] = useBoardConfig();
 
   return (
     <>
@@ -43,15 +55,23 @@ const NavBar = ({ editMode }) => {
         </div>
 
         <div className="nav-center">
-          <h3>Air Board Game</h3>
+          <h3>{boardConfig.name ? boardConfig.name : "Air Board Game"}</h3>
           <button
             className="button clear icon-only"
             onClick={() => setShowInfoModal((prev) => !prev)}
           >
-            <img
-              src="https://icongr.am/feather/info.svg?size=50&color=ffffff"
-              alt="info"
-            />
+            {!editMode && (
+              <img
+                src="https://icongr.am/feather/info.svg?size=50&color=ffffff"
+                alt="info"
+              />
+            )}
+            {editMode && (
+              <img
+                src="https://icongr.am/feather/edit.svg?size=50&color=ffffff"
+                alt="info"
+              />
+            )}
           </button>
         </div>
 
@@ -71,7 +91,12 @@ const NavBar = ({ editMode }) => {
         <div className="menu"></div>
       </StyledNavBar>
       <HelpModal show={showHelpModal} setShow={setShowHelpModal} />
-      <InfoModal show={showInfoModal} setShow={setShowInfoModal} />
+      {!editMode && (
+        <InfoModal show={showInfoModal} setShow={setShowInfoModal} />
+      )}
+      {editMode && (
+        <InfoEditModal show={showInfoModal} setShow={setShowInfoModal} />
+      )}
       <LoadSaveModal
         show={showLoadGameModal}
         setShow={setShowLoadGameModal}
