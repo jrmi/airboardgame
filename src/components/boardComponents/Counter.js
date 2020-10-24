@@ -2,25 +2,28 @@ import React, { memo } from "react";
 import styled, { css } from "styled-components";
 
 const CounterPane = styled.div`
-  ${({ color, fontSize }) => css`
+  ${({ color }) => css`
     background-color: ${color};
-    padding: 0.5em;
+    padding: 0.2em;
     text-align: center;
-    font-size: ${fontSize}px;
-
     border-radius: 3px;
     box-shadow: 4px 4px 5px 0px rgb(0, 0, 0, 0.3);
+    button {
+      padding: 1rem;
+    }
     input {
       width: 3em;
     }
     h3 {
       user-select: none;
       padding: 0;
+      margin: 0;
     }
     div {
       display: flex;
       justify-content: space-between;
       flex-direction: row;
+      align-items: center;
     }
   `}
 `;
@@ -30,7 +33,7 @@ const Counter = ({
   color = "#CCC",
   label = "",
   textColor = "#000",
-  fontSize = "16",
+  fontSize = "22",
   setState,
 }) => {
   const setValue = (e) => {
@@ -60,13 +63,10 @@ const Counter = ({
   };
 
   return (
-    <CounterPane color={color} fontSize={fontSize}>
+    <CounterPane color={color}>
       <h3>{label}</h3>
       <div>
-        <button
-          onClick={decrement}
-          style={{ fontSize: fontSize + "px", margin: "2px" }}
-        >
+        <button onClick={decrement} style={{ margin: "2px" }}>
           -
         </button>
         <label style={{ userSelect: "none" }}>
@@ -86,10 +86,7 @@ const Counter = ({
             onChange={setValue}
           />
         </label>
-        <button
-          onClick={increment}
-          style={{ fontSize: fontSize + "px", margin: "2px" }}
-        >
+        <button onClick={increment} style={{ margin: "2px" }}>
           +
         </button>
       </div>

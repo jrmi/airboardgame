@@ -20,8 +20,9 @@ const AddItemPane = styled.div`
   position: absolute;
   right: 0.5em;
   top: 4.5em;
-  bottom: 4em;
+  bottom: 4.5em;
   background-color: var(--bg-secondary-color);
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
   width: 20%;
   padding: 0.5em;
   text-align: center;
@@ -33,12 +34,9 @@ const AddItemPane = styled.div`
 
 const AvailableItemList = styled.div`
   margin-top: 2em;
-  background-color: black;
   color: white;
   list-type: none;
 `;
-
-const Title = styled.h3``;
 
 const AddItemButton = () => {
   const { t } = useTranslation();
@@ -52,7 +50,7 @@ const AddItemButton = () => {
       <StyledButton onClick={() => setShowAddPanel((prev) => !prev)}>
         <img
           src="https://icongr.am/feather/plus-circle.svg?size=46&color=db5034"
-          alt="Add item"
+          alt={t("Add item")}
         />
       </StyledButton>
       {showAddPanel && (
@@ -64,7 +62,7 @@ const AddItemButton = () => {
                 onClick={() => setTab("standard")}
                 className={tab === "standard" ? "active" : ""}
               >
-                Standard
+                {t("Standard")}
               </a>
             }
             {availableItemList && availableItemList.length > 0 && (
@@ -73,7 +71,7 @@ const AddItemButton = () => {
                 onClick={() => setTab("other")}
                 className={tab === "other" ? "active" : ""}
               >
-                Other
+                {t("Other")}
               </a>
             )}
           </nav>
@@ -81,7 +79,6 @@ const AddItemButton = () => {
             {tab === "standard" && <NewItems />}
             {tab === "other" && (
               <AvailableItemList>
-                <Title>{t("Box Content")}</Title>
                 <AvailableItems />
               </AvailableItemList>
             )}

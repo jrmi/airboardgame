@@ -3,20 +3,30 @@ import styled, { css } from "styled-components";
 import { useTranslation } from "react-i18next";
 
 const DicePane = styled.div`
-  ${({ color, fontSize }) => css`
+  ${({ color }) => css`
     background-color: ${color};
-    width: 5em;
     padding: 0.3em;
     text-align: center;
-    fontsize: ${fontSize}px;
     display: flex;
     justify-content: space-between;
     flex-direction: column;
+    align-items: center;
     border-radius: 3px;
     box-shadow: 3px 3px 8px 0px rgb(0, 0, 0, 0.3);
-    h3 {
+    & h3 {
       user-select: none;
       padding: 0;
+      margin: 0;
+    }
+    &
+      input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="color"]):not([type="button"]):not([type="reset"]).result {
+      width: 3em;
+      display: block;
+      text-align: center;
+      border: none;
+      margin: 0.2em 0;
+      padding: 0.2em 0;
+      user-select: none;
     }
   `}
 `;
@@ -33,7 +43,7 @@ const Dice = ({
   label = "",
   side = 6,
   textColor = "#000",
-  fontSize = "16",
+  fontSize = "22",
   setState,
 }) => {
   const { t } = useTranslation();
@@ -61,29 +71,21 @@ const Dice = ({
   };
 
   return (
-    <DicePane color={color} fontSize={fontSize}>
+    <DicePane color={color}>
       <h3>{label}</h3>
       <label style={{ userSelect: "none" }}>
         <input
           style={{
             textColor,
-            width: "100%",
-            display: "block",
-            textAlign: "center",
-            border: "none",
-            margin: "0.2em 0",
-            padding: "0.2em 0",
             fontSize: fontSize + "px",
-            userSelect: "none",
           }}
+          className="result"
           value={value}
           onChange={setValue}
         />
       </label>
       <span>
-        <button onClick={roll} style={{ fontSize: fontSize + "px" }}>
-          {t("Roll")}
-        </button>
+        <button onClick={roll}>{t("Roll")}</button>
       </span>
     </DicePane>
   );

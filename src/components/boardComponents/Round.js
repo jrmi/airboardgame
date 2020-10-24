@@ -15,7 +15,8 @@ const StyledRound = styled.div`
 `;
 
 const Round = ({
-  radius,
+  size,
+  radius = size,
   color,
   text = "",
   textColor = "#000",
