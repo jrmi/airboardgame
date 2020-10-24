@@ -27,21 +27,34 @@ AvailableItem.displayName = "AvailableItem";
 
 const AvailableItems = () => {
   const availableItemList = useRecoilValue(AvailableItemListAtom);
+  const [filter, setFilter] = React.useState("");
 
   const groupIds = React.useMemo(
     () => [...new Set(availableItemList.map((item) => item.groupId))],
     [availableItemList]
   );
 
+  let items = availableItemList;
+  if (filter.length) {
+    items = availableItemList.filter(({ label }) =>
+      label.toLowerCase().includes(filter.toLowerCase())
+    );
+  }
+
   return (
     <>
+      <input
+        value={filter}
+        onChange={(e) => setFilter(e.target.value)}
+        style={{ marginBottom: "1em" }}
+      />
       {groupIds.map((groupId) => {
         return (
           <div key={groupId}>
             <details style={{ textAlign: "left", marginLeft: "10px" }}>
               <summary style={{ cursor: "pointer" }}>{groupId}</summary>
               <ul>
-                {availableItemList
+                {items
                   .filter((item) => item.groupId === groupId)
                   .map((item) => (
                     <li key={item.id}>
