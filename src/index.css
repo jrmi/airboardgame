@@ -30,7 +30,7 @@ body {
 button {
   padding: 1rem 2.5rem;
   color: var(--font-color);
-  background: var(--color-grey);
+  background: var(--color-lightGrey);
 }
 
 .button:hover,

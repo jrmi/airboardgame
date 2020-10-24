@@ -7,6 +7,33 @@ import { PanZoomRotateAtom } from "./Board";
 
 import { itemMap } from "./boardComponents";
 
+import styled from "styled-components";
+
+const ItemList = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  justify-content: space-around;
+`;
+
+const Item = styled.div`
+  padding: 1em;
+  margin: 0.3em;
+  cursor: pointer;
+  border: 1px solid #00000022;
+  opacity: 0.7;
+  &:hover {
+    opacity: 1;
+  }
+  & > div {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+  }
+`;
+
+const size = 70;
+
 const NewItem = memo(({ type }) => {
   const { pushItem } = useItems();
 
@@ -24,21 +51,30 @@ const NewItem = memo(({ type }) => {
     [pushItem, type]
   );
 
+  const Component = itemMap[type].component;
+
   return (
-    <button
-      className="button"
-      //style={{ display: "block", width: "100%" }}
-      onClick={addItem}
-    >
-      {itemMap[type].label}
-    </button>
+    <>
+      <Item onClick={addItem}>
+        <div style={{ pointerEvents: "none" }}>
+          <Component width={size} height={size} size={size} />
+          <span>{itemMap[type].label}</span>
+        </div>
+      </Item>
+    </>
   );
 });
 
 NewItem.displayName = "NewItem";
 
 const NewItems = () => {
-  return Object.keys(itemMap).map((type) => <NewItem type={type} key={type} />);
+  return (
+    <ItemList>
+      {Object.keys(itemMap).map((type) => (
+        <NewItem type={type} key={type} />
+      ))}
+    </ItemList>
+  );
 };
 
 export default memo(NewItems);

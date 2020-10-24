@@ -92,7 +92,7 @@ const Game = styled.li`
     margin: 0 1em;
   }
 
-  & .button {
+  & .button.play {
     margin: 0 2px;
     background-color: var(--color-secondary);
   }
@@ -105,8 +105,8 @@ const Game = styled.li`
 
   & .extra-actions {
     position: absolute;
-    bottom: 0.5em;
-    left: 0.5em;
+    top: 0.5em;
+    right: 0.5em;
     display: none;
   }
 
@@ -182,14 +182,20 @@ const GameListView = () => {
             </Link>
             {beta && userId === owner && (
               <div className="extra-actions">
-                <Link to={`/game/${id}/edit`} className="button edit">
-                  {t("Edit")}
+                <Link to={`/game/${id}/edit`} className="button edit icon-only">
+                  <img
+                    src="https://icongr.am/feather/edit.svg?size=16&color=ffffff"
+                    alt="info"
+                  />
                 </Link>
                 <button
                   onClick={handleRemove(id)}
-                  className="button error delete"
+                  className="button delete icon-only"
                 >
-                  X
+                  <img
+                    src="https://icongr.am/feather/trash.svg?size=16&color=ffffff"
+                    alt="info"
+                  />
                 </button>
               </div>
             )}
