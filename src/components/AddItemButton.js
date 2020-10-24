@@ -63,7 +63,6 @@ const AddItemButton = () => {
               <a
                 onClick={() => setTab("standard")}
                 className={tab === "standard" ? "active" : ""}
-                href="#"
               >
                 Standard
               </a>
@@ -73,7 +72,6 @@ const AddItemButton = () => {
               <a
                 onClick={() => setTab("other")}
                 className={tab === "other" ? "active" : ""}
-                href="#"
               >
                 Other
               </a>

@@ -15,7 +15,7 @@
    sodipodi:docname="stack.svg"
    width="82.000008"
    height="74.000038"
-   inkscape:version="0.92.3 (2405546, 2018-03-11)">
+   inkscape:version="0.92.5 (2060ec1f9f, 2020-04-08)">
   <metadata
      id="metadata16">
     <rdf:RDF>
@@ -48,17 +48,19 @@
      fit-margin-right="0"
      fit-margin-bottom="0"
      inkscape:zoom="1.888"
-     inkscape:cx="46.181736"
-     inkscape:cy="21.322054"
+     inkscape:cx="18.374533"
+     inkscape:cy="13.9068"
      inkscape:window-x="0"
      inkscape:window-y="48"
      inkscape:window-maximized="0"
-     inkscape:current-layer="svg10" />
+     inkscape:current-layer="svg10"
+     inkscape:pagecheckerboard="true" />
   <g
      transform="translate(-8.999998,-965.36216)"
-     id="g4">
+     id="g4"
+     style="fill:#ffffff">
     <path
-       style="color:#000000;display:inline;overflow:visible;visibility:visible;fill:#000000;stroke:none;enable-background:accumulate"
+       style="color:#000000;display:inline;overflow:visible;visibility:visible;fill:#ffffff;stroke:none;enable-background:accumulate"
        d="m 49.999998,965.36216 -41,20.87184 41,20.8717 41.000004,-20.8717 z m -29.375,31.07054 -11.625,5.9295 41,20.8718 41.000004,-20.8718 -11.625,-5.9295 -27.468804,13.9936 -1.9062,0.9783 -1.9063,-0.9783 z m 0,16.1282 -11.625,5.9295 41,20.8718 41.000004,-20.8718 -11.625,-5.9295 -27.468804,13.9936 -1.9062,0.9784 -1.9063,-0.9784 z"
        marker="none"
        visibility="visible"

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Merriweather+Sans:wght@300;500;700;800&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Merriweather+Sans:wght@300;500;700;800&display=block");
 
 body {
   margin: 0;
@@ -7,7 +7,7 @@ body {
 
 :root {
   --bg-color: #2a2a2aff;
-  --bg-secondary-color: #1f1f1fff;
+  --bg-secondary-color: #404040ff;
   --font-color: #f9fbfaff;
   --color-darkGrey: #2a2a2aff;
   --color-lightGrey: #888886ff;
@@ -23,13 +23,38 @@ body {
   --font-family-mono: monaco, "Consolas", "Lucida Console", monospace;
 }
 
-.button, [type="button"], [type="reset"], [type="submit"], button {
-	padding: 1rem 2.5rem;
-	color: var(--font-color);
-	background: var(--color-grey);
+.button,
+[type="button"],
+[type="reset"],
+[type="submit"],
+button {
+  padding: 1rem 2.5rem;
+  color: var(--font-color);
+  background: var(--color-grey);
 }
 
+.button:hover,
+[type="button"]:hover,
+[type="reset"]:hover,
+[type="submit"]:hover,
+button:hover {
+  filter: brightness(125%);
+  opacity: 1;
+}
 
-h1, h2,h3,h4,h5 {
+a:hover:not(.button) {
+  filter: brightness(125%);
+  opacity: 1;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5 {
   font-family: "Merriweather Sans", sans-serif;
+}
+
+.tabs a {
+  color: var(--font-color);
 }

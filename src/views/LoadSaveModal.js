@@ -55,7 +55,11 @@ const LoadSaveGameModal = ({ show, setShow, edit }) => {
         </div>
       }
     >
-      {edit && <button onClick={handleSave}>Save game</button>}
+      {edit && (
+        <button className="primary button" onClick={handleSave}>
+          Save game
+        </button>
+      )}
       <LoadGame onLoad={loadGame} />
       <DownloadGameLink />
     </Modal>

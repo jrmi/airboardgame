@@ -33,7 +33,7 @@ function App() {
             <Route path="/game/:gameId?">
               <GameView edit />
             </Route>
-            <Route exact path="/games">
+            <Route exact path="/games/">
               <GameListView />
             </Route>
             <Route exact path="/login">

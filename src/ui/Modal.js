@@ -55,7 +55,10 @@ export const Modal = ({ setShow, show, children, footer, title }) => {
                 setShow(false);
               }}
             >
-              <img src="https://icongr.am/feather/x.svg?size=30&color=ffffff" />
+              <img
+                src="https://icongr.am/feather/x.svg?size=30&color=ffffff"
+                alt="close"
+              />
             </button>
           </header>
           <section className="content">{children}</section>

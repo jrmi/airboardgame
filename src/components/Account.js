@@ -4,7 +4,7 @@ import Modal from "../ui/Modal";
 import { sendAuthToken } from "../utils/api";
 import useAuth from "../hooks/useAuth";
 
-const Account = () => {
+const Account = (props) => {
   const { t } = useTranslation();
   const { isAuthenticated, logout } = useAuth();
   const [email, setEmail] = React.useState("");
@@ -29,9 +29,7 @@ const Account = () => {
 
   return (
     <>
-      <div>
-        {isAuthenticated}
-        {isAuthenticated ? t("Logged") : t("Not logged")}
+      <div {...props}>
         {isAuthenticated ? (
           <button onClick={logout}>{t("Logout")}</button>
         ) : (
@@ -42,9 +40,6 @@ const Account = () => {
         {!emailSent && (
           <>
             <input value={email} onChange={handleChange} />
-            <button onClick={() => setShowLogin(false)} className="error">
-              {t("Cancel")}
-            </button>
             <button onClick={handleSubmit} className="success">
               {t("Ask authentication link")}
             </button>

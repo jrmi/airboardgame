@@ -36,21 +36,31 @@ const SelectedPane = styled.div`
 
 const ActionPane = styled.div.attrs(({ top, left }) => ({
   style: {
-    top: `${top - 55}px`,
+    top: `${top - 85}px`,
     left: `${left}px`,
   },
 }))`
   position: absolute;
   display: flex;
-  background-color: #333333ff;
+  background-color: var(--bg-color);
   justify-content: center;
+  align-items: center;
   border-radius: 4px;
   padding: 0.5em;
-  box-shadow: rgba(0, 0, 0, 0.15) 0px 3px 3px 0px;
+  
+  box-shadow: 2.5px 4.33px 14.7px 0.3px rgba(0, 0, 0, 0.7);
+
   & button{
-    margin 0 6px;
-    padding: 0.4em;
-    height: 40px
+    margin 0 4px;
+    padding: 0em;
+    height: 50px
+  }
+  & .button.icon-only{
+    padding: 0em;
+    opacity: 0.5;
+  }
+  & button.icon-only:hover{
+    opacity: 1;
   }
   & .count{
     color: var(--color-secondary);
@@ -308,14 +318,14 @@ export const SelectedItems = () => {
             if (onlyEdit && !showEdit) return null;
             return (
               <button
-                className="icon-only"
+                className="button clear icon-only"
                 key={action}
                 onClick={handler}
                 title={label}
               >
                 <img
                   src={icon}
-                  style={{ width: "25px", height: "24px" }}
+                  style={{ width: "32px", height: "32px" }}
                   alt={label}
                 />
               </button>
@@ -323,12 +333,12 @@ export const SelectedItems = () => {
           })}
 
           <button
-            className="icon-only"
+            className="button clear icon-only"
             onClick={() => setShowEdit((prev) => !prev)}
             title="Edit"
           >
             <img
-              src="https://icongr.am/feather/edit.svg?size=25&color=000000"
+              src="https://icongr.am/feather/edit.svg?size=32&color=ffffff"
               alt="Edit"
             />
           </button>

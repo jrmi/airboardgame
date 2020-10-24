@@ -15,7 +15,7 @@
    sodipodi:docname="delete.svg"
    width="22"
    height="28"
-   inkscape:version="0.92.3 (2405546, 2018-03-11)">
+   inkscape:version="0.92.5 (2060ec1f9f, 2020-04-08)">
   <metadata
      id="metadata18">
     <rdf:RDF>
@@ -31,7 +31,7 @@
   <defs
      id="defs16" />
   <sodipodi:namedview
-     pagecolor="#ffffff"
+     pagecolor="#000000"
      bordercolor="#666666"
      borderopacity="1"
      objecttolerance="10"
@@ -39,21 +39,21 @@
      guidetolerance="10"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:window-width="865"
-     inkscape:window-height="480"
+     inkscape:window-width="1848"
+     inkscape:window-height="1016"
      id="namedview14"
      showgrid="false"
      fit-margin-top="0"
      fit-margin-left="0"
      fit-margin-right="0"
      fit-margin-bottom="0"
-     inkscape:zoom="5.9"
-     inkscape:cx="11"
-     inkscape:cy="30.338983"
-     inkscape:window-x="335"
-     inkscape:window-y="77"
-     inkscape:window-maximized="0"
-     inkscape:current-layer="svg12" />
+     inkscape:zoom="8.34386"
+     inkscape:cx="14.034946"
+     inkscape:cy="4.8471152"
+     inkscape:window-x="1512"
+     inkscape:window-y="27"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="g6" />
   <title
      id="title2">Dashboard, ui, basic, essential, Sort</title>
   <g
@@ -63,20 +63,7 @@
     <path
        d="M 20,25 V 14 a 1,1 0 0 1 2,0 v 11 a 1,1 0 0 1 -2,0 z m -9,1 a 1,1 0 0 0 1,-1 V 14 a 1,1 0 0 0 -2,0 v 11 a 1,1 0 0 0 1,1 z M 27,8 v 2 a 1,1 0 0 1 -1,1 v 16 a 3,3 0 0 1 -3,3 H 9 A 3,3 0 0 1 6,27 V 11 A 1,1 0 0 1 5,10 V 8 A 3,3 0 0 1 8,5 h 4 a 3,3 0 0 1 3,-3 h 2 a 3,3 0 0 1 3,3 h 4 a 3,3 0 0 1 3,3 z M 14,5 h 4 A 1,1 0 0 0 17,4 h -2 a 1,1 0 0 0 -1,1 z m 10,6 H 8 v 16 a 1,1 0 0 0 1,1 h 14 a 1,1 0 0 0 1,-1 z M 25,8 A 1,1 0 0 0 24,7 H 8 A 1,1 0 0 0 7,8 v 1 h 18 z m -9,18 a 1,1 0 0 0 1,-1 V 14 a 1,1 0 0 0 -2,0 v 11 a 1,1 0 0 0 1,1 z"
        id="path4"
-       inkscape:connector-curvature="0" />
+       inkscape:connector-curvature="0"
+       style="fill:#fdfdfd;fill-opacity:1" />
   </g>
-  <text
-     x="-5"
-     y="45"
-     font-size="5px"
-     font-weight="bold"
-     id="text8"
-     style="font-weight:bold;font-size:5px;font-family:'Helvetica Neue', Helvetica, Arial-Unicode, Arial, Sans-serif;fill:#000000">Created by Caesar Rizky Kurniawan</text>
-  <text
-     x="-5"
-     y="50"
-     font-size="5px"
-     font-weight="bold"
-     id="text10"
-     style="font-weight:bold;font-size:5px;font-family:'Helvetica Neue', Helvetica, Arial-Unicode, Arial, Sans-serif;fill:#000000">from the Noun Project</text>
 </svg>
