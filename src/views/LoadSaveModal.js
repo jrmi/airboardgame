@@ -57,7 +57,7 @@ const LoadSaveGameModal = ({ show, setShow, edit }) => {
     >
       {edit && (
         <button className="primary button" onClick={handleSave}>
-          Save game
+          {t("Save game")}
         </button>
       )}
       <LoadGame onLoad={loadGame} />

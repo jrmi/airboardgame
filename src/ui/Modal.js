@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 import styled from "styled-components";
 
@@ -37,6 +38,8 @@ const StyledModal = styled.div.attrs(() => ({ className: "overlay" }))`
 `;
 
 export const Modal = ({ setShow, show, children, footer, title }) => {
+  const { t } = useTranslation();
+
   if (!show) {
     return null;
   }
@@ -59,7 +62,7 @@ export const Modal = ({ setShow, show, children, footer, title }) => {
             >
               <img
                 src="https://icongr.am/feather/x.svg?size=30&color=ffffff"
-                alt="close"
+                alt={t("Close")}
               />
             </button>
           </header>

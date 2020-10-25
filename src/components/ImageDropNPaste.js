@@ -8,8 +8,10 @@ import { useItems } from "../components/Board/Items";
 import { nanoid } from "nanoid";
 
 import { useRecoilCallback } from "recoil";
+import { useTranslation } from "react-i18next";
 
 const ImageDropNPaste = ({ namespace, children }) => {
+  const { t } = useTranslation();
   const [uploading, setUploading] = React.useState(false);
   const { pushItem } = useItems();
 
@@ -71,7 +73,7 @@ const ImageDropNPaste = ({ namespace, children }) => {
   return (
     <div {...getRootProps()}>
       {children}
-      {uploading && <Waiter message="Uploading image(s)..." />}
+      {uploading && <Waiter message={t("Uploading image(s)...")} />}
     </div>
   );
 };

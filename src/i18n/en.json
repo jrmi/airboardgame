@@ -84,5 +84,21 @@
   "Clone": "Clone",
   "Info": "Information",
   "Game information": "Game information",
-  "No information": "No information"
+  "No information": "No information",
+  "Logout": "Log out",
+  "Login": "Log in",
+  "Ask authentication link": "Ask an authentication link",
+  "Mail sent, check your inbox and click the link to login.": "Mail sent, check your inbox and click the link to login.",
+  "Standard": "Standard",
+  "Other": "Other",
+  "Export game": "Export game",
+  "Uploading image(s)...": "Uploading image(s)...",
+  "Items": "Items",
+  "Edit": "Edit",
+  "No image": "No image",
+  "Sending file...": "Sending file...",
+  "Click or drag'n'drop file here": "Click or drag'n'drop file here",
+  "Create new game": "New game",
+  "Play your favorite games online with your friends": "Play your favorite games online with your friends",
+  "Game loading...": "Game loading..."
 }
