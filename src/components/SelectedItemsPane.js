@@ -303,7 +303,7 @@ export const SelectedItems = () => {
           {selectedItems.length > 1 && (
             <div className="count">
               <span className="number">{selectedItems.length}</span>
-              <span>Items</span>
+              <span>{t("Items")}</span>
             </div>
           )}
           {availableActions.map((action) => {
@@ -335,11 +335,11 @@ export const SelectedItems = () => {
           <button
             className="button clear icon-only"
             onClick={() => setShowEdit((prev) => !prev)}
-            title="Edit"
+            title={t("Edit")}
           >
             <img
               src="https://icongr.am/feather/edit.svg?size=32&color=ffffff"
-              alt="Edit"
+              alt={t("Edit")}
             />
           </button>
         </ActionPane>

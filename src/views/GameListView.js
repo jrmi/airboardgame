@@ -38,7 +38,8 @@ const Header = styled.div`
   }
   & .new-game {
     position: absolute;
-    right: 8em;
+    right: 0.5em;
+    top: 4em;
     background-color: var(--color-secondary);
   }
 `;
@@ -170,7 +171,7 @@ const GameListView = () => {
           <h1>Air Board Game</h1>
         </Brand>
         <h2 className="baseline">
-          Play your favorite games online with your friends
+          {t("Play your favorite games online with your friends")}
         </h2>
       </Header>
       <GameList>
@@ -185,7 +186,7 @@ const GameListView = () => {
                 <Link to={`/game/${id}/edit`} className="button edit icon-only">
                   <img
                     src="https://icongr.am/feather/edit.svg?size=16&color=ffffff"
-                    alt="info"
+                    alt={t("Edit")}
                   />
                 </Link>
                 <button
@@ -194,7 +195,7 @@ const GameListView = () => {
                 >
                   <img
                     src="https://icongr.am/feather/trash.svg?size=16&color=ffffff"
-                    alt="info"
+                    alt={t("Remove")}
                   />
                 </button>
               </div>

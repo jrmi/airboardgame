@@ -47,7 +47,9 @@ const Account = (props) => {
         )}
         {emailSent && (
           <>
-            <p>{t("Mail sent, check your inbox and click the link.")}</p>
+            <p>
+              {t("Mail sent, check your inbox and click the link to login.")}
+            </p>
             <button onClick={() => setShowLogin(false)}>Ok</button>
           </>
         )}

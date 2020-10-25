@@ -2,7 +2,6 @@
   "name": "airgameboard",
   "version": "0.1.0",
   "private": true,
-  "type": "module",
   "dependencies": {
     "@color2k/compat": "^1.0.0-rc.5",
     "@scripters/use-socket.io": "^1.6.0",
