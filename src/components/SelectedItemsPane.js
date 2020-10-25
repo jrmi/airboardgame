@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-import { useRecoilValue } from "recoil";
+import { useRecoilValue, useRecoilCallback } from "recoil";
 import { useItems } from "./Board/Items";
 import { useItemActions } from "./boardComponents/useItemActions";
 import {
@@ -118,58 +118,62 @@ export const SelectedItems = () => {
     debounce((show) => {
       setShowAction(show);
     }, 400),
-    [setShowAction]
+    []
   );
 
   // Update bounding box
-  const updateBox = React.useCallback(() => {
-    let boundingBox = null;
+  const updateBox = useRecoilCallback(
+    ({ snapshot }) => async () => {
+      const selectedItems = await snapshot.getPromise(selectedItemsAtom);
+      let boundingBox = null;
 
-    selectedItems.forEach((itemId) => {
-      const elem = document.getElementById(itemId);
+      selectedItems.forEach((itemId) => {
+        const elem = document.getElementById(itemId);
 
-      if (!elem) return;
+        if (!elem) return;
 
-      const {
-        right: x2,
-        bottom: y2,
-        top: y,
-        left: x,
-      } = elem.getBoundingClientRect();
+        const {
+          right: x2,
+          bottom: y2,
+          top: y,
+          left: x,
+        } = elem.getBoundingClientRect();
 
-      if (!boundingBox) {
-        boundingBox = {};
-        boundingBox.x = x;
-        boundingBox.y = y;
-        boundingBox.x2 = x2;
-        boundingBox.y2 = y2;
-      } else {
-        if (x < boundingBox.x) {
+        if (!boundingBox) {
+          boundingBox = {};
           boundingBox.x = x;
-        }
-        if (y < boundingBox.y) {
           boundingBox.y = y;
-        }
-        if (x2 > boundingBox.x2) {
           boundingBox.x2 = x2;
-        }
-        if (y2 > boundingBox.y2) {
           boundingBox.y2 = y2;
-        }
-      }
-    });
-
-    setBoundingBoxLast(
-      boundingBox
-        ? {
-            top: boundingBox.y,
-            left: boundingBox.x,
-            height: boundingBox.y2 - boundingBox.y,
-            width: boundingBox.x2 - boundingBox.x,
+        } else {
+          if (x < boundingBox.x) {
+            boundingBox.x = x;
           }
-        : null
-    );
-  }, [selectedItems]);
+          if (y < boundingBox.y) {
+            boundingBox.y = y;
+          }
+          if (x2 > boundingBox.x2) {
+            boundingBox.x2 = x2;
+          }
+          if (y2 > boundingBox.y2) {
+            boundingBox.y2 = y2;
+          }
+        }
+      });
+
+      setBoundingBoxLast(
+        boundingBox
+          ? {
+              top: boundingBox.y,
+              left: boundingBox.x,
+              height: boundingBox.y2 - boundingBox.y,
+              width: boundingBox.x2 - boundingBox.x,
+            }
+          : null
+      );
+    },
+    []
+  );
 
   // Debounced version of update box
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -183,20 +187,26 @@ export const SelectedItems = () => {
   React.useEffect(() => {
     // Update selected elements bounding box
     updateBox();
-    updateBoxDelay(); // Delay to update after animation like tap.
+    updateBoxDelay(); // Delay to update after board item animation like tap/untap.
   }, [selectedItems, itemMap, panZoomRotate, updateBox, updateBoxDelay]);
 
   React.useEffect(() => {
     // Show on selection
-    showActionDelay(true);
+    if (selectedItems.length) {
+      showActionDelay(true);
+    } else {
+      setShowAction(false);
+    }
     setShowEdit(false);
   }, [selectedItems, showActionDelay]);
 
   React.useEffect(() => {
     // Hide when moving something
-    setShowAction(false);
-    showActionDelay(true);
-  }, [itemMap, panZoomRotate, showActionDelay]);
+    if (selectedItems) {
+      setShowAction(false);
+      showActionDelay(true);
+    }
+  }, [selectedItems, itemMap, panZoomRotate, showActionDelay]);
 
   React.useEffect(() => {
     const onKeyUp = (e) => {
