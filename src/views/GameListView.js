@@ -153,7 +153,6 @@ const GameListView = () => {
       ],
     });
   };
-  console.log(beta);
 
   return (
     <GameView>
