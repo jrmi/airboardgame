@@ -181,7 +181,7 @@ export const SelectedItems = () => {
   );
 
   React.useEffect(() => {
-    // Update selected elemnts bounding box
+    // Update selected elements bounding box
     updateBox();
     updateBoxDelay(); // Delay to update after animation like tap.
   }, [selectedItems, itemMap, panZoomRotate, updateBox, updateBoxDelay]);
