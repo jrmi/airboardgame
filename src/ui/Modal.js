@@ -26,8 +26,10 @@ const StyledModal = styled.div.attrs(() => ({ className: "overlay" }))`
   }
   .close {
     position: absolute;
-    top: 0.5em;
-    right: 0.5em;
+    top: 0.2em;
+    right: 0.2em;
+    padding: 0.5rem;
+    margin: 0;
   }
   footer {
     margin-top: 1em;

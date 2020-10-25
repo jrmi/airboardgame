@@ -18,7 +18,9 @@ const UserColor = styled.div`
 `;
 
 const StyledInputName = styled.input`
-  width: 7em;
+  &:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="color"]):not([type="button"]):not([type="reset"]) {
+    width: 10em;
+  }
 `;
 
 const emptyStyle = {};
@@ -61,7 +63,10 @@ const UserConfig = ({ user, setUser, editable, index }) => {
         {editable ? "*" : ""}
       </UserColor>
       <Modal title={"User details"} show={showDetails} setShow={setShowDetails}>
+        <label>Username</label>
         <StyledInputName value={name} onChange={handleChange} />
+
+        <label>Color</label>
         <SketchPicker
           disableAlpha
           presetColors={emptyColors}
