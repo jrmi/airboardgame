@@ -2,7 +2,7 @@ import React from "react";
 
 import { atom, useRecoilState, useRecoilValue } from "recoil";
 import { BoardConfigAtom } from "./";
-import { isMacOS } from "../../deviceInfos";
+import { isMacOS } from "../../utils/deviceInfos";
 import { insideClass } from "../../utils/";
 
 import styled from "styled-components";
