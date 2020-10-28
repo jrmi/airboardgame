@@ -16,6 +16,12 @@ const Form = ({ initialValues }) => {
           initialValue={initialValues.label}
         />
       </Label>
+      <Label>
+        {t("Side count")}
+        <Field name="side" component="input" initialValue={initialValues.side}>
+          {(props) => <input {...props.input} type="number" />}
+        </Field>
+      </Label>
     </>
   );
 };

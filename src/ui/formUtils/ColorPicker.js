@@ -5,10 +5,11 @@ import styled from "styled-components";
 
 const Color = styled.div`
   background-color: ${({ color }) => color};
+  border: 1px solid #00000022;
   width: 20px;
   height: 20px;
   margin: 5px;
-  cursor: "pointer";
+  cursor: pointer;
 `;
 
 const ColorPickerWrapper = styled.div`
