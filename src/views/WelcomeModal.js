@@ -10,7 +10,7 @@ const WelcomeModal = ({ show, setShow }) => {
 
   return (
     <Modal
-      title={t("Welcome to Airboardgame")}
+      title={t("Ready to play ?")}
       setShow={setShow}
       show={show}
       footer={
@@ -24,13 +24,6 @@ const WelcomeModal = ({ show, setShow }) => {
         </button>
       }
     >
-      <h3>{t("What is it?")}</h3>
-      <Trans i18nKey="welcomeText">
-        <p>
-          Airboardgame is a tabletop simulator to play your favorite board games
-          with your friends online.
-        </p>
-      </Trans>
       <h3>{t("Invite your friends")}</h3>
       <Trans i18nKey="InviteFriends">
         <p>
