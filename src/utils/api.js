@@ -10,6 +10,18 @@ const gameURI = `${API_ENDPOINT}/store/game`;
 const execURI = `${API_ENDPOINT}/execute`;
 const authURI = `${API_ENDPOINT}/auth`;
 
+// Register to backend
+export const register = async () => {
+  await fetch(`${execURI}/_register`, {
+    credentials: "include",
+    headers: {
+      "X-SPC-HOST": `${window.location.origin}/exec`,
+    },
+  });
+};
+
+register();
+
 export const uploadImage = async (namespace, file) => {
   const payload = new FormData();
   payload.append("file", file);
@@ -28,17 +40,22 @@ export const getGames = async () => {
     fields: "_id,board,owner",
   });
 
+  let gameList = [];
+
   const result = await fetch(`${gameURI}?${"" + fetchParams}`, {
     credentials: "include",
   });
-  const serverGame = await result.json();
 
-  let gameList = serverGame.map((game) => ({
-    name: game.board.name,
-    id: game._id,
-    owner: game.owner,
-    url: `${gameURI}/${game._id}`,
-  }));
+  if (result.status === 200) {
+    const serverGames = await result.json();
+
+    gameList = serverGames.map((game) => ({
+      name: game.board.name,
+      id: game._id,
+      owner: game.owner,
+      url: `${gameURI}/${game._id}`,
+    }));
+  }
 
   if (!IS_PRODUCTION) {
     gameList = [
@@ -88,6 +105,7 @@ export const updateGame = async (id, data) => {
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json",
+      "X-SPC-HOST": `${window.location.origin}/exec`,
     },
     body: JSON.stringify(data),
     credentials: "include",

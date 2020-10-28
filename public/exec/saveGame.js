@@ -9,6 +9,10 @@ const throwError = (message, code = 400) => {
 const main = async ({ store, id, userId, body }) => {
   let existingGame = null;
 
+  if (!userId) {
+    throwError("Game creation not allowed for unauthenticated users", 403);
+  }
+
   try {
     existingGame = await store.get("game", id);
   } catch {
@@ -16,7 +20,7 @@ const main = async ({ store, id, userId, body }) => {
   }
 
   if (existingGame && existingGame.owner !== userId) {
-    console.log("fobidden");
+    console.log("Forbidden");
     throwError("Modification allowed only for owner", 403);
   }
 

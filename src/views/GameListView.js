@@ -180,7 +180,7 @@ const GameListView = () => {
             <Link to={`/game/${id}/session/`} className="button play">
               {t("Play")}
             </Link>
-            {beta && userId === owner && (
+            {beta && (userId === owner || !owner) && (
               <div className="extra-actions">
                 <Link to={`/game/${id}/edit`} className="button edit icon-only">
                   <img
