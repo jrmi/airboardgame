@@ -12,6 +12,7 @@ import { UserList } from "../components/users";
 import useBoardConfig from "../components/useBoardConfig";
 
 import logo from "../images/logo.png";
+import { useTranslation } from "react-i18next";
 
 const StyledNavBar = styled.div.attrs(() => ({ className: "nav" }))`
   position: fixed;
@@ -30,6 +31,7 @@ const StyledNavBar = styled.div.attrs(() => ({ className: "nav" }))`
 `;
 
 const NavBar = ({ editMode }) => {
+  const { t } = useTranslation();
   const [showLoadGameModal, setShowLoadGameModal] = React.useState(false);
   const [showHelpModal, setShowHelpModal] = React.useState(false);
   const [showInfoModal, setShowInfoModal] = React.useState(false);
@@ -41,7 +43,7 @@ const NavBar = ({ editMode }) => {
       <StyledNavBar>
         <div className="nav-left">
           <Link to="/games/" className="brand">
-            <img src={logo} alt="Air Board Game" />
+            <img src={logo} alt="Air Board Game" title={t("Go to home")} />
           </Link>
           <button
             className="button clear icon-only"
@@ -49,7 +51,8 @@ const NavBar = ({ editMode }) => {
           >
             <img
               src="https://icongr.am/feather/save.svg?size=50&color=ffffff"
-              alt="save"
+              alt={t("Save")}
+              title={t("Save")}
             />
           </button>
         </div>
@@ -63,13 +66,15 @@ const NavBar = ({ editMode }) => {
             {!editMode && (
               <img
                 src="https://icongr.am/feather/info.svg?size=50&color=ffffff"
-                alt="info"
+                alt={t("Info")}
+                title={t("Info")}
               />
             )}
             {editMode && (
               <img
                 src="https://icongr.am/feather/edit.svg?size=50&color=ffffff"
-                alt="info"
+                alt={t("Configure game")}
+                title={t("Configure game")}
               />
             )}
           </button>
@@ -83,7 +88,8 @@ const NavBar = ({ editMode }) => {
           >
             <img
               src="https://icongr.am/feather/help-circle.svg?size=50&color=ffffff"
-              alt="help"
+              alt={t("Help")}
+              title={t("Help")}
             />
           </button>
         </div>

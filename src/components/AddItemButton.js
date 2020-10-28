@@ -51,6 +51,7 @@ const AddItemButton = () => {
         <img
           src="https://icongr.am/feather/plus-circle.svg?size=46&color=db5034"
           alt={t("Add item")}
+          title={t("Add item")}
         />
       </StyledButton>
       {showAddPanel && (
