@@ -117,7 +117,7 @@ export const SelectedItems = () => {
   const showActionDelay = React.useCallback(
     debounce((show) => {
       setShowAction(show);
-    }, 400),
+    }, 300),
     []
   );
 
@@ -186,8 +186,10 @@ export const SelectedItems = () => {
 
   React.useEffect(() => {
     // Update selected elements bounding box
-    updateBox();
-    updateBoxDelay(); // Delay to update after board item animation like tap/untap.
+    if (selectedItems) {
+      updateBox();
+      updateBoxDelay(); // Delay to update after board item animation like tap/untap.
+    }
   }, [selectedItems, itemMap, panZoomRotate, updateBox, updateBoxDelay]);
 
   React.useEffect(() => {
