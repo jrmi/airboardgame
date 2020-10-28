@@ -33,7 +33,7 @@
     "react-i18next": "^11.7.0",
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "^3.4.0",
+    "react-scripts": "^4.0.0",
     "react-use-localstorage": "^3.4.1",
     "react-zoom-pan-pinch": "^1.6.1",
     "recoil": "0.0.10",

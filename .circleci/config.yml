@@ -20,7 +20,7 @@ jobs:
           steps:
             - run: npm install
             - run: npm run lint
-            - run: SKIP_PREFLIGHT_CHECK=true npm run build
+            - run: npm run build
             - run:
                 name: Netlify Deploy
                 command: npx netlify deploy --site $NETLIFY_SITE_ID --auth $NETLIFY_ACCESS_TOKEN --dir=build
@@ -40,7 +40,7 @@ jobs:
           steps:
             - run: npm install
             - run: npm run lint
-            - run: SKIP_PREFLIGHT_CHECK=true npm run build
+            - run: npm run build
             - run:
                 name: Netlify Deploy
                 command: npx netlify deploy --site $NETLIFY_SITE_ID --auth $NETLIFY_ACCESS_TOKEN --dir=build --prod
@@ -49,7 +49,7 @@ workflows:
   e2etest:
     jobs:
       - cypress/run:
-          start: SKIP_PREFLIGHT_CHECK=true REACT_APP_SOCKET_URL=https://public.jeremiez.net/ REACT_APP_SOCKET_PATH=/wamp/socket.io REACT_APP_API_ENDPOINT=https://public.jeremiez.net/airboardgame/ CI=true npm start
+          start: REACT_APP_NO_WELCOME=1 REACT_APP_SOCKET_URL=https://public.jeremiez.net/ REACT_APP_SOCKET_PATH=/wamp/socket.io REACT_APP_API_ENDPOINT=https://public.jeremiez.net/airboardgame CI=true npm start
           wait-on: "http-get://localhost:3000"
           no-workspace: true
           store_artifacts: true
