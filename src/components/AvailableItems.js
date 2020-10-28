@@ -3,6 +3,7 @@ import { useRecoilValue, useRecoilCallback } from "recoil";
 import { useItems } from "../components/Board/Items";
 import { nanoid } from "nanoid";
 import { AvailableItemListAtom, PanZoomRotateAtom } from "./Board";
+import { useTranslation } from "react-i18next";
 
 const AvailableItem = memo(({ data }) => {
   const { label } = data;
@@ -26,13 +27,10 @@ const AvailableItem = memo(({ data }) => {
 AvailableItem.displayName = "AvailableItem";
 
 const AvailableItems = () => {
+  const { t } = useTranslation();
   const availableItemList = useRecoilValue(AvailableItemListAtom);
   const [filter, setFilter] = React.useState("");
-
-  const groupIds = React.useMemo(
-    () => [...new Set(availableItemList.map((item) => item.groupId))],
-    [availableItemList]
-  );
+  const { pushItem } = useItems();
 
   let items = availableItemList;
   if (filter.length) {
@@ -40,6 +38,23 @@ const AvailableItems = () => {
       label.toLowerCase().includes(filter.toLowerCase())
     );
   }
+
+  const groupIds = React.useMemo(
+    () => [...new Set(items.map((item) => item.groupId))],
+    [items]
+  );
+
+  const addItems = useRecoilCallback(
+    ({ snapshot }) => async (groupId) => {
+      const { centerX, centerY } = await snapshot.getPromise(PanZoomRotateAtom);
+      items
+        .filter((item) => item.groupId === groupId)
+        .forEach((data) => {
+          pushItem({ ...data, x: centerX, y: centerY, id: nanoid() });
+        });
+    },
+    [items, pushItem]
+  );
 
   return (
     <>
@@ -51,8 +66,21 @@ const AvailableItems = () => {
       {groupIds.map((groupId) => {
         return (
           <div key={groupId}>
-            <details style={{ textAlign: "left", marginLeft: "10px" }}>
-              <summary style={{ cursor: "pointer" }}>{groupId}</summary>
+            <details
+              style={{ textAlign: "left", marginLeft: "10px" }}
+              open={filter.length}
+            >
+              <summary style={{ cursor: "pointer" }}>
+                {groupId}{" "}
+                <span
+                  onClick={(e) => {
+                    e.preventDefault();
+                    addItems(groupId);
+                  }}
+                >
+                  [{t("Add all")}]
+                </span>
+              </summary>
               <ul>
                 {items
                   .filter((item) => item.groupId === groupId)
