@@ -2,9 +2,7 @@ describe("Selection action", () => {
   beforeEach(() => {
     cy.viewport(1000, 600);
     cy.visit("/");
-    cy.contains("I want to play...", { timeout: 5000 }).click();
-    cy.contains("Menu").click();
-    cy.contains("Test game").click();
+    cy.contains("Test Game").parent().find(".button").click();
     // Way board loading
     cy.get(".board-pane").should(
       "have.css",
