@@ -28,6 +28,7 @@ export const itemMap = {
   rect: {
     component: Rect,
     defaultActions: ["lock", "remove"],
+    availableActions: ["stack", "shuffle", "clone", "lock", "remove"],
     form: RectFormFields,
     label: i18n.t("Rectangle"),
     template: {},
@@ -35,6 +36,7 @@ export const itemMap = {
   cube: {
     component: Cube,
     defaultActions: ["clone", "lock", "remove"],
+    availableActions: ["stack", "shuffle", "clone", "lock", "remove"],
     form: CubeFormFields,
     label: i18n.t("Cube"),
     template: {},
@@ -42,6 +44,7 @@ export const itemMap = {
   round: {
     component: Round,
     defaultActions: ["clone", "lock", "remove"],
+    availableActions: ["stack", "shuffle", "clone", "lock", "remove"],
     form: RoundFormFields,
     label: i18n.t("Round"),
     template: {},
@@ -49,6 +52,7 @@ export const itemMap = {
   token: {
     component: Token,
     defaultActions: ["clone", "lock", "remove"],
+    availableActions: ["stack", "shuffle", "clone", "lock", "remove"],
     form: TokenFormFields,
     label: i18n.t("Token"),
     template: {},
@@ -56,6 +60,7 @@ export const itemMap = {
   meeple: {
     component: Meeple,
     defaultActions: ["clone", "lock", "remove"],
+    availableActions: ["stack", "shuffle", "clone", "lock", "remove"],
     form: MeepleFormFields,
     label: i18n.t("Meeple"),
     template: {},
@@ -63,6 +68,7 @@ export const itemMap = {
   jewel: {
     component: Jewel,
     defaultActions: ["clone", "lock", "remove"],
+    availableActions: ["stack", "shuffle", "clone", "lock", "remove"],
     form: JewelFormFields,
     label: i18n.t("Jewel"),
     template: {},
@@ -85,6 +91,37 @@ export const itemMap = {
         return ["tap", "stack", "shuffle", "clone", "lock", "remove"];
       }
     },
+    availableActions: (item) => {
+      if (item.backContent) {
+        return [
+          "flip",
+          "flipSelf",
+          "tap",
+          "rotate30",
+          "rotate45",
+          "rotate60",
+          "rotate90",
+          "stack",
+          "shuffle",
+          "clone",
+          "lock",
+          "remove",
+        ];
+      } else {
+        return [
+          "tap",
+          "rotate30",
+          "rotate45",
+          "rotate60",
+          "rotate90",
+          "stack",
+          "shuffle",
+          "clone",
+          "lock",
+          "remove",
+        ];
+      }
+    },
     form: ImageFormFields,
     label: i18n.t("Image"),
     template: {},
@@ -92,6 +129,7 @@ export const itemMap = {
   counter: {
     component: Counter,
     defaultActions: ["clone", "lock", "remove"],
+    availableActions: ["clone", "lock", "remove"],
     form: CounterFormFields,
     label: i18n.t("Counter"),
     template: {},
@@ -99,13 +137,15 @@ export const itemMap = {
   dice: {
     component: Dice,
     defaultActions: ["clone", "lock", "remove"],
+    availableActions: ["clone", "lock", "remove"],
     form: DiceFormFields,
     label: i18n.t("Dice"),
     template: {},
   },
   note: {
     component: Note,
-    defaultActions: ["clone", "lock", "remove"],
+    defaultActions: ["shuffle", "clone", "lock", "remove"],
+    availableActions: ["shuffle", "clone", "lock", "remove"],
     form: NoteFormFields,
     label: i18n.t("Note"),
     template: {},
@@ -113,6 +153,7 @@ export const itemMap = {
   zone: {
     component: Zone,
     defaultActions: ["clone", "lock", "remove"],
+    availableActions: ["clone", "lock", "remove"],
     form: ZoneFormFields,
     label: i18n.t("Zone"),
     template: {},
@@ -141,5 +182,26 @@ export const getDefaultActionsFromItem = (item) => {
     }
     return actions;
   }
+
   return [];
+};
+
+export const getAvailableActionsFromItem = (item) => {
+  if (item.type in itemMap) {
+    const actions = itemMap[item.type].availableActions;
+    if (typeof actions === "function") {
+      return actions(item);
+    }
+    return actions;
+  }
+
+  return [];
+};
+
+export const getActionsFromItem = (item) => {
+  const { actions = getDefaultActionsFromItem(item) } = item;
+  // Filter availableActions to keep same order
+  return getAvailableActionsFromItem(item).filter((action) =>
+    actions.includes(action)
+  );
 };
