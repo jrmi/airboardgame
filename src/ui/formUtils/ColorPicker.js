@@ -28,13 +28,19 @@ const ColorPickerWrapper = styled.div`
 
 const ColorPicker = ({ value, onChange }) => {
   const [showPicker, setShowPicker] = React.useState(false);
+  const [currentColor, setCurrentColor] = React.useState(value);
 
   const showColorPicker = () => {
     setShowPicker((prev) => !prev);
   };
 
-  const handleChange = React.useCallback(
+  const handleChange = React.useCallback((newColor) => {
+    setCurrentColor(newColor);
+  }, []);
+
+  const handleChangeComplete = React.useCallback(
     (newColor) => {
+      setCurrentColor(newColor);
       onChange(newColor.hex);
     },
     [onChange]
@@ -49,7 +55,12 @@ const ColorPicker = ({ value, onChange }) => {
       <Color color={value} onClick={showColorPicker} />
       {showPicker && (
         <ColorPickerWrapper>
-          <SketchPicker color={value} onChangeComplete={handleChange} />
+          <SketchPicker
+            color={currentColor}
+            onChange={handleChange}
+            disableAlpha
+            onChangeComplete={handleChangeComplete}
+          />
           <button onClick={handleClick}>Close</button>
         </ColorPickerWrapper>
       )}
