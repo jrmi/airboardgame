@@ -2,14 +2,14 @@ import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
-import { getGames, deleteGame } from "../utils/api";
+import { getGames } from "../utils/api";
 import Account from "../components/Account";
 import useAuth from "../hooks/useAuth";
 
-import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
 import logo from "../images/logo-mono.png";
 import header from "../images/header.jpg";
+import useLocalStorage from "../hooks/useLocalStorage";
 
 import styled from "styled-components";
 
@@ -116,14 +116,16 @@ const Game = styled.li`
   }
 `;
 
-function useQuery() {
+const useQuery = () => {
   return new URLSearchParams(useLocation().search);
-}
+};
 
 const GameListView = () => {
   const { t } = useTranslation();
+
+  const [isBeta, setIsBeta] = useLocalStorage("isBeta", false);
+
   let query = useQuery();
-  const beta = query.get("beta") === "true";
 
   const [gameList, setGameList] = React.useState([]);
   const { isAuthenticated, userId } = useAuth();
@@ -134,7 +136,15 @@ const GameListView = () => {
     });
   }, [isAuthenticated]);
 
-  const handleRemove = (idToRemove) => async () => {
+  const forceBeta = query.get("beta") === "true";
+
+  React.useEffect(() => {
+    if (forceBeta) {
+      setIsBeta(true);
+    }
+  }, [forceBeta, setIsBeta]);
+
+  /*const handleRemove = (idToRemove) => async () => {
     confirmAlert({
       title: t("Confirmation"),
       message: t("Do you really want to remove selected items ?"),
@@ -152,17 +162,17 @@ const GameListView = () => {
         },
       ],
     });
-  };
+  };*/
 
   return (
     <GameView>
       <Header>
-        {beta && isAuthenticated && (
+        {isBeta && isAuthenticated && (
           <Link to={`/game/`} className="button new-game">
             {t("Create new game")}
           </Link>
         )}
-        {beta && <Account className="login" />}
+        {isBeta && <Account className="login" />}
         <Brand className="brand">
           <a href="/">
             <img src={logo} alt="logo" />
@@ -174,33 +184,34 @@ const GameListView = () => {
         </h2>
       </Header>
       <GameList>
-        {gameList.map(({ name, id, owner }) => (
-          <Game key={id}>
-            <h2 className="game-name">{name}</h2>
-            <Link to={`/game/${id}/session/`} className="button play">
-              {t("Play")}
-            </Link>
-            {beta && (userId === owner || !owner) && (
-              <div className="extra-actions">
-                <Link to={`/game/${id}/edit`} className="button edit icon-only">
-                  <img
-                    src="https://icongr.am/feather/edit.svg?size=16&color=ffffff"
-                    alt={t("Edit")}
-                  />
-                </Link>
-                <button
-                  onClick={handleRemove(id)}
-                  className="button delete icon-only"
-                >
-                  <img
-                    src="https://icongr.am/feather/trash.svg?size=16&color=ffffff"
-                    alt={t("Remove")}
-                  />
-                </button>
-              </div>
-            )}
-          </Game>
-        ))}
+        {gameList
+          .filter(
+            ({ published, owner }) =>
+              published || (userId && (!owner || owner === userId))
+          )
+          .map(({ name, id, owner, published }) => (
+            <Game key={id}>
+              <h2 className="game-name">
+                {name} {!published && "(Private)"}
+              </h2>
+              <Link to={`/game/${id}/session/`} className="button play">
+                {t("Play")}
+              </Link>
+              {isBeta && userId && (userId === owner || !owner) && (
+                <div className="extra-actions">
+                  <Link
+                    to={`/game/${id}/edit`}
+                    className="button edit icon-only"
+                  >
+                    <img
+                      src="https://icongr.am/feather/edit.svg?size=16&color=ffffff"
+                      alt={t("Edit")}
+                    />
+                  </Link>
+                </div>
+              )}
+            </Game>
+          ))}
       </GameList>
     </GameView>
   );

@@ -59,6 +59,16 @@ const BoardConfig = () => {
               initialValue={boardConfig.info}
             />
           </Label>
+
+          <Label>
+            {t("Publish")}
+            <Field
+              name="published"
+              component="input"
+              type="checkbox"
+              initialValue={boardConfig.published}
+            />
+          </Label>
         </div>
       )}
     />

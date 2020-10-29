@@ -19,7 +19,7 @@ const main = async ({ store, id, userId, body }) => {
     console.log("Game not found");
   }
 
-  if (existingGame && existingGame.owner !== userId) {
+  if (existingGame && existingGame.owner && existingGame.owner !== userId) {
     console.log("Forbidden");
     throwError("Modification allowed only for owner", 403);
   }
