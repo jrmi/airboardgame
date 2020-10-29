@@ -39,10 +39,22 @@ const Account = (props) => {
       <Modal show={showLogin} setShow={setShowLogin} title={t("Login")}>
         {!emailSent && (
           <>
-            <input value={email} onChange={handleChange} />
-            <button onClick={handleSubmit} className="success">
-              {t("Ask authentication link")}
-            </button>
+            <input
+              value={email}
+              onChange={handleChange}
+              placeholder={t("Enter your email here")}
+            />
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                marginTop: "2em",
+              }}
+            >
+              <button onClick={handleSubmit} className="button primary">
+                {t("Ask authentication link")}
+              </button>
+            </div>
           </>
         )}
         {emailSent && (
@@ -50,7 +62,20 @@ const Account = (props) => {
             <p>
               {t("Mail sent, check your inbox and click the link to login.")}
             </p>
-            <button onClick={() => setShowLogin(false)}>Ok</button>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                marginTop: "2em",
+              }}
+            >
+              <button
+                className="button primary"
+                onClick={() => setShowLogin(false)}
+              >
+                Ok
+              </button>
+            </div>
           </>
         )}
       </Modal>

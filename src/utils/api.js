@@ -54,13 +54,14 @@ export const getGames = async () => {
       id: game._id,
       owner: game.owner,
       url: `${gameURI}/${game._id}`,
+      published: game.board.published,
     }));
   }
 
   if (!IS_PRODUCTION) {
     gameList = [
-      { name: "Test Game", data: testGame, id: "test" },
-      { name: "Perf Test", data: perfGame, id: "perf" },
+      { name: "Test Game", data: testGame, id: "test", published: true },
+      { name: "Perf Test", data: perfGame, id: "perf", published: true },
       ...gameList,
     ];
   }
@@ -89,8 +90,6 @@ export const getGame = async (gameId) => {
   } else {
     return data;
   }
-  /*const result = await fetch(`${gameURI}/${id}`);
-  return await result.json();*/
 };
 
 export const createGame = async (data) => {
@@ -130,6 +129,7 @@ export const sendAuthToken = async (email) => {
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json",
+      "X-Auth-HOST": `${window.location.origin}`,
     },
     body: JSON.stringify({ userEmail: email }),
     credentials: "include",
