@@ -11,7 +11,13 @@ import { ItemMapAtom } from "../Board/";
 
 import Label from "../../ui/formUtils/Label";
 
-import { getFormFieldComponent } from ".";
+import {
+  getFormFieldComponent,
+  getDefaultActionsFromItem,
+  getAvailableActionsFromItem,
+} from ".";
+
+import ActionsField from "./ActionsField";
 
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
@@ -21,6 +27,8 @@ const ItemFormFactory = ({ itemId, onSubmitHandler }) => {
 
   const itemMap = useRecoilValue(ItemMapAtom);
   const item = itemMap[itemId];
+  const [defaultActions] = React.useState(getDefaultActionsFromItem(item));
+  const [availableActions] = React.useState(getAvailableActionsFromItem(item));
 
   if (!item) return null;
 
@@ -40,7 +48,6 @@ const ItemFormFactory = ({ itemId, onSubmitHandler }) => {
           <div style={{ display: "none" }}>
             <Field name="id" component="input" initialValue={item.id} />
           </div>
-
           <Label>
             <Field
               name="locked"
@@ -103,8 +110,19 @@ const ItemFormFactory = ({ itemId, onSubmitHandler }) => {
               }}
             </Field>
           </Label>
-
           <FieldsComponent initialValues={item} />
+          <h3>{t("Available actions")}</h3>
+          <Label>
+            <Field name="actions" initialValue={item.actions || defaultActions}>
+              {({ input: { onChange, value } }) => (
+                <ActionsField
+                  onChange={onChange}
+                  value={value}
+                  availableActions={availableActions}
+                />
+              )}
+            </Field>
+          </Label>
         </div>
       )}
     />

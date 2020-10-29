@@ -27,7 +27,8 @@
       }
     ],
     "react/prop-types": "off",
-    "jsx-a11y/anchor-is-valid": "off"
+    "jsx-a11y/anchor-is-valid": "off",
+    "no-unused-vars": "warn"
   },
   "plugins": ["react-hooks"],
   "extends": [

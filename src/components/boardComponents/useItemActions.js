@@ -8,7 +8,7 @@ import { useUsers } from "../users";
 
 import intersection from "lodash.intersection";
 import { ItemMapAtom } from "../Board";
-import { getDefaultActionsFromItem } from "./";
+import { getActionsFromItem } from "./";
 
 import { useTranslation } from "react-i18next";
 import { nanoid } from "nanoid";
@@ -24,12 +24,6 @@ import lockIcon from "../../images/lock.svg";
 import rotateIcon from "../../images/rotate.svg";
 import shuffleIcon from "../../images/shuffle.svg";
 import tapIcon from "../../images/tap.svg";
-
-const getActionsFromItem = (item) => {
-  const defaultActions = getDefaultActionsFromItem(item);
-  const { actions = [] } = item;
-  return defaultActions.concat(actions);
-};
 
 export const useItemActions = () => {
   const {
@@ -70,11 +64,12 @@ export const useItemActions = () => {
       if (selectedItems.length > 0) {
         // Prevent set state on unmounted component
         if (!isMountedRef.current) return;
-        setAvailableActions(
-          selectedItemList.reduce((acc, item) => {
-            return intersection(acc, getActionsFromItem(item));
-          }, getActionsFromItem(selectedItemList[0]))
-        );
+
+        const allActions = selectedItemList.reduce((acc, item) => {
+          return intersection(acc, getActionsFromItem(item));
+        }, getActionsFromItem(selectedItemList[0]));
+
+        setAvailableActions(allActions);
       } else {
         setAvailableActions([]);
       }
@@ -268,26 +263,6 @@ export const useItemActions = () => {
         shortcut: "t",
         icon: tapIcon,
       },
-      rotate90: {
-        action: rotate.bind(null, 90),
-        label: t("Rotate 90"),
-        icon: rotateIcon,
-      },
-      rotate60: {
-        action: rotate.bind(null, 60),
-        label: t("Rotate 60"),
-        icon: rotateIcon,
-      },
-      rotate45: {
-        action: rotate.bind(null, 45),
-        label: t("Rotate 45"),
-        icon: rotateIcon,
-      },
-      rotate30: {
-        action: rotate.bind(null, 30),
-        label: t("Rotate 30"),
-        icon: rotateIcon,
-      },
       stack: {
         action: align,
         label: t("Stack"),
@@ -301,6 +276,26 @@ export const useItemActions = () => {
         shortcut: "",
         multiple: true,
         icon: shuffleIcon,
+      },
+      rotate30: {
+        action: rotate.bind(null, 30),
+        label: t("Rotate 30"),
+        icon: rotateIcon,
+      },
+      rotate45: {
+        action: rotate.bind(null, 45),
+        label: t("Rotate 45"),
+        icon: rotateIcon,
+      },
+      rotate60: {
+        action: rotate.bind(null, 60),
+        label: t("Rotate 60"),
+        icon: rotateIcon,
+      },
+      rotate90: {
+        action: rotate.bind(null, 90),
+        label: t("Rotate 90"),
+        icon: rotateIcon,
       },
       clone: {
         action: cloneItem,

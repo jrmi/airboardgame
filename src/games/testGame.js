@@ -17,7 +17,18 @@ const genGame = () => {
     width: 100,
     x: 400,
     y: 400,
-    actions: ["rotate90", "rotate45"],
+    actions: [
+      "flip",
+      "flipSelf",
+      "tap",
+      "rotate45",
+      "rotate90",
+      "stack",
+      "shuffle",
+      "clone",
+      "lock",
+      "remove",
+    ],
   });
 
   items.push({
