@@ -201,6 +201,11 @@ const useItems = () => {
 
   const removeItems = React.useCallback(
     (itemsIdToRemove, sync = true) => {
+      // Remove from selected items first
+      setSelectItems((prevList) => {
+        return prevList.filter((id) => !itemsIdToRemove.includes(id));
+      });
+
       setItemList((prevItemList) => {
         return prevItemList.filter(
           (itemId) => !itemsIdToRemove.includes(itemId)
@@ -218,10 +223,6 @@ const useItems = () => {
       if (sync) {
         c2c.publish(`removeItems`, itemsIdToRemove);
       }
-
-      setSelectItems((prevList) => {
-        return prevList.filter((id) => !itemsIdToRemove.includes(id));
-      });
     },
     [c2c, setItemList, setItemMap, setSelectItems]
   );
