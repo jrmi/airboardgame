@@ -104,5 +104,15 @@
   "Go to home": "Home",
   "Configure game": "Configure game",
   "Ready to play ?": "Ready to play ?",
-  "Add all": "Add all"
+  "Add all": "Add all",
+  "Enter your email here": "Enter your email here",
+  "Side count": "Side count",
+  "Available actions": "Available actions",
+  "Publish": "Publish",
+  "Generating export": "Generating export...",
+  "About": "About",
+  "Got it!": "Got it!",
+  "This site use a cookie only to know if your are authenticated.": "This site use a cookie only to know if your are authenticated.",
+  "Refuse": "Refuse",
+  "Cookie are disabled, can't connect": "Cookie are disabled, can't login"
 }

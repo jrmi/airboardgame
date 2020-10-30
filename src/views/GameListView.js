@@ -1,6 +1,8 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import styled from "styled-components";
+import CookieConsent from "react-cookie-consent";
 
 import { getGames } from "../utils/api";
 import Account from "../components/Account";
@@ -11,7 +13,7 @@ import logo from "../images/logo-mono.png";
 import header from "../images/header.jpg";
 import useLocalStorage from "../hooks/useLocalStorage";
 
-import styled from "styled-components";
+import AboutModal from "./AboutModal";
 
 const Header = styled.div`
   height: 15em;
@@ -66,7 +68,17 @@ const Brand = styled.div`
   }
 `;
 
-const GameView = styled.div``;
+const GameView = styled.div`
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  & > footer {
+    margin-top: 1em;
+    padding: 0.5em 0;
+    text-align: center;
+    background-color: #00000099;
+  }
+`;
 
 const GameList = styled.ul`
   width: 960px;
@@ -74,9 +86,11 @@ const GameList = styled.ul`
   margin: 0;
   margin: 0 auto;
   padding: 0 2em;
+  flex: 1;
   display: flex;
   flex-wrap: wrap;
-  flex-direction: row;
+  align-items: start;
+  justify-content: start;
 `;
 
 const Game = styled.li`
@@ -89,6 +103,7 @@ const Game = styled.li`
   padding: 0.5em;
   margin: 0.3em;
   flex: 1 1 0%;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
   width: & .game-name {
     margin: 0 1em;
   }
@@ -124,6 +139,11 @@ const GameListView = () => {
   const { t } = useTranslation();
 
   const [isBeta, setIsBeta] = useLocalStorage("isBeta", false);
+  const [cookieConsent, setCookieConsent] = useLocalStorage(
+    "cookieConsent",
+    false
+  );
+  const [showAboutModal, setShowAboutModal] = React.useState(false);
 
   let query = useQuery();
 
@@ -165,55 +185,89 @@ const GameListView = () => {
   };*/
 
   return (
-    <GameView>
-      <Header>
-        {isBeta && isAuthenticated && (
-          <Link to={`/game/`} className="button new-game">
-            {t("Create new game")}
-          </Link>
-        )}
-        {isBeta && <Account className="login" />}
-        <Brand className="brand">
-          <a href="/">
-            <img src={logo} alt="logo" />
-          </a>
-          <h1>Air Board Game</h1>
-        </Brand>
-        <h2 className="baseline">
-          {t("Play your favorite games online with your friends")}
-        </h2>
-      </Header>
-      <GameList>
-        {gameList
-          .filter(
-            ({ published, owner }) =>
-              published || (userId && (!owner || owner === userId))
-          )
-          .map(({ name, id, owner, published }) => (
-            <Game key={id}>
-              <h2 className="game-name">
-                {name} {!published && "(Private)"}
-              </h2>
-              <Link to={`/game/${id}/session/`} className="button play">
-                {t("Play")}
-              </Link>
-              {isBeta && userId && (userId === owner || !owner) && (
-                <div className="extra-actions">
-                  <Link
-                    to={`/game/${id}/edit`}
-                    className="button edit icon-only"
-                  >
-                    <img
-                      src="https://icongr.am/feather/edit.svg?size=16&color=ffffff"
-                      alt={t("Edit")}
-                    />
-                  </Link>
-                </div>
-              )}
-            </Game>
-          ))}
-      </GameList>
-    </GameView>
+    <>
+      <GameView>
+        <Header>
+          {isBeta && isAuthenticated && (
+            <Link to={`/game/`} className="button new-game">
+              {t("Create new game")}
+            </Link>
+          )}
+          {isBeta && <Account className="login" disabled={!cookieConsent} />}
+          <Brand className="brand">
+            <a href="/">
+              <img src={logo} alt="logo" />
+            </a>
+            <h1>Air Board Game</h1>
+          </Brand>
+          <h2 className="baseline">
+            {t("Play your favorite games online with your friends")}
+          </h2>
+        </Header>
+        <GameList>
+          {gameList
+            .filter(
+              ({ published, owner }) =>
+                published || (userId && (!owner || owner === userId))
+            )
+            .map(({ name, id, owner, published }) => (
+              <Game key={id}>
+                <h2 className="game-name">
+                  {name} {!published && "(Private)"}
+                </h2>
+                <Link to={`/game/${id}/session/`} className="button play">
+                  {t("Play")}
+                </Link>
+                {isBeta && userId && (userId === owner || !owner) && (
+                  <div className="extra-actions">
+                    <Link
+                      to={`/game/${id}/edit`}
+                      className="button edit icon-only"
+                    >
+                      <img
+                        src="https://icongr.am/feather/edit.svg?size=16&color=ffffff"
+                        alt={t("Edit")}
+                      />
+                    </Link>
+                  </div>
+                )}
+              </Game>
+            ))}
+        </GameList>
+        <footer>
+          <button
+            className="button clear"
+            onClick={() => setShowAboutModal(true)}
+          >
+            {t("About")}
+          </button>
+        </footer>
+      </GameView>
+      <AboutModal show={showAboutModal} setShow={setShowAboutModal} />
+      {isBeta && (
+        <CookieConsent
+          location="bottom"
+          buttonText={t("Got it!")}
+          enableDeclineButton
+          declineButtonText={t("Refuse")}
+          cookieName="cookieConsent"
+          onAccept={() => setCookieConsent(true)}
+          containerClasses="cookie"
+          expires={150}
+          buttonStyle={{
+            color: "var(--font-color)",
+            backgroundColor: "var(--color-secondary)",
+          }}
+          style={{
+            backgroundColor: "#000000CE",
+            boxShadow:
+              "rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px",
+          }}
+        >
+          {t("This site use a cookie only to know if your are authenticated.")}
+        </CookieConsent>
+      )}
+    </>
   );
 };
 

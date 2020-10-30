@@ -4,7 +4,7 @@ import Modal from "../ui/Modal";
 import { sendAuthToken } from "../utils/api";
 import useAuth from "../hooks/useAuth";
 
-const Account = (props) => {
+const Account = ({ disabled, ...props }) => {
   const { t } = useTranslation();
   const { isAuthenticated, logout } = useAuth();
   const [email, setEmail] = React.useState("");
@@ -26,6 +26,16 @@ const Account = (props) => {
       setEmailSent(false);
     }
   }, [showLogin]);
+
+  if (disabled) {
+    return (
+      <div {...props}>
+        <button disabled title={t("Cookie are disabled, can't connect")}>
+          {t("Login")}
+        </button>
+      </div>
+    );
+  }
 
   return (
     <>
