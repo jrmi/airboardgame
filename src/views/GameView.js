@@ -90,7 +90,7 @@ export const GameView = ({ edit }) => {
 
   return (
     <GameProvider game={game} gameId={realGameId}>
-      <BoardView namespace={gameId} edit={edit} />
+      <BoardView namespace={realGameId} edit={edit} />
     </GameProvider>
   );
 };
