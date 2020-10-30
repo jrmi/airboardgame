@@ -17,8 +17,9 @@ const generateDownloadURI = (data) => {
 export const DownloadGameLink = () => {
   const { t } = useTranslation();
 
-  const [downloadURI, setDownloadURI] = React.useState({});
+  const [downloadURI, setDownloadURI] = React.useState("");
   const [date, setDate] = React.useState(Date.now());
+  const [genOnce, setGenOnce] = React.useState(false);
 
   const updateSaveLink = useRecoilCallback(
     ({ snapshot }) => async () => {
@@ -35,6 +36,7 @@ export const DownloadGameLink = () => {
       if (game.items.length) {
         setDownloadURI(generateDownloadURI(game));
         setDate(Date.now());
+        setGenOnce(true);
       }
     },
     []
@@ -46,22 +48,32 @@ export const DownloadGameLink = () => {
     const cancel = setInterval(() => {
       if (!mounted) return;
       updateSaveLink();
-    }, 5000);
+    }, 2000);
 
     return () => {
       mounted = false;
+      setGenOnce(false);
       clearInterval(cancel);
     };
   }, [updateSaveLink]);
 
   return (
-    <a
-      className="button primary"
-      href={downloadURI}
-      download={`airboardgame_${date}.json`}
-    >
-      {t("Export game")}
-    </a>
+    <>
+      {genOnce && (
+        <a
+          className="button primary"
+          href={downloadURI}
+          download={`airboardgame_${date}.json`}
+        >
+          {t("Export game")}
+        </a>
+      )}
+      {!genOnce && (
+        <button className="button primary" disabled>
+          {t("Generating export")}
+        </button>
+      )}
+    </>
   );
 };
 
