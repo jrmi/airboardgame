@@ -171,7 +171,8 @@ const useItems = () => {
         c2c.publish(`updateItemListOrder`, result);
         return result;
       });
-    }
+    },
+    [c2c, setItemList, setItemMap]
   );
 
   const insertItemBefore = useRecoilCallback(
