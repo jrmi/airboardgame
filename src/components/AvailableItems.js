@@ -73,6 +73,7 @@ const AvailableItems = () => {
               <summary style={{ cursor: "pointer" }}>
                 {groupId}{" "}
                 <span
+                  style={{ fontSize: "0.6em" }}
                   onClick={(e) => {
                     e.preventDefault();
                     addItems(groupId);
