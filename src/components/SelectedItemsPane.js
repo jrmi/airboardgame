@@ -356,7 +356,9 @@ export const SelectedItems = () => {
           </button>
         </ActionPane>
       )}
-      {boundingBoxLast && <BoundingBoxZone {...boundingBoxLast} />}
+      {boundingBoxLast && selectedItems.length > 1 && (
+        <BoundingBoxZone {...boundingBoxLast} />
+      )}
     </>
   );
 };
