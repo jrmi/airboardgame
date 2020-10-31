@@ -89,8 +89,7 @@ const GameList = styled.ul`
   flex: 1;
   display: flex;
   flex-wrap: wrap;
-  align-items: start;
-  justify-content: start;
+  align-content: flex-start;
 `;
 
 const Game = styled.li`
