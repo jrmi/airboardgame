@@ -56,7 +56,7 @@ const UserConfig = ({ user, setUser, editable, index }) => {
       <UserColor
         color={user.color}
         editable={editable}
-        onClick={() => setShowDetails(true)}
+        onClick={() => editable && setShowDetails(true)}
         title={user.name}
       >
         {user.name ? user.name[0] : index}
