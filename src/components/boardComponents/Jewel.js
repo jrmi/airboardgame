@@ -7,7 +7,7 @@ const Token = ({ size = 50, color = "#b3b3b3" }) => {
     <svg
       xmlns="http://www.w3.org/2000/svg"
       version="1.1"
-      viewBox="0 0 13.229166 13.229167"
+      viewBox="2.5 2.5 8.5 8.5"
       height={size}
       width={size}
     >

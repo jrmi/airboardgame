@@ -7,8 +7,8 @@ const Meeple = ({ size = 50, color = "#b3b3b3" }) => {
     <svg
       xmlns="http://www.w3.org/2000/svg"
       version="1.1"
-      viewBox="0 0 13.492827 10.775362"
-      height={(size / 5) * 4}
+      viewBox="1 1 11 7"
+      height={size}
       width={size}
     >
       <defs id="defs3017">
