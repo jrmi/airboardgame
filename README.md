@@ -2,7 +2,7 @@
 
 Play any board game online in real time with your friends thanks to this [tabletop simulator](https://airboardgame.netlify.app).
 
-If you just want to play, go [here](https://airboardgame.netlify.app).
+If you just want to play, go [here](https://airboardgame.net).
 
 No need to create an account, each time you visit Airboardgame website,
 a new room is automatically created and, as first player,
@@ -60,10 +60,9 @@ development skills to play with your friends.
 Want to test a concept? Play a Print & Play game? Use airboardgame without the need for more hardware.
 The only limit is your imagination.
 
-To access this features, just be the first player and click the "Edit button" to
-enable edition features.
+To access this features, login then click on the « create new game » button on home page.
 
-We want Airboardgame to be simple, intuitive and consistent web application.
+We want Airboardgame to be simple, intuitive and a consistent web application.
 Just give a try and if you like it share it and contribute.
 
 You can create a game with simple actions :
