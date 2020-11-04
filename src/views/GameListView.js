@@ -52,6 +52,7 @@ const Brand = styled.div`
   width: 550px;
   align-items: center;
   padding: 0 1em;
+  position: relative;
   & h1 {
     font-size: 4em;
     margin: 0;
@@ -65,6 +66,13 @@ const Brand = styled.div`
   & img {
     height: 55px;
     margin-top: 8px;
+  }
+  & .beta {
+    position: absolute;
+    top: 3px;
+    right: 33px;
+    font-weight: 700;
+    color: hsl(168, 83%, 62%);
   }
 `;
 
@@ -183,6 +191,7 @@ const GameListView = () => {
               <img src={logo} alt="logo" />
             </a>
             <h1>Air Board Game</h1>
+            <span className="beta">Beta</span>
           </Brand>
           <h2 className="baseline">
             {t("Play your favorite games online with your friends")}
