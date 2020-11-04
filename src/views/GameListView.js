@@ -138,6 +138,11 @@ const GameListView = () => {
   const { t } = useTranslation();
 
   const [isBeta, setIsBeta] = useLocalStorage("isBeta", false);
+
+  if (isBeta) {
+    console.log("Beta activated");
+  }
+
   const [cookieConsent, setCookieConsent] = useLocalStorage(
     "cookieConsent",
     false
@@ -163,36 +168,16 @@ const GameListView = () => {
     }
   }, [forceBeta, setIsBeta]);
 
-  /*const handleRemove = (idToRemove) => async () => {
-    confirmAlert({
-      title: t("Confirmation"),
-      message: t("Do you really want to remove selected items ?"),
-      buttons: [
-        {
-          label: t("Yes"),
-          onClick: () => {
-            deleteGame(idToRemove);
-            setGameList(gameList.filter(({ id }) => id !== idToRemove));
-          },
-        },
-        {
-          label: t("No"),
-          onClick: () => {},
-        },
-      ],
-    });
-  };*/
-
   return (
     <>
       <GameView>
         <Header>
-          {isBeta && isAuthenticated && (
+          {isAuthenticated && (
             <Link to={`/game/`} className="button new-game">
               {t("Create new game")}
             </Link>
           )}
-          {isBeta && <Account className="login" disabled={!cookieConsent} />}
+          <Account className="login" disabled={!cookieConsent} />
           <Brand className="brand">
             <a href="/">
               <img src={logo} alt="logo" />
@@ -217,7 +202,7 @@ const GameListView = () => {
                 <Link to={`/game/${id}/session/`} className="button play">
                   {t("Play")}
                 </Link>
-                {isBeta && userId && (userId === owner || !owner) && (
+                {userId && (userId === owner || !owner) && (
                   <div className="extra-actions">
                     <Link
                       to={`/game/${id}/edit`}
@@ -243,29 +228,27 @@ const GameListView = () => {
         </footer>
       </GameView>
       <AboutModal show={showAboutModal} setShow={setShowAboutModal} />
-      {isBeta && (
-        <CookieConsent
-          location="bottom"
-          buttonText={t("Got it!")}
-          enableDeclineButton
-          declineButtonText={t("Refuse")}
-          cookieName="cookieConsent"
-          onAccept={() => setCookieConsent(true)}
-          containerClasses="cookie"
-          expires={150}
-          buttonStyle={{
-            color: "var(--font-color)",
-            backgroundColor: "var(--color-secondary)",
-          }}
-          style={{
-            backgroundColor: "#000000CE",
-            boxShadow:
-              "rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px",
-          }}
-        >
-          {t("This site use a cookie only to know if your are authenticated.")}
-        </CookieConsent>
-      )}
+      <CookieConsent
+        location="bottom"
+        buttonText={t("Got it!")}
+        enableDeclineButton
+        declineButtonText={t("Refuse")}
+        cookieName="cookieConsent"
+        onAccept={() => setCookieConsent(true)}
+        containerClasses="cookie"
+        expires={150}
+        buttonStyle={{
+          color: "var(--font-color)",
+          backgroundColor: "var(--color-secondary)",
+        }}
+        style={{
+          backgroundColor: "#000000CE",
+          boxShadow:
+            "rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px",
+        }}
+      >
+        {t("This site use a cookie only to know if your are authenticated.")}
+      </CookieConsent>
     </>
   );
 };
