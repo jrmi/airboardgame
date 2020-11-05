@@ -50,6 +50,8 @@ export const DownloadGameLink = () => {
       updateSaveLink();
     }, 2000);
 
+    updateSaveLink();
+
     return () => {
       mounted = false;
       setGenOnce(false);
