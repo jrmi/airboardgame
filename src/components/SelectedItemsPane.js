@@ -2,7 +2,6 @@ import React from "react";
 import styled from "styled-components";
 
 import { useRecoilValue, useRecoilCallback } from "recoil";
-import { useItems } from "./Board/Items";
 import { useItemActions } from "./boardComponents/useItemActions";
 import {
   selectedItemsAtom,
@@ -26,7 +25,8 @@ const SelectedPane = styled.div`
   left: 0.5em;
   bottom: 0.5em;
   top: 4.5em;
-  background-color: transparent;
+  background-color: var(--bg-secondary-color);
+  padding: 0.5em;
   overflow-y: scroll;
   transform: scaleX(-1);
   & > div {
@@ -99,8 +99,6 @@ const BoundingBoxZone = styled.div.attrs(({ top, left, height, width }) => ({
 `;
 
 export const SelectedItems = () => {
-  const { updateItem } = useItems();
-
   const { availableActions, actionMap } = useItemActions();
   const [showAction, setShowAction] = React.useState(false);
   const [showEdit, setShowEdit] = React.useState(false);
@@ -228,16 +226,6 @@ export const SelectedItems = () => {
     };
   }, [actionMap, showEdit]);
 
-  const onSubmitHandler = React.useCallback(
-    (formValues) => {
-      updateItem(formValues.id, (item) => ({
-        ...item,
-        ...formValues,
-      }));
-    },
-    [updateItem]
-  );
-
   const onDblClick = React.useCallback(
     (e) => {
       const foundElement = insideClass(e.target, "item");
@@ -289,25 +277,19 @@ export const SelectedItems = () => {
     });
   };*/
 
-  const showEditPane = selectedItems.length === 1 && showEdit;
-
   return (
     <>
-      {showEditPane && (
+      {showEdit && (
         <SelectedPane>
-          {selectedItems.map((itemId) => (
-            <div className="card" key={itemId}>
-              <header>
-                <h3>{t("Edit item")}</h3>
-              </header>
-              <CardContent>
-                <ItemFormFactory
-                  itemId={itemId}
-                  onSubmitHandler={onSubmitHandler}
-                />
-              </CardContent>
-            </div>
-          ))}
+          <div>
+            <header>
+              {selectedItems.length === 1 && <h3>{t("Edit item")}</h3>}
+              {selectedItems.length > 1 && <h3>{t("Edit all items")}</h3>}
+            </header>
+            <CardContent>
+              <ItemFormFactory />
+            </CardContent>
+          </div>
         </SelectedPane>
       )}
       {showAction && (
