@@ -4,12 +4,19 @@ import { useTranslation } from "react-i18next";
 
 import { useRecoilValue } from "recoil";
 
+import Slider from "rc-slider";
 import { Form, Field } from "react-final-form";
+
 import AutoSave from "../../ui/formUtils/AutoSave";
 
-import { ItemMapAtom } from "../Board/";
+import { ItemMapAtom, selectedItemsAtom } from "../Board/";
+import { useItems } from "../Board/Items";
 
 import Label from "../../ui/formUtils/Label";
+
+import ActionsField from "./ActionsField";
+
+import "rc-slider/assets/index.css";
 
 import {
   getFormFieldComponent,
@@ -17,22 +24,52 @@ import {
   getAvailableActionsFromItem,
 } from ".";
 
-import ActionsField from "./ActionsField";
-
-import Slider from "rc-slider";
-import "rc-slider/assets/index.css";
-
-const ItemFormFactory = ({ itemId, onSubmitHandler }) => {
+const ItemFormFactory = () => {
   const { t } = useTranslation();
 
+  const { batchUpdateItems } = useItems();
+
+  const selectedItems = useRecoilValue(selectedItemsAtom);
   const itemMap = useRecoilValue(ItemMapAtom);
-  const item = itemMap[itemId];
+
+  const item = itemMap[selectedItems[0]];
+
   const [defaultActions] = React.useState(getDefaultActionsFromItem(item));
   const [availableActions] = React.useState(getAvailableActionsFromItem(item));
 
-  if (!item) return null;
+  let FieldsComponent;
 
-  const FieldsComponent = getFormFieldComponent(item.type);
+  if (selectedItems.length === 1) {
+    FieldsComponent = getFormFieldComponent(item.type);
+  } else {
+    const types = new Set(selectedItems.map((itemId) => itemMap[itemId].type));
+    if (types.size === 1) {
+      FieldsComponent = getFormFieldComponent(Array.from(types)[0]);
+    } else {
+      FieldsComponent = () => null;
+    }
+  }
+
+  let initialValues;
+
+  // Set initial values to item values if only one element selected
+  // Empty object otherwise
+  if (selectedItems.length === 1) {
+    initialValues = { ...item };
+    initialValues.actions = initialValues.actions || defaultActions;
+  } else {
+    initialValues = {};
+  }
+
+  const onSubmitHandler = React.useCallback(
+    (formValues) => {
+      batchUpdateItems(selectedItems, (item) => ({
+        ...item,
+        ...formValues,
+      }));
+    },
+    [batchUpdateItems, selectedItems]
+  );
 
   return (
     <Form
@@ -45,21 +82,18 @@ const ItemFormFactory = ({ itemId, onSubmitHandler }) => {
           }}
         >
           <AutoSave save={onSubmitHandler} />
-          <div style={{ display: "none" }}>
-            <Field name="id" component="input" initialValue={item.id} />
-          </div>
           <Label>
             <Field
               name="locked"
               component="input"
               type="checkbox"
-              initialValue={item.locked}
+              initialValue={initialValues.locked}
             />
             <span className="checkable">{t("Locked?")}</span>
           </Label>
           <Label>
             {t("Rotation")}
-            <Field name="rotation" initialValue={item.rotation}>
+            <Field name="rotation" initialValue={initialValues.rotation}>
               {({ input: { onChange, value } }) => {
                 return (
                   <Slider
@@ -70,6 +104,7 @@ const ItemFormFactory = ({ itemId, onSubmitHandler }) => {
                     step={5}
                     included={false}
                     marks={{
+                      "-90": -90,
                       "-45": -45,
                       "-30": -30,
                       0: 0,
@@ -85,7 +120,7 @@ const ItemFormFactory = ({ itemId, onSubmitHandler }) => {
           </Label>
           <Label>
             {t("Layer")}
-            <Field name="layer" initialValue={item.layer}>
+            <Field name="layer" initialValue={initialValues.layer}>
               {({ input: { onChange, value } }) => {
                 return (
                   <Slider
@@ -110,10 +145,10 @@ const ItemFormFactory = ({ itemId, onSubmitHandler }) => {
               }}
             </Field>
           </Label>
-          <FieldsComponent initialValues={item} />
+          <FieldsComponent initialValues={initialValues} />
           <h3>{t("Available actions")}</h3>
           <Label>
-            <Field name="actions" initialValue={item.actions || defaultActions}>
+            <Field name="actions" initialValue={initialValues.actions}>
               {({ input: { onChange, value } }) => (
                 <ActionsField
                   onChange={onChange}
@@ -129,4 +164,4 @@ const ItemFormFactory = ({ itemId, onSubmitHandler }) => {
   );
 };
 
-export default ItemFormFactory;
+export default React.memo(ItemFormFactory);
