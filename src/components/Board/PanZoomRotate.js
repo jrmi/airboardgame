@@ -9,6 +9,8 @@ import styled from "styled-components";
 
 import debounce from "lodash.debounce";
 
+const TOLERANCE = 100;
+
 export const PanZoomRotateAtom = atom({
   key: "PanZoomRotate",
   default: {
@@ -137,13 +139,42 @@ const PanZoomRotate = ({ children }) => {
         e.clientX - stateRef.current.startX,
         e.clientY - stateRef.current.startY,
       ];
-      setDim((prevDim) => ({
-        ...prevDim,
-        translateX: stateRef.current.startTranslateX + deltaX,
-        translateY: stateRef.current.startTranslateY + deltaY,
-      }));
+      setDim((prevDim) => {
+        return {
+          ...prevDim,
+          translateX: stateRef.current.startTranslateX + deltaX,
+          translateY: stateRef.current.startTranslateY + deltaY,
+        };
+      });
     }
   };
+
+  // Keep board inside viewport
+  React.useEffect(() => {
+    const { width, height } = wrappedRef.current.getBoundingClientRect();
+    const { innerHeight, innerWidth } = window;
+
+    const newDim = {};
+
+    if (dim.translateX > innerWidth - TOLERANCE) {
+      newDim.translateX = innerWidth - TOLERANCE;
+    }
+    if (dim.translateX + width < TOLERANCE) {
+      newDim.translateX = TOLERANCE - width;
+    }
+    if (dim.translateY > innerHeight - TOLERANCE) {
+      newDim.translateY = innerHeight - TOLERANCE;
+    }
+    if (dim.translateY + height < TOLERANCE) {
+      newDim.translateY = TOLERANCE - height;
+    }
+    if (Object.keys(newDim).length > 0) {
+      setDim((prevDim) => ({
+        ...prevDim,
+        ...newDim,
+      }));
+    }
+  }, [dim.translateX, dim.translateY, setDim]);
 
   const onMouseUp = React.useCallback(() => {
     stateRef.current.moving = false;
