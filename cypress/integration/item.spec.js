@@ -9,6 +9,11 @@ describe("Item interactions", () => {
       "transform",
       "matrix(1, 0, 0, 1, 0, -200)"
     );
+    cy.get(".item")
+      .first()
+      .children()
+      .first()
+      .should("have.css", "transform", "none");
   });
 
   it("should move item", () => {
