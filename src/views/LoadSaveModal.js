@@ -10,6 +10,8 @@ import { nanoid } from "nanoid";
 import { updateGame } from "../utils/api";
 import { useGame } from "../hooks/useGame";
 
+import { toast } from "react-toastify";
+
 import Modal from "../ui/Modal";
 
 const LoadSaveGameModal = ({ show, setShow, edit }) => {
@@ -30,12 +32,18 @@ const LoadSaveGameModal = ({ show, setShow, edit }) => {
   const handleSave = React.useCallback(async () => {
     const currentGame = await getGame();
     if (gameId && gameId.length > 8) {
-      await updateGame(gameId, currentGame);
+      try {
+        await updateGame(gameId, currentGame);
+        toast.success(t("Game saved"), { autoClose: 1500 });
+      } catch (e) {
+        console.log(e);
+        toast.error(t("Error while saving game. Try again later..."));
+      }
     } else {
       console.log("Game not created. It's not a real one.");
     }
     setShow(false);
-  }, [gameId, getGame, setShow]);
+  }, [gameId, getGame, setShow, t]);
 
   return (
     <Modal
