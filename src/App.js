@@ -9,6 +9,9 @@ import {
 
 import { RecoilRoot } from "recoil";
 import { nanoid } from "nanoid";
+import { ToastContainer } from "react-toastify";
+
+import "react-toastify/dist/ReactToastify.css";
 
 import GameListView from "./views/GameListView";
 import GameView from "./views/GameView";
@@ -42,6 +45,17 @@ function App() {
           </Switch>
         </Router>
       </RecoilRoot>
+      <ToastContainer
+        position="top-center"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     </Suspense>
   );
 }

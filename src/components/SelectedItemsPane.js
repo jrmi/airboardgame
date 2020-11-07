@@ -229,7 +229,7 @@ export const SelectedItems = () => {
   const onDblClick = React.useCallback(
     (e) => {
       const foundElement = insideClass(e.target, "item");
-      // We dblclick oustside of an element
+      // We dblclick outside of an element
       if (!foundElement) return;
 
       const filteredActions = availableActions.filter(
