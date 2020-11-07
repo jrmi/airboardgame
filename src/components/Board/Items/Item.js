@@ -62,6 +62,7 @@ const Item = ({
   const itemRef = React.useRef(null);
   const [unlock, setUnlock] = React.useState(false);
   const isMountedRef = React.useRef(false);
+  const effectRef = React.useRef(null);
 
   // Allow to operate on locked item if key is pressed
   React.useEffect(() => {
@@ -98,6 +99,10 @@ const Item = ({
     };
   }, []);
 
+  const removeClass = () => {
+    effectRef.current.className = "";
+  };
+
   return (
     <div
       style={{
@@ -117,7 +122,9 @@ const Item = ({
         layer={layer}
         id={id}
       >
-        <Component {...rest} setState={updateState} />
+        <div className="hvr-pop" ref={effectRef} onAnimationEnd={removeClass}>
+          <Component {...rest} setState={updateState} />
+        </div>
       </ItemWrapper>
     </div>
   );
