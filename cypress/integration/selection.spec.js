@@ -1,3 +1,5 @@
+const { transform } = require("@babel/core");
+
 describe("Selection action", () => {
   beforeEach(() => {
     cy.viewport(1000, 600);
@@ -9,6 +11,11 @@ describe("Selection action", () => {
       "transform",
       "matrix(1, 0, 0, 1, 0, -200)"
     );
+    cy.get(".item")
+      .first()
+      .children()
+      .first()
+      .should("have.css", "transform", "none");
   });
 
   it("should select multiple items with left click ", () => {
