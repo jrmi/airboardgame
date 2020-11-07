@@ -19,16 +19,22 @@ const StyledButton = styled.div.attrs(() => ({
 const AddItemPane = styled.div`
   position: absolute;
   right: 0.5em;
-  top: 4.5em;
-  bottom: 4.5em;
+  top: 3.5em;
+  bottom: 0.5em;
   background-color: var(--bg-secondary-color);
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
   width: 20%;
+  min-width: 280px;
   padding: 0.5em;
   text-align: center;
   overflow-y: scroll;
   & .tabs a {
     cursor: pointer;
+  }
+  & .close {
+    position: absolute;
+    top: 5px;
+    right: 10px;
   }
 `;
 
@@ -49,13 +55,28 @@ const AddItemButton = () => {
     <>
       <StyledButton onClick={() => setShowAddPanel((prev) => !prev)}>
         <img
-          src="https://icongr.am/feather/plus-circle.svg?size=46&color=db5034"
+          src={
+            showAddPanel
+              ? "https://icongr.am/feather/x-circle.svg?size=46&color=db5034"
+              : "https://icongr.am/feather/plus-circle.svg?size=46&color=db5034"
+          }
           alt={t("Add item")}
           title={t("Add item")}
         />
       </StyledButton>
       {showAddPanel && (
         <AddItemPane>
+          <button
+            className="button clear icon-only close"
+            onClick={() => {
+              setShowAddPanel(false);
+            }}
+          >
+            <img
+              src="https://icongr.am/feather/x.svg?size=30&color=ffffff"
+              alt={t("Close")}
+            />
+          </button>
           <nav className="tabs">
             {
               // eslint-disable-next-line
