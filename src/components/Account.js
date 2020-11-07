@@ -3,6 +3,8 @@ import { useTranslation } from "react-i18next";
 import Modal from "../ui/Modal";
 import { sendAuthToken } from "../utils/api";
 import useAuth from "../hooks/useAuth";
+import { toast } from "react-toastify";
+import Waiter from "../ui/Waiter";
 
 const Account = ({ disabled, ...props }) => {
   const { t } = useTranslation();
@@ -10,14 +12,23 @@ const Account = ({ disabled, ...props }) => {
   const [email, setEmail] = React.useState("");
   const [emailSent, setEmailSent] = React.useState(false);
   const [showLogin, setShowLogin] = React.useState(false);
+  const [loginInProgress, setLoginInProgress] = React.useState(false);
 
   const handleChange = (e) => {
     setEmail(e.target.value);
   };
 
-  const handleSubmit = () => {
-    sendAuthToken(email);
-    setEmailSent(true);
+  const handleSubmit = async () => {
+    try {
+      setLoginInProgress(true);
+      await sendAuthToken(email);
+      setEmailSent(true);
+      setLoginInProgress(false);
+    } catch (e) {
+      setLoginInProgress(false);
+      console.log(e);
+      toast.error(t("Error why logging, verify your email address"));
+    }
   };
 
   React.useEffect(() => {
@@ -37,6 +48,12 @@ const Account = ({ disabled, ...props }) => {
     );
   }
 
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      handleSubmit();
+    }
+  };
+
   return (
     <>
       <div {...props}>
@@ -46,6 +63,7 @@ const Account = ({ disabled, ...props }) => {
           <button onClick={() => setShowLogin(true)}>{t("Login")}</button>
         )}
       </div>
+      {loginInProgress && <Waiter message={t("In progress...")} />}
       <Modal show={showLogin} setShow={setShowLogin} title={t("Login")}>
         {!emailSent && (
           <>
@@ -53,6 +71,7 @@ const Account = ({ disabled, ...props }) => {
               value={email}
               onChange={handleChange}
               placeholder={t("Enter your email here")}
+              onKeyDown={handleKeyDown}
             />
             <div
               style={{

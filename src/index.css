@@ -58,3 +58,7 @@ h5 {
 .tabs a {
   color: var(--font-color);
 }
+
+input::placeholder {
+  color: #2d2f33;
+}

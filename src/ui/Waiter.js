@@ -9,11 +9,13 @@ const Overlay = styled.div`
   top: 0;
   left: 0;
   background-color: var(--bg-color);
-  opacity: 0.7;
+  opacity: 0.9;
   color: #606984;
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 1000;
+  font-size: 3em;
 `;
 
 const Waiter = ({ message }) => {
