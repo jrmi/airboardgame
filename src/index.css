@@ -63,6 +63,9 @@ input::placeholder {
   color: #2d2f33;
 }
 
+/* Animation definition */
+
+/* hvr-pop */
 @keyframes hvr-pop {
   0% {
     transform: scale(3);
