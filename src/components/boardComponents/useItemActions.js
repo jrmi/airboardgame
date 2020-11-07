@@ -121,6 +121,10 @@ export const useItemActions = () => {
   );
 
   const shuffleSelectedItems = React.useCallback(() => {
+    selectedItems.forEach((itemId) => {
+      const elem = document.getElementById(itemId);
+      elem.firstChild.className = "hvr-wobble-horizontal";
+    });
     const shuffledItems = shuffleArray([...selectedItems]);
     swapItems(selectedItems, shuffledItems);
   }, [selectedItems, swapItems]);
