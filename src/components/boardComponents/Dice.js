@@ -47,6 +47,9 @@ const Dice = ({
   setState,
 }) => {
   const { t } = useTranslation();
+
+  const diceWrapper = React.useRef(null);
+
   const setValue = (e) => {
     setState((prevState) => ({
       ...prevState,
@@ -55,6 +58,7 @@ const Dice = ({
   };
 
   const roll = () => {
+    diceWrapper.current.className = "hvr-wobble-horizontal";
     const simulateRoll = (nextTimeout) => {
       setState((prevState) => ({
         ...prevState,
@@ -70,24 +74,30 @@ const Dice = ({
     simulateRoll(100);
   };
 
+  const removeClass = (e) => {
+    e.target.className = "";
+  };
+
   return (
-    <DicePane color={color}>
-      <h3>{label}</h3>
-      <label style={{ userSelect: "none" }}>
-        <input
-          style={{
-            textColor,
-            fontSize: fontSize + "px",
-          }}
-          className="result"
-          value={value}
-          onChange={setValue}
-        />
-      </label>
-      <span>
-        <button onClick={roll}>{t("Roll")}</button>
-      </span>
-    </DicePane>
+    <div onAnimationEnd={removeClass} ref={diceWrapper}>
+      <DicePane color={color}>
+        <h3>{label}</h3>
+        <label style={{ userSelect: "none" }}>
+          <input
+            style={{
+              textColor,
+              fontSize: fontSize + "px",
+            }}
+            className="result"
+            value={value}
+            onChange={setValue}
+          />
+        </label>
+        <span>
+          <button onClick={roll}>{t("Roll")}</button>
+        </span>
+      </DicePane>
+    </div>
   );
 };
 
