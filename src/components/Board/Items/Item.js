@@ -56,13 +56,14 @@ const ItemWrapper = styled.div.attrs(({ rotation, locked }) => {
 const Item = ({
   setState,
   state: { type, x, y, rotation = 0, id, locked, layer, ...rest } = {},
+  animate = "hvr-pop",
   isSelected,
   getComponent,
 }) => {
   const itemRef = React.useRef(null);
   const [unlock, setUnlock] = React.useState(false);
   const isMountedRef = React.useRef(false);
-  const effectRef = React.useRef(null);
+  const animateRef = React.useRef(null);
 
   // Allow to operate on locked item if key is pressed
   React.useEffect(() => {
@@ -99,8 +100,12 @@ const Item = ({
     };
   }, []);
 
-  const removeClass = () => {
-    effectRef.current.className = "";
+  React.useEffect(() => {
+    animateRef.current.className = animate;
+  }, [animate]);
+
+  const removeClass = (e) => {
+    e.target.className = "";
   };
 
   return (
@@ -122,7 +127,7 @@ const Item = ({
         layer={layer}
         id={id}
       >
-        <div className="hvr-pop" ref={effectRef} onAnimationEnd={removeClass}>
+        <div ref={animateRef} onAnimationEnd={removeClass}>
           <Component {...rest} setState={updateState} />
         </div>
       </ItemWrapper>
