@@ -49,7 +49,7 @@ const PanZoomRotate = ({ children }) => {
   });
 
   // React on scale change
-  React.useEffect(() => {
+  React.useLayoutEffect(() => {
     setDim((prevDim) => {
       const { top, left } = wrappedRef.current.getBoundingClientRect();
       const displayX = scale.x - left;
