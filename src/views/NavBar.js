@@ -8,6 +8,7 @@ import InfoModal from "../views/InfoModal";
 import InfoEditModal from "../views/InfoEditModal";
 import LoadSaveModal from "../views/LoadSaveModal";
 import { UserList } from "../components/users";
+import { getBestTranslationFromConfig } from "../utils/api";
 
 import useBoardConfig from "../components/useBoardConfig";
 
@@ -31,12 +32,17 @@ const StyledNavBar = styled.div.attrs(() => ({ className: "nav" }))`
 `;
 
 const NavBar = ({ editMode }) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [showLoadGameModal, setShowLoadGameModal] = React.useState(false);
   const [showHelpModal, setShowHelpModal] = React.useState(false);
   const [showInfoModal, setShowInfoModal] = React.useState(false);
 
   const [boardConfig] = useBoardConfig();
+
+  const translation = React.useMemo(
+    () => getBestTranslationFromConfig(boardConfig, i18n.languages),
+    [boardConfig, i18n.languages]
+  );
 
   return (
     <>
@@ -58,7 +64,7 @@ const NavBar = ({ editMode }) => {
         </div>
 
         <div className="nav-center">
-          <h3>{boardConfig.name ? boardConfig.name : "Air Board Game"}</h3>
+          <h3>{translation.name ? translation.name : "Air Board Game"}</h3>
           <button
             className="button clear icon-only"
             onClick={() => setShowInfoModal((prev) => !prev)}

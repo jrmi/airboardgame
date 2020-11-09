@@ -20,7 +20,6 @@ const Item = styled.div`
   padding: 1em;
   margin: 0.3em;
   cursor: pointer;
-  border: 1px solid #00000022;
   opacity: 0.7;
   &:hover {
     opacity: 1;

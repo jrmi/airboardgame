@@ -12,6 +12,7 @@ import "react-confirm-alert/src/react-confirm-alert.css";
 import logo from "../images/logo-mono.png";
 import header from "../images/header.jpg";
 import useLocalStorage from "../hooks/useLocalStorage";
+import GameListItem from "./GameListItem";
 
 import AboutModal from "./AboutModal";
 
@@ -100,44 +101,6 @@ const GameList = styled.ul`
   align-content: flex-start;
 `;
 
-const Game = styled.li`
-  width: 100%;
-  background-color: var(--bg-secondary-color);
-  position: relative;
-  min-width: 250px;
-  max-width: 440px;
-  height: 150px;
-  padding: 0.5em;
-  margin: 0.3em;
-  flex: 1 1 0%;
-  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
-  width: & .game-name {
-    margin: 0 1em;
-  }
-
-  & .button.play {
-    margin: 0 2px;
-    background-color: var(--color-secondary);
-  }
-
-  & .play {
-    position: absolute;
-    bottom: 0.5em;
-    right: 0.5em;
-  }
-
-  & .extra-actions {
-    position: absolute;
-    top: 0.5em;
-    right: 0.5em;
-    display: none;
-  }
-
-  &:hover .extra-actions {
-    display: block;
-  }
-`;
-
 const useQuery = () => {
   return new URLSearchParams(useLocation().search);
 };
@@ -203,28 +166,8 @@ const GameListView = () => {
               ({ published, owner }) =>
                 published || (userId && (!owner || owner === userId))
             )
-            .map(({ name, id, owner, published }) => (
-              <Game key={id}>
-                <h2 className="game-name">
-                  {name} {!published && "(Private)"}
-                </h2>
-                <Link to={`/game/${id}/session/`} className="button play">
-                  {t("Play")}
-                </Link>
-                {userId && (userId === owner || !owner) && (
-                  <div className="extra-actions">
-                    <Link
-                      to={`/game/${id}/edit`}
-                      className="button edit icon-only"
-                    >
-                      <img
-                        src="https://icongr.am/feather/edit.svg?size=16&color=ffffff"
-                        alt={t("Edit")}
-                      />
-                    </Link>
-                  </div>
-                )}
-              </Game>
+            .map((game) => (
+              <GameListItem key={game.id} game={game} userId={userId} />
             ))}
         </GameList>
         <footer>

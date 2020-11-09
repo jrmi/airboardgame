@@ -60,8 +60,23 @@ h5 {
 }
 
 input::placeholder {
-  color: #2d2f33;
+  color: var(--color-lightGrey);
+  color: var(--color-grey);
 }
+
+/*input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="color"]):not([type="button"]):not([type="reset"]),
+select,
+textarea,
+textarea[type="text"] {
+  border-radius: 2px;
+  border: none;
+  font-size: 1em;
+  transition: all 0.2s ease;
+  display: block;
+  width: 100%;
+  background-color: var(--bg-color);
+  color: var(--font-color);
+}*/
 
 /* Animation definition */
 

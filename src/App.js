@@ -12,6 +12,7 @@ import { nanoid } from "nanoid";
 import { ToastContainer } from "react-toastify";
 
 import "react-toastify/dist/ReactToastify.css";
+import "rc-slider/assets/index.css";
 
 import GameListView from "./views/GameListView";
 import GameView from "./views/GameView";

@@ -16,8 +16,6 @@ import Label from "../../ui/formUtils/Label";
 
 import ActionsField from "./ActionsField";
 
-import "rc-slider/assets/index.css";
-
 import {
   getFormFieldComponent,
   getDefaultActionsFromItem,
