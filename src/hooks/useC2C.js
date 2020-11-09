@@ -65,15 +65,15 @@ export const C2CProvider = ({ room, ...props }) => {
   }
 
   return (
-    <C2CContext.Provider value={[c2c, joined, isMaster]}>
+    <C2CContext.Provider value={[c2c, joined, isMaster, room]}>
       {props.children}
     </C2CContext.Provider>
   );
 };
 
 export const useC2C = () => {
-  const [c2c, joined, isMaster] = useContext(C2CContext);
-  return [c2c, joined, isMaster];
+  const [c2c, joined, isMaster, room] = useContext(C2CContext);
+  return [c2c, joined, isMaster, room];
 };
 
 export default { C2CContext, C2CProvider, useC2C };
