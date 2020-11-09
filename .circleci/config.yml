@@ -18,12 +18,12 @@ jobs:
       - checkout
       - node/with-cache:
           steps:
-            - run: npm install
+            - run: npm ci
             - run: npm run lint
             - run: npm run build
             - run:
                 name: Netlify Deploy
-                command: npx netlify deploy --site $NETLIFY_SITE_ID --auth $NETLIFY_ACCESS_TOKEN --dir=build
+                command: npx netlify deploy --dir=./build --site $NETLIFY_SITE_ID --auth $NETLIFY_ACCESS_TOKEN
 
   build-deploy:
     executor:
@@ -38,7 +38,7 @@ jobs:
       - checkout
       - node/with-cache:
           steps:
-            - run: npm install
+            - run: npm ci
             - run: npm run lint
             - run: npm run build
             - run:
