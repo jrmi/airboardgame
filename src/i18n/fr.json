@@ -143,5 +143,9 @@
   "Error while saving game. Try again later...": "Une erreur est survenue lors de l'enregistrement du jeu. Veuillez essayez plus tard…",
   "Multi-lang": "Multilingue",
   "fr": "Français",
-  "en": "Anglais"
+  "en": "Anglais",
+  "Url copied to clipboard!": "L'Url a été copiée dans le presse-papier",
+  "Copy": "Copier",
+  "Talk with your friends": "Parlez avec vos amis",
+  "useAudioConf": "<0>Nous vous recommandons d'utiliser une application de conférence audio pour discuter avec vos amis. Par exemple vous pouvez utiliser <1>Jitsi</1>.</0>"
 }

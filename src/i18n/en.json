@@ -143,5 +143,9 @@
   "Error while saving game. Try again later...": "Error while saving game. Try again later...",
   "Multi-lang": "All",
   "fr": "French",
-  "en": "English"
+  "en": "English",
+  "Url copied to clipboard!": "Url copied to clipboard!",
+  "Copy": "Copy",
+  "Talk with your friends": "Talk with your friends",
+  "useAudioConf": "<0>We recommend you to use any audio conferencing system to talk with your friends. For example you can use <1>Jitsi</1>.</0>"
 }
