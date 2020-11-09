@@ -4,15 +4,21 @@ import { useTranslation } from "react-i18next";
 import { useRecoilValue } from "recoil";
 
 import Modal from "../ui/Modal";
+import { getBestTranslationFromConfig } from "../utils/api";
 
 import { BoardConfigAtom } from "../components/Board/";
 
 import marked from "marked";
 
 const InfoModal = ({ show, setShow }) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   const boardConfig = useRecoilValue(BoardConfigAtom);
+
+  const translation = React.useMemo(
+    () => getBestTranslationFromConfig(boardConfig, i18n.languages),
+    [boardConfig, i18n.languages]
+  );
 
   return (
     <Modal
@@ -32,12 +38,12 @@ const InfoModal = ({ show, setShow }) => {
         </div>
       }
     >
-      {boardConfig.info && (
+      {translation.description && (
         <div
-          dangerouslySetInnerHTML={{ __html: marked(boardConfig.info) }}
+          dangerouslySetInnerHTML={{ __html: marked(translation.description) }}
         ></div>
       )}
-      {!boardConfig.info && <div>{t("No information")}</div>}
+      {!translation.description && <div>{t("No information")}</div>}
     </Modal>
   );
 };

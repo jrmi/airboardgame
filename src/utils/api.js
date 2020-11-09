@@ -35,6 +35,37 @@ export const uploadImage = async (namespace, file) => {
 
 // TODO Add delete Image
 
+export const getBestTranslationFromConfig = (
+  {
+    translations = [],
+    defaultLanguage,
+    defaultName,
+    defaultDescription,
+    name,
+    info,
+  },
+  langs
+) => {
+  const translationsMap = {
+    [defaultLanguage || "en"]: {
+      name: defaultName || name,
+      description: defaultDescription || info,
+    },
+  };
+
+  translations.forEach((translation) => {
+    translationsMap[translation.language] = translation;
+  });
+
+  for (let lang in langs) {
+    if (translationsMap[langs[lang]]) {
+      return translationsMap[langs[lang]];
+    }
+  }
+
+  return translationsMap[defaultLanguage || "en"];
+};
+
 export const getGames = async () => {
   const fetchParams = new URLSearchParams({
     fields: "_id,board,owner",
@@ -54,7 +85,7 @@ export const getGames = async () => {
       id: game._id,
       owner: game.owner,
       url: `${gameURI}/${game._id}`,
-      published: game.board.published,
+      ...game.board,
     }));
   }
 

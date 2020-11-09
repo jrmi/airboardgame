@@ -31,7 +31,14 @@ module.exports = {
     ns: ["locale", "resource"],
     defaultLng: "en",
     defaultNs: "resource",
-    defaultValue: "__STRING_NOT_TRANSLATED__",
+    defaultValue: function (lng, ns, key) {
+      if (lng === "en") {
+        // Return key as the default value for English language
+        return key;
+      }
+      // Return the string '__NOT_TRANSLATED__' for other languages
+      return `${lng}__${key}__`;
+    },
     resource: {
       loadPath: "src/i18n/{{lng}}.json",
       savePath: "src/i18n/{{lng}}.json",
