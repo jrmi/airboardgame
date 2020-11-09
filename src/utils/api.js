@@ -84,8 +84,8 @@ export const getGames = async () => {
       name: game.board.name,
       id: game._id,
       owner: game.owner,
-      url: `${gameURI}/${game._id}`,
       ...game.board,
+      url: `${gameURI}/${game._id}`,
     }));
   }
 
