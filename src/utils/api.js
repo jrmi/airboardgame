@@ -85,14 +85,27 @@ export const getGames = async () => {
       id: game._id,
       owner: game.owner,
       ...game.board,
+      board: game.board,
       url: `${gameURI}/${game._id}`,
     }));
   }
 
   if (!IS_PRODUCTION) {
     gameList = [
-      { name: "Test Game", data: testGame, id: "test", published: true },
-      { name: "Perf Test", data: perfGame, id: "perf", published: true },
+      {
+        ...testGame,
+        name: "Test Game",
+        data: testGame,
+        id: "test",
+        published: true,
+      },
+      {
+        ...perfGame,
+        name: "Perf Test",
+        data: perfGame,
+        id: "perf",
+        published: true,
+      },
       ...gameList,
     ];
   }

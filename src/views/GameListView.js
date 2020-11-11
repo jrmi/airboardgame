@@ -127,7 +127,21 @@ const GameListView = () => {
 
   React.useEffect(() => {
     getGames().then((content) => {
-      setGameList(content);
+      setGameList(
+        content.sort((a, b) => {
+          const [nameA, nameB] = [
+            a.board.defaultName || a.board.name,
+            b.board.defaultName || b.board.name,
+          ];
+          if (nameA < nameB) {
+            return -1;
+          }
+          if (nameA > nameB) {
+            return 1;
+          }
+          return 0;
+        })
+      );
     });
   }, [isAuthenticated]);
 
