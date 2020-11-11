@@ -48,7 +48,7 @@ const AboutModal = ({ show, setShow }) => {
           you an authentication link.
         </p>
         <h3>Credits</h3>
-        <p>Thanks to every body</p>
+        <p>Thanks to everybody !</p>
       </Trans>
     </Modal>
   );
