@@ -27,7 +27,7 @@ const Account = ({ disabled, ...props }) => {
     } catch (e) {
       setLoginInProgress(false);
       console.log(e);
-      toast.error(t("Error why logging, verify your email address"));
+      toast.error(t("Error while logging, verify your email address"));
     }
   };
 

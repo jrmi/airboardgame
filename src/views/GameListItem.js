@@ -179,7 +179,7 @@ const GameListItem = ({
         {materialLanguage !== undefined && (
           <span>
             <img
-              src="https://icongr.am/entypo/chat.svg?size=16&color=888886"
+              src="https://icongr.am/entypo/globe.svg?size=16&color=888886"
               alt={t("Material language")}
             />{" "}
             {materialLanguageDisplay}

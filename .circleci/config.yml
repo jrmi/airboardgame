@@ -18,7 +18,7 @@ jobs:
       - checkout
       - node/with-cache:
           steps:
-            - run: npm ci
+            - run: npm install
             - run: npm run lint
             - run: npm run build
             - run:
