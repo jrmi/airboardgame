@@ -3,7 +3,6 @@ import "./wdyr";
 import React from "react";
 import ReactDOM from "react-dom";
 
-//import "chota/dist/chota.css";
 import "./index.css";
 
 import "./i18n"; // load translation system

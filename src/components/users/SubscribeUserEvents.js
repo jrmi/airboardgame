@@ -26,9 +26,18 @@ const SubscribeUserEvents = () => {
   React.useEffect(() => {
     if (joined) {
       if (!isMaster) {
-        c2c.call("getUserList").then((userList) => {
+        const onGetUserList = (userList) => {
           usersRef.current = userList;
           setUsers(userList);
+        };
+
+        c2c.call("getUserList").then(onGetUserList, () => {
+          // retry later
+          setTimeout(() => {
+            c2c
+              .call("getUserList")
+              .then(onGetUserList, (error) => console.log(error));
+          }, 1000);
         });
       }
     }

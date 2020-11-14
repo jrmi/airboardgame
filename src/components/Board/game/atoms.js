@@ -10,10 +10,21 @@ export const BoardConfigAtom = atom({
   default: {},
 });
 
+export const BoardStateAtom = atom({
+  key: "boardState",
+  default: {
+    movingItems: false,
+    selecting: false,
+    zooming: false,
+    panning: false,
+  },
+});
+
 export const ItemListAtom = atom({
   key: "itemList",
   default: [],
 });
+
 export const ItemMapAtom = atom({
   key: "ItemMap",
   default: {},

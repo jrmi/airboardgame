@@ -1,14 +1,16 @@
 import React from "react";
 
-import { PanZoomRotateAtom } from "./PanZoomRotate";
-import { selectedItemsAtom } from "./Selector";
+import { BoardStateAtom, selectedItemsAtom, PanZoomRotateAtom } from "./";
 import { useItems } from "./Items";
 import { useSetRecoilState, useRecoilCallback } from "recoil";
 import { insideClass, hasClass } from "../../utils";
 
 const ActionPane = ({ children }) => {
   const { putItemsOnTop, moveItems } = useItems();
+
   const setSelectedItems = useSetRecoilState(selectedItemsAtom);
+  const setBoardState = useSetRecoilState(BoardStateAtom);
+
   const wrapperRef = React.useRef(null);
   const actionRef = React.useRef({});
 
@@ -80,17 +82,21 @@ const ActionPane = ({ children }) => {
 
         actionRef.current.prevX = currentX;
         actionRef.current.prevY = currentY;
+        setBoardState((prev) =>
+          !prev.movingItems ? { ...prev, movingItems: true } : prev
+        );
       }
     },
-    [moveItems]
+    [moveItems, setBoardState]
   );
 
   const onMouseUp = React.useCallback(() => {
     if (actionRef.current.moving) {
       actionRef.current = { moving: false };
       wrapperRef.current.style.cursor = "auto";
+      setBoardState((prev) => ({ ...prev, movingItems: false }));
     }
-  }, []);
+  }, [setBoardState]);
 
   React.useEffect(() => {
     document.addEventListener("mouseup", onMouseUp);

@@ -77,9 +77,19 @@ export const GameView = ({ edit }) => {
   React.useEffect(() => {
     if (joined && !isMaster && !gameLoaded && !gameLoadingRef.current) {
       gameLoadingRef.current = true;
-      c2c.call("getGame").then((receivedGame) => {
+      const onReceiveGame = (receivedGame) => {
         setGame(receivedGame);
         setGameLoaded(true);
+      };
+      c2c.call("getGame").then(onReceiveGame, () => {
+        setTimeout(
+          c2c
+            .call("getGame")
+            .then(onReceiveGame, (error) =>
+              console.log("Failed to call getGame with error", error)
+            ),
+          1000
+        );
       });
     }
   }, [c2c, isMaster, joined, gameLoaded]);
