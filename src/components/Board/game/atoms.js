@@ -23,7 +23,9 @@ export const AllItemsSelector = selector({
   key: "AllItemsSelector",
   get: ({ get }) => {
     const itemMap = get(ItemMapAtom);
-    return get(ItemListAtom).map((id) => itemMap[id]);
+    return get(ItemListAtom)
+      .map((id) => itemMap[id])
+      .filter((item) => item); // This filter clean the selection of missing items
   },
 });
 

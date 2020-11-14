@@ -42,7 +42,9 @@ const useItems = () => {
     (items) => {
       setItemMap(
         items.reduce((acc, item) => {
-          acc[item.id] = item;
+          if (item && item.id) {
+            acc[item.id] = item;
+          }
           return acc;
         }, {})
       );
