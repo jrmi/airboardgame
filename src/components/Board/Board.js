@@ -29,7 +29,7 @@ const StyledBoard = styled.div.attrs(() => ({ className: "board" }))`
     rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
 `;
 
-export const Board = ({ user, users, getComponent }) => {
+export const Board = ({ user, users, getComponent, moveFirst = true }) => {
   const { t } = useTranslation();
 
   const config = useRecoilValue(BoardConfigAtom);
@@ -41,8 +41,8 @@ export const Board = ({ user, users, getComponent }) => {
   return (
     <>
       <SubscribeItemEvents />
-      <PanZoomRotate>
-        <Selector>
+      <PanZoomRotate moveFirst={moveFirst}>
+        <Selector moveFirst={moveFirst}>
           <ActionPane>
             <CursorPane user={user} users={users}>
               <StyledBoard size={config.size}>
