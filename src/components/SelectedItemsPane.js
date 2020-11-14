@@ -142,11 +142,7 @@ export const SelectedItems = () => {
         } = elem.getBoundingClientRect();
 
         if (!boundingBox) {
-          boundingBox = {};
-          boundingBox.x = x;
-          boundingBox.y = y;
-          boundingBox.x2 = x2;
-          boundingBox.y2 = y2;
+          boundingBox = { x, y, x2, y2 };
         } else {
           if (x < boundingBox.x) {
             boundingBox.x = x;

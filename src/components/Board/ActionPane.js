@@ -16,7 +16,7 @@ const ActionPane = ({ children }) => {
 
   const onMouseDown = useRecoilCallback(
     ({ snapshot }) => async (e) => {
-      if (e.button === 0 && !e.altKey) {
+      if (e.button === 0 /*&& !e.altKey*/) {
         // Allow text selection instead of moving
         if (["INPUT", "TEXTAREA"].includes(e.target.tagName)) return;
 

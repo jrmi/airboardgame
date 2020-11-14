@@ -56,6 +56,8 @@ const findSelected = (itemMap, rect) => {
     .map((elem) => elem.id);
 };
 
+const moveFirst = false;
+
 const Selector = ({ children }) => {
   const setSelected = useSetRecoilState(selectedItemsAtom);
   const setBoardState = useSetRecoilState(BoardStateAtom);
@@ -77,11 +79,16 @@ const Selector = ({ children }) => {
 
   const onMouseDown = useRecoilCallback(
     ({ snapshot }) => async (e) => {
-      if (
-        e.button === 0 &&
-        !e.altKey &&
-        (!insideClass(e.target, "item") || insideClass(e.target, "locked"))
-      ) {
+      const outsideItem =
+        !insideClass(e.target, "item") || insideClass(e.target, "locked");
+
+      const metaKeyPressed = e.altKey || e.ctrlKey || e.metaKey;
+
+      const goodButton = moveFirst
+        ? (e.button === 0 && metaKeyPressed) || e.button === 1
+        : (e.button === 1 && metaKeyPressed) || e.button === 0;
+
+      if (goodButton && (outsideItem || moveFirst)) {
         const { top, left } = e.currentTarget.getBoundingClientRect();
         const { clientX, clientY } = e;
 
@@ -157,7 +164,7 @@ const Selector = ({ children }) => {
   );
 
   const onMouseUp = useRecoilCallback(
-    ({ snapshot }) => async () => {
+    ({ snapshot }) => async (e) => {
       if (stateRef.current.moving) {
         const itemMap = await snapshot.getPromise(ItemMapAtom);
 
@@ -174,6 +181,14 @@ const Selector = ({ children }) => {
         wrapperRef.current.style.cursor = "auto";
 
         setBoardState((prev) => ({ ...prev, selecting: false }));
+      } else {
+        if (
+          moveFirst &&
+          (!insideClass(e.target, "item") || insideClass(e.target, "locked")) &&
+          insideClass(e.target, "board")
+        ) {
+          setSelected(emptySelection);
+        }
       }
     },
     [emptySelection, setBoardState, setSelected]
