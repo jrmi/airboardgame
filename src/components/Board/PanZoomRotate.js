@@ -1,9 +1,16 @@
 import React from "react";
 
-import { atom, useRecoilState, useRecoilValue } from "recoil";
-import { BoardConfigAtom } from "./";
+import {
+  atom,
+  useRecoilState,
+  useRecoilValue,
+  useSetRecoilState,
+} from "recoil";
+import { BoardConfigAtom, BoardStateAtom } from "./";
 import { isMacOS } from "../../utils/deviceInfos";
 import { insideClass } from "../../utils/";
+
+import usePrevious from "../../hooks/usePrevious";
 
 import styled from "styled-components";
 
@@ -36,6 +43,9 @@ const Pane = styled.div.attrs(({ translateX, translateY, scale, rotate }) => ({
 const PanZoomRotate = ({ children }) => {
   const [dim, setDim] = useRecoilState(PanZoomRotateAtom);
   const config = useRecoilValue(BoardConfigAtom);
+  const setBoardState = useSetRecoilState(BoardStateAtom);
+  const prevDim = usePrevious(dim);
+
   const [scale, setScale] = React.useState({
     scale: config.scale,
     x: 0,
@@ -149,6 +159,27 @@ const PanZoomRotate = ({ children }) => {
     }
   };
 
+  const onMouseUp = React.useCallback(() => {
+    stateRef.current.moving = false;
+    wrapperRef.current.style.cursor = "auto";
+  }, []);
+
+  // Debounce set center to avoid too many render
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const debouncedUpdateCenter = React.useCallback(
+    debounce(() => {
+      const { innerHeight, innerWidth } = window;
+      setDim((prevDim) => {
+        return {
+          ...prevDim,
+          centerX: (innerWidth / 2 - prevDim.translateX) / prevDim.scale,
+          centerY: (innerHeight / 2 - prevDim.translateY) / prevDim.scale,
+        };
+      });
+    }, 300),
+    [setDim]
+  );
+
   // Keep board inside viewport
   React.useEffect(() => {
     const { width, height } = wrappedRef.current.getBoundingClientRect();
@@ -176,30 +207,44 @@ const PanZoomRotate = ({ children }) => {
     }
   }, [dim.translateX, dim.translateY, setDim]);
 
-  const onMouseUp = React.useCallback(() => {
-    stateRef.current.moving = false;
-    wrapperRef.current.style.cursor = "auto";
-  }, []);
-
-  // Debounce set center to avoid too many render
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const debouncedUpdateCenter = React.useCallback(
-    debounce(() => {
-      const { innerHeight, innerWidth } = window;
-      setDim((prevDim) => {
-        return {
-          ...prevDim,
-          centerX: (innerWidth / 2 - prevDim.translateX) / prevDim.scale,
-          centerY: (innerHeight / 2 - prevDim.translateY) / prevDim.scale,
-        };
-      });
-    }, 300),
-    [setDim]
-  );
-
   React.useEffect(() => {
     debouncedUpdateCenter();
   }, [debouncedUpdateCenter, dim.translateX, dim.translateY]);
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const updateBoardStateDelay = React.useCallback(
+    debounce((newState) => {
+      setBoardState(newState);
+    }, 300),
+    [setBoardState]
+  );
+
+  // Update boardState on zoom or pan
+  React.useEffect(() => {
+    if (!prevDim) {
+      return;
+    }
+    if (prevDim.scale !== dim.scale) {
+      setBoardState((prev) =>
+        !prev.zooming ? { ...prev, zooming: true } : prev
+      );
+      updateBoardStateDelay((prev) =>
+        prev.zooming ? { ...prev, zooming: false } : prev
+      );
+    }
+    if (
+      prevDim.translateY !== dim.translateY ||
+      prevDim.translateX !== dim.translateX
+    ) {
+      setBoardState((prev) =>
+        !prev.panning ? { ...prev, panning: true } : prev
+      );
+      updateBoardStateDelay((prev) =>
+        prev.panning ? { ...prev, panning: false } : prev
+      );
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dim, updateBoardStateDelay]);
 
   React.useEffect(() => {
     document.addEventListener("mouseup", onMouseUp);

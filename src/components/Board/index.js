@@ -7,4 +7,5 @@ export {
   ItemListAtom,
   ItemMapAtom,
   AllItemsSelector,
+  BoardStateAtom,
 } from "./game/atoms";

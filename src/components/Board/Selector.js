@@ -8,7 +8,12 @@ import {
 } from "recoil";
 import styled from "styled-components";
 
-import { PanZoomRotateAtom, BoardConfigAtom, ItemMapAtom } from "./";
+import {
+  PanZoomRotateAtom,
+  BoardConfigAtom,
+  ItemMapAtom,
+  BoardStateAtom,
+} from "./";
 import { insideClass, isPointInsideRect } from "../../utils";
 
 export const selectedItemsAtom = atom({
@@ -53,7 +58,10 @@ const findSelected = (itemMap, rect) => {
 
 const Selector = ({ children }) => {
   const setSelected = useSetRecoilState(selectedItemsAtom);
+  const setBoardState = useSetRecoilState(BoardStateAtom);
+
   const [selector, setSelector] = React.useState({});
+  const [emptySelection] = React.useState([]);
 
   const wrapperRef = React.useRef(null);
   const stateRef = React.useRef({
@@ -64,8 +72,8 @@ const Selector = ({ children }) => {
 
   // Reset selection on game loading
   React.useEffect(() => {
-    setSelected([]);
-  }, [config, setSelected]);
+    setSelected(emptySelection);
+  }, [config, emptySelection, setSelected]);
 
   const onMouseDown = useRecoilCallback(
     ({ snapshot }) => async (e) => {
@@ -87,9 +95,11 @@ const Selector = ({ children }) => {
 
         setSelector({ ...stateRef.current });
         wrapperRef.current.style.cursor = "crosshair";
+
+        setBoardState((prev) => ({ ...prev, selecting: true }));
       }
     },
-    []
+    [setBoardState]
   );
 
   const throttledSetSelected = useRecoilCallback(
@@ -152,13 +162,21 @@ const Selector = ({ children }) => {
         const itemMap = await snapshot.getPromise(ItemMapAtom);
 
         const selected = findSelected(itemMap, stateRef.current);
-        setSelected(selected);
+
+        if (selected.length === 0) {
+          setSelected(emptySelection);
+        } else {
+          setSelected(selected);
+        }
+
         stateRef.current = { moving: false };
         setSelector({ ...stateRef.current });
         wrapperRef.current.style.cursor = "auto";
+
+        setBoardState((prev) => ({ ...prev, selecting: false }));
       }
     },
-    [setSelected]
+    [emptySelection, setBoardState, setSelected]
   );
 
   React.useEffect(() => {
@@ -171,9 +189,9 @@ const Selector = ({ children }) => {
   // Reset selected on unmount
   React.useEffect(() => {
     return () => {
-      setSelected([]);
+      setSelected(emptySelection);
     };
-  }, [setSelected]);
+  }, [setSelected, emptySelection]);
 
   return (
     <div

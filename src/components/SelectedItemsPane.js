@@ -7,6 +7,7 @@ import {
   selectedItemsAtom,
   PanZoomRotateAtom,
   ItemMapAtom,
+  BoardStateAtom,
 } from "../components/Board/";
 
 import debounce from "lodash.debounce";
@@ -34,12 +35,23 @@ const SelectedPane = styled.div`
   }
 `;
 
-const ActionPane = styled.div.attrs(({ top, left }) => ({
-  style: {
-    top: `${top - 85}px`,
-    left: `${left}px`,
-  },
-}))`
+const ActionPane = styled.div.attrs(({ top, left, height }) => {
+  if (top < 120) {
+    return {
+      style: {
+        top: `${top + height + 20}px`,
+        left: `${left}px`,
+      },
+    };
+  } else {
+    return {
+      style: {
+        top: `${top - 85}px`,
+        left: `${left}px`,
+      },
+    };
+  }
+})`
   position: absolute;
   display: flex;
   background-color: var(--bg-color);
@@ -100,24 +112,16 @@ const BoundingBoxZone = styled.div.attrs(({ top, left, height, width }) => ({
 
 export const SelectedItems = () => {
   const { availableActions, actionMap } = useItemActions();
-  const [showAction, setShowAction] = React.useState(false);
+  const [showAction, setShowAction] = React.useState(true);
   const [showEdit, setShowEdit] = React.useState(false);
 
   const { t } = useTranslation();
 
   const selectedItems = useRecoilValue(selectedItemsAtom);
+  const boardState = useRecoilValue(BoardStateAtom);
   const itemMap = useRecoilValue(ItemMapAtom);
   const panZoomRotate = useRecoilValue(PanZoomRotateAtom);
   const [boundingBoxLast, setBoundingBoxLast] = React.useState(null);
-
-  // Show/Hide action after delay to avoid flip/flop
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const showActionDelay = React.useCallback(
-    debounce((show) => {
-      setShowAction(show);
-    }, 300),
-    []
-  );
 
   // Update bounding box
   const updateBox = useRecoilCallback(
@@ -191,22 +195,19 @@ export const SelectedItems = () => {
   }, [selectedItems, itemMap, panZoomRotate, updateBox, updateBoxDelay]);
 
   React.useEffect(() => {
-    // Show on selection
-    if (selectedItems.length) {
-      showActionDelay(true);
-    } else {
-      setShowAction(false);
-    }
-    setShowEdit(false);
-  }, [selectedItems, showActionDelay]);
+    // Hide when moving something
+    setShowAction(!boardState.movingItems);
+  }, [boardState.movingItems]);
 
   React.useEffect(() => {
     // Hide when moving something
-    if (selectedItems) {
-      setShowAction(false);
-      showActionDelay(true);
-    }
-  }, [selectedItems, itemMap, panZoomRotate, showActionDelay]);
+    setShowAction(!boardState.panning);
+  }, [boardState.panning]);
+
+  React.useEffect(() => {
+    // Hide when moving something
+    setShowAction(!boardState.zooming);
+  }, [boardState.zooming]);
 
   React.useEffect(() => {
     const onKeyUp = (e) => {
@@ -292,50 +293,61 @@ export const SelectedItems = () => {
           </div>
         </SelectedPane>
       )}
-      {showAction && (
+      {selectedItems.length && showAction && (
         <ActionPane {...boundingBoxLast}>
-          {selectedItems.length > 1 && (
+          {(selectedItems.length > 1 || boardState.selecting) && (
             <div className="count">
               <span className="number">{selectedItems.length}</span>
               <span>{t("Items")}</span>
             </div>
           )}
-          {availableActions.map((action) => {
-            const {
-              label,
-              action: handler,
-              multiple,
-              edit: onlyEdit,
-              icon,
-            } = actionMap[action];
-            if (multiple && selectedItems.length < 2) return null;
-            if (onlyEdit && !showEdit) return null;
-            return (
-              <button
-                className="button clear icon-only"
-                key={action}
-                onClick={handler}
-                title={label}
-              >
-                <img
-                  src={icon}
-                  style={{ width: "32px", height: "32px" }}
-                  alt={label}
-                />
-              </button>
-            );
-          })}
+          {!boardState.selecting &&
+            availableActions.map((action) => {
+              const {
+                label,
+                action: handler,
+                multiple,
+                edit: onlyEdit,
+                icon,
+              } = actionMap[action];
+              if (multiple && selectedItems.length < 2) return null;
+              if (onlyEdit && !showEdit) return null;
+              return (
+                <button
+                  className="button clear icon-only"
+                  key={action}
+                  onClick={handler}
+                  title={label}
+                >
+                  <img
+                    src={icon}
+                    style={{ width: "32px", height: "32px" }}
+                    alt={label}
+                  />
+                </button>
+              );
+            })}
 
-          <button
-            className="button clear icon-only"
-            onClick={() => setShowEdit((prev) => !prev)}
-            title={t("Edit")}
-          >
-            <img
-              src="https://icongr.am/feather/edit.svg?size=32&color=ffffff"
-              alt={t("Edit")}
-            />
-          </button>
+          {!boardState.selecting && (
+            <button
+              className="button clear icon-only"
+              onClick={() => setShowEdit((prev) => !prev)}
+              title={t("Edit")}
+            >
+              {!showEdit && (
+                <img
+                  src="https://icongr.am/feather/edit.svg?size=32&color=ffffff"
+                  alt={t("Edit")}
+                />
+              )}
+              {showEdit && (
+                <img
+                  src="https://icongr.am/feather/edit.svg?size=32&color=db5034"
+                  alt={t("Edit")}
+                />
+              )}
+            </button>
+          )}
         </ActionPane>
       )}
       {boundingBoxLast && selectedItems.length > 1 && (
