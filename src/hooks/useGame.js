@@ -37,7 +37,7 @@ export const GameProvider = ({ gameId, game, children }) => {
           newGame.availableItems.map((item) => ({ ...item, id: nanoid() }))
         );
       }
-      setItemList(newGame.items);
+      setItemList(newGame.items.filter((item) => item)); // The filter avoid the empty item bug on reload
       setBoardConfig(newGame.board, false);
       setGameLoaded(true);
     },

@@ -34,6 +34,11 @@ const findSelected = (itemMap, rect) => {
     .filter((elem) => {
       const { clientHeight, clientWidth, id } = elem;
       const item = itemMap[id];
+      if (!item) {
+        // Avoid to find item that are not yet removed from DOM
+        console.error(`Missing item ${id}`);
+        return false;
+      }
       return (
         !item.locked &&
         isPointInsideRect({ x: item.x, y: item.y }, rect) &&
