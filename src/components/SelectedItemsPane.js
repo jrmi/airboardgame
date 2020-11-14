@@ -35,12 +35,13 @@ const SelectedPane = styled.div`
   }
 `;
 
-const ActionPane = styled.div.attrs(({ top, left, height }) => {
+const ActionPane = styled.div.attrs(({ top, left, height, hide }) => {
   if (top < 120) {
     return {
       style: {
         top: `${top + height + 20}px`,
         left: `${left}px`,
+        opacity: hide ? 0.05 : 1,
       },
     };
   } else {
@@ -48,6 +49,7 @@ const ActionPane = styled.div.attrs(({ top, left, height }) => {
       style: {
         top: `${top - 85}px`,
         left: `${left}px`,
+        opacity: hide ? 0.05 : 1,
       },
     };
   }
@@ -59,6 +61,7 @@ const ActionPane = styled.div.attrs(({ top, left, height }) => {
   align-items: center;
   border-radius: 4px;
   padding: 0.5em;
+  transition: opacity 100ms;
   
   box-shadow: 2.5px 4.33px 14.7px 0.3px rgba(0, 0, 0, 0.7);
 
@@ -104,7 +107,7 @@ const BoundingBoxZone = styled.div.attrs(({ top, left, height, width }) => ({
   top: 0;
   left: 0;
   z-index: 6;
-  position: fixed;
+  position: absolute;
   background-color: hsla(0, 40%, 50%, 0%);
   border: 1px dashed hsl(20, 55%, 40%);
   pointer-events: none;
@@ -112,7 +115,6 @@ const BoundingBoxZone = styled.div.attrs(({ top, left, height, width }) => ({
 
 export const SelectedItems = () => {
   const { availableActions, actionMap } = useItemActions();
-  const [showAction, setShowAction] = React.useState(true);
   const [showEdit, setShowEdit] = React.useState(false);
 
   const { t } = useTranslation();
@@ -123,7 +125,7 @@ export const SelectedItems = () => {
   const panZoomRotate = useRecoilValue(PanZoomRotateAtom);
   const [boundingBoxLast, setBoundingBoxLast] = React.useState(null);
 
-  // Update bounding box
+  // Update selection bounding box
   const updateBox = useRecoilCallback(
     ({ snapshot }) => async () => {
       const selectedItems = await snapshot.getPromise(selectedItemsAtom);
@@ -189,21 +191,6 @@ export const SelectedItems = () => {
       updateBoxDelay(); // Delay to update after board item animation like tap/untap.
     }
   }, [selectedItems, itemMap, panZoomRotate, updateBox, updateBoxDelay]);
-
-  React.useEffect(() => {
-    // Hide when moving something
-    setShowAction(!boardState.movingItems);
-  }, [boardState.movingItems]);
-
-  React.useEffect(() => {
-    // Hide when moving something
-    setShowAction(!boardState.panning);
-  }, [boardState.panning]);
-
-  React.useEffect(() => {
-    // Hide when moving something
-    setShowAction(!boardState.zooming);
-  }, [boardState.zooming]);
 
   React.useEffect(() => {
     const onKeyUp = (e) => {
@@ -289,8 +276,13 @@ export const SelectedItems = () => {
           </div>
         </SelectedPane>
       )}
-      {selectedItems.length && showAction && (
-        <ActionPane {...boundingBoxLast}>
+      {selectedItems.length && (
+        <ActionPane
+          {...boundingBoxLast}
+          hide={
+            boardState.zooming || boardState.panning || boardState.movingItems
+          }
+        >
           {(selectedItems.length > 1 || boardState.selecting) && (
             <div className="count">
               <span className="number">{selectedItems.length}</span>

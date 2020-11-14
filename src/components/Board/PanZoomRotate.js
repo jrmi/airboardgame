@@ -223,10 +223,18 @@ const PanZoomRotate = ({ children }) => {
   }, [debouncedUpdateCenter, dim.translateX, dim.translateY]);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const updateBoardStateDelay = React.useCallback(
+  const updateBoardStateZoomingDelay = React.useCallback(
     debounce((newState) => {
       setBoardState(newState);
     }, 300),
+    [setBoardState]
+  );
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const updateBoardStatePanningDelay = React.useCallback(
+    debounce((newState) => {
+      setBoardState(newState);
+    }, 200),
     [setBoardState]
   );
 
@@ -239,7 +247,7 @@ const PanZoomRotate = ({ children }) => {
       setBoardState((prev) =>
         !prev.zooming ? { ...prev, zooming: true } : prev
       );
-      updateBoardStateDelay((prev) =>
+      updateBoardStateZoomingDelay((prev) =>
         prev.zooming ? { ...prev, zooming: false } : prev
       );
     }
@@ -250,12 +258,12 @@ const PanZoomRotate = ({ children }) => {
       setBoardState((prev) =>
         !prev.panning ? { ...prev, panning: true } : prev
       );
-      updateBoardStateDelay((prev) =>
+      updateBoardStatePanningDelay((prev) =>
         prev.panning ? { ...prev, panning: false } : prev
       );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dim, updateBoardStateDelay]);
+  }, [dim, updateBoardStatePanningDelay, updateBoardStateZoomingDelay]);
 
   React.useEffect(() => {
     document.addEventListener("mouseup", onMouseUp);
