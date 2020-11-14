@@ -40,9 +40,7 @@ const Pane = styled.div.attrs(({ translateX, translateY, scale, rotate }) => ({
   display: inline-block;
 `;
 
-const moveFirst = false;
-
-const PanZoomRotate = ({ children }) => {
+const PanZoomRotate = ({ children, moveFirst }) => {
   const [dim, setDim] = useRecoilState(PanZoomRotateAtom);
   const config = useRecoilValue(BoardConfigAtom);
   const setBoardState = useSetRecoilState(BoardStateAtom);
@@ -140,9 +138,9 @@ const PanZoomRotate = ({ children }) => {
 
     const metaKeyPressed = e.altKey || e.ctrlKey || e.metaKey;
 
-    const goodButton = !moveFirst
-      ? (e.button === 0 && metaKeyPressed) || e.button === 1
-      : (e.button === 1 && metaKeyPressed) || e.button === 0;
+    const goodButton = moveFirst
+      ? e.button === 0 && !metaKeyPressed
+      : e.button === 1 || (e.button === 0 && metaKeyPressed);
 
     if (goodButton && (outsideItem || !moveFirst)) {
       stateRef.current.moving = true;

@@ -147,5 +147,9 @@
   "Copy": "Copy",
   "Talk with your friends": "Talk with your friends",
   "useAudioConf": "<0>We recommend you to use any audio conferencing system to talk with your friends. For example you can use <1>Jitsi</1>.</0>",
-  "Error while logging, verify your email address": "Error while logging, verify your email address"
+  "Error while logging, verify your email address": "Error while logging, verify your email address",
+  "Move mode": "Move mode",
+  "Switch to move mode": "Switch to move mode",
+  "Select mode": "Select mode",
+  "Switch to select mode": "Switch to select mode"
 }

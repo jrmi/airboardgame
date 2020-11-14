@@ -147,5 +147,9 @@
   "Copy": "Copier",
   "Talk with your friends": "Parlez avec vos amis",
   "useAudioConf": "<0>Nous vous recommandons d'utiliser une application de conférence audio pour discuter avec vos amis. Par exemple vous pouvez utiliser <1>Jitsi</1>.</0>",
-  "Error while logging, verify your email address": "Une erreur est survenue lors de l'envoi du lien d'authentification, vérifiez votre adresse."
+  "Error while logging, verify your email address": "Une erreur est survenue lors de l'envoi du lien d'authentification, vérifiez votre adresse.",
+  "Move mode": "Mode déplacement",
+  "Switch to move mode": "Basculer vers le mode déplacement",
+  "Select mode": "Mode sélection",
+  "Switch to select mode": "Basculer vers le mode sélection"
 }

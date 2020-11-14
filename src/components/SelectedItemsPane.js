@@ -29,6 +29,7 @@ const SelectedPane = styled.div`
   background-color: var(--bg-secondary-color);
   padding: 0.5em;
   overflow-y: scroll;
+  z-index: 2;
   transform: scaleX(-1);
   & > div {
     transform: scaleX(-1);

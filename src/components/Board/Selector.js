@@ -56,9 +56,7 @@ const findSelected = (itemMap, rect) => {
     .map((elem) => elem.id);
 };
 
-const moveFirst = false;
-
-const Selector = ({ children }) => {
+const Selector = ({ children, moveFirst }) => {
   const setSelected = useSetRecoilState(selectedItemsAtom);
   const setBoardState = useSetRecoilState(BoardStateAtom);
 
@@ -85,8 +83,8 @@ const Selector = ({ children }) => {
       const metaKeyPressed = e.altKey || e.ctrlKey || e.metaKey;
 
       const goodButton = moveFirst
-        ? (e.button === 0 && metaKeyPressed) || e.button === 1
-        : (e.button === 1 && metaKeyPressed) || e.button === 0;
+        ? e.button === 1 || (e.button === 0 && metaKeyPressed)
+        : e.button === 0 && !metaKeyPressed;
 
       if (goodButton && (outsideItem || moveFirst)) {
         const { top, left } = e.currentTarget.getBoundingClientRect();
@@ -106,7 +104,7 @@ const Selector = ({ children }) => {
         setBoardState((prev) => ({ ...prev, selecting: true }));
       }
     },
-    [setBoardState]
+    [moveFirst, setBoardState]
   );
 
   const throttledSetSelected = useRecoilCallback(
@@ -191,7 +189,7 @@ const Selector = ({ children }) => {
         }
       }
     },
-    [emptySelection, setBoardState, setSelected]
+    [emptySelection, moveFirst, setBoardState, setSelected]
   );
 
   React.useEffect(() => {
