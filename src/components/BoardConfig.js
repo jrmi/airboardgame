@@ -6,6 +6,7 @@ import { Form, Field } from "react-final-form";
 import AutoSave from "../ui/formUtils/AutoSave";
 import Label from "../ui/formUtils/Label";
 import useBoardConfig from "./useBoardConfig";
+import ImageField from "../ui/formUtils/ImageField";
 
 import { Range } from "rc-slider";
 import { nanoid } from "nanoid";
@@ -136,6 +137,14 @@ const BoardConfig = () => {
               initialValue={boardConfig.size}
               style={{ width: "5em", textAlign: "right" }}
             />
+          </Label>
+          <Label>
+            {t("Image")}
+            <Field name="imageUrl" initialValue={boardConfig.imageUrl}>
+              {({ input: { value, onChange } }) => {
+                return <ImageField value={value} onChange={onChange} />;
+              }}
+            </Field>
           </Label>
           <Label>
             {t("Material language")}
