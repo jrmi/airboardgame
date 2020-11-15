@@ -11,6 +11,7 @@ import Note from "./Note";
 import Zone from "./Zone";
 import Meeple from "./Meeple";
 import Jewel from "./Jewel";
+import Pawn from "./Pawn";
 
 import ImageFormFields from "./forms/ImageFormFields";
 import CounterFormFields from "./forms/CounterFormFields";
@@ -23,6 +24,7 @@ import ZoneFormFields from "./forms/ZoneFormFields";
 import TokenFormFields from "./forms/TokenFormFields";
 import MeepleFormFields from "./forms/MeepleFormFields";
 import JewelFormFields from "./forms/JewelFormFields";
+import PawnFormFields from "./forms/PawnFormFields";
 
 export const itemMap = {
   rect: {
@@ -63,6 +65,14 @@ export const itemMap = {
     availableActions: ["stack", "shuffle", "clone", "lock", "remove"],
     form: MeepleFormFields,
     label: i18n.t("Meeple"),
+    template: {},
+  },
+  pawn: {
+    component: Pawn,
+    defaultActions: ["clone", "lock", "remove"],
+    availableActions: ["stack", "shuffle", "clone", "lock", "remove"],
+    form: PawnFormFields,
+    label: i18n.t("Pawn"),
     template: {},
   },
   jewel: {

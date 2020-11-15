@@ -19,12 +19,8 @@ const Form = ({ initialValues }) => {
         />
       </Label>
       <Label>
-        {t("Radius")}
-        <Field
-          name="radius"
-          component="input"
-          initialValue={initialValues.radius}
-        >
+        {t("Size")}
+        <Field name="size" component="input" initialValue={initialValues.size}>
           {(props) => <input {...props.input} type="number" />}
         </Field>
       </Label>

@@ -265,7 +265,7 @@ export const SelectedItems = () => {
   return (
     <>
       {showEdit && (
-        <SelectedPane>
+        <SelectedPane key={selectedItems[0]}>
           <div>
             <header>
               {selectedItems.length === 1 && <h3>{t("Edit item")}</h3>}
