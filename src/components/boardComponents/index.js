@@ -12,6 +12,7 @@ import Zone from "./Zone";
 import Meeple from "./Meeple";
 import Jewel from "./Jewel";
 import Pawn from "./Pawn";
+import CheckerBoard from "./CheckerBoard";
 
 import ImageFormFields from "./forms/ImageFormFields";
 import CounterFormFields from "./forms/CounterFormFields";
@@ -25,6 +26,7 @@ import TokenFormFields from "./forms/TokenFormFields";
 import MeepleFormFields from "./forms/MeepleFormFields";
 import JewelFormFields from "./forms/JewelFormFields";
 import PawnFormFields from "./forms/PawnFormFields";
+import CheckerBoardFormFields from "./forms/CheckerBoardFormFields";
 
 export const itemMap = {
   rect: {
@@ -81,6 +83,14 @@ export const itemMap = {
     availableActions: ["stack", "shuffle", "clone", "lock", "remove"],
     form: JewelFormFields,
     label: i18n.t("Jewel"),
+    template: {},
+  },
+  checkerboard: {
+    component: CheckerBoard,
+    defaultActions: ["clone", "lock", "remove"],
+    availableActions: ["clone", "lock", "remove"],
+    form: CheckerBoardFormFields,
+    label: i18n.t("Checkerboard"),
     template: {},
   },
   image: {
