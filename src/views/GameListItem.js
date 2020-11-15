@@ -15,6 +15,25 @@ const Game = styled.li`
   margin: 0.3em;
   flex: 1 1 0%;
   box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+  background: ${(props) =>
+    props.back
+      ? `url(${props.back}), rgba(255, 255, 255, 0.6)`
+      : "var(--bg-secondary-color)"};
+  background-blend-mode: screen;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+
+  /*&:before {
+    position: absolute;
+    content: " ";
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+  }*/
 
   & .game-name {
     margin: 0;
@@ -72,6 +91,8 @@ const Game = styled.li`
   }
 `;
 
+const backgroundImage = false;
+
 const GameListItem = ({
   game: {
     published,
@@ -81,6 +102,7 @@ const GameListItem = ({
     materialLanguage,
     duration,
     playerCount,
+    imageUrl,
   },
   game,
   userId,
@@ -131,7 +153,7 @@ const GameListItem = ({
   let materialLanguageDisplay = t(materialLanguage);
 
   return (
-    <Game>
+    <Game back={backgroundImage ? imageUrl : null}>
       <h2 className="game-name">{translation.name}</h2>
       {!published && (
         <img
