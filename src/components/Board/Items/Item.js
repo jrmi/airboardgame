@@ -76,8 +76,6 @@ const ItemWrapper = styled.div.attrs(({ rotation, locked }) => {
     `}
 `;
 
-const gridSize = 1; // Plan to add grid. Need to fix multiple item move behaviour
-
 const Item = ({
   setState,
   state: { type, x, y, rotation = 0, id, locked, layer, ...rest } = {},
@@ -136,9 +134,7 @@ const Item = ({
   return (
     <div
       style={{
-        transform: `translate(${Math.round(x / gridSize) * gridSize}px, ${
-          Math.round(y / gridSize) * gridSize
-        }px)`,
+        transform: `translate(${x}px, ${y}px)`,
         display: "inline-block",
         zIndex: (layer || 0) + 3,
         position: "absolute",
