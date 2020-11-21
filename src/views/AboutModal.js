@@ -39,7 +39,8 @@ const AboutModal = ({ show, setShow }) => {
         <h3>Abuse report</h3>
         <p>
           To report abuse, please email at abu
-          <span style={{ display: "none" }}>anti-span</span>se@airboardgame.net
+          <span style={{ display: "none" }}>anti-span</span>
+          se-report@airboardgame.com
         </p>
         <h3>RGPD</h3>
         <p>
@@ -53,5 +54,4 @@ const AboutModal = ({ show, setShow }) => {
     </Modal>
   );
 };
-
 export default AboutModal;
