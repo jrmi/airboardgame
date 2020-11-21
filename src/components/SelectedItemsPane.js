@@ -264,7 +264,7 @@ export const SelectedItems = () => {
 
   return (
     <>
-      {showEdit && (
+      {showEdit && !boardState.selecting && (
         <SelectedPane key={selectedItems[0]}>
           <div>
             <header>
