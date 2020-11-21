@@ -8,7 +8,7 @@ import {
 } from "recoil";
 import { BoardConfigAtom, BoardStateAtom } from "./";
 import { isMacOS } from "../../utils/deviceInfos";
-import { insideClass } from "../../utils/";
+import { insideClass, getPointerState } from "../../utils/";
 
 import usePrevious from "../../hooks/usePrevious";
 
@@ -95,7 +95,9 @@ const PanZoomRotate = ({ children, moveFirst }) => {
       return;
     }
 
-    const { deltaX, deltaY, clientX, clientY } = e;
+    const { deltaX, deltaY } = e;
+
+    const { clientX, clientY } = getPointerState(e);
 
     // On a trackpad, the pinch and pan events are differentiated by the crtlKey value.
     // On a pinch gesture, the ctrlKey is set to true, so we want to have a scaling effect.
@@ -139,13 +141,15 @@ const PanZoomRotate = ({ children, moveFirst }) => {
     const metaKeyPressed = e.altKey || e.ctrlKey || e.metaKey;
 
     const goodButton = moveFirst
-      ? e.button === 0 && !metaKeyPressed
+      ? (e.button === 0 || e.touches) && !metaKeyPressed
       : e.button === 1 || (e.button === 0 && metaKeyPressed);
+
+    const { clientX, clientY } = getPointerState(e);
 
     if (goodButton && (outsideItem || !moveFirst)) {
       stateRef.current.moving = true;
-      stateRef.current.startX = e.clientX;
-      stateRef.current.startY = e.clientY;
+      stateRef.current.startX = clientX;
+      stateRef.current.startY = clientY;
       stateRef.current.startTranslateX = dim.translateX;
       stateRef.current.startTranslateY = dim.translateY;
       wrapperRef.current.style.cursor = "move";
@@ -154,9 +158,10 @@ const PanZoomRotate = ({ children, moveFirst }) => {
 
   const onMouseMouve = (e) => {
     if (stateRef.current.moving) {
+      const { clientX, clientY } = getPointerState(e);
       const [deltaX, deltaY] = [
-        e.clientX - stateRef.current.startX,
-        e.clientY - stateRef.current.startY,
+        clientX - stateRef.current.startX,
+        clientY - stateRef.current.startY,
       ];
       setDim((prevDim) => {
         return {
@@ -292,6 +297,9 @@ const PanZoomRotate = ({ children, moveFirst }) => {
       onMouseDown={onMouseDown}
       onMouseMove={onMouseMouve}
       onMouseUp={onMouseUp}
+      onTouchStart={onMouseDown}
+      onTouchMove={onMouseMouve}
+      onTouchEnd={onMouseUp}
       ref={wrapperRef}
     >
       <Pane {...dim} ref={wrappedRef}>
