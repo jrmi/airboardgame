@@ -13,7 +13,7 @@ import { getActionsFromItem } from "./";
 import { useTranslation } from "react-i18next";
 import { nanoid } from "nanoid";
 
-import { shuffle as shuffleArray } from "../../utils";
+import { shuffle as shuffleArray, randInt } from "../../utils";
 
 import deleteIcon from "../../images/delete.svg";
 import stackIcon from "../../images/stack.svg";
@@ -128,6 +128,19 @@ export const useItemActions = () => {
     const shuffledItems = shuffleArray([...selectedItems]);
     swapItems(selectedItems, shuffledItems);
   }, [selectedItems, swapItems]);
+
+  const randomlyRotateSelectedItems = React.useCallback(
+    (angle, maxRotateCount) => {
+      batchUpdateItems(selectedItems, (item) => {
+        console.log(randInt(0, 3));
+        const rotation =
+          ((item.rotation || 0) + angle * randInt(0, maxRotateCount)) % 360;
+        console.log(item.rotation, rotation);
+        return { ...item, rotation };
+      });
+    },
+    [selectedItems, batchUpdateItems]
+  );
 
   // Tap/Untap elements
   const toggleTap = useRecoilCallback(
@@ -281,6 +294,34 @@ export const useItemActions = () => {
         multiple: true,
         icon: shuffleIcon,
       },
+      randomlyRotate30: {
+        action: randomlyRotateSelectedItems.bind(null, 30, 11),
+        label: t("Rotate randomly 30"),
+        shortcut: "",
+        multiple: false,
+        icon: rotateIcon,
+      },
+      randomlyRotate45: {
+        action: randomlyRotateSelectedItems.bind(null, 90, 7),
+        label: t("Rotate randomly 45"),
+        shortcut: "",
+        multiple: false,
+        icon: rotateIcon,
+      },
+      randomlyRotate90: {
+        action: randomlyRotateSelectedItems.bind(null, 90, 3),
+        label: t("Rotate randomly 90"),
+        shortcut: "",
+        multiple: false,
+        icon: rotateIcon,
+      },
+      randomlyRotate180: {
+        action: randomlyRotateSelectedItems.bind(null, 180, 1),
+        label: t("Rotate randomly 180"),
+        shortcut: "",
+        multiple: false,
+        icon: rotateIcon,
+      },
       rotate30: {
         action: rotate.bind(null, 30),
         label: t("Rotate 30"),
@@ -335,6 +376,7 @@ export const useItemActions = () => {
       cloneItem,
       toggleLock,
       removeSelectedItems,
+      randomlyRotateSelectedItems,
     ]
   );
 
@@ -349,6 +391,7 @@ export const useItemActions = () => {
     rotate,
     actionMap,
     availableActions,
+    randomlyRotate: randomlyRotateSelectedItems,
   };
 };
 
