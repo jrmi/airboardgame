@@ -21,31 +21,48 @@ describe("Selection action", () => {
   it("should select multiple items with left click ", () => {
     cy.get(".board")
       .trigger("mousedown", {
-        x: 600,
-        y: 400,
-        clientX: 600,
-        clientY: 400,
+        x: 350,
+        y: 500,
+        clientX: 350,
+        clientY: 500,
         button: 0,
       })
       .trigger("mousemove", {
-        x: 200,
-        y: 100,
-        clientX: 200,
-        clientY: 100,
-        force: true,
-      })
-      .trigger("mouseup", {
+        x: 600,
+        y: 150,
+        clientX: 600,
+        clientY: 150,
         force: true,
       });
 
-    cy.get("img[src='/games/BH.jpg']")
-      .parents(".item")
-      .should("have.css", "border", "2px dashed rgba(255, 0, 0, 0.627)");
+    cy.get(".selector").should(
+      "have.css",
+      "transform",
+      "matrix(1, 0, 0, 1, 350, 350)"
+    );
+
+    cy.get(".board").trigger("mousemove", {
+      x: 601,
+      y: 151,
+      clientX: 601,
+      clientY: 151,
+      force: true,
+    });
+
+    cy.wait(500);
+
+    cy.get(".board").trigger("mouseup", {
+      force: true,
+    });
+
     cy.get("img[src='/games/AS.jpg']")
       .parents(".item")
-      .should("have.css", "border", "2px dashed rgba(255, 0, 0, 0.627)");
+      .should("have.class", "selected");
     cy.get("img[src='/games/JC.jpg']")
       .parents(".item")
-      .should("have.css", "border", "2px dashed rgba(255, 0, 0, 0.627)");
+      .should("have.class", "selected");
+    cy.get("img[src='/games/BH.jpg']")
+      .parents(".item")
+      .should("have.class", "selected");
   });
 });
