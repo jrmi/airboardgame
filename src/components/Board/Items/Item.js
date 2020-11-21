@@ -1,12 +1,15 @@
 import React, { memo } from "react";
 
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 import lockIcon from "../../../images/lock.svg";
 
-const ItemWrapper = styled.div.attrs(({ rotation, locked }) => {
+const ItemWrapper = styled.div.attrs(({ rotation, locked, selected }) => {
   let className = "item";
   if (locked) {
     className += " locked";
+  }
+  if (selected) {
+    className += " selected";
   }
   return {
     className,
@@ -42,38 +45,30 @@ const ItemWrapper = styled.div.attrs(({ rotation, locked }) => {
     right: 0;
   }
 
-  ${({ selected }) =>
-    selected
-      ? css`
-          border: 2px dashed #ff0000a0;
-          padding: 2px;
-          cursor: pointer;
-        `
-      : css`
-          padding: 4px;
-        `}
-  ${({ locked }) =>
-    locked &&
-    css`
-      &::after {
-        content: "";
-        position: absolute;
-        width: 24px;
-        height: 30px;
-        top: 4px;
-        right: 4px;
-        opacity: 0.1;
-        background-image: url(${lockIcon});
-        background-size: cover;
-        user-select: none;
-      }
+  padding: 4px;
 
-      &:hover {
-        &::after {
-          opacity: 0.3;
-        }
-      }
-    `}
+  &.selected {
+    border: 2px dashed #ff0000a0;
+    padding: 2px;
+    cursor: pointer;
+  }
+
+  &.locked::after {
+    content: "";
+    position: absolute;
+    width: 24px;
+    height: 30px;
+    top: 4px;
+    right: 4px;
+    opacity: 0.1;
+    background-image: url(${lockIcon});
+    background-size: cover;
+    user-select: none;
+  }
+
+  &.locked:hover::after {
+    opacity: 0.3;
+  }
 `;
 
 const Item = ({
