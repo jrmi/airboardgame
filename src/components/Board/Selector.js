@@ -15,6 +15,7 @@ import {
   BoardStateAtom,
 } from "./";
 import { insideClass, isPointInsideRect } from "../../utils";
+import throttle from "lodash.throttle";
 
 export const selectedItemsAtom = atom({
   key: "selectedItems",
@@ -22,6 +23,7 @@ export const selectedItemsAtom = atom({
 });
 
 const SelectorZone = styled.div.attrs(({ top, left, height, width }) => ({
+  className: "selector",
   style: {
     transform: `translate(${left}px, ${top}px)`,
     height: `${height}px`,
@@ -34,27 +36,33 @@ const SelectorZone = styled.div.attrs(({ top, left, height, width }) => ({
   border: 2px solid hsl(0, 55%, 40%);
 `;
 
-const findSelected = (itemMap, rect) => {
+const findSelected = throttle((itemMap) => {
+  const selector = document.body.querySelector(".selector");
+  if (!selector) {
+    return;
+  }
+  const rect = selector.getBoundingClientRect();
+
   return Array.from(document.getElementsByClassName("item"))
     .filter((elem) => {
-      const { clientHeight, clientWidth, id } = elem;
+      const { id } = elem;
       const item = itemMap[id];
       if (!item) {
         // Avoid to find item that are not yet removed from DOM
         console.error(`Missing item ${id}`);
         return false;
       }
-      return (
-        !item.locked &&
-        isPointInsideRect({ x: item.x, y: item.y }, rect) &&
-        isPointInsideRect(
-          { x: item.x + clientWidth, y: item.y + clientHeight },
-          rect
-        )
-      );
+      if (item.locked) {
+        return false;
+      }
+      const fourElem = Array.from(elem.querySelectorAll(".corner"));
+      return fourElem.every((corner) => {
+        const { top: y, left: x } = corner.getBoundingClientRect();
+        return isPointInsideRect({ x, y }, rect);
+      });
     })
     .map((elem) => elem.id);
-};
+}, 150);
 
 const Selector = ({ children, moveFirst }) => {
   const setSelected = useSetRecoilState(selectedItemsAtom);
@@ -108,11 +116,10 @@ const Selector = ({ children, moveFirst }) => {
   );
 
   const throttledSetSelected = useRecoilCallback(
-    ({ snapshot }) => async (selector) => {
+    ({ snapshot }) => async () => {
       if (stateRef.current.moving) {
         const itemMap = await snapshot.getPromise(ItemMapAtom);
-
-        const selected = findSelected(itemMap, selector);
+        const selected = findSelected(itemMap);
         setSelected((prevSelected) => {
           if (JSON.stringify(prevSelected) !== JSON.stringify(selected)) {
             return selected;
@@ -125,7 +132,7 @@ const Selector = ({ children, moveFirst }) => {
   );
 
   React.useEffect(() => {
-    throttledSetSelected(selector);
+    throttledSetSelected();
   }, [selector, throttledSetSelected]);
 
   const onMouseMove = useRecoilCallback(
