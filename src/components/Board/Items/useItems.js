@@ -61,15 +61,15 @@ const useItems = () => {
   );
 
   const moveItems = React.useCallback(
-    (itemIds, posDelta, sync = true) => {
+    (itemIds, posDelta, sync = true, gridSize = 1) => {
       setItemMap((prevItemMap) => {
         const result = { ...prevItemMap };
         itemIds.forEach((id) => {
           const item = prevItemMap[id];
           result[id] = {
             ...item,
-            x: item.x + posDelta.x,
-            y: item.y + posDelta.y,
+            x: Math.round((item.x + posDelta.x) / gridSize) * gridSize,
+            y: Math.round((item.y + posDelta.y) / gridSize) * gridSize,
           };
         });
         return result;

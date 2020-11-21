@@ -139,6 +139,15 @@ const BoardConfig = () => {
             />
           </Label>
           <Label>
+            {t("Magnetic Grid size")}
+            <Field
+              name="gridSize"
+              component="input"
+              initialValue={boardConfig.gridSize || 1}
+              style={{ width: "5em", textAlign: "right" }}
+            />
+          </Label>
+          <Label>
             {t("Image")}
             <Field name="imageUrl" initialValue={boardConfig.imageUrl}>
               {({ input: { value, onChange } }) => {
