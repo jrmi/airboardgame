@@ -35,6 +35,12 @@ const StyledModal = styled.div.attrs(() => ({ className: "overlay" }))`
   footer {
     margin-top: 1em;
   }
+
+  @media screen and (max-width: 640px) {
+    & .modal-content {
+      max-width: 90%;
+    }
+  }
 `;
 
 export const Modal = ({ setShow, show, children, footer, title }) => {
