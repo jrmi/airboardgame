@@ -8,7 +8,7 @@ import {
 } from "./";
 import { useItems } from "./Items";
 import { useSetRecoilState, useRecoilCallback } from "recoil";
-import { insideClass, hasClass } from "../../utils";
+import { insideClass, hasClass, getPointerState } from "../../utils";
 
 const ActionPane = ({ children }) => {
   const { putItemsOnTop, moveItems } = useItems();
@@ -21,12 +21,14 @@ const ActionPane = ({ children }) => {
 
   const onMouseDown = useRecoilCallback(
     ({ snapshot }) => async (e) => {
-      if (e.button === 0 /*&& !e.altKey*/) {
+      if (e.button === 0 || e.touches /*&& !e.altKey*/) {
         // Allow text selection instead of moving
         if (["INPUT", "TEXTAREA"].includes(e.target.tagName)) return;
 
         const { top, left } = e.currentTarget.getBoundingClientRect();
-        const { clientX, clientY, ctrlKey, metaKey } = e;
+        const { ctrlKey, metaKey } = e;
+
+        const { clientX, clientY } = getPointerState(e);
 
         const foundElement = insideClass(e.target, "item");
 
@@ -72,7 +74,8 @@ const ActionPane = ({ children }) => {
     ({ snapshot }) => async (e) => {
       if (actionRef.current.moving) {
         const { top, left } = e.currentTarget.getBoundingClientRect();
-        const { clientX, clientY } = e;
+
+        const { clientX, clientY } = getPointerState(e);
 
         const panZoomRotate = await snapshot.getPromise(PanZoomRotateAtom);
         const selectedItems = await snapshot.getPromise(selectedItemsAtom);
@@ -123,13 +126,21 @@ const ActionPane = ({ children }) => {
 
   React.useEffect(() => {
     document.addEventListener("mouseup", onMouseUp);
+    document.addEventListener("touchend", onMouseUp);
     return () => {
       document.removeEventListener("mouseup", onMouseUp);
+      document.removeEventListener("touchend", onMouseUp);
     };
   }, [onMouseUp]);
 
   return (
-    <div onMouseDown={onMouseDown} onMouseMove={onMouseMouve} ref={wrapperRef}>
+    <div
+      onMouseDown={onMouseDown}
+      onTouchStart={onMouseDown}
+      onMouseMove={onMouseMouve}
+      onTouchMove={onMouseMouve}
+      ref={wrapperRef}
+    >
       {children}
     </div>
   );

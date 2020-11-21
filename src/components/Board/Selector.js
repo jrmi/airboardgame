@@ -14,7 +14,7 @@ import {
   ItemMapAtom,
   BoardStateAtom,
 } from "./";
-import { insideClass, isPointInsideRect } from "../../utils";
+import { insideClass, isPointInsideRect, getPointerState } from "../../utils";
 import throttle from "lodash.throttle";
 
 export const selectedItemsAtom = atom({
@@ -39,7 +39,7 @@ const SelectorZone = styled.div.attrs(({ top, left, height, width }) => ({
 const findSelected = throttle((itemMap) => {
   const selector = document.body.querySelector(".selector");
   if (!selector) {
-    return;
+    return [];
   }
   const rect = selector.getBoundingClientRect();
 
@@ -92,11 +92,12 @@ const Selector = ({ children, moveFirst }) => {
 
       const goodButton = moveFirst
         ? e.button === 1 || (e.button === 0 && metaKeyPressed)
-        : e.button === 0 && !metaKeyPressed;
+        : (e.button === 0 || e.touches) && !metaKeyPressed;
 
       if (goodButton && (outsideItem || moveFirst)) {
         const { top, left } = e.currentTarget.getBoundingClientRect();
-        const { clientX, clientY } = e;
+
+        const { clientX, clientY } = getPointerState(e);
 
         const panZoomRotate = await snapshot.getPromise(PanZoomRotateAtom);
         const displayX = (clientX - left) / panZoomRotate.scale;
@@ -120,6 +121,7 @@ const Selector = ({ children, moveFirst }) => {
       if (stateRef.current.moving) {
         const itemMap = await snapshot.getPromise(ItemMapAtom);
         const selected = findSelected(itemMap);
+
         setSelected((prevSelected) => {
           if (JSON.stringify(prevSelected) !== JSON.stringify(selected)) {
             return selected;
@@ -139,8 +141,8 @@ const Selector = ({ children, moveFirst }) => {
     ({ snapshot }) => async (e) => {
       if (stateRef.current.moving) {
         const { top, left } = e.currentTarget.getBoundingClientRect();
-        const { clientX, clientY } = e;
-        e.preventDefault();
+
+        const { clientX, clientY } = getPointerState(e);
 
         const panZoomRotate = await snapshot.getPromise(PanZoomRotateAtom);
 
@@ -201,8 +203,10 @@ const Selector = ({ children, moveFirst }) => {
 
   React.useEffect(() => {
     document.addEventListener("mouseup", onMouseUp);
+    document.addEventListener("touchend", onMouseUp);
     return () => {
       document.removeEventListener("mouseup", onMouseUp);
+      document.removeEventListener("touchend", onMouseUp);
     };
   }, [onMouseUp]);
 
@@ -217,6 +221,8 @@ const Selector = ({ children, moveFirst }) => {
     <div
       onMouseDown={onMouseDown}
       onMouseMove={onMouseMove}
+      onTouchStart={onMouseDown}
+      onTouchMove={onMouseMove}
       onMouseEnter={onMouseMove}
       onMouseOut={onMouseMove}
       ref={wrapperRef}
