@@ -22,11 +22,56 @@ const StyledNavBar = styled.div.attrs(() => ({ className: "nav" }))`
   background-color: rgba(26, 26, 26, 0.7);
   z-index: 10;
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+
+  & .brand {
+    margin: 0;
+    padding: 7px;
+    width: 54px;
+    height: 54px;
+  }
+
   & .nav-center {
     display: flex;
-    align-items: center;
     & h3 {
       margin: 0;
+    }
+  }
+
+  & .nav-right,
+  & .nav-center,
+  & .nav-left {
+    align-items: center;
+  }
+
+  & .nav-right {
+    justify-content: flex-end;
+    padding-right: 5px;
+  }
+
+  @media screen and (max-width: 640px) {
+    & {
+      flex-direction: row;
+    }
+    & .save {
+      display: none;
+    }
+    & .info {
+      margin: 0;
+      padding: 0;
+      width: 24px;
+      height: 24px;
+    }
+    & .help {
+      margin: 0;
+      padding: 0;
+      width: 24px;
+      height: 24px;
+    }
+    & h3 {
+      font-size: 1.2em;
+    }
+    & .nav-left {
+      flex: 0;
     }
   }
 `;
@@ -52,7 +97,7 @@ const NavBar = ({ editMode }) => {
             <img src={logo} alt="Air Board Game" title={t("Go to home")} />
           </Link>
           <button
-            className="button clear icon-only"
+            className="button clear icon-only save"
             onClick={() => setShowLoadGameModal((prev) => !prev)}
           >
             <img
@@ -66,7 +111,7 @@ const NavBar = ({ editMode }) => {
         <div className="nav-center">
           <h3>{translation.name ? translation.name : "Air Board Game"}</h3>
           <button
-            className="button clear icon-only"
+            className="button clear icon-only info"
             onClick={() => setShowInfoModal((prev) => !prev)}
           >
             {!editMode && (
@@ -89,7 +134,7 @@ const NavBar = ({ editMode }) => {
         <div className="nav-right">
           {!editMode && <UserList />}
           <button
-            className="button clear icon-only"
+            className="button clear icon-only help"
             onClick={() => setShowHelpModal((prev) => !prev)}
           >
             <img
@@ -99,8 +144,6 @@ const NavBar = ({ editMode }) => {
             />
           </button>
         </div>
-
-        <div className="menu"></div>
       </StyledNavBar>
       <HelpModal show={showHelpModal} setShow={setShowHelpModal} />
       {!editMode && (

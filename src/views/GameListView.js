@@ -45,6 +45,20 @@ const Header = styled.div`
     top: 4em;
     background-color: var(--color-secondary);
   }
+  @media screen and (max-width: 640px) {
+    & {
+      height: 10em;
+    }
+    & .new-game {
+      display: none;
+    }
+    & .login {
+      display: none;
+    }
+    & .baseline {
+      font-size: 1em;
+    }
+  }
 `;
 
 const Brand = styled.div`
@@ -75,6 +89,15 @@ const Brand = styled.div`
     font-weight: 700;
     color: hsl(168, 83%, 62%);
   }
+
+  @media screen and (max-width: 640px) {
+    & {
+      width: 290px;
+    }
+    & h1 {
+      font-size: 2em;
+    }
+  }
 `;
 
 const GameView = styled.div`
@@ -90,7 +113,8 @@ const GameView = styled.div`
 `;
 
 const GameList = styled.ul`
-  width: 960px;
+  width: 100%;
+  max-width: 960px;
   list-style: none;
   margin: 0;
   margin: 0 auto;
@@ -99,6 +123,9 @@ const GameList = styled.ul`
   display: flex;
   flex-wrap: wrap;
   align-content: flex-start;
+
+  @media screen and (max-width: 640px) {
+  }
 `;
 
 const useQuery = () => {
