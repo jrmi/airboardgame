@@ -19,6 +19,29 @@ const ItemWrapper = styled.div.attrs(({ rotation, locked }) => {
   transition: transform 150ms;
   user-select: none;
 
+  & .corner {
+    position: absolute;
+    width: 0px;
+    height: 0px;
+  }
+
+  & .top-left {
+    top: 0;
+    left: 0;
+  }
+  & .top-right {
+    top: 0;
+    right: 0;
+  }
+  & .bottom-left {
+    bottom: 0;
+    left: 0;
+  }
+  & .bottom-right {
+    bottom: 0;
+    right: 0;
+  }
+
   ${({ selected }) =>
     selected
       ? css`
@@ -133,6 +156,10 @@ const Item = ({
       >
         <div ref={animateRef} onAnimationEnd={removeClass}>
           <Component {...rest} setState={updateState} />
+          <div className="corner top-left"></div>
+          <div className="corner top-right"></div>
+          <div className="corner bottom-left"></div>
+          <div className="corner bottom-right"></div>
         </div>
       </ItemWrapper>
     </div>
