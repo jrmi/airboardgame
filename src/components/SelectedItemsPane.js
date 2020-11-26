@@ -6,8 +6,8 @@ import { useItemActions } from "./boardComponents/useItemActions";
 import {
   selectedItemsAtom,
   PanZoomRotateAtom,
-  ItemMapAtom,
   BoardStateAtom,
+  ItemMapAtom,
 } from "../components/Board/";
 
 import debounce from "lodash.debounce";
@@ -40,21 +40,21 @@ const ActionPane = styled.div.attrs(({ top, left, height, hide }) => {
   if (top < 120) {
     return {
       style: {
-        top: `${top + height + 20}px`,
-        left: `${left}px`,
-        opacity: hide ? 0.05 : 1,
+        transform: `translate(${left}px, ${top + height + 20}px)`,
+        opacity: hide ? 0 : 1,
       },
     };
   } else {
     return {
       style: {
-        top: `${top - 85}px`,
-        left: `${left}px`,
-        opacity: hide ? 0.05 : 1,
+        transform: `translate(${left}px, ${top - 85}px)`,
+        opacity: hide ? 0 : 1,
       },
     };
   }
 })`
+  top: 0;
+  left: 0;
   position: absolute;
   display: flex;
   background-color: var(--bg-color);
@@ -62,7 +62,7 @@ const ActionPane = styled.div.attrs(({ top, left, height, hide }) => {
   align-items: center;
   border-radius: 4px;
   padding: 0.5em;
-  transition: opacity 100ms;
+  transition: opacity 200ms;
   
   box-shadow: 2.5px 4.33px 14.7px 0.3px rgba(0, 0, 0, 0.7);
 
@@ -114,22 +114,24 @@ const BoundingBoxZone = styled.div.attrs(({ top, left, height, width }) => ({
   pointer-events: none;
 `;
 
-export const SelectedItems = () => {
-  const { availableActions, actionMap } = useItemActions();
-  const [showEdit, setShowEdit] = React.useState(false);
-
-  const { t } = useTranslation();
-
-  const selectedItems = useRecoilValue(selectedItemsAtom);
-  const boardState = useRecoilValue(BoardStateAtom);
-  const itemMap = useRecoilValue(ItemMapAtom);
+const BoundingBox = ({
+  boundingBoxLast,
+  setBoundingBoxLast,
+  selectedItems,
+}) => {
   const panZoomRotate = useRecoilValue(PanZoomRotateAtom);
-  const [boundingBoxLast, setBoundingBoxLast] = React.useState(null);
+  const itemMap = useRecoilValue(ItemMapAtom);
 
   // Update selection bounding box
   const updateBox = useRecoilCallback(
     ({ snapshot }) => async () => {
       const selectedItems = await snapshot.getPromise(selectedItemsAtom);
+
+      if (selectedItems.length === 0) {
+        setBoundingBoxLast(null);
+        return;
+      }
+
       let boundingBox = null;
 
       selectedItems.forEach((itemId) => {
@@ -162,20 +164,33 @@ export const SelectedItems = () => {
         }
       });
 
-      setBoundingBoxLast(
-        boundingBox
-          ? {
-              top: boundingBox.y,
-              left: boundingBox.x,
-              height: boundingBox.y2 - boundingBox.y,
-              width: boundingBox.x2 - boundingBox.x,
-            }
-          : null
-      );
-    },
-    []
-  );
+      if (!boundingBox) {
+        setBoundingBoxLast(null);
+        return;
+      }
 
+      const newBB = {
+        top: boundingBox.y,
+        left: boundingBox.x,
+        height: boundingBox.y2 - boundingBox.y,
+        width: boundingBox.x2 - boundingBox.x,
+      };
+
+      setBoundingBoxLast((prevBB) => {
+        if (
+          !prevBB ||
+          prevBB.top !== newBB.top ||
+          prevBB.left !== newBB.left ||
+          prevBB.width !== newBB.width ||
+          prevBB.height !== newBB.height
+        ) {
+          return newBB;
+        }
+        return prevBB;
+      });
+    },
+    [setBoundingBoxLast]
+  );
   // Debounced version of update box
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const updateBoxDelay = React.useCallback(
@@ -187,11 +202,24 @@ export const SelectedItems = () => {
 
   React.useEffect(() => {
     // Update selected elements bounding box
-    if (selectedItems) {
-      updateBox();
-      updateBoxDelay(); // Delay to update after board item animation like tap/untap.
-    }
+    updateBox();
+    updateBoxDelay(); // Delay to update after board item animation like tap/untap.
   }, [selectedItems, itemMap, panZoomRotate, updateBox, updateBoxDelay]);
+
+  if (!boundingBoxLast || selectedItems.length < 2) return null;
+
+  return <BoundingBoxZone {...boundingBoxLast} />;
+};
+
+export const SelectedItemsPane = () => {
+  const { availableActions, actionMap } = useItemActions();
+  const [showEdit, setShowEdit] = React.useState(false);
+
+  const { t } = useTranslation();
+
+  const selectedItems = useRecoilValue(selectedItemsAtom);
+  const boardState = useRecoilValue(BoardStateAtom);
+  const [boundingBoxLast, setBoundingBoxLast] = React.useState(null);
 
   React.useEffect(() => {
     const onKeyUp = (e) => {
@@ -339,11 +367,13 @@ export const SelectedItems = () => {
           )}
         </ActionPane>
       )}
-      {boundingBoxLast && selectedItems.length > 1 && (
-        <BoundingBoxZone {...boundingBoxLast} />
-      )}
+      <BoundingBox
+        boundingBoxLast={boundingBoxLast}
+        setBoundingBoxLast={setBoundingBoxLast}
+        selectedItems={selectedItems}
+      />
     </>
   );
 };
 
-export default SelectedItems;
+export default SelectedItemsPane;
