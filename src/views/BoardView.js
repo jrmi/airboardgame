@@ -31,7 +31,7 @@ const BoardContainer = styled.div`
 `;
 
 const FirstActionSelect = styled.button`
-  position: absolute;
+  position: fixed;
   bottom: 1em;
   left: 1em;
   background: none;
