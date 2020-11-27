@@ -14,7 +14,7 @@ import {
   ItemMapAtom,
   BoardStateAtom,
 } from "./";
-import { insideClass, isPointInsideRect, getPointerState } from "../../utils";
+import { insideClass, isPointInsideRect } from "../../utils";
 import throttle from "lodash.throttle";
 
 export const selectedItemsAtom = atom({
@@ -83,39 +83,6 @@ const Selector = ({ children, moveFirst }) => {
     setSelected(emptySelection);
   }, [config, emptySelection, setSelected]);
 
-  const onMouseDown = useRecoilCallback(
-    ({ snapshot }) => async (e) => {
-      const outsideItem =
-        !insideClass(e.target, "item") || insideClass(e.target, "locked");
-
-      const metaKeyPressed = e.altKey || e.ctrlKey || e.metaKey;
-
-      const goodButton = moveFirst
-        ? e.button === 1 || (e.button === 0 && metaKeyPressed)
-        : (e.button === 0 || e.touches) && !metaKeyPressed;
-
-      if (goodButton && (outsideItem || moveFirst)) {
-        const { top, left } = e.currentTarget.getBoundingClientRect();
-
-        const { clientX, clientY } = getPointerState(e);
-
-        const panZoomRotate = await snapshot.getPromise(PanZoomRotateAtom);
-        const displayX = (clientX - left) / panZoomRotate.scale;
-        const displayY = (clientY - top) / panZoomRotate.scale;
-
-        stateRef.current.moving = true;
-        stateRef.current.startX = displayX;
-        stateRef.current.startY = displayY;
-
-        setSelector({ ...stateRef.current });
-        wrapperRef.current.style.cursor = "crosshair";
-
-        setBoardState((prev) => ({ ...prev, selecting: true }));
-      }
-    },
-    [moveFirst, setBoardState]
-  );
-
   const throttledSetSelected = useRecoilCallback(
     ({ snapshot }) => async () => {
       if (stateRef.current.moving) {
@@ -133,6 +100,58 @@ const Selector = ({ children, moveFirst }) => {
     [setSelected]
   );
 
+  const onMouseDown = useRecoilCallback(
+    ({ snapshot }) => async (e) => {
+      if (!e.isPrimary) {
+        return;
+      }
+      const {
+        target,
+        pointerId,
+        currentTarget,
+        clientX,
+        clientY,
+        button,
+        altKey,
+        ctrlKey,
+        metaKey,
+      } = e;
+
+      const outsideItem =
+        !insideClass(target, "item") || insideClass(target, "locked");
+
+      const metaKeyPressed = altKey || ctrlKey || metaKey;
+
+      const goodButton = moveFirst
+        ? button === 1 || (button === 0 && metaKeyPressed)
+        : button === 0 && !metaKeyPressed;
+
+      if (goodButton && (outsideItem || moveFirst)) {
+        const { top, left } = currentTarget.getBoundingClientRect();
+
+        const panZoomRotate = await snapshot.getPromise(PanZoomRotateAtom);
+        const displayX = (clientX - left) / panZoomRotate.scale;
+        const displayY = (clientY - top) / panZoomRotate.scale;
+
+        stateRef.current.moving = true;
+        stateRef.current.startX = displayX;
+        stateRef.current.startY = displayY;
+
+        setSelector({ ...stateRef.current });
+        wrapperRef.current.style.cursor = "crosshair";
+
+        try {
+          currentTarget.setPointerCapture(pointerId);
+        } catch (e) {
+          console.log("Fail to capture pointer", e);
+        }
+
+        setBoardState((prev) => ({ ...prev, selecting: true }));
+      }
+    },
+    [moveFirst, setBoardState]
+  );
+
   React.useEffect(() => {
     throttledSetSelected();
   }, [selector, throttledSetSelected]);
@@ -140,9 +159,12 @@ const Selector = ({ children, moveFirst }) => {
   const onMouseMove = useRecoilCallback(
     ({ snapshot }) => async (e) => {
       if (stateRef.current.moving) {
-        const { top, left } = e.currentTarget.getBoundingClientRect();
+        if (!e.isPrimary) {
+          return;
+        }
+        const { currentTarget, clientX, clientY } = e;
 
-        const { clientX, clientY } = getPointerState(e);
+        const { top, left } = currentTarget.getBoundingClientRect();
 
         const panZoomRotate = await snapshot.getPromise(PanZoomRotateAtom);
 
@@ -172,7 +194,12 @@ const Selector = ({ children, moveFirst }) => {
 
   const onMouseUp = useRecoilCallback(
     ({ snapshot }) => async (e) => {
+      const { target } = e;
       if (stateRef.current.moving) {
+        if (!e.isPrimary) {
+          return;
+        }
+
         const itemMap = await snapshot.getPromise(ItemMapAtom);
 
         const selected = findSelected(itemMap, stateRef.current);
@@ -191,8 +218,8 @@ const Selector = ({ children, moveFirst }) => {
       } else {
         if (
           moveFirst &&
-          (!insideClass(e.target, "item") || insideClass(e.target, "locked")) &&
-          insideClass(e.target, "board")
+          (!insideClass(target, "item") || insideClass(target, "locked")) &&
+          insideClass(target, "board")
         ) {
           setSelected(emptySelection);
         }
@@ -200,15 +227,6 @@ const Selector = ({ children, moveFirst }) => {
     },
     [emptySelection, moveFirst, setBoardState, setSelected]
   );
-
-  React.useEffect(() => {
-    document.addEventListener("mouseup", onMouseUp);
-    document.addEventListener("touchend", onMouseUp);
-    return () => {
-      document.removeEventListener("mouseup", onMouseUp);
-      document.removeEventListener("touchend", onMouseUp);
-    };
-  }, [onMouseUp]);
 
   // Reset selected on unmount
   React.useEffect(() => {
@@ -219,21 +237,13 @@ const Selector = ({ children, moveFirst }) => {
 
   return (
     <div
-      onMouseDown={onMouseDown}
-      onMouseMove={onMouseMove}
-      onTouchStart={onMouseDown}
-      onTouchMove={onMouseMove}
-      onMouseEnter={onMouseMove}
-      onMouseOut={onMouseMove}
+      onPointerDown={onMouseDown}
+      onPointerMove={onMouseMove}
+      onPointerUp={onMouseUp}
+      style={{ touchAction: "none" }}
       ref={wrapperRef}
     >
-      {selector.moving && (
-        <SelectorZone
-          {...selector}
-          onMouseEnter={(e) => e.stopPropagation()}
-          onMouseOut={(e) => e.stopPropagation()}
-        />
-      )}
+      {selector.moving && <SelectorZone {...selector} />}
       {children}
     </div>
   );
