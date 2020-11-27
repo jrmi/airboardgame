@@ -26,37 +26,52 @@ describe("Board interactions", () => {
 
   it("Pan board with middle click", () => {
     cy.get(".board")
-      .trigger("mousedown", { button: 1 })
-      .trigger("mousemove", {
+      .trigger("pointerdown", {
+        button: 1,
+        clientX: 100,
+        clientY: 100,
+        isPrimary: true,
+      })
+      .trigger("pointermove", {
         clientX: 200,
-        clientY: 250,
+        clientY: 200,
+        isPrimary: true,
         force: true,
       })
-      .trigger("mouseup", {
+      .trigger("pointerup", {
         force: true,
+        isPrimary: true,
       });
     cy.get(".board-pane").should(
       "have.css",
       "transform",
-      "matrix(1, 0, 0, 1, -300, -250)"
+      "matrix(1, 0, 0, 1, 100, -100)"
     );
   });
 
   it("Pan board with left click and altKey ", () => {
     cy.get(".board")
-      .trigger("mousedown", { button: 0, altKey: true })
-      .trigger("mousemove", {
+      .trigger("pointerdown", {
+        button: 0,
         clientX: 100,
-        clientY: 150,
+        clientY: 100,
+        isPrimary: true,
+        altKey: true,
+      })
+      .trigger("pointermove", {
+        clientX: 200,
+        clientY: 200,
+        isPrimary: true,
         force: true,
       })
-      .trigger("mouseup", {
+      .trigger("pointerup", {
         force: true,
+        isPrimary: true,
       });
     cy.get(".board-pane").should(
       "have.css",
       "transform",
-      "matrix(1, 0, 0, 1, -400, -350)"
+      "matrix(1, 0, 0, 1, 100, -100)"
     );
   });
 });

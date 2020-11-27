@@ -29,17 +29,20 @@ describe("Item interactions", () => {
 
     cy.get("img[src='/games/JC.jpg']")
       .parents(".item")
-      .trigger("mousedown", {
+      .trigger("pointerdown", {
         button: 0,
         force: true,
+        isPrimary: true,
       })
-      .trigger("mousemove", {
+      .trigger("pointermove", {
         clientX: 200,
         clientY: 200,
         force: true,
+        isPrimary: true,
       })
-      .trigger("mouseup", {
+      .trigger("pointerup", {
         force: true,
+        isPrimary: true,
       });
     cy.get("img[src='/games/JC.jpg']")
       .parents(".item")
