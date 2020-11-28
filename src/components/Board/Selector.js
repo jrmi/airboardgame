@@ -17,6 +17,8 @@ import {
 import { insideClass, isPointInsideRect } from "../../utils";
 import throttle from "lodash.throttle";
 
+import Gesture from "./Gesture";
+
 export const selectedItemsAtom = atom({
   key: "selectedItems",
   default: [],
@@ -100,7 +102,18 @@ const Selector = ({ children, moveFirst }) => {
     [setSelected]
   );
 
-  const onMouseDown = useRecoilCallback(
+  React.useEffect(() => {
+    throttledSetSelected();
+  }, [selector, throttledSetSelected]);
+
+  // Reset selected on unmount
+  React.useEffect(() => {
+    return () => {
+      setSelected(emptySelection);
+    };
+  }, [setSelected, emptySelection]);
+
+  /*const onMouseDown = useRecoilCallback(
     ({ snapshot }) => async (e) => {
       if (!e.isPrimary) {
         return;
@@ -150,13 +163,9 @@ const Selector = ({ children, moveFirst }) => {
       }
     },
     [moveFirst, setBoardState]
-  );
+  );*/
 
-  React.useEffect(() => {
-    throttledSetSelected();
-  }, [selector, throttledSetSelected]);
-
-  const onMouseMove = useRecoilCallback(
+  /*const onMouseMove = useRecoilCallback(
     ({ snapshot }) => async (e) => {
       if (stateRef.current.moving) {
         if (!e.isPrimary) {
@@ -190,9 +199,9 @@ const Selector = ({ children, moveFirst }) => {
       }
     },
     []
-  );
+  );*/
 
-  const onMouseUp = useRecoilCallback(
+  /*const onMouseUp = useRecoilCallback(
     ({ snapshot }) => async (e) => {
       const { target } = e;
       if (stateRef.current.moving) {
@@ -226,26 +235,100 @@ const Selector = ({ children, moveFirst }) => {
       }
     },
     [emptySelection, moveFirst, setBoardState, setSelected]
+  );*/
+
+  const onDragStart = (e) => {
+    const { button, altKey, ctrlKey, metaKey, target } = e;
+
+    const outsideItem =
+      !insideClass(target, "item") || insideClass(target, "locked");
+
+    const metaKeyPressed = altKey || ctrlKey || metaKey;
+
+    const goodButton = moveFirst
+      ? button === 1 || (button === 0 && metaKeyPressed)
+      : button === 0 && !metaKeyPressed;
+
+    if (goodButton && (outsideItem || moveFirst)) {
+      stateRef.current.moving = true;
+      setBoardState((prev) => ({ ...prev, selecting: true }));
+      wrapperRef.current.style.cursor = "crosshair";
+    }
+  };
+
+  const onDrag = useRecoilCallback(
+    ({ snapshot }) => async (e) => {
+      const { distanceY, distanceX, startX, startY } = e;
+
+      if (stateRef.current.moving) {
+        const { top, left } = wrapperRef.current.getBoundingClientRect();
+
+        const panZoomRotate = await snapshot.getPromise(PanZoomRotateAtom);
+
+        const displayX = (startX - left) / panZoomRotate.scale;
+        const displayY = (startY - top) / panZoomRotate.scale;
+
+        const displayDistanceX = distanceX / panZoomRotate.scale;
+        const displayDistanceY = distanceY / panZoomRotate.scale;
+
+        if (displayDistanceX > 0) {
+          stateRef.current.left = displayX;
+          stateRef.current.width = displayDistanceX;
+        } else {
+          stateRef.current.left = displayX + displayDistanceX;
+          stateRef.current.width = -displayDistanceX;
+        }
+        if (displayDistanceY > 0) {
+          stateRef.current.top = displayY;
+          stateRef.current.height = displayDistanceY;
+        } else {
+          stateRef.current.top = displayY + displayDistanceY;
+          stateRef.current.height = -displayDistanceY;
+        }
+
+        setSelector({ ...stateRef.current, moving: true });
+      }
+    },
+    []
   );
 
-  // Reset selected on unmount
-  React.useEffect(() => {
-    return () => {
-      setSelected(emptySelection);
-    };
-  }, [setSelected, emptySelection]);
+  const onDragEnd = () => {
+    if (stateRef.current.moving) {
+      setBoardState((prev) => ({ ...prev, selecting: false }));
+      stateRef.current.moving = false;
+      setSelector({ moving: false });
+      wrapperRef.current.style.cursor = "auto";
+    }
+  };
+
+  const onTap = React.useCallback(
+    (e) => {
+      const { target } = e;
+      if (
+        (!insideClass(target, "item") || insideClass(target, "locked")) &&
+        insideClass(target, "board")
+      ) {
+        setSelected(emptySelection);
+      }
+    },
+    [emptySelection, setSelected]
+  );
 
   return (
-    <div
-      onPointerDown={onMouseDown}
-      onPointerMove={onMouseMove}
-      onPointerUp={onMouseUp}
-      style={{ touchAction: "none" }}
-      ref={wrapperRef}
+    <Gesture
+      onDragStart={onDragStart}
+      onDrag={onDrag}
+      onDragEnd={onDragEnd}
+      onTap={onTap}
+      onLongTap={() => {
+        console.log("longtap");
+      }}
     >
-      {selector.moving && <SelectorZone {...selector} />}
-      {children}
-    </div>
+      <div ref={wrapperRef}>
+        {selector.moving && <SelectorZone {...selector} />}
+        {children}
+      </div>
+    </Gesture>
   );
 };
 

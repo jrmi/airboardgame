@@ -43,6 +43,7 @@ const ActionPane = ({ children }) => {
         const foundElement = insideClass(target, "item");
 
         if (foundElement && !hasClass(foundElement, "locked")) {
+          e.stopPropagation();
           const panZoomRotate = await snapshot.getPromise(PanZoomRotateAtom);
           const selectedItems = await snapshot.getPromise(selectedItemsAtom);
 
