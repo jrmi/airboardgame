@@ -16,21 +16,22 @@ describe("Selection action", () => {
       .should("have.css", "transform", "none");
   });
 
-  it("should select multiple items with left click ", () => {
+  it("should select multiple items with right click ", () => {
     cy.get(".board")
       .trigger("pointerdown", {
+        pointerId: 42,
         x: 350,
         y: 500,
-        button: 0,
         clientX: 350,
         clientY: 500,
-        button: 0,
+        buttons: 1,
         isPrimary: true,
       })
       .trigger("pointermove", {
+        pointerId: 42,
         x: 600,
         y: 150,
-        button: 0,
+        buttons: 1,
         clientX: 600,
         clientY: 150,
         force: true,
@@ -44,9 +45,10 @@ describe("Selection action", () => {
     );
 
     cy.get(".board").trigger("pointermove", {
+      pointerId: 42,
       x: 601,
       y: 151,
-      button: 0,
+      buttons: 1,
       clientX: 601,
       clientY: 151,
       isPrimary: true,
@@ -56,6 +58,7 @@ describe("Selection action", () => {
     cy.wait(500);
 
     cy.get(".board").trigger("pointerup", {
+      pointerId: 42,
       isPrimary: true,
       force: true,
     });

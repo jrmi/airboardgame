@@ -30,9 +30,10 @@ const SelectedPane = styled.div`
   padding: 0.5em;
   overflow-y: scroll;
   z-index: 2;
-  transform: scaleX(-1);
-  & > div {
-    transform: scaleX(-1);
+  & .close {
+    position: absolute;
+    right: 0.5em;
+    top: 0.5em;
   }
 `;
 
@@ -298,6 +299,17 @@ export const SelectedItemsPane = () => {
             <header>
               {selectedItems.length === 1 && <h3>{t("Edit item")}</h3>}
               {selectedItems.length > 1 && <h3>{t("Edit all items")}</h3>}
+              <button
+                className="button clear icon-only close"
+                onClick={() => {
+                  setShowEdit(false);
+                }}
+              >
+                <img
+                  src="https://icongr.am/feather/x.svg?size=30&color=ffffff"
+                  alt={t("Close")}
+                />
+              </button>
             </header>
             <CardContent>
               <ItemFormFactory />

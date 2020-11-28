@@ -194,132 +194,18 @@ const PanZoomRotate = ({ children, moveFirst }) => {
     };
   }, []);
 
-  /*const onWheel = React.useCallback(
-    (e) => {
-      const { deltaX, deltaY, clientX, clientY, ctrlKey, altKey } = e;
+  React.useEffect(() => {
+    // Prevent some undesirable effect on safari
+    document.addEventListener("gesturestart", (e) => e.preventDefault());
+    document.addEventListener("gesturechange", (e) => e.preventDefault());
+  }, []);
 
-      // On a trackpad, the pinch gesture sets the ctrlKey to true.
-      // In that situation, we want to use the custom scaling below, not the browser default zoom.
-      // Hence in this situation we avoid to return immediately.
-      if (altKey || (ctrlKey && !isMacOS())) {
-        return;
-      }
-
-      // On a trackpad, the pinch and pan events are differentiated by the crtlKey value.
-      // On a pinch gesture, the ctrlKey is set to true, so we want to have a scaling effect.
-      // If we are only moving the fingers in the same direction, a pan is needed.
-      // Ref: https://medium.com/@auchenberg/detecting-multi-touch-trackpad-gestures-in-javascript-a2505babb10e
-      if (isMacOS() && !ctrlKey) {
-        setDim((prevDim) => {
-          return {
-            ...prevDim,
-            translateX: prevDim.translateX - 2 * deltaX,
-            translateY: prevDim.translateY - 2 * deltaY,
-          };
-        });
-      } else {
-        setScale((prevScale) => {
-          // Made the scale multiplicator Mac specific, as the default one was zooming way too much on each gesture.
-          const scaleMult =
-            (deltaY < 0 ? -3 : 3 * prevScale.scale) / (isMacOS() ? 50 : 20);
-          let newScale = prevScale.scale - scaleMult;
-
-          if (newScale > 8) {
-            newScale = 8;
-          }
-
-          if (newScale < 0.1) {
-            newScale = 0.1;
-          }
-          return {
-            scale: newScale,
-            x: clientX,
-            y: clientY,
-          };
-        });
-      }
-    },
-    [setDim]
-  );*/
-
-  /*const onMouseDown = (e) => {
-    if (!e.isPrimary) {
+  const onWheel = ({ delta: [, deltaY], event: { clientX, clientY } }) => {
+    if (deltaY === 0) {
       return;
     }
 
-    const {
-      target,
-      altKey,
-      ctrlKey,
-      metaKey,
-      button,
-      clientX,
-      clientY,
-      pointerId,
-    } = e;
-
-    const outsideItem =
-      !insideClass(target, "item") || insideClass(target, "locked");
-
-    const metaKeyPressed = altKey || ctrlKey || metaKey;
-
-    const goodButton = moveFirst
-      ? button === 0 && !metaKeyPressed
-      : button === 1 || (button === 0 && metaKeyPressed);
-
-    if (goodButton && (outsideItem || !moveFirst)) {
-      stateRef.current.moving = true;
-      stateRef.current.startX = clientX;
-      stateRef.current.startY = clientY;
-      stateRef.current.startTranslateX = dim.translateX;
-      stateRef.current.startTranslateY = dim.translateY;
-      wrapperRef.current.style.cursor = "move";
-      try {
-        target.setPointerCapture(pointerId);
-      } catch (e) {
-        console.log("Fail to capture pointer", e);
-      }
-    }
-  };*/
-
-  /*const onMouseMove = (e) => {
-    if (stateRef.current.moving) {
-      if (!e.isPrimary) {
-        return;
-      }
-      const { clientX, clientY } = e;
-
-      const [deltaX, deltaY] = [
-        clientX - stateRef.current.startX,
-        clientY - stateRef.current.startY,
-      ];
-      setDim((prevDim) => {
-        return {
-          ...prevDim,
-          translateX: stateRef.current.startTranslateX + deltaX,
-          translateY: stateRef.current.startTranslateY + deltaY,
-        };
-      });
-    }
-  };*/
-
-  /*const onMouseUp = React.useCallback((e) => {
-    if (!e.isPrimary) {
-      return;
-    }
-    stateRef.current.moving = false;
-    wrapperRef.current.style.cursor = "auto";
-  }, []);*/
-
-  const onZoom = (e) => {
-    //const { clientX, clientY, scale } = e;
-
-    const {
-      delta: [, deltaY],
-      event: { clientX, clientY },
-    } = e;
-
-    const scale = 1 - deltaY / (isMacOS() ? 25 : 10);
+    const scale = 1 - (deltaY > 0 ? 1 : -1) / (isMacOS() ? 25 : 5);
 
     setScale((prevScale) => {
       let newScale = prevScale.scale * scale;
@@ -338,20 +224,7 @@ const PanZoomRotate = ({ children, moveFirst }) => {
     });
   };
 
-  React.useEffect(() => {
-    document.addEventListener("gesturestart", (e) => e.preventDefault());
-    document.addEventListener("gesturechange", (e) => e.preventDefault());
-  }, []);
-
-  const onPinch = React.useCallback((e) => {
-    //const { clientX, clientY, scale } = e;
-    //console.log("e", e);
-
-    const {
-      vdva: [vdx],
-      origin: [clientX, clientY],
-    } = e;
-
+  const onPinch = ({ vdva: [vdx], origin: [clientX, clientY] }) => {
     setScale((prevScale) => {
       let newScale = prevScale.scale + vdx * prevScale.scale;
       if (newScale > 8) {
@@ -367,17 +240,15 @@ const PanZoomRotate = ({ children, moveFirst }) => {
         y: clientY,
       };
     });
-  }, []);
+  };
 
-  const onPan = (e) => {
-    const {
-      delta: [deltaX, deltaY],
-      buttons,
-      altKey,
-      touches,
-      event: { target },
-    } = e;
-
+  const onPan = ({
+    delta: [deltaX, deltaY],
+    buttons,
+    altKey,
+    touches,
+    event: { target },
+  }) => {
     const outsideItem =
       !insideClass(target, "item") || insideClass(target, "locked");
 
@@ -398,10 +269,7 @@ const PanZoomRotate = ({ children, moveFirst }) => {
     }
   };
 
-  useGesture(
-    { onDrag: onPan, onWheel: onZoom, onPinch },
-    { domTarget: wrapperRef }
-  );
+  useGesture({ onDrag: onPan, onWheel, onPinch }, { domTarget: wrapperRef });
 
   return (
     <div ref={wrapperRef} style={{ touchAction: "none" }}>
@@ -410,14 +278,6 @@ const PanZoomRotate = ({ children, moveFirst }) => {
       </Pane>
     </div>
   );
-
-  /*return (
-    <Gesture onPan={onPan} onZoom={onZoom} onDrag={onDrag}>
-      <Pane {...dim} ref={wrappedRef}>
-        {children}
-      </Pane>
-    </Gesture>
-  );*/
 };
 
 export default PanZoomRotate;

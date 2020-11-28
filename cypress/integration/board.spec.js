@@ -27,18 +27,22 @@ describe("Board interactions", () => {
   it("Pan board with middle click", () => {
     cy.get(".board")
       .trigger("pointerdown", {
-        button: 1,
+        pointerId: 10,
+        buttons: 4,
         clientX: 100,
         clientY: 100,
         isPrimary: true,
       })
       .trigger("pointermove", {
+        pointerId: 10,
+        buttons: 4,
         clientX: 200,
         clientY: 200,
         isPrimary: true,
         force: true,
       })
       .trigger("pointerup", {
+        pointerId: 10,
         force: true,
         isPrimary: true,
       });
@@ -52,19 +56,24 @@ describe("Board interactions", () => {
   it("Pan board with left click and altKey ", () => {
     cy.get(".board")
       .trigger("pointerdown", {
-        button: 0,
+        pointerId: 11,
+        buttons: 1,
         clientX: 100,
         clientY: 100,
         isPrimary: true,
         altKey: true,
       })
       .trigger("pointermove", {
+        pointerId: 11,
+        buttons: 1,
         clientX: 200,
         clientY: 200,
+        altKey: true,
         isPrimary: true,
         force: true,
       })
       .trigger("pointerup", {
+        pointerId: 11,
         force: true,
         isPrimary: true,
       });
