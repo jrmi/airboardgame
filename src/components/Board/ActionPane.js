@@ -10,6 +10,10 @@ import { useItems } from "./Items";
 import { useSetRecoilState, useRecoilCallback } from "recoil";
 import { insideClass, hasClass } from "../../utils";
 
+import Gesture from "./Gesture";
+
+import { useGesture } from "react-use-gesture";
+
 const ActionPane = ({ children }) => {
   const { putItemsOnTop, moveItems } = useItems();
 
@@ -21,29 +25,27 @@ const ActionPane = ({ children }) => {
 
   const onMouseDown = useRecoilCallback(
     ({ snapshot }) => async (e) => {
-      if (!e.isPrimary) {
-        return;
-      }
       const {
-        target,
-        pointerId,
-        currentTarget,
+        event: { target, currentTarget },
+        event,
         ctrlKey,
         metaKey,
-        clientX,
-        clientY,
-        button,
+        xy: [clientX, clientY],
+        buttons,
       } = e;
-      if (button === 0 /*&& !e.altKey*/) {
+      if (buttons === 1 /*&& !e.altKey*/) {
         // Allow text selection instead of moving
-        if (["INPUT", "TEXTAREA"].includes(target.tagName)) return;
+        if (["INPUT", "TEXTAREA"].includes(target.tagName)) {
+          event.stopPropagation();
+          return;
+        }
 
         const { top, left } = currentTarget.getBoundingClientRect();
 
         const foundElement = insideClass(target, "item");
 
         if (foundElement && !hasClass(foundElement, "locked")) {
-          e.stopPropagation();
+          event.stopPropagation();
           const panZoomRotate = await snapshot.getPromise(PanZoomRotateAtom);
           const selectedItems = await snapshot.getPromise(selectedItemsAtom);
 
@@ -67,13 +69,9 @@ const ActionPane = ({ children }) => {
           actionRef.current.prevX = point.x;
           actionRef.current.prevY = point.y;
           actionRef.current.itemId = foundElement.id;
+          actionRef.current.currentBoardRect = { top, left };
 
           wrapperRef.current.style.cursor = "move";
-          try {
-            currentTarget.setPointerCapture(pointerId);
-          } catch (e) {
-            console.log("Fail to capture pointer", e);
-          }
         }
       }
     },
@@ -83,12 +81,11 @@ const ActionPane = ({ children }) => {
   const onMouseMove = useRecoilCallback(
     ({ snapshot }) => async (e) => {
       if (actionRef.current.moving) {
-        if (!e.isPrimary) {
-          return;
-        }
-        const { clientX, clientY, currentTarget } = e;
+        const {
+          xy: [clientX, clientY],
+        } = e;
 
-        const { top, left } = currentTarget.getBoundingClientRect();
+        const { top, left } = actionRef.current.currentBoardRect;
 
         const panZoomRotate = await snapshot.getPromise(PanZoomRotateAtom);
         const selectedItems = await snapshot.getPromise(selectedItemsAtom);
@@ -137,9 +134,6 @@ const ActionPane = ({ children }) => {
 
   const onMouseUp = React.useCallback(
     (e) => {
-      if (!e.isPrimary) {
-        return;
-      }
       if (actionRef.current.moving) {
         actionRef.current = { moving: false };
         wrapperRef.current.style.cursor = "auto";
@@ -149,14 +143,13 @@ const ActionPane = ({ children }) => {
     [setBoardState]
   );
 
+  useGesture(
+    { onDrag: onMouseMove, onDragStart: onMouseDown, onDragEnd: onMouseUp },
+    { domTarget: wrapperRef }
+  );
+
   return (
-    <div
-      onPointerDown={onMouseDown}
-      onPointerMove={onMouseMove}
-      onPointerUp={onMouseUp}
-      style={{ touchAction: "none" }}
-      ref={wrapperRef}
-    >
+    <div style={{ touchAction: "none" }} ref={wrapperRef}>
       {children}
     </div>
   );

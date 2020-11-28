@@ -15,7 +15,9 @@ import styled from "styled-components";
 
 import debounce from "lodash.debounce";
 
-import Gesture from "./Gesture";
+import { useGesture } from "react-use-gesture";
+
+import { isMacOS } from "../../utils/deviceInfos";
 
 const TOLERANCE = 100;
 
@@ -53,7 +55,7 @@ const PanZoomRotate = ({ children, moveFirst }) => {
     y: 0,
   });
 
-  //const wrapperRef = React.useRef(null);
+  const wrapperRef = React.useRef(null);
   const wrappedRef = React.useRef(null);
 
   // React on scale change
@@ -310,7 +312,15 @@ const PanZoomRotate = ({ children, moveFirst }) => {
   }, []);*/
 
   const onZoom = (e) => {
-    const { clientX, clientY, scale } = e;
+    //const { clientX, clientY, scale } = e;
+
+    const {
+      delta: [, deltaY],
+      event: { clientX, clientY },
+    } = e;
+
+    const scale = 1 - deltaY / (isMacOS() ? 25 : 10);
+
     setScale((prevScale) => {
       let newScale = prevScale.scale * scale;
       if (newScale > 8) {
@@ -328,48 +338,86 @@ const PanZoomRotate = ({ children, moveFirst }) => {
     });
   };
 
-  const onPan = (e) => {
-    const { altKey, ctrlKey, metaKey, button, deltaX, deltaY, target } = e;
+  React.useEffect(() => {
+    document.addEventListener("gesturestart", (e) => e.preventDefault());
+    document.addEventListener("gesturechange", (e) => e.preventDefault());
+  }, []);
 
-    /*const outsideItem =
-      !insideClass(target, "item") || insideClass(target, "locked");
+  const onPinch = React.useCallback((e) => {
+    //const { clientX, clientY, scale } = e;
+    //console.log("e", e);
 
-    const metaKeyPressed = altKey || ctrlKey || metaKey;
+    const {
+      vdva: [vdx],
+      origin: [clientX, clientY],
+    } = e;
 
-    const goodButton = moveFirst
-      ? button === 0 && !metaKeyPressed
-      : button === 1 || (button === 0 && metaKeyPressed);*/
+    setScale((prevScale) => {
+      let newScale = prevScale.scale + vdx * prevScale.scale;
+      if (newScale > 8) {
+        newScale = 8;
+      }
 
-    //if (goodButton && (outsideItem || !moveFirst)) {
-    //if (outsideItem) {
-    setDim((prevDim) => {
+      if (newScale < 0.1) {
+        newScale = 0.1;
+      }
       return {
-        ...prevDim,
-        translateX: prevDim.translateX + deltaX,
-        translateY: prevDim.translateY + deltaY,
+        scale: newScale,
+        x: clientX,
+        y: clientY,
       };
     });
-    //}
-  };
+  }, []);
 
-  const onDrag = (e) => {
-    const { target } = e;
+  const onPan = (e) => {
+    const {
+      delta: [deltaX, deltaY],
+      buttons,
+      altKey,
+      touches,
+      event: { target },
+    } = e;
 
     const outsideItem =
       !insideClass(target, "item") || insideClass(target, "locked");
 
-    if (moveFirst && outsideItem) {
-      onPan(e);
+    const metaKeyPressed = altKey;
+
+    const goodButton = moveFirst
+      ? buttons === 1 && !metaKeyPressed
+      : buttons === 4 || (buttons === 1 && metaKeyPressed) || touches > 1;
+
+    if (goodButton && (outsideItem || !moveFirst)) {
+      setDim((prevDim) => {
+        return {
+          ...prevDim,
+          translateX: prevDim.translateX + deltaX,
+          translateY: prevDim.translateY + deltaY,
+        };
+      });
     }
   };
 
+  useGesture(
+    { onDrag: onPan, onWheel: onZoom, onPinch },
+    { domTarget: wrapperRef }
+  );
+
   return (
+    <div ref={wrapperRef} style={{ touchAction: "none" }}>
+      <Pane {...dim} ref={wrappedRef}>
+        {children}
+      </Pane>
+    </div>
+  );
+
+  /*return (
     <Gesture onPan={onPan} onZoom={onZoom} onDrag={onDrag}>
       <Pane {...dim} ref={wrappedRef}>
         {children}
       </Pane>
     </Gesture>
-  );
+  );*/
 };
 
 export default PanZoomRotate;

@@ -19,6 +19,8 @@ import throttle from "lodash.throttle";
 
 import Gesture from "./Gesture";
 
+import { useGesture } from "react-use-gesture";
+
 export const selectedItemsAtom = atom({
   key: "selectedItems",
   default: [],
@@ -237,33 +239,58 @@ const Selector = ({ children, moveFirst }) => {
     [emptySelection, moveFirst, setBoardState, setSelected]
   );*/
 
-  const onDragStart = (e) => {
-    const { button, altKey, ctrlKey, metaKey, target } = e;
+  const onDragStart = ({ buttons, altKey, touches }) => {
+    const outsideItem = true;
+    //!insideClass(target, "item") || insideClass(target, "locked");
 
-    const outsideItem =
-      !insideClass(target, "item") || insideClass(target, "locked");
-
-    const metaKeyPressed = altKey || ctrlKey || metaKey;
+    const metaKeyPressed = altKey;
 
     const goodButton = moveFirst
-      ? button === 1 || (button === 0 && metaKeyPressed)
-      : button === 0 && !metaKeyPressed;
+      ? buttons === 4 || (buttons === 4 && metaKeyPressed)
+      : buttons === 1 && !metaKeyPressed;
 
-    if (goodButton && (outsideItem || moveFirst)) {
+    if (goodButton && (outsideItem || moveFirst) && touches <= 1) {
       stateRef.current.moving = true;
       setBoardState((prev) => ({ ...prev, selecting: true }));
       wrapperRef.current.style.cursor = "crosshair";
     }
   };
 
+  const onDragEnd = React.useCallback(() => {
+    if (stateRef.current.moving) {
+      setBoardState((prev) => ({ ...prev, selecting: false }));
+      stateRef.current.moving = false;
+      setSelector({ moving: false });
+      wrapperRef.current.style.cursor = "auto";
+    }
+  }, [setBoardState]);
+
   const onDrag = useRecoilCallback(
-    ({ snapshot }) => async (e) => {
-      const { distanceY, distanceX, startX, startY } = e;
+    ({ snapshot }) => async ({
+      movement: [distanceX, distanceY],
+      initial: [startX, startY],
+      touches,
+      event,
+      tap,
+      ...rest
+    }) => {
+      console.log("drag", touches, rest);
+      const panZoomRotate = await snapshot.getPromise(PanZoomRotateAtom);
+
+      if (tap) {
+        const { target } = event;
+        if (
+          (!insideClass(target, "item") || insideClass(target, "locked")) &&
+          insideClass(target, "board")
+        ) {
+          setSelected(emptySelection);
+        }
+        onDragEnd();
+        return;
+      }
 
       if (stateRef.current.moving) {
         const { top, left } = wrapperRef.current.getBoundingClientRect();
-
-        const panZoomRotate = await snapshot.getPromise(PanZoomRotateAtom);
 
         const displayX = (startX - left) / panZoomRotate.scale;
         const displayY = (startY - top) / panZoomRotate.scale;
@@ -285,23 +312,13 @@ const Selector = ({ children, moveFirst }) => {
           stateRef.current.top = displayY + displayDistanceY;
           stateRef.current.height = -displayDistanceY;
         }
-
         setSelector({ ...stateRef.current, moving: true });
       }
     },
-    []
+    [emptySelection, onDragEnd, setSelected]
   );
 
-  const onDragEnd = () => {
-    if (stateRef.current.moving) {
-      setBoardState((prev) => ({ ...prev, selecting: false }));
-      stateRef.current.moving = false;
-      setSelector({ moving: false });
-      wrapperRef.current.style.cursor = "auto";
-    }
-  };
-
-  const onTap = React.useCallback(
+  /*const onTap = React.useCallback(
     (e) => {
       const { target } = e;
       if (
@@ -312,23 +329,15 @@ const Selector = ({ children, moveFirst }) => {
       }
     },
     [emptySelection, setSelected]
-  );
+  );*/
+
+  useGesture({ onDrag, onDragStart, onDragEnd }, { domTarget: wrapperRef });
 
   return (
-    <Gesture
-      onDragStart={onDragStart}
-      onDrag={onDrag}
-      onDragEnd={onDragEnd}
-      onTap={onTap}
-      onLongTap={() => {
-        console.log("longtap");
-      }}
-    >
-      <div ref={wrapperRef}>
-        {selector.moving && <SelectorZone {...selector} />}
-        {children}
-      </div>
-    </Gesture>
+    <div ref={wrapperRef} style={{ touchAction: "none" }}>
+      {selector.moving && <SelectorZone {...selector} />}
+      {children}
+    </div>
   );
 };
 
