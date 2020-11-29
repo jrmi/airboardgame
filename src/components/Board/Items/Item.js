@@ -1,9 +1,11 @@
 import React, { memo } from "react";
 
 import styled from "styled-components";
+import { useSpring, animated } from "react-spring";
+
 import lockIcon from "../../../images/lock.svg";
 
-const ItemWrapper = styled.div.attrs(({ rotation, locked, selected }) => {
+const ItemWrapper = animated(styled.div.attrs(({ locked, selected }) => {
   let className = "item";
   if (locked) {
     className += " locked";
@@ -13,13 +15,10 @@ const ItemWrapper = styled.div.attrs(({ rotation, locked, selected }) => {
   }
   return {
     className,
-    style: {
-      transform: `rotate(${rotation}deg)`,
-    },
+    style: {},
   };
 })`
   display: inline-block;
-  transition: transform 150ms;
   user-select: none;
 
   & .corner {
@@ -69,11 +68,20 @@ const ItemWrapper = styled.div.attrs(({ rotation, locked, selected }) => {
   &.locked:hover::after {
     opacity: 0.3;
   }
-`;
+`);
 
 const Item = ({
   setState,
-  state: { type, x, y, rotation = 0, id, locked, layer, ...rest } = {},
+  state: {
+    type,
+    x: baseX,
+    y: baseY,
+    rotation = 0,
+    id,
+    locked,
+    layer,
+    ...rest
+  } = {},
   animate = "hvr-pop",
   isSelected,
   getComponent,
@@ -82,6 +90,13 @@ const Item = ({
   const [unlock, setUnlock] = React.useState(false);
   const isMountedRef = React.useRef(false);
   const animateRef = React.useRef(null);
+
+  const transform = useSpring({
+    x: baseX,
+    y: baseY,
+    rotate: rotation,
+    config: { mass: 1, tension: 450, friction: 25 },
+  });
 
   // Allow to operate on locked item if key is pressed
   React.useEffect(() => {
@@ -127,9 +142,9 @@ const Item = ({
   };
 
   return (
-    <div
+    <animated.div
       style={{
-        transform: `translate(${x}px, ${y}px)`,
+        ...transform,
         display: "inline-block",
         zIndex: (layer || 0) + 3,
         position: "absolute",
@@ -138,7 +153,6 @@ const Item = ({
       }}
     >
       <ItemWrapper
-        rotation={rotation}
         locked={locked && !unlock}
         selected={isSelected}
         ref={itemRef}
@@ -153,7 +167,7 @@ const Item = ({
           <div className="corner bottom-right"></div>
         </div>
       </ItemWrapper>
-    </div>
+    </animated.div>
   );
 };
 

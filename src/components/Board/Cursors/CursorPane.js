@@ -1,7 +1,7 @@
 import React from "react";
 import Cursors from "./Cursors";
 import { useC2C } from "../../../hooks/useC2C";
-import { PanZoomRotateAtom } from "../PanZoomRotate";
+import { PanZoomRotateAtom } from "../";
 import { useRecoilValue } from "recoil";
 
 export const Board = ({ children, user, users }) => {

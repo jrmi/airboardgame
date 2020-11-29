@@ -1,12 +1,7 @@
 import React from "react";
 
-import {
-  atom,
-  useRecoilState,
-  useRecoilValue,
-  useSetRecoilState,
-} from "recoil";
-import { BoardConfigAtom, BoardStateAtom } from "./";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { BoardConfigAtom, BoardStateAtom, PanZoomRotateAtom } from "./";
 import { insideClass } from "../../utils/";
 
 import usePrevious from "../../hooks/usePrevious";
@@ -19,21 +14,11 @@ import { useGesture, useDrag } from "react-use-gesture";
 
 import { isMacOS } from "../../utils/deviceInfos";
 
+import { useSpring, animated } from "react-spring";
+
 const TOLERANCE = 100;
 
-export const PanZoomRotateAtom = atom({
-  key: "PanZoomRotate",
-  default: {
-    translateX: 0,
-    translateY: 0,
-    scale: 1,
-    rotate: 0,
-    centerX: 0,
-    centerY: 0,
-  },
-});
-
-const Pane = styled.div.attrs(({ translateX, translateY, scale, rotate }) => ({
+/*const Pane = styled.div.attrs(({ translateX, translateY, scale, rotate }) => ({
   style: {
     transform: `translate(${translateX}px, ${translateY}px) scale(${scale}) rotate(${rotate}deg)`,
   },
@@ -41,7 +26,14 @@ const Pane = styled.div.attrs(({ translateX, translateY, scale, rotate }) => ({
 }))`
   transform-origin: top left;
   display: inline-block;
-`;
+`;*/
+
+const Pane = animated(styled.div.attrs(() => ({
+  className: "board-pane",
+}))`
+  transform-origin: top left;
+  display: inline-block;
+`);
 
 const PanZoomRotate = ({ children, moveFirst }) => {
   const [dim, setDim] = useRecoilState(PanZoomRotateAtom);
@@ -53,6 +45,13 @@ const PanZoomRotate = ({ children, moveFirst }) => {
     scale: config.scale,
     x: 0,
     y: 0,
+  });
+
+  const transform = useSpring({
+    x: dim.translateX,
+    y: dim.translateY,
+    scale: scale.scale,
+    config: { mass: 1, tension: 250, friction: 20 },
   });
 
   const wrapperRef = React.useRef(null);
@@ -89,7 +88,7 @@ const PanZoomRotate = ({ children, moveFirst }) => {
   }, [config.size, config.scale, setDim]);
 
   // Keep board inside viewport
-  /*React.useEffect(() => {
+  React.useEffect(() => {
     const { width, height } = wrappedRef.current.getBoundingClientRect();
     const { innerHeight, innerWidth } = window;
 
@@ -113,7 +112,7 @@ const PanZoomRotate = ({ children, moveFirst }) => {
         ...newDim,
       }));
     }
-  }, [dim.translateX, dim.translateY, setDim]);*/
+  }, [dim.translateX, dim.translateY, setDim]);
 
   // Debounce set center to avoid too many render
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -243,7 +242,6 @@ const PanZoomRotate = ({ children, moveFirst }) => {
   };
 
   const onPan = ({
-    delta: [deltaX, deltaY],
     offset: [offsetX, offsetY],
     movement: [moveX, moveY],
     buttons,
@@ -265,8 +263,6 @@ const PanZoomRotate = ({ children, moveFirst }) => {
       setDim((prevDim) => {
         return {
           ...prevDim,
-          /*translateX: prevDim.translateX + deltaX,
-          translateY: prevDim.translateY + deltaY,*/
           translateX: moveX,
           translateY: moveY,
         };
@@ -274,31 +270,16 @@ const PanZoomRotate = ({ children, moveFirst }) => {
     }
   };
 
-  const { innerHeight, innerWidth } = window;
-  const limit = config.size * 0.5 * dim.scale;
-
   useDrag(onPan, {
     domTarget: wrapperRef,
-    bounds: {
-      left: -limit,
-      right: innerWidth - limit,
-      top: -limit,
-      bottom: innerHeight - limit,
-    },
-    rubberband: true,
     initial: [dim.translateX, dim.translateY],
   });
 
-  useGesture(
-    { onWheel, onPinch },
-    {
-      domTarget: wrapperRef,
-    }
-  );
+  useGesture({ onWheel, onPinch }, { domTarget: wrapperRef });
 
   return (
     <div ref={wrapperRef} style={{ touchAction: "none" }}>
-      <Pane {...dim} ref={wrappedRef}>
+      <Pane style={transform} ref={wrappedRef}>
         {children}
       </Pane>
     </div>
