@@ -1,4 +1,3 @@
-export { default as Board } from "./Board";
 export { PanZoomRotateAtom } from "./PanZoomRotate";
 export { selectedItemsAtom } from "./Selector";
 export {
@@ -9,3 +8,4 @@ export {
   AllItemsSelector,
   BoardStateAtom,
 } from "./game/atoms";
+export { default as Board } from "./Board";

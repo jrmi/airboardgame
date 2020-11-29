@@ -15,7 +15,7 @@ import styled from "styled-components";
 
 import debounce from "lodash.debounce";
 
-import { useGesture } from "react-use-gesture";
+import { useGesture, useDrag } from "react-use-gesture";
 
 import { isMacOS } from "../../utils/deviceInfos";
 
@@ -89,7 +89,7 @@ const PanZoomRotate = ({ children, moveFirst }) => {
   }, [config.size, config.scale, setDim]);
 
   // Keep board inside viewport
-  React.useEffect(() => {
+  /*React.useEffect(() => {
     const { width, height } = wrappedRef.current.getBoundingClientRect();
     const { innerHeight, innerWidth } = window;
 
@@ -113,7 +113,7 @@ const PanZoomRotate = ({ children, moveFirst }) => {
         ...newDim,
       }));
     }
-  }, [dim.translateX, dim.translateY, setDim]);
+  }, [dim.translateX, dim.translateY, setDim]);*/
 
   // Debounce set center to avoid too many render
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -244,6 +244,8 @@ const PanZoomRotate = ({ children, moveFirst }) => {
 
   const onPan = ({
     delta: [deltaX, deltaY],
+    offset: [offsetX, offsetY],
+    movement: [moveX, moveY],
     buttons,
     altKey,
     touches,
@@ -254,6 +256,7 @@ const PanZoomRotate = ({ children, moveFirst }) => {
 
     const metaKeyPressed = altKey;
 
+    console.log(moveX, moveY, offsetX, offsetY);
     const goodButton = moveFirst
       ? buttons === 1 && !metaKeyPressed
       : buttons === 4 || (buttons === 1 && metaKeyPressed) || touches > 1;
@@ -262,14 +265,36 @@ const PanZoomRotate = ({ children, moveFirst }) => {
       setDim((prevDim) => {
         return {
           ...prevDim,
-          translateX: prevDim.translateX + deltaX,
-          translateY: prevDim.translateY + deltaY,
+          /*translateX: prevDim.translateX + deltaX,
+          translateY: prevDim.translateY + deltaY,*/
+          translateX: moveX,
+          translateY: moveY,
         };
       });
     }
   };
 
-  useGesture({ onDrag: onPan, onWheel, onPinch }, { domTarget: wrapperRef });
+  const { innerHeight, innerWidth } = window;
+  const limit = config.size * 0.5 * dim.scale;
+
+  useDrag(onPan, {
+    domTarget: wrapperRef,
+    bounds: {
+      left: -limit,
+      right: innerWidth - limit,
+      top: -limit,
+      bottom: innerHeight - limit,
+    },
+    rubberband: true,
+    initial: [dim.translateX, dim.translateY],
+  });
+
+  useGesture(
+    { onWheel, onPinch },
+    {
+      domTarget: wrapperRef,
+    }
+  );
 
   return (
     <div ref={wrapperRef} style={{ touchAction: "none" }}>
