@@ -55,6 +55,8 @@ const ActionPane = styled.div.attrs(({ top, left, height, hide }) => {
 })`
   top: 0;
   left: 0;
+  user-select: none;
+  touch-action: none;
   position: absolute;
   display: flex;
   background-color: var(--bg-color);
