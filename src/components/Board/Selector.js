@@ -113,9 +113,7 @@ const Selector = ({ children, moveFirst }) => {
     };
   }, [setSelected, emptySelection]);
 
-  const onDragStart = (e) => {
-    const { button, altKey, ctrlKey, metaKey, target } = e;
-
+  const onDragStart = ({ button, altKey, ctrlKey, metaKey, target }) => {
     const outsideItem =
       !insideClass(target, "item") || insideClass(target, "locked");
 
@@ -133,9 +131,7 @@ const Selector = ({ children, moveFirst }) => {
   };
 
   const onDrag = useRecoilCallback(
-    ({ snapshot }) => async (e) => {
-      const { distanceY, distanceX, startX, startY } = e;
-
+    ({ snapshot }) => async ({ distanceY, distanceX, startX, startY }) => {
       if (stateRef.current.moving) {
         const { top, left } = wrapperRef.current.getBoundingClientRect();
 
@@ -178,8 +174,7 @@ const Selector = ({ children, moveFirst }) => {
   };
 
   const onTap = React.useCallback(
-    (e) => {
-      const { target } = e;
+    ({ target }) => {
       if (
         (!insideClass(target, "item") || insideClass(target, "locked")) &&
         insideClass(target, "board")
