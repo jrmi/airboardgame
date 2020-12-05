@@ -174,8 +174,7 @@ const PanZoomRotate = ({ children, moveFirst }) => {
     };
   }, []);
 
-  const onZoom = (e) => {
-    const { clientX, clientY, scale } = e;
+  const onZoom = ({ clientX, clientY, scale }) => {
     setScale((prevScale) => {
       let newScale = prevScale.scale * scale;
       if (newScale > 8) {
@@ -193,8 +192,7 @@ const PanZoomRotate = ({ children, moveFirst }) => {
     });
   };
 
-  const onPan = (e) => {
-    const { deltaX, deltaY } = e;
+  const onPan = ({ deltaX, deltaY }) => {
     setDim((prevDim) => {
       return {
         ...prevDim,
@@ -204,14 +202,14 @@ const PanZoomRotate = ({ children, moveFirst }) => {
     });
   };
 
-  const onDrag = (e) => {
-    const { target } = e;
+  const onDrag = (state) => {
+    const { target } = state;
 
     const outsideItem =
       !insideClass(target, "item") || insideClass(target, "locked");
 
     if (moveFirst && outsideItem) {
-      onPan(e);
+      onPan(state);
     }
   };
 
