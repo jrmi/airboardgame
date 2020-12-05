@@ -19,9 +19,18 @@ const PanZoomPane = ({
 
   const onWheel = React.useCallback(
     (e) => {
-      const { deltaX, deltaY, clientX, clientY, ctrlKey, altKey } = e;
+      const {
+        deltaX,
+        deltaY,
+        clientX,
+        clientY,
+        ctrlKey,
+        altKey,
+        metaKey,
+        target,
+      } = e;
 
-      // On a Macos trackpad, the pinch gesture sets the ctrlKey to true.
+      // On a MacOs trackpad, the pinch gesture sets the ctrlKey to true.
       // In that situation, we want to use the custom scaling, not the browser default zoom.
       // Hence in this situation we avoid to return immediately.
       if (altKey || (ctrlKey && !isMacOS())) {
@@ -36,10 +45,17 @@ const PanZoomPane = ({
         onPan({
           deltaX: 2 * deltaX,
           deltaY: 2 * deltaY,
+          button: 1,
+          ctrlKey,
+          metaKey,
+          target,
           event: e,
         });
       } else {
-        const scaleMult = 1 - deltaY / (isMacOS() ? 25 : 10);
+        if (!deltaY) {
+          return;
+        }
+        const scaleMult = 1 - (deltaY > 0 ? 1 : -1) / 5;
         onZoom({ scale: scaleMult, clientX, clientY, event: e });
       }
     },
@@ -47,43 +63,44 @@ const PanZoomPane = ({
   );
 
   const onPointerDown = React.useCallback(
-    (e) => {
-      if (!e.isPrimary) {
+    ({
+      target,
+      button,
+      clientX,
+      clientY,
+      pointerId,
+      altKey,
+      ctrlKey,
+      metaKey,
+      isPrimary,
+    }) => {
+      if (!isPrimary) {
         return;
       }
 
-      const {
+      Object.assign(stateRef.current, {
+        pressed: true,
+        moving: false,
+        gestureStart: false,
+        startX: clientX,
+        startY: clientY,
+        prevX: clientX,
+        prevY: clientY,
+        currentButton: button,
         target,
-        button,
-        clientX,
-        clientY,
-        pointerId,
-        altKey,
-        ctrlKey,
-        metaKey,
-      } = e;
-
-      stateRef.current.pressed = true;
-      stateRef.current.moving = false;
-      stateRef.current.gestureStart = false;
-      stateRef.current.startX = clientX;
-      stateRef.current.startY = clientY;
-      stateRef.current.prevX = clientX;
-      stateRef.current.prevY = clientY;
-      stateRef.current.currentButton = button;
-      stateRef.current.target = target;
-      stateRef.current.timeStart = Date.now();
-      stateRef.current.longTapTimeout = setTimeout(() => {
-        stateRef.current.noTap = true;
-        onLongTap({
-          clientX,
-          clientY,
-          altKey,
-          ctrlKey,
-          metaKey,
-          target,
-        });
-      }, 750);
+        timeStart: Date.now(),
+        longTapTimeout: setTimeout(() => {
+          stateRef.current.noTap = true;
+          onLongTap({
+            clientX,
+            clientY,
+            altKey,
+            ctrlKey,
+            metaKey,
+            target,
+          });
+        }, 750),
+      });
 
       try {
         target.setPointerCapture(pointerId);
@@ -97,17 +114,25 @@ const PanZoomPane = ({
   const onPointerMove = React.useCallback(
     (e) => {
       if (stateRef.current.pressed) {
-        if (!e.isPrimary) {
+        const {
+          isPrimary,
+          clientX,
+          clientY,
+          altKey,
+          ctrlKey,
+          metaKey,
+          pointerType,
+        } = e;
+
+        if (!isPrimary) {
           return;
         }
 
         stateRef.current.moving = true;
 
-        const { clientX, clientY, altKey, ctrlKey, metaKey } = e;
-
         if (
           (stateRef.current.currentButton === 0 && !altKey) ||
-          e.pointerType === "touch"
+          pointerType === "touch"
         ) {
           if (!stateRef.current.gestureStart) {
             onDragStart({
