@@ -173,6 +173,16 @@ const Selector = ({ children, moveFirst }) => {
     }
   };
 
+  const onLongTap = React.useCallback(
+    ({ target }) => {
+      const foundElement = insideClass(target, "item");
+      if (foundElement) {
+        setSelected([foundElement.id]);
+      }
+    },
+    [setSelected]
+  );
+
   const onTap = React.useCallback(
     ({ target }) => {
       if (
@@ -191,9 +201,7 @@ const Selector = ({ children, moveFirst }) => {
       onDrag={onDrag}
       onDragEnd={onDragEnd}
       onTap={onTap}
-      onLongTap={() => {
-        console.log("longtap");
-      }}
+      onLongTap={onLongTap}
     >
       <div ref={wrapperRef}>
         {selector.moving && <SelectorZone {...selector} />}
