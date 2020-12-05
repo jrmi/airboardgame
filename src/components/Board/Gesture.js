@@ -15,6 +15,7 @@ const PanZoomPane = ({
   const wrapperRef = React.useRef(null);
   const stateRef = React.useRef({
     moving: false,
+    pointers: new Set(),
   });
 
   const onWheel = React.useCallback(
@@ -74,6 +75,7 @@ const PanZoomPane = ({
       metaKey,
       isPrimary,
     }) => {
+      stateRef.current.pointers.add(pointerId);
       if (!isPrimary) {
         return;
       }
@@ -195,6 +197,7 @@ const PanZoomPane = ({
 
   const onPointerUp = React.useCallback(
     (e) => {
+      stateRef.current.pointers.delete(e.pointerId);
       if (!e.isPrimary) {
         return;
       }
