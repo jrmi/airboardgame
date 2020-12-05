@@ -2,6 +2,13 @@ import React from "react";
 
 import { isMacOS } from "../../utils/deviceInfos";
 
+const otherPointer = (pointers, currentPointer) => {
+  const p2 = Object.keys(pointers)
+    .map((p) => Number(p))
+    .find((pointer) => pointer !== currentPointer);
+  return pointers[p2];
+};
+
 const PanZoomPane = ({
   children,
   onDrag = () => {},
@@ -15,7 +22,8 @@ const PanZoomPane = ({
   const wrapperRef = React.useRef(null);
   const stateRef = React.useRef({
     moving: false,
-    pointers: new Set(),
+    pointers: {},
+    mainPointer: undefined,
   });
 
   const onWheel = React.useCallback(
@@ -73,12 +81,30 @@ const PanZoomPane = ({
       altKey,
       ctrlKey,
       metaKey,
-      isPrimary,
     }) => {
-      stateRef.current.pointers.add(pointerId);
-      if (!isPrimary) {
+      stateRef.current.pointers[pointerId] = { clientX, clientY };
+
+      if (stateRef.current.mainPointer !== undefined) {
+        const { clientX: clientX2, clientY: clientY2 } = otherPointer(
+          stateRef.current.pointers,
+          pointerId
+        );
+
+        const newClientX = (clientX2 + clientX) / 2;
+        const newClientY = (clientY2 + clientY) / 2;
+
+        Object.assign(stateRef.current, {
+          pressed: true,
+          moving: false,
+          gestureStart: false,
+          startX: clientX,
+          startY: clientY,
+          prevX: newClientX,
+          prevY: newClientY,
+        });
         return;
       }
+      stateRef.current.mainPointer = pointerId;
 
       Object.assign(stateRef.current, {
         pressed: true,
@@ -117,25 +143,49 @@ const PanZoomPane = ({
     (e) => {
       if (stateRef.current.pressed) {
         const {
-          isPrimary,
-          clientX,
-          clientY,
+          pointerId,
+          clientX: eventClientX,
+          clientY: eventClientY,
           altKey,
           ctrlKey,
           metaKey,
           pointerType,
         } = e;
 
-        if (!isPrimary) {
+        if (stateRef.current.mainPointer !== pointerId) {
+          stateRef.current.pointers[pointerId] = {
+            clientX: eventClientX,
+            clientY: eventClientY,
+          };
           return;
         }
 
         stateRef.current.moving = true;
 
-        if (
-          (stateRef.current.currentButton === 0 && !altKey) ||
-          pointerType === "touch"
-        ) {
+        const twoFingers = Object.keys(stateRef.current.pointers).length === 2;
+
+        let clientX, clientY;
+
+        if (twoFingers) {
+          // Find other pointerId
+          const { clientX: clientX2, clientY: clientY2 } = otherPointer(
+            stateRef.current.pointers,
+            pointerId
+          );
+
+          clientX = (clientX2 + eventClientX) / 2;
+          clientY = (clientY2 + eventClientY) / 2;
+        } else {
+          clientX = eventClientX;
+          clientY = eventClientY;
+        }
+
+        const shouldDrag =
+          pointerType !== "touch"
+            ? stateRef.current.currentButton === 0 && !altKey
+            : !twoFingers;
+
+        if (shouldDrag) {
           if (!stateRef.current.gestureStart) {
             onDragStart({
               deltaX: 0,
@@ -176,6 +226,7 @@ const PanZoomPane = ({
             stateRef.current.gestureStart = true;
             clearTimeout(stateRef.current.longTapTimeout);
           }
+
           onPan({
             deltaX: clientX - stateRef.current.prevX,
             deltaY: clientY - stateRef.current.prevY,
@@ -197,12 +248,30 @@ const PanZoomPane = ({
 
   const onPointerUp = React.useCallback(
     (e) => {
-      stateRef.current.pointers.delete(e.pointerId);
-      if (!e.isPrimary) {
+      const {
+        clientX,
+        clientY,
+        altKey,
+        ctrlKey,
+        metaKey,
+        target,
+        pointerId,
+      } = e;
+
+      delete stateRef.current.pointers[pointerId];
+
+      if (stateRef.current.mainPointer !== pointerId) {
         return;
       }
-      const { clientX, clientY, altKey, ctrlKey, metaKey, target } = e;
 
+      if (Object.keys(stateRef.current.pointers).length > 0) {
+        stateRef.current.mainPointer = Number(
+          Object.keys(stateRef.current.pointers)[0]
+        );
+        return;
+      }
+
+      stateRef.current.mainPointer = undefined;
       stateRef.current.pressed = false;
 
       clearTimeout(stateRef.current.longTapTimeout);
