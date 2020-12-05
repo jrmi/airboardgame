@@ -1,8 +1,12 @@
 export const API_ENDPOINT =
-  process.env.REACT_APP_API_ENDPOINT || "http://localhost:3001";
+  process.env.REACT_APP_API_ENDPOINT ||
+  window.location.origin ||
+  "http://localhost:3001";
 
 export const SOCKET_URL =
-  process.env.REACT_APP_SOCKET_URL || "http://localhost:4000";
+  process.env.REACT_APP_SOCKET_URL ||
+  window.location.origin ||
+  "http://localhost:3001";
 
 export const SOCKET_PATH = process.env.REACT_APP_SOCKET_PATH || "/socket.io";
 

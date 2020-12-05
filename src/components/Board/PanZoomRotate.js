@@ -1,12 +1,7 @@
 import React from "react";
 
-import {
-  atom,
-  useRecoilState,
-  useRecoilValue,
-  useSetRecoilState,
-} from "recoil";
-import { BoardConfigAtom, BoardStateAtom } from "./";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { BoardConfigAtom, BoardStateAtom, PanZoomRotateAtom } from "./";
 import { insideClass } from "../../utils/";
 
 import usePrevious from "../../hooks/usePrevious";
@@ -18,18 +13,6 @@ import debounce from "lodash.debounce";
 import Gesture from "./Gesture";
 
 const TOLERANCE = 100;
-
-export const PanZoomRotateAtom = atom({
-  key: "PanZoomRotate",
-  default: {
-    translateX: 0,
-    translateY: 0,
-    scale: 1,
-    rotate: 0,
-    centerX: 0,
-    centerY: 0,
-  },
-});
 
 const Pane = styled.div.attrs(({ translateX, translateY, scale, rotate }) => ({
   style: {
@@ -53,7 +36,6 @@ const PanZoomRotate = ({ children, moveFirst }) => {
     y: 0,
   });
 
-  //const wrapperRef = React.useRef(null);
   const wrappedRef = React.useRef(null);
 
   // React on scale change
@@ -192,123 +174,6 @@ const PanZoomRotate = ({ children, moveFirst }) => {
     };
   }, []);
 
-  /*const onWheel = React.useCallback(
-    (e) => {
-      const { deltaX, deltaY, clientX, clientY, ctrlKey, altKey } = e;
-
-      // On a trackpad, the pinch gesture sets the ctrlKey to true.
-      // In that situation, we want to use the custom scaling below, not the browser default zoom.
-      // Hence in this situation we avoid to return immediately.
-      if (altKey || (ctrlKey && !isMacOS())) {
-        return;
-      }
-
-      // On a trackpad, the pinch and pan events are differentiated by the crtlKey value.
-      // On a pinch gesture, the ctrlKey is set to true, so we want to have a scaling effect.
-      // If we are only moving the fingers in the same direction, a pan is needed.
-      // Ref: https://medium.com/@auchenberg/detecting-multi-touch-trackpad-gestures-in-javascript-a2505babb10e
-      if (isMacOS() && !ctrlKey) {
-        setDim((prevDim) => {
-          return {
-            ...prevDim,
-            translateX: prevDim.translateX - 2 * deltaX,
-            translateY: prevDim.translateY - 2 * deltaY,
-          };
-        });
-      } else {
-        setScale((prevScale) => {
-          // Made the scale multiplicator Mac specific, as the default one was zooming way too much on each gesture.
-          const scaleMult =
-            (deltaY < 0 ? -3 : 3 * prevScale.scale) / (isMacOS() ? 50 : 20);
-          let newScale = prevScale.scale - scaleMult;
-
-          if (newScale > 8) {
-            newScale = 8;
-          }
-
-          if (newScale < 0.1) {
-            newScale = 0.1;
-          }
-          return {
-            scale: newScale,
-            x: clientX,
-            y: clientY,
-          };
-        });
-      }
-    },
-    [setDim]
-  );*/
-
-  /*const onMouseDown = (e) => {
-    if (!e.isPrimary) {
-      return;
-    }
-
-    const {
-      target,
-      altKey,
-      ctrlKey,
-      metaKey,
-      button,
-      clientX,
-      clientY,
-      pointerId,
-    } = e;
-
-    const outsideItem =
-      !insideClass(target, "item") || insideClass(target, "locked");
-
-    const metaKeyPressed = altKey || ctrlKey || metaKey;
-
-    const goodButton = moveFirst
-      ? button === 0 && !metaKeyPressed
-      : button === 1 || (button === 0 && metaKeyPressed);
-
-    if (goodButton && (outsideItem || !moveFirst)) {
-      stateRef.current.moving = true;
-      stateRef.current.startX = clientX;
-      stateRef.current.startY = clientY;
-      stateRef.current.startTranslateX = dim.translateX;
-      stateRef.current.startTranslateY = dim.translateY;
-      wrapperRef.current.style.cursor = "move";
-      try {
-        target.setPointerCapture(pointerId);
-      } catch (e) {
-        console.log("Fail to capture pointer", e);
-      }
-    }
-  };*/
-
-  /*const onMouseMove = (e) => {
-    if (stateRef.current.moving) {
-      if (!e.isPrimary) {
-        return;
-      }
-      const { clientX, clientY } = e;
-
-      const [deltaX, deltaY] = [
-        clientX - stateRef.current.startX,
-        clientY - stateRef.current.startY,
-      ];
-      setDim((prevDim) => {
-        return {
-          ...prevDim,
-          translateX: stateRef.current.startTranslateX + deltaX,
-          translateY: stateRef.current.startTranslateY + deltaY,
-        };
-      });
-    }
-  };*/
-
-  /*const onMouseUp = React.useCallback((e) => {
-    if (!e.isPrimary) {
-      return;
-    }
-    stateRef.current.moving = false;
-    wrapperRef.current.style.cursor = "auto";
-  }, []);*/
-
   const onZoom = (e) => {
     const { clientX, clientY, scale } = e;
     setScale((prevScale) => {
@@ -329,19 +194,7 @@ const PanZoomRotate = ({ children, moveFirst }) => {
   };
 
   const onPan = (e) => {
-    const { altKey, ctrlKey, metaKey, button, deltaX, deltaY, target } = e;
-
-    /*const outsideItem =
-      !insideClass(target, "item") || insideClass(target, "locked");
-
-    const metaKeyPressed = altKey || ctrlKey || metaKey;
-
-    const goodButton = moveFirst
-      ? button === 0 && !metaKeyPressed
-      : button === 1 || (button === 0 && metaKeyPressed);*/
-
-    //if (goodButton && (outsideItem || !moveFirst)) {
-    //if (outsideItem) {
+    const { deltaX, deltaY } = e;
     setDim((prevDim) => {
       return {
         ...prevDim,
@@ -349,7 +202,6 @@ const PanZoomRotate = ({ children, moveFirst }) => {
         translateY: prevDim.translateY + deltaY,
       };
     });
-    //}
   };
 
   const onDrag = (e) => {

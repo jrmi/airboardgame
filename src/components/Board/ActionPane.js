@@ -34,7 +34,7 @@ const ActionPane = ({ children }) => {
         clientY,
         button,
       } = e;
-      if (button === 0 /*&& !e.altKey*/) {
+      if (button === 0 && !e.altKey) {
         // Allow text selection instead of moving
         if (["INPUT", "TEXTAREA"].includes(target.tagName)) return;
 

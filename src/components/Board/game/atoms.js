@@ -40,10 +40,23 @@ export const AllItemsSelector = selector({
   },
 });
 
+export const PanZoomRotateAtom = atom({
+  key: "PanZoomRotate",
+  default: {
+    translateX: 0,
+    translateY: 0,
+    scale: 1,
+    rotate: 0,
+    centerX: 0,
+    centerY: 0,
+  },
+});
+
 export default {
   ItemListAtom,
   BoardConfigAtom,
   AvailableItemListAtom,
   AllItemsSelector,
   ItemMapAtom,
+  PanZoomRotateAtom,
 };
