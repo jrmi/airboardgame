@@ -21,6 +21,11 @@ const ActionPane = ({ children }) => {
   const wrapperRef = React.useRef(null);
   const actionRef = React.useRef({});
 
+  // Use ref as pointer events are faster than react state management
+  const selectedItemRef = React.useRef({
+    items: [],
+  });
+
   const onDragStart = useRecoilCallback(
     ({ snapshot }) => async ({ target, ctrlKey, metaKey, event }) => {
       // Allow text selection instead of moving
@@ -33,10 +38,14 @@ const ActionPane = ({ children }) => {
 
         const selectedItems = await snapshot.getPromise(selectedItemsAtom);
 
+        selectedItemRef.current.items = selectedItems;
+
         if (!selectedItems.includes(foundElement.id)) {
           if (ctrlKey || metaKey) {
+            selectedItemRef.current.items = [...selectedItems, foundElement.id];
             setSelectedItems((prev) => [...prev, foundElement.id]);
           } else {
+            selectedItemRef.current.items = [foundElement.id];
             setSelectedItems([foundElement.id]);
           }
         }
@@ -56,7 +65,6 @@ const ActionPane = ({ children }) => {
     ({ snapshot }) => async ({ deltaX, deltaY }) => {
       if (actionRef.current.moving) {
         const panZoomRotate = await snapshot.getPromise(PanZoomRotateAtom);
-        const selectedItems = await snapshot.getPromise(selectedItemsAtom);
         const { gridSize: boardGridSize = 1 } = await snapshot.getPromise(
           BoardConfigAtom
         );
@@ -70,12 +78,12 @@ const ActionPane = ({ children }) => {
         if (realMoveX || realMoveY) {
           // Put items on top of others on first move
           if (!actionRef.current.onTop) {
-            putItemsOnTop(selectedItems);
+            putItemsOnTop(selectedItemRef.current.items);
             actionRef.current.onTop = true;
           }
 
           moveItems(
-            selectedItems,
+            selectedItemRef.current.items,
             {
               x: realMoveX,
               y: realMoveY,
