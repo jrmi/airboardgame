@@ -16,7 +16,7 @@ const computeDistance = ([x1, y1], [x2, y2]) => {
   return Math.hypot(distanceX, distanceY);
 };
 
-const PanZoomPane = ({
+const Gesture = ({
   children,
   onDrag = () => {},
   onDragStart = () => {},
@@ -32,9 +32,24 @@ const PanZoomPane = ({
     pointers: {},
     mainPointer: undefined,
   });
+  const queueRef = React.useRef([]);
+
+  // Queue event to avoid async mess
+  const queue = React.useCallback((callback) => {
+    queueRef.current.push(async () => {
+      await callback();
+      queueRef.current.shift();
+      if (queueRef.current.length !== 0) {
+        await queueRef.current[0]();
+      }
+    });
+    if (queueRef.current.length === 1) {
+      queueRef.current[0]();
+    }
+  }, []);
 
   const onWheel = React.useCallback(
-    async (e) => {
+    (e) => {
       const {
         deltaX,
         deltaY,
@@ -58,28 +73,30 @@ const PanZoomPane = ({
       // If we are only moving the fingers in the same direction, a pan is needed.
       // Ref: https://medium.com/@auchenberg/detecting-multi-touch-trackpad-gestures-in-javascript-a2505babb10e
       if (isMacOS() && !ctrlKey) {
-        onPan({
-          deltaX: 2 * deltaX,
-          deltaY: 2 * deltaY,
-          button: 1,
-          ctrlKey,
-          metaKey,
-          target,
-          event: e,
-        });
+        queue(() =>
+          onPan({
+            deltaX: 2 * deltaX,
+            deltaY: 2 * deltaY,
+            button: 1,
+            ctrlKey,
+            metaKey,
+            target,
+            event: e,
+          })
+        );
       } else {
         if (!deltaY) {
           return;
         }
         const scaleMult = 1 - (deltaY > 0 ? 1 : -1) / 5;
-        await onZoom({ scale: scaleMult, clientX, clientY, event: e });
+        queue(() => onZoom({ scale: scaleMult, clientX, clientY, event: e }));
       }
     },
-    [onPan, onZoom]
+    [onPan, onZoom, queue]
   );
 
   const onPointerDown = React.useCallback(
-    async ({
+    ({
       target,
       button,
       clientX,
@@ -139,14 +156,16 @@ const PanZoomPane = ({
         timeStart: Date.now(),
         longTapTimeout: setTimeout(async () => {
           stateRef.current.noTap = true;
-          await onLongTap({
-            clientX,
-            clientY,
-            altKey,
-            ctrlKey,
-            metaKey,
-            target,
-          });
+          queue(() =>
+            onLongTap({
+              clientX,
+              clientY,
+              altKey,
+              ctrlKey,
+              metaKey,
+              target,
+            })
+          );
         }, 750),
       });
 
@@ -157,11 +176,11 @@ const PanZoomPane = ({
         console.log("Fail to capture pointer", e);
       }
     },
-    [onLongTap]
+    [onLongTap, queue]
   );
 
   const onPointerMove = React.useCallback(
-    async (e) => {
+    (e) => {
       if (stateRef.current.pressed) {
         const {
           pointerId,
@@ -226,51 +245,47 @@ const PanZoomPane = ({
             stateRef.current.gestureStart = true;
             // Clear tap timeout
             clearTimeout(stateRef.current.longTapTimeout);
-            await onDragStart({
-              deltaX: 0,
-              deltaY: 0,
-              startX: stateRef.current.startX,
-              startY: stateRef.current.startY,
-              distanceX: 0,
-              distanceY: 0,
-              button: stateRef.current.currentButton,
-              altKey,
-              ctrlKey,
-              metaKey,
-              target: stateRef.current.target,
-              event: e,
-            });
-            await onDrag({
-              deltaX: clientX - stateRef.current.prevX,
-              deltaY: clientY - stateRef.current.prevY,
-              startX: stateRef.current.startX,
-              startY: stateRef.current.startY,
-              distanceX: clientX - stateRef.current.startX,
-              distanceY: clientY - stateRef.current.startY,
-              button: stateRef.current.currentButton,
-              altKey,
-              ctrlKey,
-              metaKey,
-              target: stateRef.current.target,
-              event: e,
-            });
-          } else {
-            // Drag event
-            await onDrag({
-              deltaX: clientX - stateRef.current.prevX,
-              deltaY: clientY - stateRef.current.prevY,
-              startX: stateRef.current.startX,
-              startY: stateRef.current.startY,
-              distanceX: clientX - stateRef.current.startX,
-              distanceY: clientY - stateRef.current.startY,
-              button: stateRef.current.currentButton,
-              altKey,
-              ctrlKey,
-              metaKey,
-              target: stateRef.current.target,
-              event: e,
-            });
+
+            queue(() =>
+              onDragStart({
+                deltaX: 0,
+                deltaY: 0,
+                startX: stateRef.current.startX,
+                startY: stateRef.current.startY,
+                distanceX: 0,
+                distanceY: 0,
+                button: stateRef.current.currentButton,
+                altKey,
+                ctrlKey,
+                metaKey,
+                target: stateRef.current.target,
+                event: e,
+              })
+            );
           }
+          // Create closure
+          const deltaX = clientX - stateRef.current.prevX;
+          const deltaY = clientY - stateRef.current.prevY;
+          const distanceX = clientX - stateRef.current.startX;
+          const distanceY = clientY - stateRef.current.startY;
+
+          // Drag event
+          queue(() =>
+            onDrag({
+              deltaX,
+              deltaY,
+              startX: stateRef.current.startX,
+              startY: stateRef.current.startY,
+              distanceX,
+              distanceY,
+              button: stateRef.current.currentButton,
+              altKey,
+              ctrlKey,
+              metaKey,
+              target: stateRef.current.target,
+              event: e,
+            })
+          );
         } else {
           if (!stateRef.current.gestureStart) {
             wrapperRef.current.style.cursor = "move";
@@ -279,29 +294,38 @@ const PanZoomPane = ({
             clearTimeout(stateRef.current.longTapTimeout);
           }
 
+          // Create closure
+          const deltaX = clientX - stateRef.current.prevX;
+          const deltaY = clientY - stateRef.current.prevY;
+          const target = stateRef.current.target;
+
           // Pan event
-          await onPan({
-            deltaX: clientX - stateRef.current.prevX,
-            deltaY: clientY - stateRef.current.prevY,
-            button: stateRef.current.currentButton,
-            altKey,
-            ctrlKey,
-            metaKey,
-            target: stateRef.current.target,
-            event: e,
-          });
+          queue(() =>
+            onPan({
+              deltaX,
+              deltaY,
+              button: stateRef.current.currentButton,
+              altKey,
+              ctrlKey,
+              metaKey,
+              target,
+              event: e,
+            })
+          );
 
           if (twoFingers && distance !== stateRef.current.prevDistance) {
             const deltaY = stateRef.current.prevDistance - distance;
 
             if (Math.abs(deltaY) > 10) {
               const scaleMult = 1 - (deltaY > 0 ? 1 : -1) / 10;
-              await onZoom({
-                scale: scaleMult,
-                clientX,
-                clientY,
-                event: e,
-              });
+              queue(() =>
+                onZoom({
+                  scale: scaleMult,
+                  clientX,
+                  clientY,
+                  event: e,
+                })
+              );
               stateRef.current.prevDistance = distance;
             }
           }
@@ -311,11 +335,11 @@ const PanZoomPane = ({
         stateRef.current.prevY = clientY;
       }
     },
-    [onDrag, onDragStart, onPan, onZoom]
+    [onDrag, onDragStart, onPan, onZoom, queue]
   );
 
   const onPointerUp = React.useCallback(
-    async (e) => {
+    (e) => {
       const {
         clientX,
         clientY,
@@ -351,19 +375,21 @@ const PanZoomPane = ({
       if (stateRef.current.moving) {
         // If we were moving, send drag end event
         stateRef.current.moving = false;
-        await onDragEnd({
-          deltaX: clientX - stateRef.current.prevX,
-          deltaY: clientY - stateRef.current.prevY,
-          startX: stateRef.current.startX,
-          startY: stateRef.current.startY,
-          distanceX: clientX - stateRef.current.startX,
-          distanceY: clientY - stateRef.current.startY,
-          button: stateRef.current.currentButton,
-          altKey,
-          ctrlKey,
-          metaKey,
-          event: e,
-        });
+        queue(() =>
+          onDragEnd({
+            deltaX: clientX - stateRef.current.prevX,
+            deltaY: clientY - stateRef.current.prevY,
+            startX: stateRef.current.startX,
+            startY: stateRef.current.startY,
+            distanceX: clientX - stateRef.current.startX,
+            distanceY: clientY - stateRef.current.startY,
+            button: stateRef.current.currentButton,
+            altKey,
+            ctrlKey,
+            metaKey,
+            event: e,
+          })
+        );
         wrapperRef.current.style.cursor = "auto";
       } else {
         const now = Date.now();
@@ -373,19 +399,21 @@ const PanZoomPane = ({
         } else {
           // Send tap event only if time less than 300ms
           if (stateRef.current.timeStart - now < 300) {
-            await onTap({
-              clientX,
-              clientY,
-              altKey,
-              ctrlKey,
-              metaKey,
-              target,
-            });
+            queue(() =>
+              onTap({
+                clientX,
+                clientY,
+                altKey,
+                ctrlKey,
+                metaKey,
+                target,
+              })
+            );
           }
         }
       }
     },
-    [onDragEnd, onTap]
+    [onDragEnd, onTap, queue]
   );
 
   return (
@@ -403,4 +431,4 @@ const PanZoomPane = ({
   );
 };
 
-export default PanZoomPane;
+export default Gesture;
