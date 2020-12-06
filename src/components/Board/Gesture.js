@@ -9,6 +9,13 @@ const otherPointer = (pointers, currentPointer) => {
   return pointers[p2];
 };
 
+const computeDistance = ([x1, y1], [x2, y2]) => {
+  const distanceX = Math.abs(x1 - x2);
+  const distanceY = Math.abs(y1 - y2);
+
+  return Math.hypot(distanceX, distanceY);
+};
+
 const PanZoomPane = ({
   children,
   onDrag = () => {},
@@ -82,9 +89,11 @@ const PanZoomPane = ({
       ctrlKey,
       metaKey,
     }) => {
+      // Add pointer to map
       stateRef.current.pointers[pointerId] = { clientX, clientY };
 
       if (stateRef.current.mainPointer !== undefined) {
+        // This is not the main pointer
         const { clientX: clientX2, clientY: clientY2 } = otherPointer(
           stateRef.current.pointers,
           pointerId
@@ -93,6 +102,12 @@ const PanZoomPane = ({
         const newClientX = (clientX2 + clientX) / 2;
         const newClientY = (clientY2 + clientY) / 2;
 
+        const distance = computeDistance(
+          [clientX2, clientY2],
+          [clientX, clientY]
+        );
+
+        // We update previous position as the new position is the center beetween both finger
         Object.assign(stateRef.current, {
           pressed: true,
           moving: false,
@@ -101,11 +116,16 @@ const PanZoomPane = ({
           startY: clientY,
           prevX: newClientX,
           prevY: newClientY,
+          startDistance: distance,
+          prevDistance: distance,
         });
         return;
       }
+
+      // We set the mainpointer
       stateRef.current.mainPointer = pointerId;
 
+      // And prepare move
       Object.assign(stateRef.current, {
         pressed: true,
         moving: false,
@@ -131,6 +151,7 @@ const PanZoomPane = ({
       });
 
       try {
+        // TODO should change capture when main pointer change
         target.setPointerCapture(pointerId);
       } catch (e) {
         console.log("Fail to capture pointer", e);
@@ -153,6 +174,7 @@ const PanZoomPane = ({
         } = e;
 
         if (stateRef.current.mainPointer !== pointerId) {
+          // Event from other pointer
           stateRef.current.pointers[pointerId] = {
             clientX: eventClientX,
             clientY: eventClientY,
@@ -162,9 +184,10 @@ const PanZoomPane = ({
 
         stateRef.current.moving = true;
 
+        // Do we have two finger ?
         const twoFingers = Object.keys(stateRef.current.pointers).length === 2;
 
-        let clientX, clientY;
+        let clientX, clientY, distance;
 
         if (twoFingers) {
           // Find other pointerId
@@ -173,19 +196,31 @@ const PanZoomPane = ({
             pointerId
           );
 
+          // Update client X with the center of each touch
           clientX = (clientX2 + eventClientX) / 2;
           clientY = (clientY2 + eventClientY) / 2;
+          distance = computeDistance(
+            [clientX2, clientY2],
+            [eventClientX, eventClientY]
+          );
         } else {
           clientX = eventClientX;
           clientY = eventClientY;
         }
 
+        // We drag if
+        // On non touch device
+        //   - Button is 0
+        //   - Alt key is no pressed
+        // or on touch devices
+        //   - We use only one finger
         const shouldDrag =
           pointerType !== "touch"
             ? stateRef.current.currentButton === 0 && !altKey
             : !twoFingers;
 
         if (shouldDrag) {
+          // Send drag start on first move
           if (!stateRef.current.gestureStart) {
             onDragStart({
               deltaX: 0,
@@ -203,9 +238,10 @@ const PanZoomPane = ({
             });
             wrapperRef.current.style.cursor = "move";
             stateRef.current.gestureStart = true;
+            // Clear tap timeout
             clearTimeout(stateRef.current.longTapTimeout);
           }
-
+          // Drag event
           onDrag({
             deltaX: clientX - stateRef.current.prevX,
             deltaY: clientY - stateRef.current.prevY,
@@ -224,9 +260,11 @@ const PanZoomPane = ({
           if (!stateRef.current.gestureStart) {
             wrapperRef.current.style.cursor = "move";
             stateRef.current.gestureStart = true;
+            // Clear tap timeout on first move
             clearTimeout(stateRef.current.longTapTimeout);
           }
 
+          // Pan event
           onPan({
             deltaX: clientX - stateRef.current.prevX,
             deltaY: clientY - stateRef.current.prevY,
@@ -237,13 +275,28 @@ const PanZoomPane = ({
             target: stateRef.current.target,
             event: e,
           });
+
+          if (twoFingers && distance !== stateRef.current.prevDistance) {
+            const deltaY = stateRef.current.prevDistance - distance;
+
+            if (Math.abs(deltaY) > 10) {
+              const scaleMult = 1 - (deltaY > 0 ? 1 : -1) / 10;
+              onZoom({
+                scale: scaleMult,
+                clientX,
+                clientY,
+                event: e,
+              });
+              stateRef.current.prevDistance = distance;
+            }
+          }
         }
 
         stateRef.current.prevX = clientX;
         stateRef.current.prevY = clientY;
       }
     },
-    [onDrag, onDragStart, onPan]
+    [onDrag, onDragStart, onPan, onZoom]
   );
 
   const onPointerUp = React.useCallback(
@@ -258,13 +311,16 @@ const PanZoomPane = ({
         pointerId,
       } = e;
 
+      // Remove pointer from map
       delete stateRef.current.pointers[pointerId];
 
       if (stateRef.current.mainPointer !== pointerId) {
+        // If this is not the main pointer we quit here
         return;
       }
 
       if (Object.keys(stateRef.current.pointers).length > 0) {
+        // If was main pointer but we have another one, this one become main
         stateRef.current.mainPointer = Number(
           Object.keys(stateRef.current.pointers)[0]
         );
@@ -274,9 +330,11 @@ const PanZoomPane = ({
       stateRef.current.mainPointer = undefined;
       stateRef.current.pressed = false;
 
+      // Clear longTap
       clearTimeout(stateRef.current.longTapTimeout);
 
       if (stateRef.current.moving) {
+        // If we were moving, send drag end event
         stateRef.current.moving = false;
         onDragEnd({
           deltaX: clientX - stateRef.current.prevX,
@@ -298,6 +356,7 @@ const PanZoomPane = ({
         if (stateRef.current.noTap) {
           stateRef.current.noTap = false;
         } else {
+          // Send tap event only if time less than 300ms
           if (stateRef.current.timeStart - now < 300) {
             onTap({
               clientX,
