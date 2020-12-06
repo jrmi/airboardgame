@@ -21,7 +21,7 @@ const ActionPane = ({ children }) => {
   const wrapperRef = React.useRef(null);
   const actionRef = React.useRef({});
 
-  const onMouseDown = useRecoilCallback(
+  const onDragStart = useRecoilCallback(
     ({ snapshot }) => async ({ target, ctrlKey, metaKey, event }) => {
       // Allow text selection instead of moving
       if (["INPUT", "TEXTAREA"].includes(target.tagName)) return;
@@ -30,6 +30,7 @@ const ActionPane = ({ children }) => {
 
       if (foundElement && !hasClass(foundElement, "locked")) {
         event.stopPropagation();
+
         const selectedItems = await snapshot.getPromise(selectedItemsAtom);
 
         if (!selectedItems.includes(foundElement.id)) {
@@ -51,7 +52,7 @@ const ActionPane = ({ children }) => {
     [setSelectedItems]
   );
 
-  const onMouseMove = useRecoilCallback(
+  const onDrag = useRecoilCallback(
     ({ snapshot }) => async ({ deltaX, deltaY }) => {
       if (actionRef.current.moving) {
         const panZoomRotate = await snapshot.getPromise(PanZoomRotateAtom);
@@ -94,7 +95,7 @@ const ActionPane = ({ children }) => {
     [moveItems, putItemsOnTop, setBoardState]
   );
 
-  const onMouseUp = React.useCallback(() => {
+  const onDragEnd = React.useCallback(() => {
     if (actionRef.current.moving) {
       actionRef.current = { moving: false };
       setBoardState((prev) => ({ ...prev, movingItems: false }));
@@ -102,11 +103,7 @@ const ActionPane = ({ children }) => {
   }, [setBoardState]);
 
   return (
-    <Gesture
-      onDragStart={onMouseDown}
-      onDrag={onMouseMove}
-      onDragEnd={onMouseUp}
-    >
+    <Gesture onDragStart={onDragStart} onDrag={onDrag} onDragEnd={onDragEnd}>
       <div ref={wrapperRef}>{children}</div>
     </Gesture>
   );

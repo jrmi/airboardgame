@@ -183,13 +183,23 @@ const Selector = ({ children, moveFirst }) => {
     [setSelected]
   );
 
-  const onTap = React.useCallback(
-    ({ target }) => {
+  const onTap = useRecoilCallback(
+    ({ snapshot }) => async ({ target, ctrlKey, metaKey }) => {
+      const foundItem = insideClass(target, "item");
       if (
-        (!insideClass(target, "item") || insideClass(target, "locked")) &&
+        (!foundItem || insideClass(foundItem, "locked")) &&
         insideClass(target, "board")
       ) {
         setSelected(emptySelection);
+      } else {
+        const selectedItems = await snapshot.getPromise(selectedItemsAtom);
+        if (foundItem && !selectedItems.includes(foundItem.id)) {
+          if (ctrlKey || metaKey) {
+            setSelected((prev) => [...prev, foundItem.id]);
+          } else {
+            setSelected([foundItem.id]);
+          }
+        }
       }
     },
     [emptySelection, setSelected]

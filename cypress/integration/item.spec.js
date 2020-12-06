@@ -27,27 +27,33 @@ describe("Item interactions", () => {
       .parents(".item")
       .click(500, 500, { force: true });
 
+    cy.get("img[src='/games/JC.jpg']").parents(".item").trigger("pointerdown", {
+      button: 0,
+      clientX: 430,
+      clientY: 430,
+      force: true,
+      pointerId: 1,
+    });
+
+    cy.wait(300);
+
     cy.get("img[src='/games/JC.jpg']")
       .parents(".item")
-      .trigger("pointerdown", {
-        button: 0,
-        force: true,
-        isPrimary: true,
-      })
       .trigger("pointermove", {
-        clientX: 200,
-        clientY: 200,
+        button: 0,
+        clientX: 530,
+        clientY: 530,
         force: true,
-        isPrimary: true,
+        pointerId: 1,
       })
       .trigger("pointerup", {
         force: true,
-        isPrimary: true,
+        pointerId: 1,
       });
     cy.get("img[src='/games/JC.jpg']")
       .parents(".item")
       .parent()
-      .should("have.css", "transform", "matrix(1, 0, 0, 1, 146, 320)");
+      .should("have.css", "transform", "matrix(1, 0, 0, 1, 520, 500)");
   });
 
   it("should flip item", () => {

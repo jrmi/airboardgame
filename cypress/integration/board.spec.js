@@ -30,16 +30,17 @@ describe("Board interactions", () => {
         button: 1,
         clientX: 100,
         clientY: 100,
-        isPrimary: true,
+        pointerId: 1,
       })
       .trigger("pointermove", {
         clientX: 200,
         clientY: 200,
-        isPrimary: true,
+        pointerId: 1,
         force: true,
       })
       .trigger("pointerup", {
         force: true,
+        pointerId: 1,
         isPrimary: true,
       });
     cy.get(".board-pane").should(
@@ -55,17 +56,20 @@ describe("Board interactions", () => {
         button: 0,
         clientX: 100,
         clientY: 100,
-        isPrimary: true,
+        pointerId: 1,
         altKey: true,
       })
       .trigger("pointermove", {
+        button: 0,
         clientX: 200,
         clientY: 200,
-        isPrimary: true,
+        pointerId: 1,
+        altKey: true,
         force: true,
       })
       .trigger("pointerup", {
         force: true,
+        pointerId: 1,
         isPrimary: true,
       });
     cy.get(".board-pane").should(

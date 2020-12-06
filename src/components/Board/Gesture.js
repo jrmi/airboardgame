@@ -34,7 +34,7 @@ const PanZoomPane = ({
   });
 
   const onWheel = React.useCallback(
-    (e) => {
+    async (e) => {
       const {
         deltaX,
         deltaY,
@@ -72,14 +72,14 @@ const PanZoomPane = ({
           return;
         }
         const scaleMult = 1 - (deltaY > 0 ? 1 : -1) / 5;
-        onZoom({ scale: scaleMult, clientX, clientY, event: e });
+        await onZoom({ scale: scaleMult, clientX, clientY, event: e });
       }
     },
     [onPan, onZoom]
   );
 
   const onPointerDown = React.useCallback(
-    ({
+    async ({
       target,
       button,
       clientX,
@@ -137,9 +137,9 @@ const PanZoomPane = ({
         currentButton: button,
         target,
         timeStart: Date.now(),
-        longTapTimeout: setTimeout(() => {
+        longTapTimeout: setTimeout(async () => {
           stateRef.current.noTap = true;
-          onLongTap({
+          await onLongTap({
             clientX,
             clientY,
             altKey,
@@ -161,7 +161,7 @@ const PanZoomPane = ({
   );
 
   const onPointerMove = React.useCallback(
-    (e) => {
+    async (e) => {
       if (stateRef.current.pressed) {
         const {
           pointerId,
@@ -222,7 +222,11 @@ const PanZoomPane = ({
         if (shouldDrag) {
           // Send drag start on first move
           if (!stateRef.current.gestureStart) {
-            onDragStart({
+            wrapperRef.current.style.cursor = "move";
+            stateRef.current.gestureStart = true;
+            // Clear tap timeout
+            clearTimeout(stateRef.current.longTapTimeout);
+            await onDragStart({
               deltaX: 0,
               deltaY: 0,
               startX: stateRef.current.startX,
@@ -236,26 +240,37 @@ const PanZoomPane = ({
               target: stateRef.current.target,
               event: e,
             });
-            wrapperRef.current.style.cursor = "move";
-            stateRef.current.gestureStart = true;
-            // Clear tap timeout
-            clearTimeout(stateRef.current.longTapTimeout);
+            await onDrag({
+              deltaX: clientX - stateRef.current.prevX,
+              deltaY: clientY - stateRef.current.prevY,
+              startX: stateRef.current.startX,
+              startY: stateRef.current.startY,
+              distanceX: clientX - stateRef.current.startX,
+              distanceY: clientY - stateRef.current.startY,
+              button: stateRef.current.currentButton,
+              altKey,
+              ctrlKey,
+              metaKey,
+              target: stateRef.current.target,
+              event: e,
+            });
+          } else {
+            // Drag event
+            await onDrag({
+              deltaX: clientX - stateRef.current.prevX,
+              deltaY: clientY - stateRef.current.prevY,
+              startX: stateRef.current.startX,
+              startY: stateRef.current.startY,
+              distanceX: clientX - stateRef.current.startX,
+              distanceY: clientY - stateRef.current.startY,
+              button: stateRef.current.currentButton,
+              altKey,
+              ctrlKey,
+              metaKey,
+              target: stateRef.current.target,
+              event: e,
+            });
           }
-          // Drag event
-          onDrag({
-            deltaX: clientX - stateRef.current.prevX,
-            deltaY: clientY - stateRef.current.prevY,
-            startX: stateRef.current.startX,
-            startY: stateRef.current.startY,
-            distanceX: clientX - stateRef.current.startX,
-            distanceY: clientY - stateRef.current.startY,
-            button: stateRef.current.currentButton,
-            altKey,
-            ctrlKey,
-            metaKey,
-            target: stateRef.current.target,
-            event: e,
-          });
         } else {
           if (!stateRef.current.gestureStart) {
             wrapperRef.current.style.cursor = "move";
@@ -265,7 +280,7 @@ const PanZoomPane = ({
           }
 
           // Pan event
-          onPan({
+          await onPan({
             deltaX: clientX - stateRef.current.prevX,
             deltaY: clientY - stateRef.current.prevY,
             button: stateRef.current.currentButton,
@@ -281,7 +296,7 @@ const PanZoomPane = ({
 
             if (Math.abs(deltaY) > 10) {
               const scaleMult = 1 - (deltaY > 0 ? 1 : -1) / 10;
-              onZoom({
+              await onZoom({
                 scale: scaleMult,
                 clientX,
                 clientY,
@@ -300,7 +315,7 @@ const PanZoomPane = ({
   );
 
   const onPointerUp = React.useCallback(
-    (e) => {
+    async (e) => {
       const {
         clientX,
         clientY,
@@ -336,7 +351,7 @@ const PanZoomPane = ({
       if (stateRef.current.moving) {
         // If we were moving, send drag end event
         stateRef.current.moving = false;
-        onDragEnd({
+        await onDragEnd({
           deltaX: clientX - stateRef.current.prevX,
           deltaY: clientY - stateRef.current.prevY,
           startX: stateRef.current.startX,
@@ -358,7 +373,7 @@ const PanZoomPane = ({
         } else {
           // Send tap event only if time less than 300ms
           if (stateRef.current.timeStart - now < 300) {
-            onTap({
+            await onTap({
               clientX,
               clientY,
               altKey,
