@@ -35,8 +35,6 @@ describe("Item interactions", () => {
       pointerId: 1,
     });
 
-    cy.wait(300);
-
     cy.get("img[src='/games/JC.jpg']")
       .parents(".item")
       .trigger("pointermove", {
