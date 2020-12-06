@@ -110,32 +110,40 @@ const Gesture = ({
       stateRef.current.pointers[pointerId] = { clientX, clientY };
 
       if (stateRef.current.mainPointer !== undefined) {
-        // This is not the main pointer
-        const { clientX: clientX2, clientY: clientY2 } = otherPointer(
-          stateRef.current.pointers,
-          pointerId
-        );
+        if (stateRef.current.mainPointer !== pointerId) {
+          // This is not the main pointer
+          try {
+            const { clientX: clientX2, clientY: clientY2 } = otherPointer(
+              stateRef.current.pointers,
+              pointerId
+            );
+            const newClientX = (clientX2 + clientX) / 2;
+            const newClientY = (clientY2 + clientY) / 2;
 
-        const newClientX = (clientX2 + clientX) / 2;
-        const newClientY = (clientY2 + clientY) / 2;
+            const distance = computeDistance(
+              [clientX2, clientY2],
+              [clientX, clientY]
+            );
 
-        const distance = computeDistance(
-          [clientX2, clientY2],
-          [clientX, clientY]
-        );
+            // We update previous position as the new position is the center beetween both finger
+            Object.assign(stateRef.current, {
+              pressed: true,
+              moving: false,
+              gestureStart: false,
+              startX: clientX,
+              startY: clientY,
+              prevX: newClientX,
+              prevY: newClientY,
+              startDistance: distance,
+              prevDistance: distance,
+            });
+          } catch (e) {
+            console.log("Error while getting other pointer. Ignoring", e);
+            console.log(stateRef.current.pointers, pointerId);
+            stateRef.current.mainPointer === undefined;
+          }
+        }
 
-        // We update previous position as the new position is the center beetween both finger
-        Object.assign(stateRef.current, {
-          pressed: true,
-          moving: false,
-          gestureStart: false,
-          startX: clientX,
-          startY: clientY,
-          prevX: newClientX,
-          prevY: newClientY,
-          startDistance: distance,
-          prevDistance: distance,
-        });
         return;
       }
 
@@ -170,7 +178,6 @@ const Gesture = ({
       });
 
       try {
-        // TODO should change capture when main pointer change
         target.setPointerCapture(pointerId);
       } catch (e) {
         console.log("Fail to capture pointer", e);
@@ -363,6 +370,13 @@ const Gesture = ({
         stateRef.current.mainPointer = Number(
           Object.keys(stateRef.current.pointers)[0]
         );
+        try {
+          stateRef.current.target.setPointerCapture(
+            stateRef.current.mainPointer
+          );
+        } catch (e) {
+          console.log("Fails to set pointer capture", e);
+        }
         return;
       }
 
