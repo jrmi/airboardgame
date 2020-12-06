@@ -38,11 +38,12 @@ const SelectorZone = styled.div.attrs(({ top, left, height, width }) => ({
   border: 2px solid hsl(0, 55%, 40%);
 `;
 
-const findSelected = throttle((itemMap) => {
+const findSelected = (itemMap) => {
   const selector = document.body.querySelector(".selector");
   if (!selector) {
     return [];
   }
+
   const rect = selector.getBoundingClientRect();
 
   return Array.from(document.getElementsByClassName("item"))
@@ -64,7 +65,7 @@ const findSelected = throttle((itemMap) => {
       });
     })
     .map((elem) => elem.id);
-}, 150);
+};
 
 const Selector = ({ children, moveFirst }) => {
   const setSelected = useSetRecoilState(selectedItemsAtom);
@@ -86,19 +87,20 @@ const Selector = ({ children, moveFirst }) => {
   }, [config, emptySelection, setSelected]);
 
   const throttledSetSelected = useRecoilCallback(
-    ({ snapshot }) => async () => {
-      if (stateRef.current.moving) {
-        const itemMap = await snapshot.getPromise(ItemMapAtom);
-        const selected = findSelected(itemMap);
+    ({ snapshot }) =>
+      throttle(async () => {
+        if (stateRef.current.moving) {
+          const itemMap = await snapshot.getPromise(ItemMapAtom);
+          const selected = findSelected(itemMap);
 
-        setSelected((prevSelected) => {
-          if (JSON.stringify(prevSelected) !== JSON.stringify(selected)) {
-            return selected;
-          }
-          return prevSelected;
-        });
-      }
-    },
+          setSelected((prevSelected) => {
+            if (JSON.stringify(prevSelected) !== JSON.stringify(selected)) {
+              return selected;
+            }
+            return prevSelected;
+          });
+        }
+      }, 300),
     [setSelected]
   );
 
