@@ -342,6 +342,11 @@ export const useItemActions = () => {
         label: t("Rotate 90"),
         icon: rotateIcon,
       },
+      rotate180: {
+        action: rotate.bind(null, 180),
+        label: t("Rotate 180"),
+        icon: rotateIcon,
+      },
       clone: {
         action: cloneItem,
         label: t("Clone"),
