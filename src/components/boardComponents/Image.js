@@ -38,7 +38,9 @@ const Label = styled.div`
   line-height: 1.5em;
 `;
 
-const Wrapper = styled.div`
+const Wrapper = styled.div.attrs(({ flippable }) => ({
+  className: flippable ? "hvr-curl-top-right" : "",
+}))`
   user-select: none;
   position: relative;
   line-height: 0em;
@@ -104,8 +106,10 @@ const Image = ({
     flipped &&
     (!Array.isArray(unflippedFor) || !unflippedFor.includes(currentUser.id));
 
+  const flippable = Boolean(backContent);
+
   return (
-    <Wrapper>
+    <Wrapper flippable={flippable}>
       <UnflippedFor>
         {unflippedForUsers &&
           unflippedForUsers.map(({ color, id }) => {
