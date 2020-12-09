@@ -164,7 +164,8 @@ const PanZoomRotate = ({ children, moveFirst }) => {
     // the browser original zoom  and therefore allowing our custom one.
     // More detail at https://github.com/facebook/react/issues/14856
     const cancelWheel = (event) => {
-      if (insideClass(event.target, "board")) event.preventDefault();
+      //if (insideClass(event.target, "board"))
+      event.preventDefault();
     };
 
     document.body.addEventListener("wheel", cancelWheel, { passive: false });

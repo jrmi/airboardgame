@@ -75,8 +75,8 @@ const Gesture = ({
       if (isMacOS() && !ctrlKey) {
         queue(() =>
           onPan({
-            deltaX: 2 * deltaX,
-            deltaY: 2 * deltaY,
+            deltaX: -2 * deltaX,
+            deltaY: -2 * deltaY,
             button: 1,
             ctrlKey,
             metaKey,
