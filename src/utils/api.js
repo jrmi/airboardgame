@@ -10,18 +10,6 @@ const gameURI = `${API_ENDPOINT}/store/game`;
 const execURI = `${API_ENDPOINT}/execute`;
 const authURI = `${API_ENDPOINT}/auth`;
 
-// Register to backend
-export const register = async () => {
-  await fetch(`${execURI}/_register`, {
-    credentials: "include",
-    headers: {
-      "X-SPC-HOST": `${window.location.origin}/exec`,
-    },
-  });
-};
-
-register();
-
 export const uploadImage = async (namespace, file) => {
   const payload = new FormData();
   payload.append("file", file);
