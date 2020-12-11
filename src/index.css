@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Merriweather+Sans:wght@300;500;700;800&display=block");
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap");
 
 body {
   margin: 0;
@@ -6,20 +6,21 @@ body {
 }
 
 :root {
-  --bg-color: #2a2a2aff;
-  --bg-secondary-color: #404040ff;
-  --font-color: #f9fbfaff;
-  --color-darkGrey: #2a2a2aff;
-  --color-lightGrey: #888886ff;
-  --color-grey: #404040ff;
-  --color-primary: #db5034ff;
+  --bg-color: #000000;
+  --bg-secondary-color: #121212;
+  --font-color: #f9fbfa;
+  --font-color2: #b3b3b3;
+  --color-darkGrey: #121212;
+  --color-lightGrey: #90969d;
+  --color-grey: #454545;
+  --color-primary: #db5034;
   --color-secondary: #00a698ff;
   --color-error: #d43939;
   --color-success: #28bd14;
   --grid-maxWidth: 120rem;
   --grid-gutter: 2rem;
   --font-size: 1.6rem;
-  --font-family-sans: sans-serif;
+  --font-family-sans: "Roboto", sans-serif;
   --font-family-mono: monaco, "Consolas", "Lucida Console", monospace;
 }
 
@@ -52,7 +53,7 @@ h2,
 h3,
 h4,
 h5 {
-  font-family: "Merriweather Sans", sans-serif;
+  font-family: var(--font-family-sans);
 }
 
 .tabs a {

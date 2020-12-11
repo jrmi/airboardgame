@@ -1,6 +1,6 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
-import { useTranslation } from "react-i18next";
+import { useTranslation, Trans } from "react-i18next";
 import styled from "styled-components";
 import CookieConsent from "react-cookie-consent";
 
@@ -16,95 +16,12 @@ import GameListItem from "./GameListItem";
 
 import AboutModal from "./AboutModal";
 
-const Header = styled.div`
-  height: 15em;
-  padding-top: 1em;
-  margin-bottom: 2em;
-  background-color: var(--bg-secondary-color);
-  background-image: url(${header});
-  position: relative;
-  & .baseline {
-    font-family: "Merriweather Sans", sans-serif;
-    text-align: center;
-    position: absolute;
-    bottom: 0px;
-    background-color: #00000099;
-    width: 100%;
-    margin: 0;
-  }
-  & .login {
-    float: right;
-    margin-right: 0.5em;
-  }
-  & .login button {
-    background-color: var(--color-primary);
-  }
-  & .new-game {
-    position: absolute;
-    right: 0.5em;
-    top: 4em;
-    background-color: var(--color-secondary);
-  }
-  @media screen and (max-width: 640px) {
-    & {
-      height: 10em;
-    }
-    & .new-game {
-      display: none;
-    }
-    & .login {
-      display: none;
-    }
-    & .baseline {
-      font-size: 1em;
-    }
-  }
-`;
-
-const Brand = styled.div`
-  background-color: var(--color-secondary);
-  display: flex;
-  width: 550px;
-  align-items: center;
-  padding: 0 1em;
-  position: relative;
-  & h1 {
-    font-size: 4em;
-    margin: 0;
-    padding: 0;
-    line-height: 75px;
-    margin-left: 0em;
-    letter-spacing: -4px;
-    font-weight: bold;
-    padding-left: 0.2em;
-  }
-  & img {
-    height: 55px;
-    margin-top: 8px;
-  }
-  & .beta {
-    position: absolute;
-    top: 3px;
-    right: 33px;
-    font-weight: 700;
-    color: hsl(168, 83%, 62%);
-  }
-
-  @media screen and (max-width: 640px) {
-    & {
-      width: 290px;
-    }
-    & h1 {
-      font-size: 2em;
-    }
-  }
-`;
-
 const GameView = styled.div`
   min-height: 100vh;
-  display: flex;
   flex-direction: column;
   & > footer {
+    width: 100%;
+    grid-column: 1 / 4;
     margin-top: 1em;
     padding: 0.5em 0;
     text-align: center;
@@ -112,17 +29,93 @@ const GameView = styled.div`
   }
 `;
 
+const Brand = styled.div`
+  position: relative;
+  display: inline-block;
+  margin-bottom: 12vh;
+  & h1 {
+    font-weight: 700;
+    font-size: 32px;
+    & a {
+      color: var(--font-color);
+    }
+  }
+  & .beta {
+    position: absolute;
+    top: 5px;
+    right: -40px;
+    text-transform: uppercase;
+    font-weight: 300;
+  }
+
+  @media screen and (max-width: 640px) {
+    & {
+    }
+    & h1 {
+    }
+  }
+`;
+
+const Header = styled.div`
+  padding-top: 1em;
+  margin-bottom: 12vh;
+  background-color: var(--bg-color);
+  position: relative;
+  padding: 0 5%;
+  & .baseline {
+    font-weigth: 800;
+    font-size: 3.5vw;
+    line-height: 1.2em;
+  }
+  & .subbaseline {
+    color: var(--font-color2);
+    font-size: 1.5vw;
+  }
+  & .login {
+    position: absolute;
+    right: 0;
+  }
+  & .login button {
+  }
+  & .new-game {
+    position: absolute;
+    top: 2em;
+    right: 0;
+  }
+  @media screen and (max-width: 640px) {
+    & {
+    }
+    & .new-game {
+    }
+    & .login {
+    }
+    & .baseline {
+    }
+  }
+`;
+
+const Filter = styled.div`
+  & .incentive {
+    width: 100%;
+    text-align: center;
+    font-size: 3.5vw;
+    padding: 0.5em;
+  }
+`;
+
+const Content = styled.div`
+  background-color: var(--bg-secondary-color);
+`;
+
 const GameList = styled.ul`
-  width: 100%;
-  max-width: 960px;
   list-style: none;
   margin: 0;
-  margin: 0 auto;
-  padding: 0 2em;
-  flex: 1;
+  padding: 0 5%;
   display: flex;
   flex-wrap: wrap;
-  align-content: flex-start;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 5%;
 
   @media screen and (max-width: 640px) {
   }
@@ -191,26 +184,40 @@ const GameListView = () => {
           )}
           <Account className="login" disabled={!cookieConsent} />
           <Brand className="brand">
-            <a href="/">
-              <img src={logo} alt="logo" />
-            </a>
-            <h1>Air Board Game</h1>
+            <h1>
+              <a href="/">Air Board Game</a>
+            </h1>
             <span className="beta">Beta</span>
           </Brand>
-          <h2 className="baseline">
-            {t("Play your favorite games online with your friends")}
-          </h2>
+          <Trans i18nKey="baseline">
+            <h2 className="baseline">
+              Play board games online
+              <br />
+              with your friends - for free!
+            </h2>
+            <p className="subbaseline">
+              Choose from our selection or create your own.
+              <br />
+              No need to sign up. Just start a game and share the link with your
+              friends.
+            </p>
+          </Trans>
         </Header>
-        <GameList>
-          {gameList
-            .filter(
-              ({ published, owner }) =>
-                published || (userId && (!owner || owner === userId))
-            )
-            .map((game) => (
-              <GameListItem key={game.id} game={game} userId={userId} />
-            ))}
-        </GameList>
+        <Content>
+          <Filter>
+            <h2 className="incentive">{t("Start a game now")}</h2>
+          </Filter>
+          <GameList>
+            {gameList
+              .filter(
+                ({ published, owner }) =>
+                  published || (userId && (!owner || owner === userId))
+              )
+              .map((game) => (
+                <GameListItem key={game.id} game={game} userId={userId} />
+              ))}
+          </GameList>
+        </Content>
         <footer>
           <button
             className="button clear"
