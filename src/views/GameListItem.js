@@ -5,45 +5,28 @@ import { useTranslation } from "react-i18next";
 import { getBestTranslationFromConfig } from "../utils/api";
 
 const Game = styled.li`
-  width: 100%;
-  background-color: var(--bg-secondary-color);
   position: relative;
-  min-width: 250px;
-  max-width: 440px;
-  height: 150px;
-  padding: 0.5em;
-  margin: 0.3em;
-  flex: 1 1 0%;
-  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
-  background: ${(props) =>
-    props.back
-      ? `url(${props.back}), rgba(255, 255, 255, 0.6)`
-      : "var(--bg-secondary-color)"};
-  background-blend-mode: screen;
-  background-position: center;
-  background-size: cover;
-  background-repeat: no-repeat;
+  //min-width: 240px;
+  //max-width: 22%;
+  //height: 150px;
+  padding: 0em;
+  //margin: 0.3em;
+  margin: 0px;
+  margin-bottom: 3em;
+  flex: 1;
+  //box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
 
-  /*&:before {
-    position: absolute;
-    content: " ";
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-  }*/
+  //border: 1px dashed blue;
 
   & .game-name {
-    margin: 0;
     max-width: 80%;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    /*text-overflow: ellipsis;
+    white-space: nowrap;*/
     line-height: 1.2em;
     overflow: hidden;
     margin-bottom: 3px;
-    font-size: 1.5em;
+    margin: 0.2em 0 0.5em 0;
+    font-size: 2.5vw;
   }
 
   & .unpublished {
@@ -75,16 +58,31 @@ const Game = styled.li`
     display: block;
   }
 
+  & .img {
+    //max-width: 25vw;
+    width: 100%;
+    min-width: 300px;
+    max-width: 600px;
+    //padding-top: 60%;
+    background-color: #333;
+  }
+
   & .details {
     display: flex;
-    flex-direction: column;
-    color: var(--color-lightGrey);
-    font-size: 0.8em;
+    flex-direction: row;
+    color: var(--font-color2);
+    font-size: 12px;
+    padding-top: 1em;
   }
   & .details > span {
     display: flex;
     align-items: center;
-    padding: 1px;
+    padding-right: 5px;
+    margin-right: 5px;
+    border-right: 1px solid var(--font-color2);
+  }
+  & .details > span:last-child {
+    border: none;
   }
   & .details img {
     margin-right: 0.5em;
@@ -154,7 +152,13 @@ const GameListItem = ({
 
   return (
     <Game back={backgroundImage ? imageUrl : null}>
-      <h2 className="game-name">{translation.name}</h2>
+      <Link to={`/game/${id}/session/`}>
+        {imageUrl ? (
+          <img className="img" src={imageUrl} />
+        ) : (
+          <img className="img" src="/default.png" />
+        )}
+      </Link>
       {!published && (
         <img
           className="unpublished"
@@ -165,10 +169,6 @@ const GameListItem = ({
       <div className="details">
         {playerCount && (
           <span>
-            <img
-              src="https://icongr.am/entypo/users.svg?size=16&color=888886"
-              alt={t("Players count")}
-            />{" "}
             {playerCountDisplay.length === 2 &&
               t("{{min}} - {{max}} players", {
                 min: playerCountDisplay[0],
@@ -180,37 +180,12 @@ const GameListItem = ({
               })}
           </span>
         )}
-        {duration && (
-          <span>
-            <img
-              src="https://icongr.am/entypo/hour-glass.svg?size=16&color=888886"
-              alt={t("Duration")}
-            />{" "}
-            {durationDisplay}
-          </span>
-        )}
-        {minAge !== undefined && (
-          <span>
-            <img
-              src="https://icongr.am/entypo/man.svg?size=16&color=888886"
-              alt={t("Minimum age")}
-            />{" "}
-            {minAge}+
-          </span>
-        )}
-        {materialLanguage !== undefined && (
-          <span>
-            <img
-              src="https://icongr.am/entypo/globe.svg?size=16&color=888886"
-              alt={t("Material language")}
-            />{" "}
-            {materialLanguageDisplay}
-          </span>
-        )}
+        {duration && <span>{durationDisplay} mins</span>}
+        {minAge !== undefined && <span>age {minAge}+</span>}
       </div>
-      <Link to={`/game/${id}/session/`} className="button play">
-        {t("Play")}
-      </Link>
+
+      <h2 className="game-name">{translation.name}</h2>
+
       {userId && (userId === owner || !owner) && (
         <div className="extra-actions">
           <Link to={`/game/${id}/edit`} className="button edit icon-only">
@@ -224,5 +199,11 @@ const GameListItem = ({
     </Game>
   );
 };
+
+/*
+      <Link to={`/game/${id}/session/`} className="button play">
+        {t("Play")}
+      </Link>;
+*/
 
 export default GameListItem;

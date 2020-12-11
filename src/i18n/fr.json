@@ -99,7 +99,6 @@
   "Sending file...": "Envoi en cours…",
   "Click or drag'n'drop file here": "Cliquez ou déposez des fichiers dans cette zone",
   "Create new game": "Créer un jeu",
-  "Play your favorite games online with your friends": "Jouez à vos jeux favoris en ligne avec vos amis",
   "Game loading...": "Chargement…",
   "Go to home": "Accueil",
   "Configure game": "Configurer le jeu",
@@ -151,5 +150,14 @@
   "Move mode": "Mode déplacement",
   "Switch to move mode": "Basculer vers le mode déplacement",
   "Select mode": "Mode sélection",
-  "Switch to select mode": "Basculer vers le mode sélection"
+  "Switch to select mode": "Basculer vers le mode sélection",
+  "Color 1": "Couleur 1",
+  "Color 2": "Couleur 2",
+  "Column count": "Nombre de colonne",
+  "Row count": "Nombre de ligne",
+  "Pawn": "Pion",
+  "Checkerboard": "Damier",
+  "Magnetic Grid size": "Taille de la grille",
+  "Start a game now": "Commencez à jouer",
+  "baseline": "<0>Jouez aux jeux de société en ligne<1></1>avec vos amis - gratuitement !</0><1>Choisissez parmi notre sélection ou ajoutez le votre.<1></1>Pas besoin de compte, démarrez un jeu et partagez le lien avec vos amis.</1>"
 }
