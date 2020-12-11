@@ -2,6 +2,30 @@ import React from "react";
 
 import { isMacOS } from "../../utils/deviceInfos";
 
+// From https://stackoverflow.com/questions/20110224/what-is-the-height-of-a-line-in-a-wheel-event-deltamode-dom-delta-line
+const getScrollLineHeight = () => {
+  const iframe = document.createElement("iframe");
+  iframe.src = "#";
+  document.body.appendChild(iframe);
+
+  // Write content in Iframe
+  const idoc = iframe.contentWindow.document;
+  idoc.open();
+  idoc.write(
+    "<!DOCTYPE html><html><head></head><body><span>a</span></body></html>"
+  );
+  idoc.close();
+
+  const scrollLineHeight = idoc.body.firstElementChild.offsetHeight;
+  document.body.removeChild(iframe);
+
+  return scrollLineHeight;
+};
+
+const LINE_HEIGHT = getScrollLineHeight();
+// Reasonable default from https://github.com/facebookarchive/fixed-data-table/blob/master/src/vendor_upstream/dom/normalizeWheel.js
+const PAGE_HEIGHT = 800;
+
 const otherPointer = (pointers, currentPointer) => {
   const p2 = Object.keys(pointers)
     .map((p) => Number(p))
@@ -24,7 +48,7 @@ const Gesture = ({
   onPan = () => {},
   onTap = () => {},
   onLongTap = () => {},
-  onZoom = () => {},
+  onZoom,
 }) => {
   const wrapperRef = React.useRef(null);
   const stateRef = React.useRef({
@@ -55,6 +79,7 @@ const Gesture = ({
         deltaY,
         clientX,
         clientY,
+        deltaMode,
         ctrlKey,
         altKey,
         metaKey,
@@ -85,11 +110,22 @@ const Gesture = ({
           })
         );
       } else {
-        if (!deltaY) {
-          return;
+        // Quit if onZoom is not set
+        if (onZoom === undefined || !deltaY) return;
+
+        let scale = deltaY;
+
+        switch (deltaMode) {
+          case 1: // Pixel
+            scale *= LINE_HEIGHT;
+            break;
+          case 2:
+            scale *= PAGE_HEIGHT;
+            break;
+          default:
         }
-        const scaleMult = 1 - (deltaY > 0 ? 1 : -1) / 5;
-        queue(() => onZoom({ scale: scaleMult, clientX, clientY, event: e }));
+
+        queue(() => onZoom({ scale, clientX, clientY, event: e }));
       }
     },
     [onPan, onZoom, queue]
@@ -320,14 +356,17 @@ const Gesture = ({
             })
           );
 
-          if (twoFingers && distance !== stateRef.current.prevDistance) {
-            const deltaY = stateRef.current.prevDistance - distance;
+          if (
+            twoFingers &&
+            distance !== stateRef.current.prevDistance &&
+            onZoom
+          ) {
+            const scale = stateRef.current.prevDistance - distance;
 
-            if (Math.abs(deltaY) > 10) {
-              const scaleMult = 1 - (deltaY > 0 ? 1 : -1) / 10;
+            if (Math.abs(scale) > 1) {
               queue(() =>
                 onZoom({
-                  scale: scaleMult,
+                  scale,
                   clientX,
                   clientY,
                   event: e,
