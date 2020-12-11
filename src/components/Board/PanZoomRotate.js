@@ -177,7 +177,7 @@ const PanZoomRotate = ({ children, moveFirst }) => {
 
   const onZoom = ({ clientX, clientY, scale }) => {
     setScale((prevScale) => {
-      let newScale = prevScale.scale * scale;
+      let newScale = prevScale.scale * (1 - scale / 200);
       if (newScale > 8) {
         newScale = 8;
       }
