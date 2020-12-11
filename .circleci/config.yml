@@ -10,16 +10,18 @@ jobs:
     environment:
       NETLIFY_SITE_ID: airboardgame.netlify.app
       REACT_APP_SOCKET_URL: https://public.jeremiez.net/
-      REACT_APP_SOCKET_PATH: /wamp/socket.io
+      REACT_APP_SOCKET_PATH: /wamp2/socket.io
       REACT_APP_GAMELIST_URL: https://airgames.netlify.app/gameList.json
-      REACT_APP_API_ENDPOINT: https://public.jeremiez.net/airboardgame
+      REACT_APP_API_ENDPOINT: https://public.jeremiez.net/ricochet
       CYPRESS_INSTALL_BINARY: 0
     steps:
       - checkout
       - node/with-cache:
           steps:
+            - run: node --version
             - run: npm install
             - run: npm run lint
+            - run: cd backend && npm install && npm run build
             - run: npm run build
             - run:
                 name: Netlify Deploy
@@ -31,15 +33,16 @@ jobs:
     environment:
       NETLIFY_SITE_ID: airboardgame.netlify.app
       REACT_APP_SOCKET_URL: https://public.jeremiez.net/
-      REACT_APP_SOCKET_PATH: /wamp/socket.io
+      REACT_APP_SOCKET_PATH: /wamp2/socket.io
       REACT_APP_GAMELIST_URL: https://airgames.netlify.app/gameList.json
-      REACT_APP_API_ENDPOINT: https://public.jeremiez.net/airboardgame
+      REACT_APP_API_ENDPOINT: https://public.jeremiez.net/ricochet
     steps:
       - checkout
       - node/with-cache:
           steps:
-            - run: npm ci
+            - run: npm install
             - run: npm run lint
+            - run: cd backend && npm install && npm run build
             - run: npm run build
             - run:
                 name: Netlify Deploy
@@ -49,7 +52,7 @@ workflows:
   e2etest:
     jobs:
       - cypress/run:
-          start: REACT_APP_NO_WELCOME=1 REACT_APP_SOCKET_URL=https://public.jeremiez.net/ REACT_APP_SOCKET_PATH=/wamp/socket.io REACT_APP_API_ENDPOINT=https://public.jeremiez.net/airboardgame CI=true npm start
+          start: REACT_APP_NO_WELCOME=1 REACT_APP_SOCKET_URL=https://public.jeremiez.net/ REACT_APP_SOCKET_PATH=/wamp2/socket.io REACT_APP_API_ENDPOINT=https://public.jeremiez.net/ricochet CI=true npm start
           wait-on: "http-get://localhost:3000"
           no-workspace: true
           store_artifacts: true
