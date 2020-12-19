@@ -197,6 +197,16 @@ const BoardConfig = () => {
             </Label>
 
             <Label>
+              {t("Baseline")}
+              <Field
+                name="defaultBaseline"
+                component="input"
+                initialValue={boardConfig.defaultBaseline}
+                style={{ width: "100%" }}
+              />
+            </Label>
+
+            <Label>
               {t("Description")}
               <Field
                 name="defaultDescription"
@@ -250,6 +260,16 @@ const BoardConfig = () => {
                       component="input"
                       initialValue={boardConfig.translations[index].name}
                       style={{ width: "15em" }}
+                    />
+                  </Label>
+
+                  <Label>
+                    {t("Baseline")}
+                    <Field
+                      name={`translations[${index}].baseline`}
+                      component="input"
+                      initialValue={boardConfig.translations[index].baseline}
+                      style={{ width: "100%" }}
                     />
                   </Label>
 
