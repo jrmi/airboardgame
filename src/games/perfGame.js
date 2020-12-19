@@ -1,11 +1,4 @@
 import { nanoid } from "nanoid";
-const infoText = `# Test game
-
-This is a test game.
-
-With a [link](https://github.com/jrmi/airboardgame/).
-
-`;
 
 const genGame = () => {
   const items = [...Array(2000)].map((e, index) => ({
@@ -29,9 +22,26 @@ const genGame = () => {
       },
     ],
     board: {
-      size: 3000,
-      scale: 1,
-      info: infoText,
+      size: 4000,
+      scale: 0.5,
+      name: "Perf Game",
+      published: true,
+      translations: [
+        {
+          language: "fr",
+          name: "1 Jeu test de performances et des extrèmes",
+          description: "Un jeu pour tester",
+        },
+      ],
+      playerCount: [1, 9],
+      defaultName: "1 Performance game to test strange things and other",
+      defaultLanguage: "en",
+      defaultDescription: "A classic",
+      materialLanguage: "Multi-lang",
+      minAge: "10",
+      duration: [30, 90],
+      imageUrl: "/games/testgame.png",
+      gridSize: 1,
     },
   };
 };

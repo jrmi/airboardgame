@@ -86,6 +86,7 @@ export const getGames = async () => {
         data: testGame,
         id: "test",
         published: true,
+        ...testGame.board,
       },
       {
         ...perfGame,
@@ -93,6 +94,7 @@ export const getGames = async () => {
         data: perfGame,
         id: "perf",
         published: true,
+        ...perfGame.board,
       },
       ...gameList,
     ];

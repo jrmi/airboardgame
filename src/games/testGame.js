@@ -1,11 +1,3 @@
-const infoText = `# Test game
-
-This is a test game.
-
-With a [link](https://github.com/jrmi/airboardgame/).
-
-`;
-
 const genGame = () => {
   const items = [];
 
@@ -167,9 +159,25 @@ const genGame = () => {
     ],
     board: {
       size: 1000,
-      scale: 1,
-      info: infoText,
-      name: "Test game",
+      scale: 0.5,
+      name: "Test Game",
+      published: true,
+      translations: [
+        {
+          language: "fr",
+          name: "0 Jeu test",
+          description: "Un jeu pour tester",
+        },
+      ],
+      playerCount: [2, 4],
+      defaultName: "0 Test game",
+      defaultLanguage: "en",
+      defaultDescription: "A classic",
+      materialLanguage: "Multi-lang",
+      minAge: "10",
+      duration: [30, 90],
+      imageUrl: "/games/testgame.png",
+      gridSize: 1,
     },
   };
 };

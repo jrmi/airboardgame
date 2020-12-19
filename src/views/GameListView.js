@@ -9,8 +9,6 @@ import Account from "../components/Account";
 import useAuth from "../hooks/useAuth";
 
 import "react-confirm-alert/src/react-confirm-alert.css";
-import logo from "../images/logo-mono.png";
-import header from "../images/header.jpg";
 import useLocalStorage from "../hooks/useLocalStorage";
 import GameListItem from "./GameListItem";
 
@@ -32,10 +30,9 @@ const GameView = styled.div`
 const Brand = styled.div`
   position: relative;
   display: inline-block;
-  margin-bottom: 12vh;
   & h1 {
     font-weight: 700;
-    font-size: 32px;
+    font-size: 24px;
     & a {
       color: var(--font-color);
     }
@@ -43,9 +40,10 @@ const Brand = styled.div`
   & .beta {
     position: absolute;
     top: 5px;
-    right: -40px;
+    left: 175px;
     text-transform: uppercase;
     font-weight: 300;
+    font-size: 0.9em;
   }
 
   @media screen and (max-width: 640px) {
@@ -56,32 +54,58 @@ const Brand = styled.div`
   }
 `;
 
-const Header = styled.div`
-  padding-top: 1em;
-  margin-bottom: 12vh;
+const Nav = styled.nav`
   background-color: var(--bg-color);
   position: relative;
   padding: 0 5%;
+  display: flex;
+  align-items: center;
+
+  & .brand {
+    flex: 1;
+  }
+
+  & button,
+  & .button {
+    background: none;
+    text-transform: uppercase;
+    font-weight: 300;
+    font-size: 1.3em;
+    border-radius: 0;
+    color: var(--font-color2);
+  }
+
+  & button:hover,
+  & .button:hover {
+    color: var(--font-color);
+    border-bottom: 1px solid var(--color-primary);
+  }
+`;
+
+const Header = styled.header`
+  background-color: var(--bg-color);
+  position: relative;
+  background: linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 1) 0%,
+      rgba(0, 0, 0, 0.6) 40%,
+      rgba(0, 0, 0, 0.6) 60%,
+      rgba(0, 0, 0, 1) 100%
+    ),
+    100% 50% / contain no-repeat url(/hero.png);
+  padding: 14vh 5%;
+  margin-bottom: 20px;
+
   & .baseline {
     font-weigth: 800;
-    font-size: 3.5vw;
+    font-size: 3.2vw;
     line-height: 1.2em;
   }
   & .subbaseline {
     color: var(--font-color2);
-    font-size: 1.5vw;
+    font-size: 1.4vw;
   }
-  & .login {
-    position: absolute;
-    right: 0;
-  }
-  & .login button {
-  }
-  & .new-game {
-    position: absolute;
-    top: 2em;
-    right: 0;
-  }
+
   @media screen and (max-width: 640px) {
     & {
     }
@@ -100,6 +124,7 @@ const Filter = styled.div`
     text-align: center;
     font-size: 3.5vw;
     padding: 0.5em;
+    margin: 0;
   }
 `;
 
@@ -176,19 +201,21 @@ const GameListView = () => {
   return (
     <>
       <GameView>
-        <Header>
-          {isAuthenticated && (
-            <Link to={`/game/`} className="button new-game">
-              {t("Create new game")}
-            </Link>
-          )}
-          <Account className="login" disabled={!cookieConsent} />
+        <Nav>
           <Brand className="brand">
             <h1>
               <a href="/">Air Board Game</a>
             </h1>
             <span className="beta">Beta</span>
           </Brand>
+          {isAuthenticated && (
+            <Link to={`/game/`} className="button new-game">
+              {t("Create new game")}
+            </Link>
+          )}
+          <Account className="login" disabled={!cookieConsent} />
+        </Nav>
+        <Header>
           <Trans i18nKey="baseline">
             <h2 className="baseline">
               Play board games online

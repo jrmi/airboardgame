@@ -158,23 +158,6 @@ const PanZoomRotate = ({ children, moveFirst }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dim, updateBoardStatePanningDelay, updateBoardStateZoomingDelay]);
 
-  React.useEffect(() => {
-    // Chrome-related issue.
-    // Making the wheel event non-passive, which allows to use preventDefault() to prevent
-    // the browser original zoom  and therefore allowing our custom one.
-    // More detail at https://github.com/facebook/react/issues/14856
-    const cancelWheel = (event) => {
-      //if (insideClass(event.target, "board"))
-      event.preventDefault();
-    };
-
-    document.body.addEventListener("wheel", cancelWheel, { passive: false });
-
-    return () => {
-      document.body.removeEventListener("wheel", cancelWheel);
-    };
-  }, []);
-
   const onZoom = ({ clientX, clientY, scale }) => {
     setScale((prevScale) => {
       let newScale = prevScale.scale * (1 - scale / 200);

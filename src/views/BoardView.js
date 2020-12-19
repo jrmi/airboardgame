@@ -15,6 +15,8 @@ import { getComponent } from "../components/boardComponents";
 import { useGame } from "../hooks/useGame";
 import AddItemButton from "../components/AddItemButton";
 
+import { insideClass } from "../utils";
+
 const StyledBoardView = styled.div`
   width: 100vw;
   height: 100vh;
@@ -49,6 +51,22 @@ export const BoardView = ({ namespace, edit: editMode = false }) => {
 
   const [moveFirst, setMoveFirst] = React.useState(false);
   const { gameLoaded } = useGame();
+
+  React.useEffect(() => {
+    // Chrome-related issue.
+    // Making the wheel event non-passive, which allows to use preventDefault() to prevent
+    // the browser original zoom  and therefore allowing our custom one.
+    // More detail at https://github.com/facebook/react/issues/14856
+    const cancelWheel = (event) => {
+      if (!insideClass(event.target, "modal-content")) event.preventDefault();
+    };
+
+    document.body.addEventListener("wheel", cancelWheel, { passive: false });
+
+    return () => {
+      document.body.removeEventListener("wheel", cancelWheel);
+    };
+  }, []);
 
   return (
     <StyledBoardView>

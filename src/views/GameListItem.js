@@ -6,22 +6,13 @@ import { getBestTranslationFromConfig } from "../utils/api";
 
 const Game = styled.li`
   position: relative;
-  //min-width: 240px;
-  //max-width: 22%;
-  //height: 150px;
   padding: 0em;
-  //margin: 0.3em;
   margin: 0px;
   margin-bottom: 3em;
   flex: 1;
-  //box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
-
-  //border: 1px dashed blue;
 
   & .game-name {
     max-width: 80%;
-    /*text-overflow: ellipsis;
-    white-space: nowrap;*/
     line-height: 1.2em;
     overflow: hidden;
     margin-bottom: 3px;
@@ -59,19 +50,18 @@ const Game = styled.li`
   }
 
   & .img {
-    //max-width: 25vw;
     width: 100%;
     min-width: 300px;
     max-width: 600px;
-    //padding-top: 60%;
     background-color: #333;
+    border-radius: 5px;
   }
 
   & .details {
     display: flex;
     flex-direction: row;
     color: var(--font-color2);
-    font-size: 12px;
+    font-size: 14px;
     padding-top: 1em;
   }
   & .details > span {
@@ -88,8 +78,6 @@ const Game = styled.li`
     margin-right: 0.5em;
   }
 `;
-
-const backgroundImage = false;
 
 const GameListItem = ({
   game: {
@@ -112,8 +100,8 @@ const GameListItem = ({
     [game, i18n.languages]
   );
 
-  let playerCountDisplay;
-  if (playerCount) {
+  let playerCountDisplay = undefined;
+  if (playerCount && playerCount.length) {
     const [min, max] = playerCount;
     if (min === max) {
       if (max === 9) {
@@ -130,8 +118,8 @@ const GameListItem = ({
     }
   }
 
-  let durationDisplay;
-  if (duration) {
+  let durationDisplay = undefined;
+  if (duration && duration.length) {
     const [min, max] = duration;
     if (min === max) {
       if (max === 90) {
@@ -150,13 +138,15 @@ const GameListItem = ({
 
   let materialLanguageDisplay = t(materialLanguage);
 
+  console.log(playerCountDisplay, playerCount);
+
   return (
-    <Game back={backgroundImage ? imageUrl : null}>
+    <Game>
       <Link to={`/game/${id}/session/`}>
         {imageUrl ? (
           <img className="img" src={imageUrl} />
         ) : (
-          <img className="img" src="/default.png" />
+          <img className="img" src="/default-game.png" />
         )}
       </Link>
       {!published && (
@@ -167,7 +157,7 @@ const GameListItem = ({
         />
       )}
       <div className="details">
-        {playerCount && (
+        {playerCountDisplay && (
           <span>
             {playerCountDisplay.length === 2 &&
               t("{{min}} - {{max}} players", {
@@ -180,8 +170,9 @@ const GameListItem = ({
               })}
           </span>
         )}
-        {duration && <span>{durationDisplay} mins</span>}
-        {minAge !== undefined && <span>age {minAge}+</span>}
+        {durationDisplay && <span>{durationDisplay} mins</span>}
+        {minAge && <span>age {minAge}+</span>}
+        {materialLanguageDisplay && <span>{materialLanguageDisplay}</span>}
       </div>
 
       <h2 className="game-name">{translation.name}</h2>
@@ -199,11 +190,5 @@ const GameListItem = ({
     </Game>
   );
 };
-
-/*
-      <Link to={`/game/${id}/session/`} className="button play">
-        {t("Play")}
-      </Link>;
-*/
 
 export default GameListItem;
