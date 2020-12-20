@@ -21,7 +21,7 @@ const StyledModal = styled.div.attrs(() => ({ className: "overlay" }))`
     margin: 10% auto;
     padding: 8px 8px 8px 8px;
     border-radius: 2px;
-    background: var(--bg-secondary-color);
+    background: var(--color-grey);
     box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px,
       rgba(0, 0, 0, 0.23) 0px 6px 6px;
   }

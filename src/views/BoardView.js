@@ -29,7 +29,7 @@ const BoardContainer = styled.div`
   height: 100%;
   overflow: hidden;
   box-sizing: border-box;
-  background-color: var(--bg-color);
+  background-color: var(--color-darkGrey);
 `;
 
 const FirstActionSelect = styled.button`

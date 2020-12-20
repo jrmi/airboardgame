@@ -21,7 +21,7 @@ const AddItemPane = styled.div`
   right: 0.5em;
   top: 3.5em;
   bottom: 0.5em;
-  background-color: var(--bg-secondary-color);
+  background-color: var(--color-grey);
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
   width: 20%;
   min-width: 280px;
