@@ -20,7 +20,6 @@ const GameView = styled.div`
   & > footer {
     width: 100%;
     grid-column: 1 / 4;
-    margin-top: 1em;
     padding: 0.5em 0;
     text-align: center;
     background-color: #00000099;
@@ -45,13 +44,6 @@ const Brand = styled.div`
     font-weight: 300;
     font-size: 0.9em;
   }
-
-  @media screen and (max-width: 640px) {
-    & {
-    }
-    & h1 {
-    }
-  }
 `;
 
 const Nav = styled.nav`
@@ -73,6 +65,9 @@ const Nav = styled.nav`
     font-size: 1.3em;
     border-radius: 0;
     color: var(--font-color2);
+    margin: 0 0.5em;
+    letter-spacing: -1px;
+    padding: 0;
   }
 
   & button:hover,
@@ -80,11 +75,19 @@ const Nav = styled.nav`
     color: var(--font-color);
     border-bottom: 1px solid var(--color-primary);
   }
+
+  @media screen and (max-width: 640px) {
+    & .button,
+    & button {
+      display: none;
+    }
+  }
 `;
 
 const Header = styled.header`
   background-color: var(--bg-color);
   position: relative;
+
   background: linear-gradient(
       180deg,
       rgba(0, 0, 0, 1) 0%,
@@ -93,27 +96,41 @@ const Header = styled.header`
       rgba(0, 0, 0, 1) 100%
     ),
     100% 50% / contain no-repeat url(/hero.png);
+
   padding: 14vh 5%;
   margin-bottom: 20px;
 
   & .baseline {
+    padding: 2px;
     font-weigth: 800;
     font-size: 3.2vw;
     line-height: 1.2em;
   }
   & .subbaseline {
+    padding: 2px;
     color: var(--font-color2);
     font-size: 1.4vw;
   }
 
-  @media screen and (max-width: 640px) {
+  @media screen and (max-width: 1024px) {
     & {
-    }
-    & .new-game {
-    }
-    & .login {
+      padding: 1em 5%;
     }
     & .baseline {
+      display: inline-block;
+      background-color: #00000088;
+      font-size: 32px;
+    }
+    & .subbaseline {
+      display: inline-block;
+      background-color: #00000088;
+      font-size: 16px;
+    }
+  }
+
+  @media screen and (max-width: 640px) {
+    & {
+      display: none;
     }
   }
 `;
@@ -125,6 +142,11 @@ const Filter = styled.div`
     font-size: 3.5vw;
     padding: 0.5em;
     margin: 0;
+  }
+  @media screen and (max-width: 1024px) {
+    & .incentive {
+      font-size: 32px;
+    }
   }
 `;
 
@@ -141,9 +163,6 @@ const GameList = styled.ul`
   align-items: flex-start;
   justify-content: space-between;
   gap: 5%;
-
-  @media screen and (max-width: 640px) {
-  }
 `;
 
 const useQuery = () => {
