@@ -9,7 +9,7 @@ const Game = styled.li`
   padding: 0em;
   margin: 0px;
   margin-bottom: 3em;
-  flex: 1;
+  flex-basis: 30%;
 
   & .game-name {
     max-width: 80%;
@@ -51,8 +51,6 @@ const Game = styled.li`
 
   & .img {
     width: 100%;
-    min-width: 300px;
-    max-width: 600px;
     background-color: #333;
     border-radius: 5px;
   }
@@ -76,6 +74,27 @@ const Game = styled.li`
   }
   & .details img {
     margin-right: 0.5em;
+  }
+
+  @media screen and (max-width: 1024px) {
+    & {
+      flex-basis: 45%;
+    }
+    & .details {
+      font-size: 12px;
+    }
+    & .game-name {
+      font-size: 28px;
+    }
+  }
+
+  @media screen and (max-width: 640px) {
+    & {
+      flex-basis: 100%;
+    }
+    & .game-name {
+      font-size: 24px;
+    }
   }
 `;
 
@@ -138,8 +157,6 @@ const GameListItem = ({
 
   let materialLanguageDisplay = t(materialLanguage);
 
-  console.log(playerCountDisplay, playerCount);
-
   return (
     <Game>
       <Link to={`/game/${id}/session/`}>
@@ -176,6 +193,8 @@ const GameListItem = ({
       </div>
 
       <h2 className="game-name">{translation.name}</h2>
+
+      <p className="baseline">{translation.baseline}</p>
 
       {userId && (userId === owner || !owner) && (
         <div className="extra-actions">

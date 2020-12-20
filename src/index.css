@@ -43,6 +43,29 @@ button:hover {
   opacity: 1;
 }
 
+
+/*.button.clear,
+[type="button"].clear,
+[type="reset"].clear,
+[type="submit"].clear,
+button.clear {
+  font-weight: 300;
+  border-radius: 0;
+  color: var(--font-color2);
+  letter-spacing: -1px;
+  padding: 0;
+}
+
+
+.button.clear:hover,
+[type="button"].clear:hover,
+[type="reset"].clear:hover,
+[type="submit"].clear:hover,
+button.clear:hover {
+  color: var(--font-color);
+  border-bottom: 1px solid var(--color-primary);
+}*/
+
 a:hover:not(.button) {
   filter: brightness(125%);
   opacity: 1;

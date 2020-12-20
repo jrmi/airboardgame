@@ -367,7 +367,7 @@ const Gesture = ({
           ) {
             const scale = stateRef.current.prevDistance - distance;
 
-            if (Math.abs(scale) > 1) {
+            if (Math.abs(scale) > 0) {
               queue(() =>
                 onZoom({
                   scale,
