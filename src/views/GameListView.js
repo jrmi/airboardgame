@@ -233,6 +233,18 @@ const GameListView = () => {
             </Link>
           )}
           <Account className="login" disabled={!cookieConsent} />
+          <a
+            className="icon button"
+            href="https://github.com/jrmi/airboardgame"
+            target="_blank"
+            rel="noreferrer"
+          >
+            <img
+              src="https://icongr.am/feather/github.svg?size=16&color=ffffff"
+              alt={t("Github")}
+              title={t("Github")}
+            />
+          </a>
         </Nav>
         <Header>
           <Trans i18nKey="baseline">
