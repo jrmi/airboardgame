@@ -2,7 +2,7 @@ describe("Board interactions", () => {
   beforeEach(() => {
     cy.viewport(1000, 600);
     cy.visit("/");
-    cy.contains("Test Game").parent().find(".button").click();
+    cy.contains("0 Test game").parent().find("img").click();
     // Way board loading
     cy.get(".board-pane").should(
       "have.css",
@@ -17,7 +17,7 @@ describe("Board interactions", () => {
   });
 
   it("Load game page", () => {
-    cy.contains("Test game");
+    cy.contains("0 Test game");
     cy.get("[title=Save]");
     cy.get("[title=Help]");
     cy.get("[title=Information]");
