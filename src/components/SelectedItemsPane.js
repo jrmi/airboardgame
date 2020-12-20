@@ -26,7 +26,7 @@ const SelectedPane = styled.div`
   left: 0.5em;
   bottom: 0.5em;
   top: 4.5em;
-  background-color: var(--bg-secondary-color);
+  background-color: var(--color-grey);
   padding: 0.5em;
   overflow-y: scroll;
   z-index: 2;
@@ -60,7 +60,7 @@ const ActionPane = styled.div.attrs(({ top, left, height, hide }) => {
   touch-action: none;
   position: absolute;
   display: flex;
-  background-color: var(--bg-color);
+  background-color: var(--color-darkGrey);
   justify-content: center;
   align-items: center;
   border-radius: 4px;
@@ -98,7 +98,6 @@ const CardContent = styled.div.attrs(() => ({ className: "content" }))`
   display: flex;
   flex-direction: column;
   padding: 0.5em;
-  background-color: var(--bg-secondary-color);
 `;
 
 const BoundingBoxZone = styled.div.attrs(({ top, left, height, width }) => ({

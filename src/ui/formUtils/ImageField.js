@@ -57,7 +57,7 @@ const ImageField = ({ value, onChange }) => {
       <div
         {...getRootProps()}
         style={{
-          border: "3px dashed black",
+          border: "3px dashed white",
           margin: "0.5em",
           padding: "0.5em",
         }}
