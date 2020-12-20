@@ -98,7 +98,7 @@
   "No image": "Pas d'image",
   "Sending file...": "Envoi en cours…",
   "Click or drag'n'drop file here": "Cliquez ou déposez des fichiers dans cette zone",
-  "Create new game": "Créer un jeu",
+  "Create new game": "Nouveau jeu",
   "Game loading...": "Chargement…",
   "Go to home": "Accueil",
   "Configure game": "Configurer le jeu",
@@ -159,5 +159,10 @@
   "Checkerboard": "Damier",
   "Magnetic Grid size": "Taille de la grille",
   "Start a game now": "Commencez à jouer",
-  "baseline": "<0>Jouez aux jeux de société en ligne<1></1>avec vos amis - gratuitement !</0><1>Choisissez parmi notre sélection ou ajoutez le votre.<1></1>Pas besoin de compte, démarrez un jeu et partagez le lien avec vos amis.</1>"
+  "baseline": "<0>Jouez aux jeux de société en ligne<1></1>avec vos amis - gratuitement !</0><1>Choisissez parmi notre sélection ou ajoutez le votre.<1></1>Pas besoin de compte, démarrez un jeu et partagez le lien avec vos amis.</1>",
+  "Rotate randomly 30": "Rotation aléatoire de 30°",
+  "Rotate randomly 45": "Rotation aléatoire de 45°",
+  "Rotate randomly 90": "Rotation aléatoire de 90°",
+  "Rotate randomly 180": "Rotation aléatoire de 180°",
+  "Baseline": "Baseline"
 }

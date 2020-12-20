@@ -24,7 +24,6 @@ describe("Selection action", () => {
         button: 0,
         clientX: 350,
         clientY: 500,
-        button: 0,
         isPrimary: true,
       })
       .trigger("pointermove", {
