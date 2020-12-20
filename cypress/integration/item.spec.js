@@ -2,7 +2,7 @@ describe("Item interactions", () => {
   beforeEach(() => {
     cy.viewport(1000, 600);
     cy.visit("/");
-    cy.contains("Test Game").parent().find(".button").click();
+    cy.contains("0 Test game").parent().find("img").click();
     // Way board loading
     cy.get(".board-pane").should(
       "have.css",

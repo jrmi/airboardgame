@@ -159,7 +159,7 @@ const genGame = () => {
     ],
     board: {
       size: 1000,
-      scale: 0.5,
+      scale: 1,
       name: "Test Game",
       published: true,
       translations: [
@@ -170,7 +170,7 @@ const genGame = () => {
         },
       ],
       playerCount: [2, 4],
-      defaultName: "0 Test game",
+      defaultName: "0 Test game",
       defaultLanguage: "en",
       defaultDescription: "A classic",
       materialLanguage: "Multi-lang",
