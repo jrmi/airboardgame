@@ -223,7 +223,7 @@ const GameListView = () => {
         <Nav>
           <Brand className="brand">
             <h1>
-              <a href="/">Air Board Game</a>
+              <Link to="/">Air Board Game</Link>
             </h1>
             <span className="beta">Beta</span>
           </Brand>
