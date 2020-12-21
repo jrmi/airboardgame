@@ -20,19 +20,25 @@ import AuthView from "./views/AuthView";
 
 import Waiter from "./ui/Waiter";
 
-function App() {
+const App = () => {
   return (
     <Suspense fallback={<Waiter message={"Loading…"} />}>
       <RecoilRoot>
         <Router>
           <Switch>
+            <Route path="/game/:gameId/session/" exact>
+              {({
+                match: {
+                  params: { gameId },
+                },
+              }) => {
+                // Redirect to new session id
+                return <Redirect to={`/game/${gameId}/session/${nanoid()}`} />;
+              }}
+            </Route>
             <Route path="/game/:gameId/session/:room/">
               <GameView />
             </Route>
-            <Redirect
-              path="/game/:gameId/session/"
-              to={`/game/:gameId/session/${nanoid()}`}
-            />
             <Route path="/game/:gameId?">
               <GameView edit />
             </Route>
@@ -59,6 +65,6 @@ function App() {
       />
     </Suspense>
   );
-}
+};
 
 export default App;
