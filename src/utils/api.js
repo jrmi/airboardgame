@@ -136,7 +136,6 @@ export const updateGame = async (id, data) => {
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json",
-      "X-SPC-HOST": `${window.location.origin}/exec`,
     },
     body: JSON.stringify(data),
     credentials: "include",
@@ -161,7 +160,6 @@ export const sendAuthToken = async (email) => {
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json",
-      "X-Auth-HOST": `${window.location.origin}`,
     },
     body: JSON.stringify({ userEmail: email }),
     credentials: "include",
