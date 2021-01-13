@@ -1,17 +1,18 @@
-# Air board game
-
-Play any board game online in real time with your friends thanks to this [tabletop simulator](https://airboardgame.netlify.app).
+# Air board game - the free online tabletop simulator
 
 If you just want to play, go [here](https://airboardgame.net).
 
-No need to create an account, each time you visit Airboardgame website,
-a new room is automatically created and, as first player,
-you can share this room link from the browser address bar with your pals.
-Since your friend open the link, you share the same board and you can play together.
+* **Choose** a game
+* **Share** the link with your friends
+* **Play** together
 
 Simple, fast and efficient.
 
-## What is it
+No need to create an account, choose a game from the list ([or create yours](#game-designer-its-also-for-you)) share
+the displayed link with your friends by mail or any channel you have in common
+and wait for your friends to join you.
+
+## A tabletop simulator ?
 
 ![In action](./public/screen.png)
 
@@ -55,9 +56,12 @@ and more…
 ## Game designer, it's also for you
 
 Airboardgame is not only designed to play games but also to create them.
-In just a few minutes you can create simple games without having any
-development skills to play with your friends.
-Want to test a concept? Play a Print & Play game? Use airboardgame without the need for more hardware.
+In just few minutes you can create simple games without any
+development skills and play with your friends.
+
+Wants to test a concept? Play a Print & Play game? Use airboardgame without
+the need for more hardware.
+
 The only limit is your imagination.
 
 To access this features, login then click on the « create new game » button on home page.
@@ -67,25 +71,28 @@ Just give a try and if you like it share it and contribute.
 
 You can create a game with simple actions :
 
-- Create items like
-  - Round,
-  - Rectangle,
-  - Dice,
-  - Note,
-  - Counter,
-  - Image that can represent cards, board, token, perks, …
-  - …
-- Choose board size
-- Add available items not on the board but in the "game box" like extension or material for more user.
+* Create items like
+  * Round,
+  * Rectangle,
+  * Dice,
+  * Note,
+  * Counter,
+  * Image that can represent cards, board, token, perks, …
+  * …
+* Choose board size
+* Add available items not on the board but in the "game box" like extension or material for more user.
+
+You can drag'n'drop image from your desktop to the board to use them in Airboardgame.
 
 ## Technical details
 
-- Open source web application
-- Made with React and Socket.io,
-- Client to client architecture. Very slim and dumb server is needed for
-  message passing, clients handle anything else.
+* Open source web application,
+* Made with React and Socket.io,
+* Client to client driven architecture.
   
 ## Installation for developpers
+
+### Client
 
 You need a recent node version. You can use nvm to initialize your environment.
 Then, execute
@@ -109,4 +116,16 @@ Then you can run the client:
 
 ```sh
 npm start
+```
+
+### Server
+
+The server code must be used with [ricochetjs](https://github.com/jrmi/ricochetjs)
+
+Follows ricochet installation instructions then execute:
+
+```sh
+cd server
+npm ci
+npm run watch
 ```
