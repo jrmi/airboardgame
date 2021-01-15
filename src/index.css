@@ -1,4 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap");
+@import url(http://fonts.googleapis.com/css?family=Satisfy);
 
 body {
   margin: 0;
@@ -42,7 +43,6 @@ button:hover {
   filter: brightness(125%);
   opacity: 1;
 }
-
 
 /*.button.clear,
 [type="button"].clear,
@@ -157,7 +157,6 @@ textarea[type="text"] {
   animation-iteration-count: 1;
 }
 
-
 /* Curl Top Right */
 .hvr-curl-top-right {
   display: inline-block;
@@ -170,12 +169,19 @@ textarea[type="text"] {
 .hvr-curl-top-right:before {
   pointer-events: none;
   position: absolute;
-  content: '';
+  content: "";
   height: 0;
   width: 0;
   top: 0;
   right: 0;
-  background: linear-gradient(225deg, #222222 42%, white 45%, #aaa 50%, #ccc 56%, white 80%);
+  background: linear-gradient(
+    225deg,
+    #222222 42%,
+    white 45%,
+    #aaa 50%,
+    #ccc 56%,
+    white 80%
+  );
   box-shadow: -1px 1px 1px rgba(0, 0, 0, 0.4);
   -webkit-transition-duration: 0.3s;
   transition-duration: 0.3s;
@@ -184,7 +190,9 @@ textarea[type="text"] {
   z-index: 5;
   opacity: 0.5;
 }
-.hvr-curl-top-right:hover:before, .hvr-curl-top-right:focus:before, .hvr-curl-top-right:active:before {
+.hvr-curl-top-right:hover:before,
+.hvr-curl-top-right:focus:before,
+.hvr-curl-top-right:active:before {
   width: 7px;
   height: 7px;
 }
