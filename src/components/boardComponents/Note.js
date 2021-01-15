@@ -20,7 +20,7 @@ const NotePane = styled.div`
     }
     & textarea {
       height: ${height}px;
-      font-family: "Gloria Hallelujah", cursive;
+      font-family: "Satisfy", cursive;
       width: 100%;
       padding: 0.2em 0;
       background-color: transparent;
