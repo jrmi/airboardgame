@@ -160,10 +160,13 @@
   "Checkerboard": "Checkerboard",
   "Magnetic Grid size": "Magnetic grid size",
   "Start a game now": "Start a game now",
-  "Rotate randomly 30": "Rotate randomly 30°",
-  "Rotate randomly 45": "Rotate randomly 45°",
-  "Rotate randomly 90": "Rotate randomly 90°",
-  "Rotate randomly 180": "Rotate randomly 180°",
+  "Rotate randomly 30": "Randomly rotate 30°",
+  "Rotate randomly 45": "Randomly rotate 45°",
+  "Rotate randomly 90": "Randomly rotate 90°",
+  "Rotate randomly 180": "Randomly rotate 180°",
   "Baseline": "Baseline",
-  "baseline": "<0>Play board games online<1></1>with your friends - for free!</0><1>Choose from our selection or create your own.<1></1>No need to sign up. Just start a game and share the link with your friends.</1>"
+  "baseline": "<0>Play board games online<1></1>with your friends - for free!</0><1>Choose from our selection or create your own.<1></1>No need to sign up. Just start a game and share the link with your friends.</1>",
+  "Rotate randomly 60": "Randomly rotate 60°",
+  "Rotate 180": "Rotate 180°",
+  "Github": "Github"
 }

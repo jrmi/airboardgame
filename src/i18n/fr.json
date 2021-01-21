@@ -164,5 +164,8 @@
   "Rotate randomly 45": "Rotation aléatoire de 45°",
   "Rotate randomly 90": "Rotation aléatoire de 90°",
   "Rotate randomly 180": "Rotation aléatoire de 180°",
-  "Baseline": "Baseline"
+  "Baseline": "Baseline",
+  "Rotate randomly 60": "Rotation aléatoire de 60°",
+  "Rotate 180": "Rotation de 180°",
+  "Github": "Github"
 }
