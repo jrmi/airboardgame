@@ -302,8 +302,15 @@ export const useItemActions = () => {
         icon: rotateIcon,
       },
       randomlyRotate45: {
-        action: randomlyRotateSelectedItems.bind(null, 90, 7),
+        action: randomlyRotateSelectedItems.bind(null, 45, 7),
         label: t("Rotate randomly 45"),
+        shortcut: "",
+        multiple: false,
+        icon: rotateIcon,
+      },
+      randomlyRotate60: {
+        action: randomlyRotateSelectedItems.bind(null, 60, 5),
+        label: t("Rotate randomly 60"),
         shortcut: "",
         multiple: false,
         icon: rotateIcon,
