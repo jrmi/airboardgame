@@ -31,6 +31,10 @@ const Account = ({ disabled, ...props }) => {
     }
   };
 
+  const showAlert = () => {
+    alert(t("Cookie are disabled or not yet accepted, can't connect"));
+  };
+
   React.useEffect(() => {
     if (!showLogin) {
       setEmail("");
@@ -41,7 +45,11 @@ const Account = ({ disabled, ...props }) => {
   if (disabled) {
     return (
       <div {...props}>
-        <button disabled title={t("Cookie are disabled, can't connect")}>
+        <button
+          onClick={showAlert}
+          title={t("Cookie are disabled or not yet accepted, can't connect")}
+          style={{ opacity: 0.4, cursor: "not-allowed" }}
+        >
           {t("Login")}
         </button>
       </div>
