@@ -1,14 +1,13 @@
 {
   "name": "airboardgame_back",
   "version": "0.1.0",
-  "description": "Bakend files for airboardgame",
+  "description": "Bakend files for Airboardgame executed by Ricochetjs",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "nodev": "npm-run-all -p watch:src watch:dist",
     "watch": "webpack --config webpack.watch.js",
-    "start": "webpack serve --config webpack.development.js",
-    "build": "webpack --config webpack.production.js"
+    "serve": "webpack serve --config webpack.development.js",
+    "build": "webpack --config webpack.production.js",
+    "start": "ricochet | pino-tiny"
   },
   "author": "",
   "license": "ISC",
@@ -25,6 +24,7 @@
   },
   "dependencies": {
     "dotenv": "^8.2.0",
-    "ricochet-js": "^0.2.0"
+    "pino-tiny": "^1.0.0",
+    "ricochet-js": "^0.2.1"
   }
 }

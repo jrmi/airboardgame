@@ -88,44 +88,82 @@ You can drag'n'drop image from your desktop to the board to use them in Airboard
 
 * Open source web application,
 * Made with React and Socket.io,
+* Use recoiljs as state management,
 * Client to client driven architecture.
   
-## Installation for developpers
+## Installation instructions
+
+This is the procedure to install Airboargame application from scratch for
+development purpose.
+You need a recent node version. You can (and should) use [nvm](https://github.com/nvm-sh/nvm)
+to initialize your environment.
+
+### Backend
+
+First you need to install and start the server part of the application.
+The server code use [ricochetjs](https://github.com/jrmi/ricochetjs). A local
+instance is installed and can be started but you can use your own instance.
+
+To proceed, execute:
+
+```sh
+cd backend
+npm ci
+cp site.dist.json site.json
+cp .env.dist .env
+```
+
+Generate an encrytion key:
+
+```sh
+npx ricochet --generate-key
+Key: <your key displayed here>
+```
+
+From here you need to customize `.env` and `site.json` file using this generated
+key.
+Modify the `RICOCHET_SECRET_KEY` in `.env` file and `key` in `site.json`. Both
+must be the same previously generated value.
+
+Default values should be fine for test but remember that data are only kept in
+memory so you loose all your changes each time you restart the ricochet server
+with this default. See [ricochetjs](https://github.com/jrmi/ricochetjs)
+documentation for more options.
+
+Now you can start the ricochet server:
+
+```sh
+npm run start
+```
+
+And you should also watch for backend code modification to generate
+code executed by ricochetjs in another terminal:
+
+```sh
+npm run watch
+```
 
 ### Client
 
-You need a recent node version. You can use nvm to initialize your environment.
-Then, execute
+in another terminal, go back to project root and execute:
 
 ```sh
-npm ci # To install dependencies
+cd <project_root>/
+npm ci
+cp .env.dist .env
 ```
 
-Configure the environement:
+Edit the `.env` file to fit your needs. Default should be fine if you didn't
+modify server configuration.
 
-Copy the `.env.dist` file without the `.dist` extension and edit it to fit your
-needs.
-
-Now you can start the server:
-
-```sh
-npm run server
-```
-
-Then you can run the client:
+Then you can start the client:
 
 ```sh
 npm start
 ```
 
-### Server
+Now you should have three terminals:
 
-The server code must be used with [ricochetjs](https://github.com/jrmi/ricochetjs)
-
-Follows ricochet installation instructions then execute:
-
-```sh
-cd server
-npm ci
-npm run watch
-```
+* the one with ricochetjs server instance. Backend logs can be found here
+* one terminal with auto build on change for backend files
+* one with React frontend server
