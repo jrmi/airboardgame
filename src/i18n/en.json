@@ -114,7 +114,7 @@
   "Got it!": "Got it!",
   "This site use a cookie only to know if your are authenticated.": "This site use a cookie only to know if your are authenticated.",
   "Refuse": "Refuse",
-  "Cookie are disabled, can't connect": "Cookie are disabled, can't login",
+  "Cookie are disabled or not yet accepted, can't connect": "Cookie are disabled or not yet accepted, can't connect",
   "Edit all items": "Edit all items",
   "about": "<0>Air Board Game is a plateform designed to play any board games with your friends online. For more information or to access source code visit <1>Github</1>.</0><1>Legal mentions</1><2>This site is hosted by Netlify (San Franscico, US) and OVH (2, rue Kellermann, 59100 Roubaix)</2><3>Abuse report</3><4>To report abuse, please email at abu<1>anti-span</1>se-report@airboardgame.com</4><5>RGPD</5><6>No personnal data are collected. When you use your email to login, this information is lost and not used for anything else than sending you an authentication link.</6><7>Credits</7><8>Thanks to everybody !</8>",
   "In progress...": "In progress...",
