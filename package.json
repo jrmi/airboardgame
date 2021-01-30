@@ -50,7 +50,7 @@
     "lint": "eslint src/",
     "prettier": "prettier --write src/",
     "eject": "react-scripts eject",
-    "server": "echo 'The server is now packaged in separate app. See https://github.com/jrmi/airboardgame-back'",
+    "server": "echo 'This command is deprecated. Please, see Readme for more information.'",
     "i18n:scanner": "i18next-scanner --config i18next-scanner.config.js 'src/**/*.{js,jsx}'",
     "cypress:open": "LANGUAGE=en cypress open",
     "cypress:run": "LANGUAGE=en cypress run",
