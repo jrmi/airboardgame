@@ -12,7 +12,8 @@ jobs:
       REACT_APP_SOCKET_URL: https://public.jeremiez.net/
       REACT_APP_SOCKET_PATH: /wamp2/socket.io
       REACT_APP_GAMELIST_URL: https://airgames.netlify.app/gameList.json
-      REACT_APP_API_ENDPOINT: https://public.jeremiez.net/ricochet
+      # REACT_APP_API_ENDPOINT: https://public.jeremiez.net/ricochet
+      REACT_APP_API_ENDPOINT: /api
       CYPRESS_INSTALL_BINARY: 0
     steps:
       - checkout
@@ -23,6 +24,11 @@ jobs:
             - run: npm run lint
             - run: cd backend && npm install && npm run build
             - run: npm run build
+            - run: |
+                cat \<<EOF > ./build/_redirects
+                /api/*  https://public.jeremiez.net/ricochet/:splat  200
+                /*    /index.html   200
+                EOF
             - run:
                 name: Netlify Deploy
                 command: npx netlify deploy --dir=./build --site $NETLIFY_SITE_ID --auth $NETLIFY_ACCESS_TOKEN
@@ -35,7 +41,8 @@ jobs:
       REACT_APP_SOCKET_URL: https://public.jeremiez.net/
       REACT_APP_SOCKET_PATH: /wamp2/socket.io
       REACT_APP_GAMELIST_URL: https://airgames.netlify.app/gameList.json
-      REACT_APP_API_ENDPOINT: https://public.jeremiez.net/ricochet
+      # REACT_APP_API_ENDPOINT: https://public.jeremiez.net/ricochet
+      REACT_APP_API_ENDPOINT: /api
     steps:
       - checkout
       - node/with-cache:
@@ -44,6 +51,11 @@ jobs:
             - run: npm run lint
             - run: cd backend && npm install && npm run build
             - run: npm run build
+            - run: |
+                cat \<<EOF > ./build/_redirects
+                /api/*  https://public.jeremiez.net/ricochet/:splat  200
+                /*    /index.html   200
+                EOF
             - run:
                 name: Netlify Deploy
                 command: npx netlify deploy --site $NETLIFY_SITE_ID --auth $NETLIFY_ACCESS_TOKEN --dir=build --prod
