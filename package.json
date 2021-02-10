@@ -87,6 +87,6 @@
     "i18next-scanner": "^2.11.0",
     "netlify-cli": "^2.68.0",
     "prettier": "2.0.5",
-    "wait-on": "^5.1.0"
+    "wait-on": "^5.2.1"
   }
 }
