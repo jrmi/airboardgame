@@ -41,7 +41,8 @@
     "recoil": "^0.1.1",
     "socket.io": "^2.3.0",
     "socket.io-client": "^2.3.0",
-    "styled-components": "^5.1.1"
+    "styled-components": "^5.1.1",
+    "uuid": "^3.3.2"
   },
   "scripts": {
     "start": "react-scripts start",

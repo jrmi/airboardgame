@@ -33,3 +33,6 @@ cypress/videos
 archives/
 
 site.json
+
+
+.idea

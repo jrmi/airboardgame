@@ -1,4 +1,5 @@
 import React from "react";
+import { v4 as uuidv4 } from "uuid";
 import { login as loginAPI, logout as logoutAPI } from "../utils/api";
 import useLocalStorage from "../hooks/useLocalStorage";
 
@@ -32,6 +33,13 @@ const useAuth = () => {
       mountedRef.current = false;
     };
   }, []);
+
+  React.useEffect(() => {
+    if (!userId) {
+      const anonymousId = uuidv4();
+      setUserId(anonymousId);
+    }
+  }, [userId, setUserId]);
 
   return {
     isAuthenticated,
