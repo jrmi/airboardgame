@@ -188,6 +188,17 @@ export const login = async (userHash, token) => {
   }
 };
 
+export const checkAuthentication = async () => {
+  const result = await fetch(`${authURI}/check`, {
+    credentials: "include",
+  });
+
+  if (result.status !== 200) {
+    return false;
+  }
+  return true;
+};
+
 export const logout = async () => {
   const result = await fetch(`${authURI}/logout/`, {
     credentials: "include",

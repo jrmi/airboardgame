@@ -1,5 +1,9 @@
 import React from "react";
-import { login as loginAPI, logout as logoutAPI } from "../utils/api";
+import {
+  login as loginAPI,
+  logout as logoutAPI,
+  checkAuthentication,
+} from "../utils/api";
 import useLocalStorage from "../hooks/useLocalStorage";
 
 const useAuth = () => {
@@ -13,7 +17,6 @@ const useAuth = () => {
   const login = React.useCallback(
     async (userHash, token) => {
       await loginAPI(userHash, token);
-      if (!mountedRef.current) return;
       setIsAuthenticated(true);
       setUserId(userHash);
     },
@@ -22,10 +25,22 @@ const useAuth = () => {
 
   const logout = React.useCallback(async () => {
     await logoutAPI();
-    if (!mountedRef.current) return;
     setIsAuthenticated(false);
     setUserId(null);
   }, [setIsAuthenticated, setUserId]);
+
+  React.useEffect(() => {
+    const checkAuth = async () => {
+      const authResult = await checkAuthentication();
+      if (!authResult) {
+        setIsAuthenticated(false);
+      }
+    };
+
+    if (isAuthenticated) {
+      checkAuth();
+    }
+  }, [isAuthenticated, setIsAuthenticated]);
 
   React.useEffect(() => {
     return () => {
