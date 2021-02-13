@@ -13,7 +13,11 @@ const useUsers = () => {
         callback = () => callbackOrUser;
       }
       setCurrentUserState((prevUser) => {
-        const newUser = { ...callback(prevUser), id: prevUser.id };
+        const newUser = {
+          ...callback(prevUser),
+          id: prevUser.id,
+          uid: prevUser.uid,
+        };
         persistUser(newUser);
         return newUser;
       });

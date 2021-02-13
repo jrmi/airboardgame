@@ -1,11 +1,14 @@
+import { nanoid } from "nanoid";
 import randomColor from "randomcolor";
 import { atom } from "recoil";
 
 export const getUser = () => {
   if (localStorage.user) {
+    // Add some mandatory info if missing
     const localUser = {
       name: "Player",
       color: randomColor({ luminosity: "dark" }),
+      uid: nanoid(),
       ...JSON.parse(localStorage.user),
     };
     // Id is given by server
@@ -16,6 +19,7 @@ export const getUser = () => {
   const newUser = {
     name: "Player",
     color: randomColor({ luminosity: "dark" }),
+    uid: nanoid(),
   };
   persistUser(newUser);
   return newUser;

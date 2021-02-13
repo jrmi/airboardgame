@@ -95,8 +95,8 @@ const Image = ({
   const unflippedForUsers = React.useMemo(() => {
     if (Array.isArray(unflippedFor)) {
       return unflippedFor
-        .filter((userId) => users.find(({ id }) => userId === id))
-        .map((userId) => users.find(({ id }) => userId === id));
+        .filter((userId) => users.find(({ uid }) => userId === uid))
+        .map((userId) => users.find(({ uid }) => userId === uid));
     }
     return null;
   }, [unflippedFor, users]);
@@ -104,7 +104,7 @@ const Image = ({
   const flippedForMe =
     backContent &&
     flipped &&
-    (!Array.isArray(unflippedFor) || !unflippedFor.includes(currentUser.id));
+    (!Array.isArray(unflippedFor) || !unflippedFor.includes(currentUser.uid));
 
   const flippable = Boolean(backContent);
 
