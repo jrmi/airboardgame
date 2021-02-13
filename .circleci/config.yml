@@ -12,7 +12,6 @@ jobs:
       REACT_APP_SOCKET_URL: https://public.jeremiez.net/
       REACT_APP_SOCKET_PATH: /wamp2/socket.io
       REACT_APP_GAMELIST_URL: https://airgames.netlify.app/gameList.json
-      # REACT_APP_API_ENDPOINT: https://public.jeremiez.net/ricochet
       REACT_APP_API_ENDPOINT: /api
       CYPRESS_INSTALL_BINARY: 0
     steps:
@@ -41,7 +40,6 @@ jobs:
       REACT_APP_SOCKET_URL: https://public.jeremiez.net/
       REACT_APP_SOCKET_PATH: /wamp2/socket.io
       REACT_APP_GAMELIST_URL: https://airgames.netlify.app/gameList.json
-      # REACT_APP_API_ENDPOINT: https://public.jeremiez.net/ricochet
       REACT_APP_API_ENDPOINT: /api
     steps:
       - checkout
