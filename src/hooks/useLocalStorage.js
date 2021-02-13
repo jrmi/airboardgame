@@ -1,59 +1,69 @@
 import React from "react";
+import { atomFamily, useRecoilState } from "recoil";
+
+const localStorageFamily = atomFamily({
+  key: "localstorage",
+  default: [false, null],
+});
 
 const useLocalStorage = (key, initialValue) => {
-  // State to store our value
-  const [storedValue, setStoredValue] = React.useState(() => {
-    try {
-      // Get from local storage by key
-      const item = window.localStorage.getItem(key);
-      if (!item) {
-        // If missing we add it
-        window.localStorage.setItem(key, JSON.stringify(initialValue));
-        return initialValue;
+  const [[loaded, storedValue], setStoredValue] = useRecoilState(
+    localStorageFamily(key)
+  );
+
+  React.useEffect(() => {
+    if (!loaded) {
+      try {
+        // Get from local storage by key
+        const item = window.localStorage.getItem(key);
+        if (!item) {
+          // If missing we add it
+          window.localStorage.setItem(key, JSON.stringify(initialValue));
+          setStoredValue([true, initialValue]);
+        }
+        setStoredValue([true, JSON.parse(item)]);
+      } catch (error) {
+        // If error also return initialValue
+        console.log(error);
+        setStoredValue([true, initialValue]);
       }
-      return JSON.parse(item);
-    } catch (error) {
-      // If error also return initialValue
-      console.log(error);
-      return initialValue;
     }
-  });
+  }, [initialValue, key, loaded, setStoredValue]);
 
   // Return a wrapped version of useState's setter function that ...
-
   // ... persists the new value to localStorage.
+  const setValue = React.useCallback(
+    (value) => {
+      try {
+        // Allow value to be a function so we have same API as useState
+        const valueToStore =
+          value instanceof Function ? value(storedValue) : value;
 
-  const setValue = (value) => {
-    try {
-      // Allow value to be a function so we have same API as useState
+        // Save state
+        setStoredValue([true, valueToStore]);
 
-      const valueToStore =
-        value instanceof Function ? value(storedValue) : value;
+        // Save to local storage
+        window.localStorage.setItem(key, JSON.stringify(valueToStore));
+      } catch (error) {
+        // A more advanced implementation would handle the error case
+        console.log(error);
+      }
+    },
+    [key, setStoredValue, storedValue]
+  );
 
-      // Save state
-
-      setStoredValue(valueToStore);
-
-      // Save to local storage
-
-      window.localStorage.setItem(key, JSON.stringify(valueToStore));
-    } catch (error) {
-      // A more advanced implementation would handle the error case
-      console.log(error);
-    }
-  };
-
+  // React on other tab modifications
   React.useEffect(() => {
     const localStorageChanged = (e) => {
       if (e.key === key) {
-        setStoredValue(JSON.parse(e.newValue));
+        setStoredValue([true, JSON.parse(e.newValue)]);
       }
     };
     window.addEventListener("storage", localStorageChanged);
     return () => {
       window.removeEventListener("storage", localStorageChanged);
     };
-  }, [key]);
+  }, [key, setStoredValue]);
 
   return [storedValue, setValue];
 };
