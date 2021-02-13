@@ -36,8 +36,12 @@ const LoadSaveGameModal = ({ show, setShow, edit }) => {
         await updateGame(gameId, currentGame);
         toast.success(t("Game saved"), { autoClose: 1500 });
       } catch (e) {
-        console.log(e);
-        toast.error(t("Error while saving game. Try again later..."));
+        if (e.message === "Forbidden") {
+          toast.error(t("Action forbidden. Try logging in again."));
+        } else {
+          console.log(e);
+          toast.error(t("Error while saving game. Try again later..."));
+        }
       }
     } else {
       console.log("Game not created. It's not a real one.");
