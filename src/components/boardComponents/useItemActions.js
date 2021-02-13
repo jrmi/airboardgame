@@ -212,7 +212,7 @@ export const useItemActions = () => {
       const selectedItemList = await getSelectedItemList(snapshot);
       const flippedSelfCount = selectedItemList.filter(
         ({ unflippedFor }) =>
-          Array.isArray(unflippedFor) && unflippedFor.includes(currentUser.id)
+          Array.isArray(unflippedFor) && unflippedFor.includes(currentUser.uid)
       ).length;
 
       let flipSelf = true;
@@ -227,11 +227,11 @@ export const useItemActions = () => {
           unflippedFor = [];
         }
 
-        if (flipSelf && !unflippedFor.includes(currentUser.id)) {
-          unflippedFor = [...unflippedFor, currentUser.id];
+        if (flipSelf && !unflippedFor.includes(currentUser.uid)) {
+          unflippedFor = [...unflippedFor, currentUser.uid];
         }
-        if (!flipSelf && unflippedFor.includes(currentUser.id)) {
-          unflippedFor = unflippedFor.filter((id) => id !== currentUser.id);
+        if (!flipSelf && unflippedFor.includes(currentUser.uid)) {
+          unflippedFor = unflippedFor.filter((id) => id !== currentUser.uid);
         }
         return {
           ...item,
@@ -240,7 +240,7 @@ export const useItemActions = () => {
         };
       });
     },
-    [getSelectedItemList, selectedItems, batchUpdateItems, currentUser.id]
+    [getSelectedItemList, selectedItems, batchUpdateItems, currentUser.uid]
   );
 
   const removeSelectedItems = React.useCallback(
