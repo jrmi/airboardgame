@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import { toast } from "react-toastify";
 
 import { useRecoilValue, useRecoilCallback } from "recoil";
 import { useItemActions } from "./boardComponents/useItemActions";
@@ -12,7 +13,7 @@ import {
 
 import debounce from "lodash.debounce";
 
-import { insideClass } from "../utils";
+import { insideClass, hasClass } from "../utils";
 
 import ItemFormFactory from "./boardComponents/ItemFormFactory";
 
@@ -29,6 +30,7 @@ const SelectedPane = styled.div`
   background-color: var(--color-grey);
   padding: 0.5em;
   overflow-y: scroll;
+  max-width: 30%;
   z-index: 2;
   & .close {
     position: absolute;
@@ -37,19 +39,17 @@ const SelectedPane = styled.div`
   }
 `;
 
-const ActionPane = styled.div.attrs(({ top, left, height, hide }) => {
+const ActionPane = styled.div.attrs(({ top, left, height }) => {
   if (top < 120) {
     return {
       style: {
-        transform: `translate(${left}px, ${top + height + 20}px)`,
-        opacity: hide ? 0 : 1,
+        transform: `translate(${left}px, ${top + height + 5}px)`,
       },
     };
   } else {
     return {
       style: {
-        transform: `translate(${left}px, ${top - 85}px)`,
-        opacity: hide ? 0 : 1,
+        transform: `translate(${left}px, ${top - 60}px)`,
       },
     };
   }
@@ -64,10 +64,15 @@ const ActionPane = styled.div.attrs(({ top, left, height, hide }) => {
   justify-content: center;
   align-items: center;
   border-radius: 4px;
-  padding: 0.5em;
-  transition: opacity 200ms;
+  padding: 0.1em 0.5em;
+  transition: opacity 300ms;
+  opacity: ${({ hide }) => (hide ? 0 : 0.7)};
   
   box-shadow: 2.5px 4.33px 14.7px 0.3px rgba(0, 0, 0, 0.7);
+
+  &:hover{
+    opacity: 1;
+  }
 
   & button{
     margin 0 4px;
@@ -244,8 +249,14 @@ export const SelectedItemsPane = () => {
   const onDblClick = React.useCallback(
     (e) => {
       const foundElement = insideClass(e.target, "item");
+
       // We dblclick outside of an element
       if (!foundElement) return;
+
+      if (hasClass(foundElement, "locked")) {
+        toast.info(t("Long click to select locked elements"));
+        return;
+      }
 
       const filteredActions = availableActions.filter(
         (action) => !actionMap[action].disableDblclick
@@ -260,7 +271,7 @@ export const SelectedItemsPane = () => {
         }
       }
     },
-    [actionMap, availableActions]
+    [actionMap, availableActions, t]
   );
 
   React.useEffect(() => {
