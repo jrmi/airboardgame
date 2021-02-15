@@ -13,6 +13,7 @@ import { ItemMapAtom, selectedItemsAtom } from "../Board/";
 import { useItems } from "../Board/Items";
 
 import Label from "../../ui/formUtils/Label";
+import Hint from "../../ui/formUtils/Hint";
 
 import ActionsField from "./ActionsField";
 
@@ -88,6 +89,7 @@ const ItemFormFactory = () => {
               initialValue={initialValues.locked}
             />
             <span className="checkable">{t("Locked?")}</span>
+            <Hint>{t("Lock action help")}</Hint>
           </Label>
           <Label>
             {t("Rotation")}

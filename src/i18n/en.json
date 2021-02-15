@@ -169,5 +169,8 @@
   "Rotate randomly 60": "Randomly rotate 60°",
   "Rotate 180": "Rotate 180°",
   "Github": "Github",
-  "Action forbidden. Try logging in again.": "Action forbidden. Try logging in again."
+  "Action forbidden. Try logging in again.": "Action forbidden. Try logging in again.",
+  "Long click to select locked elements": "Hint: long click to select locked elements",
+  "You've locked your first element. Long click to select it again.": "You've locked your first element. Long click on it to select it again.",
+  "Lock action help": "Lock element to avoid selection and unwanted move. Long clic to select it again."
 }
