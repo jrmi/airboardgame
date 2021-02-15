@@ -12,6 +12,7 @@ import { getActionsFromItem } from "./";
 
 import { useTranslation } from "react-i18next";
 import { nanoid } from "nanoid";
+import { toast } from "react-toastify";
 
 import { shuffle as shuffleArray, randInt } from "../../utils";
 
@@ -25,6 +26,8 @@ import rotateIcon from "../../images/rotate.svg";
 import shuffleIcon from "../../images/shuffle.svg";
 import tapIcon from "../../images/tap.svg";
 
+import useLocalStorage from "../../hooks/useLocalStorage";
+
 export const useItemActions = () => {
   const {
     batchUpdateItems,
@@ -35,6 +38,8 @@ export const useItemActions = () => {
   } = useItems();
 
   const { t } = useTranslation();
+
+  const [isFirstLock, setIsFirstLock] = useLocalStorage("isFirstLock", true);
 
   const { currentUser } = useUsers();
 
@@ -132,10 +137,8 @@ export const useItemActions = () => {
   const randomlyRotateSelectedItems = React.useCallback(
     (angle, maxRotateCount) => {
       batchUpdateItems(selectedItems, (item) => {
-        console.log(randInt(0, 3));
         const rotation =
           ((item.rotation || 0) + angle * randInt(0, maxRotateCount)) % 360;
-        console.log(item.rotation, rotation);
         return { ...item, rotation };
       });
     },
@@ -169,7 +172,16 @@ export const useItemActions = () => {
       ...item,
       locked: !item.locked,
     }));
-  }, [selectedItems, batchUpdateItems]);
+
+    // Help user on first lock
+    if (isFirstLock) {
+      toast.info(
+        t("You've locked your first element. Long click to select it again."),
+        { autoClose: false }
+      );
+      setIsFirstLock(false);
+    }
+  }, [batchUpdateItems, selectedItems, isFirstLock, t, setIsFirstLock]);
 
   // Flip / unflip elements
   const toggleFlip = useRecoilCallback(

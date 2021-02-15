@@ -16,7 +16,8 @@ const useLocalStorage = (key, initialValue) => {
       try {
         // Get from local storage by key
         const item = window.localStorage.getItem(key);
-        if (!item) {
+
+        if (item === undefined) {
           // If missing we add it
           window.localStorage.setItem(key, JSON.stringify(initialValue));
           setStoredValue([true, initialValue]);
