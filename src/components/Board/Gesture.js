@@ -48,6 +48,7 @@ const Gesture = ({
   onPan = () => {},
   onTap = () => {},
   onLongTap = () => {},
+  onDoubleTap = () => {},
   onZoom,
 }) => {
   const wrapperRef = React.useRef(null);
@@ -473,6 +474,13 @@ const Gesture = ({
     [onDragEnd, onTap, queue]
   );
 
+  const onDoubleTapHandler = React.useCallback(
+    (event) => {
+      onDoubleTap(event);
+    },
+    [onDoubleTap]
+  );
+
   return (
     <div
       onWheel={onWheel}
@@ -480,6 +488,7 @@ const Gesture = ({
       onPointerMove={onPointerMove}
       onPointerUp={onPointerUp}
       onPointerCancel={onPointerUp}
+      onDoubleClick={onDoubleTapHandler}
       style={{ touchAction: "none" }}
       ref={wrapperRef}
     >
