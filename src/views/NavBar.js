@@ -1,5 +1,4 @@
 import React from "react";
-import { Link } from "react-router-dom";
 
 import styled from "styled-components";
 
@@ -12,28 +11,38 @@ import { getBestTranslationFromConfig } from "../utils/api";
 
 import useBoardConfig from "../components/useBoardConfig";
 
-import logo from "../images/logo.png";
 import { useTranslation } from "react-i18next";
+
+import Brand from "./Brand";
 
 const StyledNavBar = styled.div.attrs(() => ({ className: "nav" }))`
   position: fixed;
   top: 0;
   width: 100%;
-  background-color: rgba(26, 26, 26, 0.7);
   z-index: 10;
-  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 
-  & .brand {
-    margin: 0;
-    padding: 7px;
-    width: 54px;
-    height: 54px;
-  }
+  background-color: #19202c;
+  box-shadow: 0px 3px 6px #00000029;
+
+  color: var(--font-color);
 
   & .nav-center {
-    display: flex;
+    display: relative;
     & h3 {
+      position: absolute;
+      top: 0;
       margin: 0;
+      padding: 0 2em;
+
+      background-color: #19202c;
+      box-shadow: 0px 3px 6px #00000029;
+
+      line-height: 90px;
+      letter-spacing: 0px;
+      font-size: 24px;
+      text-transform: uppercase;
+
+      transform: perspective(280px) rotateX(-20deg);
     }
   }
 
@@ -41,6 +50,13 @@ const StyledNavBar = styled.div.attrs(() => ({ className: "nav" }))`
   & .nav-center,
   & .nav-left {
     align-items: center;
+  }
+
+  & .nav-left {
+    & > div {
+      flex: 1;
+    }
+    padding-left: 40px;
   }
 
   & .nav-right {
@@ -93,9 +109,15 @@ const NavBar = ({ editMode }) => {
     <>
       <StyledNavBar>
         <div className="nav-left">
-          <Link to="/games/" className="brand">
-            <img src={logo} alt="Air Board Game" title={t("Go to home")} />
-          </Link>
+          <Brand />
+        </div>
+
+        <div className="nav-center">
+          <h3>{translation.name ? translation.name : "Air Board Game"}</h3>
+        </div>
+
+        <div className="nav-right">
+          {!editMode && <UserList />}
           <button
             className="button clear icon-only save"
             onClick={() => setShowLoadGameModal((prev) => !prev)}
@@ -106,10 +128,6 @@ const NavBar = ({ editMode }) => {
               title={t("Save")}
             />
           </button>
-        </div>
-
-        <div className="nav-center">
-          <h3>{translation.name ? translation.name : "Air Board Game"}</h3>
           <button
             className="button clear icon-only info"
             onClick={() => setShowInfoModal((prev) => !prev)}
@@ -129,10 +147,6 @@ const NavBar = ({ editMode }) => {
               />
             )}
           </button>
-        </div>
-
-        <div className="nav-right">
-          {!editMode && <UserList />}
           <button
             className="button clear icon-only help"
             onClick={() => setShowHelpModal((prev) => !prev)}

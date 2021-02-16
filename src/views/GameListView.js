@@ -13,6 +13,7 @@ import useLocalStorage from "../hooks/useLocalStorage";
 import GameListItem from "./GameListItem";
 
 import AboutModal from "./AboutModal";
+import Brand from "./Brand";
 
 const GameView = styled.div`
   min-height: 100vh;
@@ -26,36 +27,12 @@ const GameView = styled.div`
   }
 `;
 
-const Brand = styled.div`
-  position: relative;
-  display: inline-block;
-  & h1 {
-    font-weight: 700;
-    font-size: 24px;
-    & a {
-      color: var(--font-color);
-    }
-  }
-  & .beta {
-    position: absolute;
-    top: 5px;
-    left: 175px;
-    text-transform: uppercase;
-    font-weight: 300;
-    font-size: 0.9em;
-  }
-`;
-
 const Nav = styled.nav`
   background-color: var(--bg-color);
   position: relative;
   padding: 0 5%;
   display: flex;
   align-items: center;
-
-  & .brand {
-    flex: 1;
-  }
 
   & button,
   & .button {
@@ -231,12 +208,7 @@ const GameListView = () => {
     <>
       <GameView>
         <Nav>
-          <Brand className="brand">
-            <h1>
-              <Link to="/">Air Board Game</Link>
-            </h1>
-            <span className="beta">Beta</span>
-          </Brand>
+          <Brand />
           {isAuthenticated && (
             <Link to={`/game/`} className="button new-game">
               {t("Create new game")}
