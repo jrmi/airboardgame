@@ -21,10 +21,12 @@ const Placeholder = styled.p`
 
 const StyledBoard = styled.div.attrs(() => ({ className: "board" }))`
   position: relative;
-  background-image: url(/board.png);
+  background: radial-gradient(closest-corner, #3954848a, #0d101547 120%),
+    url(/board.png);
+
   width: ${({ size }) => size}px;
   height: ${({ size }) => size}px;
-  border-radius: 1em;
+  border-radius: 2px;
   box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px,
     rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
 `;
