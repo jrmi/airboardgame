@@ -14,6 +14,7 @@ import {
 import debounce from "lodash.debounce";
 
 import { insideClass, hasClass } from "../utils";
+import SidePanel from "../ui/SidePanel";
 
 import ItemFormFactory from "./boardComponents/ItemFormFactory";
 
@@ -21,23 +22,6 @@ import ItemFormFactory from "./boardComponents/ItemFormFactory";
 import "react-confirm-alert/src/react-confirm-alert.css";
 
 import { useTranslation } from "react-i18next";
-
-const SelectedPane = styled.div`
-  position: absolute;
-  left: 0.5em;
-  bottom: 0.5em;
-  top: 4.5em;
-  background-color: var(--color-grey);
-  padding: 0.5em;
-  overflow-y: scroll;
-  max-width: 30%;
-  z-index: 2;
-  & .close {
-    position: absolute;
-    right: 0.5em;
-    top: 0.5em;
-  }
-`;
 
 const ActionPane = styled.div.attrs(({ top, left, height }) => {
   if (top < 120) {
@@ -60,15 +44,15 @@ const ActionPane = styled.div.attrs(({ top, left, height }) => {
   touch-action: none;
   position: absolute;
   display: flex;
-  background-color: var(--color-darkGrey);
+  background-color: var(--color-blueGrey);
   justify-content: center;
   align-items: center;
   border-radius: 4px;
   padding: 0.1em 0.5em;
   transition: opacity 300ms;
-  opacity: ${({ hide }) => (hide ? 0 : 0.7)};
+  opacity: ${({ hide }) => (hide ? 0 : 0.9)};
   
-  box-shadow: 2.5px 4.33px 14.7px 0.3px rgba(0, 0, 0, 0.7);
+  box-shadow: 2px 2px 10px 0.3px rgba(0, 0, 0, 0.5);
 
   &:hover{
     opacity: 1;
@@ -306,28 +290,22 @@ export const SelectedItemsPane = () => {
   return (
     <>
       {showEdit && !boardState.selecting && (
-        <SelectedPane key={selectedItems[0]}>
+        <SidePanel
+          key={selectedItems[0]}
+          onClose={() => {
+            setShowEdit(false);
+          }}
+        >
           <div>
             <header>
               {selectedItems.length === 1 && <h3>{t("Edit item")}</h3>}
               {selectedItems.length > 1 && <h3>{t("Edit all items")}</h3>}
-              <button
-                className="button clear icon-only close"
-                onClick={() => {
-                  setShowEdit(false);
-                }}
-              >
-                <img
-                  src="https://icongr.am/feather/x.svg?size=30&color=ffffff"
-                  alt={t("Close")}
-                />
-              </button>
             </header>
             <CardContent>
               <ItemFormFactory />
             </CardContent>
           </div>
-        </SelectedPane>
+        </SidePanel>
       )}
       {selectedItems.length && (
         <ActionPane

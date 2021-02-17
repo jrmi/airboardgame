@@ -14,6 +14,7 @@ import ImageDropNPaste from "../components/ImageDropNPaste";
 import { getComponent } from "../components/boardComponents";
 import { useGame } from "../hooks/useGame";
 import AddItemButton from "../components/AddItemButton";
+import Touch from "../ui/Touch";
 
 import { insideClass } from "../utils";
 
@@ -30,16 +31,6 @@ const BoardContainer = styled.div`
   overflow: hidden;
   box-sizing: border-box;
   background-color: var(--color-darkGrey);
-`;
-
-const FirstActionSelect = styled.button`
-  position: fixed;
-  bottom: 1em;
-  left: 1em;
-  background: none;
-  border: 4px solid var(--color-primary);
-  border-radius: 100%;
-  padding: 0.5em;
 `;
 
 export const BoardView = ({ namespace, edit: editMode = false }) => {
@@ -87,23 +78,35 @@ export const BoardView = ({ namespace, edit: editMode = false }) => {
           <SelectedItemsPane />
         </BoardContainer>
       )}
-      <FirstActionSelect onClick={() => setMoveFirst((prev) => !prev)}>
-        {!moveFirst && (
-          <img
-            src="https://icongr.am/feather/move.svg?size=24&color=db5034"
-            alt={t("Move mode")}
-            title={t("Switch to move mode")}
-          />
-        )}
-        {moveFirst && (
-          <img
-            src="https://icongr.am/feather/mouse-pointer.svg?size=24&color=db5034"
-            alt={t("Select mode")}
-            title={t("Switch to select mode")}
-          />
-        )}
-      </FirstActionSelect>
-      <AddItemButton />
+      <div
+        style={{
+          position: "fixed",
+          bottom: "1em",
+          right: "1em",
+          display: "flex",
+          width: "20%",
+        }}
+      >
+        <Touch
+          onClick={() => setMoveFirst(false)}
+          alt={t("Select mode")}
+          label={t("Select")}
+          title={t("Switch to select mode")}
+          icon={"mouse-pointer"}
+          active={!moveFirst}
+          style={{ flex: 1 }}
+        />
+        <Touch
+          onClick={() => setMoveFirst(true)}
+          alt={t("Move mode")}
+          label={t("Move")}
+          title={t("Switch to move mode")}
+          icon={"hand"}
+          active={moveFirst}
+        />
+        <div style={{ flex: 1 }} />
+        <AddItemButton />
+      </div>
     </StyledBoardView>
   );
 };

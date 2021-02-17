@@ -8,35 +8,8 @@ import NewItems from "./NewItems";
 
 import { AvailableItemListAtom } from "./Board/";
 
-const StyledButton = styled.div.attrs(() => ({
-  className: "button clear icon-only primary",
-}))`
-  position: fixed;
-  bottom: 4px;
-  right: 4px;
-`;
-
-const AddItemPane = styled.div`
-  position: absolute;
-  right: 0.5em;
-  top: 3.5em;
-  bottom: 0.5em;
-  background-color: var(--color-grey);
-  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-  width: 20%;
-  min-width: 280px;
-  padding: 0.5em;
-  text-align: center;
-  overflow-y: scroll;
-  & .tabs a {
-    cursor: pointer;
-  }
-  & .close {
-    position: absolute;
-    top: 5px;
-    right: 10px;
-  }
-`;
+import Touch from "../ui/Touch";
+import SidePanel from "../ui/SidePanel";
 
 const AvailableItemList = styled.div`
   margin-top: 2em;
@@ -53,30 +26,21 @@ const AddItemButton = () => {
 
   return (
     <>
-      <StyledButton onClick={() => setShowAddPanel((prev) => !prev)}>
-        <img
-          src={
-            showAddPanel
-              ? "https://icongr.am/feather/x-circle.svg?size=46&color=db5034"
-              : "https://icongr.am/feather/plus-circle.svg?size=46&color=db5034"
-          }
-          alt={t("Add item")}
-          title={t("Add item")}
-        />
-      </StyledButton>
+      <Touch
+        onClick={() => setShowAddPanel((prev) => !prev)}
+        alt={t("Add item")}
+        title={t("Add item")}
+        label={t("Add")}
+        icon={showAddPanel ? "cross" : "plus"}
+        style={{ flex: 1 }}
+      />
       {showAddPanel && (
-        <AddItemPane>
-          <button
-            className="button clear icon-only close"
-            onClick={() => {
-              setShowAddPanel(false);
-            }}
-          >
-            <img
-              src="https://icongr.am/feather/x.svg?size=30&color=ffffff"
-              alt={t("Close")}
-            />
-          </button>
+        <SidePanel
+          onClose={() => {
+            setShowAddPanel(false);
+          }}
+          position="right"
+        >
           <nav className="tabs">
             {
               // eslint-disable-next-line
@@ -105,7 +69,7 @@ const AddItemButton = () => {
               </AvailableItemList>
             )}
           </section>
-        </AddItemPane>
+        </SidePanel>
       )}
     </>
   );

@@ -8,6 +8,7 @@ import InfoEditModal from "../views/InfoEditModal";
 import LoadSaveModal from "../views/LoadSaveModal";
 import { UserList } from "../components/users";
 import { getBestTranslationFromConfig } from "../utils/api";
+import Touch from "../ui/Touch";
 
 import useBoardConfig from "../components/useBoardConfig";
 
@@ -21,7 +22,7 @@ const StyledNavBar = styled.div.attrs(() => ({ className: "nav" }))`
   width: 100%;
   z-index: 10;
 
-  background-color: #19202c;
+  background-color: #19202ce0;
   box-shadow: 0px 3px 6px #00000029;
 
   color: var(--font-color);
@@ -34,7 +35,7 @@ const StyledNavBar = styled.div.attrs(() => ({ className: "nav" }))`
       margin: 0;
       padding: 0 2em;
 
-      background-color: #19202c;
+      background-color: var(--color-blueGrey);
       box-shadow: 0px 3px 6px #00000029;
 
       line-height: 90px;
@@ -62,6 +63,12 @@ const StyledNavBar = styled.div.attrs(() => ({ className: "nav" }))`
   & .nav-right {
     justify-content: flex-end;
     padding-right: 5px;
+    gap: 1em;
+  }
+
+  & .spacer {
+    flex: 1;
+    max-width: 1em;
   }
 
   @media screen and (max-width: 640px) {
@@ -118,45 +125,32 @@ const NavBar = ({ editMode }) => {
 
         <div className="nav-right">
           {!editMode && <UserList />}
-          <button
-            className="button clear icon-only save"
+          <div className="spacer" />
+          <Touch
             onClick={() => setShowLoadGameModal((prev) => !prev)}
-          >
-            <img
-              src="https://icongr.am/feather/save.svg?size=50&color=ffffff"
-              alt={t("Save")}
-              title={t("Save")}
-            />
-          </button>
-          <button
-            className="button clear icon-only info"
+            alt={t("Info")}
+            title={t("Info")}
+            icon={"upload-to-cloud"}
+          />
+          <Touch
+            onClick={() => setShowLoadGameModal((prev) => !prev)}
+            alt={t("Save")}
+            title={t("Save session")}
+            icon={"download"}
+          />
+          <div className="spacer" />
+          <Touch
             onClick={() => setShowInfoModal((prev) => !prev)}
-          >
-            {!editMode && (
-              <img
-                src="https://icongr.am/feather/info.svg?size=50&color=ffffff"
-                alt={t("Info")}
-                title={t("Info")}
-              />
-            )}
-            {editMode && (
-              <img
-                src="https://icongr.am/feather/edit.svg?size=50&color=ffffff"
-                alt={t("Configure game")}
-                title={t("Configure game")}
-              />
-            )}
-          </button>
-          <button
-            className="button clear icon-only help"
+            alt={t("Info")}
+            title={t("Info")}
+            icon={editMode ? "tools" : "info"}
+          />
+          <Touch
             onClick={() => setShowHelpModal((prev) => !prev)}
-          >
-            <img
-              src="https://icongr.am/feather/help-circle.svg?size=50&color=ffffff"
-              alt={t("Help")}
-              title={t("Help")}
-            />
-          </button>
+            alt={"help"}
+            title={t("Help")}
+            icon={"help"}
+          />
         </div>
       </StyledNavBar>
       <HelpModal show={showHelpModal} setShow={setShowHelpModal} />
