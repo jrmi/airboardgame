@@ -44,6 +44,7 @@ const Wrapper = styled.div.attrs(({ flippable }) => ({
   user-select: none;
   position: relative;
   line-height: 0em;
+  //filter: drop-shadow(2px 2px 3px #2225);
 `;
 
 const FrontImage = styled.img`

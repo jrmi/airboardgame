@@ -15,13 +15,16 @@ const StyledModal = styled.div.attrs(() => ({ className: "overlay" }))`
   overflow: auto;
   background-color: rgba(0, 0, 0, 0.4);
   border-radius: 5px;
+
   .modal-content {
     max-width: 50%;
     position: relative;
     margin: 10% auto;
     padding: 8px 8px 8px 8px;
+    padding: 2em;
     border-radius: 2px;
-    background: var(--color-grey);
+
+    background-color: var(--color-blueGrey);
     box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px,
       rgba(0, 0, 0, 0.23) 0px 6px 6px;
   }
