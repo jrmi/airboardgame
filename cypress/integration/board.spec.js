@@ -18,9 +18,9 @@ describe("Board interactions", () => {
 
   it("Load game page", () => {
     cy.contains("0 Test game");
-    cy.get("[title=Save]");
-    cy.get("[title=Help]");
-    cy.get("[title=Information]");
+    cy.get("[alt=Save]");
+    cy.get("[alt=Help]");
+    cy.get("[alt=Information]");
     cy.get("[title='Add an item']");
   });
 

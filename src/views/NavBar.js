@@ -130,8 +130,8 @@ const NavBar = ({ editMode }) => {
           <div className="spacer" />
           <Touch
             onClick={() => setShowLoadGameModal((prev) => !prev)}
-            alt={t("Info")}
-            title={t("Info")}
+            alt={t("Load")}
+            title={t("Load game")}
             icon={"upload-to-cloud"}
           />
           <Touch
@@ -149,7 +149,7 @@ const NavBar = ({ editMode }) => {
           />
           <Touch
             onClick={() => setShowHelpModal((prev) => !prev)}
-            alt={"help"}
+            alt={t("Help")}
             title={t("Help")}
             icon={"help"}
           />
