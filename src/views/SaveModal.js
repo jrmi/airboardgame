@@ -2,10 +2,6 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 
 import DownloadGameLink from "../components/DownloadGameLink";
-import LoadGame from "../components/LoadGame";
-
-import { useC2C } from "../hooks/useC2C";
-import { nanoid } from "nanoid";
 
 import { updateGame } from "../utils/api";
 import { useGame } from "../hooks/useGame";
@@ -14,20 +10,10 @@ import { toast } from "react-toastify";
 
 import Modal from "../ui/Modal";
 
-const LoadSaveGameModal = ({ show, setShow, edit }) => {
+const SaveGameModal = ({ show, setShow, edit }) => {
   const { t } = useTranslation();
-  const [c2c] = useC2C();
 
   const { gameId, getGame } = useGame();
-
-  const loadGame = React.useCallback(
-    (game) => {
-      game.items = game.items.map((item) => ({ ...item, id: nanoid() }));
-      c2c.publish("loadGame", game, true);
-      setShow(false);
-    },
-    [c2c, setShow]
-  );
 
   const handleSave = React.useCallback(async () => {
     const currentGame = await getGame();
@@ -50,32 +36,15 @@ const LoadSaveGameModal = ({ show, setShow, edit }) => {
   }, [gameId, getGame, setShow, t]);
 
   return (
-    <Modal
-      title={t("Save")}
-      setShow={setShow}
-      show={show}
-      footer={
-        <div style={{ display: "flex", justifyContent: "end" }}>
-          <button
-            onClick={() => {
-              setShow(false);
-            }}
-            className="button"
-          >
-            {t("Close")}
-          </button>
-        </div>
-      }
-    >
+    <Modal title={t("Save game")} setShow={setShow} show={show}>
       {edit && (
         <button className="primary button" onClick={handleSave}>
           {t("Save game")}
         </button>
       )}
-      <LoadGame onLoad={loadGame} />
       <DownloadGameLink />
     </Modal>
   );
 };
 
-export default LoadSaveGameModal;
+export default SaveGameModal;
