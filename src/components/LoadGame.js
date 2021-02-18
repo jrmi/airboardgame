@@ -32,10 +32,18 @@ const LoadGame = ({ onLoad = () => {} }) => {
   return (
     <div
       {...getRootProps()}
-      style={{ border: "2px dashed white", margin: "0.5em", padding: "0.5em" }}
+      style={{
+        border: "1px dashed white",
+        margin: "0.5em",
+        padding: "0.5em",
+        cursor: "pointer",
+        fontSize: "1.5em",
+      }}
     >
       <input {...getInputProps()} />
-      <p>{t("Dragn drop file here")}</p>
+      <p style={{ textAlign: "center", margin: "1em" }}>
+        {t("Dragn drop file here")}
+      </p>
     </div>
   );
 };

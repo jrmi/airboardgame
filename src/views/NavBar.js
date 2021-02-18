@@ -5,7 +5,8 @@ import styled from "styled-components";
 import HelpModal from "../views/HelpModal";
 import InfoModal from "../views/InfoModal";
 import InfoEditModal from "../views/InfoEditModal";
-import LoadSaveModal from "../views/LoadSaveModal";
+import LoadModal from "../views/LoadModal";
+import SaveModal from "../views/SaveModal";
 import { UserList } from "../components/users";
 import { getBestTranslationFromConfig } from "../utils/api";
 import Touch from "../ui/Touch";
@@ -102,6 +103,7 @@ const StyledNavBar = styled.div.attrs(() => ({ className: "nav" }))`
 const NavBar = ({ editMode }) => {
   const { t, i18n } = useTranslation();
   const [showLoadGameModal, setShowLoadGameModal] = React.useState(false);
+  const [showSaveGameModal, setShowSaveGameModal] = React.useState(false);
   const [showHelpModal, setShowHelpModal] = React.useState(false);
   const [showInfoModal, setShowInfoModal] = React.useState(false);
 
@@ -133,7 +135,7 @@ const NavBar = ({ editMode }) => {
             icon={"upload-to-cloud"}
           />
           <Touch
-            onClick={() => setShowLoadGameModal((prev) => !prev)}
+            onClick={() => setShowSaveGameModal((prev) => !prev)}
             alt={t("Save")}
             title={t("Save session")}
             icon={"download"}
@@ -160,9 +162,14 @@ const NavBar = ({ editMode }) => {
       {editMode && (
         <InfoEditModal show={showInfoModal} setShow={setShowInfoModal} />
       )}
-      <LoadSaveModal
+      <LoadModal
         show={showLoadGameModal}
         setShow={setShowLoadGameModal}
+        edit={editMode}
+      />
+      <SaveModal
+        show={showSaveGameModal}
+        setShow={setShowSaveGameModal}
         edit={editMode}
       />
     </>
