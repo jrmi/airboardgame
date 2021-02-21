@@ -6,8 +6,6 @@ export const API_ENDPOINT = USE_PROXY
     window.location.origin ||
     "http://localhost:3001";
 
-console.log("prox", USE_PROXY, API_ENDPOINT);
-
 export const SOCKET_URL =
   process.env.REACT_APP_SOCKET_URL ||
   window.location.origin ||
