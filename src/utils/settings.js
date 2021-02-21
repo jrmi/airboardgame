@@ -1,7 +1,12 @@
-export const API_ENDPOINT =
-  process.env.REACT_APP_API_ENDPOINT ||
-  window.location.origin ||
-  "http://localhost:3001";
+export const USE_PROXY = process.env.REACT_APP_USE_PROXY !== "0";
+
+export const API_ENDPOINT = USE_PROXY
+  ? ""
+  : process.env.REACT_APP_API_ENDPOINT ||
+    window.location.origin ||
+    "http://localhost:3001";
+
+console.log("prox", USE_PROXY, API_ENDPOINT);
 
 export const SOCKET_URL =
   process.env.REACT_APP_SOCKET_URL ||
