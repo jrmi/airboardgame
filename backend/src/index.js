@@ -8,10 +8,12 @@ const replaceImageUrl = async ({ store }) => {
       game.board.migrations = [];
     }
 
+    const migrations = new Set(game.board.migrations);
+
     const from = "public.jeremiez.net/airboardgame/";
     const to = "public.jeremiez.net/ricochet/";
 
-    if (game.board.migrations.includes("migrate_image_url")) {
+    if (migrations.has("migrate_image_url")) {
       return;
     }
     game.items = game.items.map((item) => {
@@ -40,7 +42,8 @@ const replaceImageUrl = async ({ store }) => {
       game.board.imageUrl = game.board.imageUrl.replace(from, to);
     }
 
-    game.board.migrations.push("migrate_image_url");
+    migrations.add("migrate_image_url");
+    game.board.migrations = Array.from(migrations);
 
     store.update("game", game._id, game);
   });
