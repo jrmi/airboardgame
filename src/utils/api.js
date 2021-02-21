@@ -57,6 +57,7 @@ export const getBestTranslationFromConfig = (
 export const getGames = async () => {
   const fetchParams = new URLSearchParams({
     fields: "_id,board,owner",
+    limit: 2000,
   });
 
   let gameList = [];
