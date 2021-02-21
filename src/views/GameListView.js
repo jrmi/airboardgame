@@ -190,7 +190,12 @@ const GameListView = () => {
   const { isAuthenticated, userId } = useAuth();
 
   React.useEffect(() => {
-    getGames().then((content) => {
+    let mounted = true;
+
+    const loadGames = async () => {
+      const content = await getGames();
+      if (!mounted) return;
+
       setGameList(
         content.sort((a, b) => {
           const [nameA, nameB] = [
@@ -206,8 +211,13 @@ const GameListView = () => {
           return 0;
         })
       );
-    });
-  }, [isAuthenticated]);
+    };
+
+    loadGames();
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   const forceBeta = query.get("beta") === "true";
 
