@@ -8,8 +8,6 @@ const Game = styled.li`
   position: relative;
   padding: 0em;
   margin: 0px;
-  margin-bottom: 3em;
-  flex-basis: 30%;
 
   & .game-name {
     max-width: 80%;
@@ -17,13 +15,13 @@ const Game = styled.li`
     overflow: hidden;
     margin-bottom: 3px;
     margin: 0.2em 0 0.5em 0;
-    font-size: 2.5vw;
+    font-size: 2.3vw;
   }
 
   & .unpublished {
     position: absolute;
     top: 0.5em;
-    right: 0.5em;
+    left: 0.5em;
     padding: 0em;
   }
 
@@ -43,16 +41,47 @@ const Game = styled.li`
     top: 0.5em;
     right: 0.5em;
     display: none;
+    z-index: 2;
   }
 
-  &:hover .extra-actions {
+  &:hover .extra-actions,
+  & .extra-actions:hover {
     display: block;
   }
 
-  & .img {
+  & .img-wrapper {
+    display: block;
+    position: relative;
     width: 100%;
-    background-color: #333;
-    border-radius: 5px;
+    padding-top: 64.5%;
+    & > span {
+      background-color: var(--color-blueGrey);
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      overflow: hidden;
+      display: block;
+      display: flex;
+      border-radius: 5px;
+      & > .back {
+        filter: blur(5px);
+        background-size: cover;
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+      }
+    }
+  }
+
+  & .img {
+    object-fit: contain;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
   }
 
   & .details {
@@ -62,6 +91,7 @@ const Game = styled.li`
     font-size: 14px;
     padding-top: 1em;
   }
+
   & .details > span {
     display: flex;
     align-items: center;
@@ -69,9 +99,11 @@ const Game = styled.li`
     margin-right: 5px;
     border-right: 1px solid var(--font-color2);
   }
+
   & .details > span:last-child {
     border: none;
   }
+
   & .details img {
     margin-right: 0.5em;
   }
@@ -159,12 +191,28 @@ const GameListItem = ({
 
   return (
     <Game>
-      <Link to={`/game/${id}/session/`}>
-        {imageUrl ? (
-          <img className="img" src={imageUrl} />
-        ) : (
-          <img className="img" src="/default-game.png" />
-        )}
+      <Link to={`/game/${id}/session/`} className="img-wrapper">
+        <span>
+          {imageUrl && (
+            <>
+              <span
+                className="back"
+                style={{ backgroundImage: `url(${imageUrl})` }}
+              />{" "}
+              <img className="img" src={imageUrl} />
+            </>
+          )}
+          {userId && (userId === owner || !owner) && (
+            <span className="extra-actions">
+              <Link to={`/game/${id}/edit`} className="button edit icon-only">
+                <img
+                  src="https://icongr.am/feather/edit.svg?size=16&color=ffffff"
+                  alt={t("Edit")}
+                />
+              </Link>
+            </span>
+          )}
+        </span>
       </Link>
       {!published && (
         <img
@@ -195,17 +243,6 @@ const GameListItem = ({
       <h2 className="game-name">{translation.name}</h2>
 
       <p className="baseline">{translation.baseline}</p>
-
-      {userId && (userId === owner || !owner) && (
-        <div className="extra-actions">
-          <Link to={`/game/${id}/edit`} className="button edit icon-only">
-            <img
-              src="https://icongr.am/feather/edit.svg?size=16&color=ffffff"
-              alt={t("Edit")}
-            />
-          </Link>
-        </div>
-      )}
     </Game>
   );
 };
