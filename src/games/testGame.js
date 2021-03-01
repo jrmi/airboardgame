@@ -63,11 +63,34 @@ const genGame = () => {
   });
 
   items.push({
+    type: "rect",
+    color: "#ffffff",
+    width: 80,
+    height: 80,
+    text: "test2",
+    textColor: "#ccc",
+    x: 400,
+    y: 100,
+  });
+
+  items.push({
     type: "round",
     color: "#D00022",
+    text: "test",
+    textColor: "#ccc",
     radius: 80,
     x: 500,
     y: 500,
+  });
+
+  items.push({
+    type: "round",
+    color: "#ffffff",
+    radius: 80,
+    text: "test3",
+    textColor: "#ccc",
+    x: 700,
+    y: 400,
   });
 
   items.push({

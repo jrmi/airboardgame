@@ -12,16 +12,6 @@ const Token = ({ size = 50, color = "#b3b3b3" }) => {
       width={size}
     >
       <defs id="defs3685">
-        <filter
-          height="1.3767999"
-          y="-0.1884"
-          width="1.3767999"
-          x="-0.1884"
-          id="filter2955"
-          style={{ colorInterpolationFilters: "sRGB" }}
-        >
-          <feGaussianBlur id="feGaussianBlur2957" stdDeviation="0.40241471" />
-        </filter>
         <radialGradient
           r="1.0880001"
           cy="475.54001"
@@ -129,15 +119,6 @@ const Token = ({ size = 50, color = "#b3b3b3" }) => {
           transform="matrix(1.6555981,0,0,1.6361873,-52.480585,288.99102)"
           id="g2969"
         >
-          <path
-            style={{
-              opacity: 0.41,
-              fill: "#666666",
-              filter: "url(#filter2955)",
-            }}
-            d="m 33.932812,-1.3177075 -0.892969,2.9765624 2.645833,2.1497395 2.480469,-2.0505208 -0.79375,-3.0427082 z"
-            id="path2713"
-          />
           <path
             d="m 35.807852,3.3274129 -2.305335,-1.8494935 0.884886,-2.9858606 2.852233,0.00413 0.877876,2.988332 -2.309776,1.8429199 z"
             style={{
