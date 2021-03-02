@@ -13,9 +13,9 @@ const Form = ({ initialValues }) => {
       <Label>
         {t("Label")}
         <Field
-          name="label"
+          name="text"
           component="input"
-          initialValue={initialValues.label}
+          initialValue={initialValues.text}
         />
       </Label>
       <Label>

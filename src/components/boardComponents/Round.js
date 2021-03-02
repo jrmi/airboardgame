@@ -6,7 +6,6 @@ const StyledRound = styled.div`
     border-radius: 100%;
     width: ${radius}px;
     height: ${radius}px;
-    text-align: center;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -49,14 +48,16 @@ const Round = ({
           }}
         />
       </svg>
-      <span
-        style={{
-          color: textColor,
-          fontSize: fontSize + "px",
-        }}
-      >
-        {text}
-      </span>
+      {text && (
+        <span
+          style={{
+            color: textColor,
+            fontSize: fontSize + "px",
+          }}
+        >
+          {text}
+        </span>
+      )}
     </StyledRound>
   );
 };
