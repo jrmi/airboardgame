@@ -74,6 +74,17 @@ const genGame = () => {
   });
 
   items.push({
+    type: "rect",
+    color: "#000",
+    width: 80,
+    height: 80,
+    text: "test4",
+    textColor: "#ccc",
+    x: 420,
+    y: 120,
+  });
+
+  items.push({
     type: "round",
     color: "#D00022",
     text: "test",
@@ -90,6 +101,16 @@ const genGame = () => {
     text: "test3",
     textColor: "#ccc",
     x: 700,
+    y: 400,
+  });
+
+  items.push({
+    type: "round",
+    color: "#000",
+    radius: 80,
+    text: "test4",
+    textColor: "#ccc",
+    x: 720,
     y: 400,
   });
 
@@ -136,7 +157,7 @@ const genGame = () => {
     y: 550,
   });
   items.push({
-    label: "My token",
+    text: "My token",
     type: "token",
     size: 70,
     color: "#00ff00",

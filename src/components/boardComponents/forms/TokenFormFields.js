@@ -11,14 +11,6 @@ const Form = ({ initialValues }) => {
   return (
     <>
       <Label>
-        {t("Label")}
-        <Field
-          name="label"
-          component="input"
-          initialValue={initialValues.label}
-        />
-      </Label>
-      <Label>
         {t("Size")}
         <Field name="size" component="input" initialValue={initialValues.size}>
           {(props) => <input {...props.input} type="number" />}
@@ -35,6 +27,39 @@ const Form = ({ initialValues }) => {
           {({ input: { onChange, value } }) => (
             <ColorPicker value={value} onChange={onChange} />
           )}
+        </Field>
+      </Label>
+
+      <Label>
+        {t("Label")}
+        <Field
+          name="text"
+          component="input"
+          initialValue={initialValues.text}
+        />
+      </Label>
+
+      <Label>
+        {t("Text Color")}
+        <Field
+          name="textColor"
+          component="input"
+          initialValue={initialValues.textColor}
+        >
+          {({ input: { onChange, value } }) => (
+            <ColorPicker value={value} onChange={onChange} />
+          )}
+        </Field>
+      </Label>
+
+      <Label>
+        {t("Font size")}
+        <Field
+          name="fontSize"
+          component="input"
+          initialValue={initialValues.fontSize}
+        >
+          {(props) => <input {...props.input} type="number" />}
         </Field>
       </Label>
     </>

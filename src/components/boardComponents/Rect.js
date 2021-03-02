@@ -45,14 +45,16 @@ const Rect = ({
           }}
         />
       </svg>
-      <span
-        style={{
-          textColor,
-          fontSize: fontSize + "px",
-        }}
-      >
-        {text}
-      </span>
+      {text && (
+        <span
+          style={{
+            textColor,
+            fontSize: fontSize + "px",
+          }}
+        >
+          {text}
+        </span>
+      )}
     </StyledShape>
   );
 };
