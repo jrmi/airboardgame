@@ -202,18 +202,18 @@ const GameListItem = ({
               <img className="img" src={imageUrl} />
             </>
           )}
-          {userId && (userId === owner || !owner) && (
-            <span className="extra-actions">
-              <Link to={`/game/${id}/edit`} className="button edit icon-only">
-                <img
-                  src="https://icongr.am/feather/edit.svg?size=16&color=ffffff"
-                  alt={t("Edit")}
-                />
-              </Link>
-            </span>
-          )}
         </span>
       </Link>
+      {userId && (userId === owner || !owner) && (
+        <span className="extra-actions">
+          <Link to={`/game/${id}/edit`} className="button edit icon-only">
+            <img
+              src="https://icongr.am/feather/edit.svg?size=16&color=ffffff"
+              alt={t("Edit")}
+            />
+          </Link>
+        </span>
+      )}
       {!published && (
         <img
           className="unpublished"
