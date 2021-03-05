@@ -1,4 +1,5 @@
 import saveGame from "./saveGame";
+import deleteGame from "./deleteGame";
 
 const replaceImageUrl = async ({ store }) => {
   console.log("Migrate images...");
@@ -49,16 +50,39 @@ const replaceImageUrl = async ({ store }) => {
   });
 };
 
-export const main = async ({ store, functions }) => {
+export const main = async ({ store, functions, schedules }) => {
   // Add remote functions
   functions.saveGame = saveGame;
+  functions.deleteGame = deleteGame;
   functions.test = ({ store }) => {
     console.log("Test function call is a success", store);
   };
-  // Declare store
+
+  // Declare stores
   await store.createOrUpdateBox("game", { security: "readOnly" });
+  await store.createOrUpdateBox("session", { security: "public" });
+
+  // Add schedules
+  schedules["daily"] = [
+    async () => {
+      const sessions = await store.list("session", { limit: 10000 });
+      sessions.forEach(async (session) => {
+        const now = Date.now();
+        if (!session.timestamp) {
+          console.log("Delete session without timestamp ", session._id);
+          await store.delete("session", session._id);
+        }
+        if (now - session.timestamp > 30 * 24 * 60 * 60 * 100) {
+          console.log("Delete too old session ", session._id);
+          await store.delete("session", session._id);
+        }
+      });
+    },
+  ];
+
   await replaceImageUrl({ store });
-  console.log("Setup loaded");
+
+  console.log("Setup loaded with session");
 };
 
 export default main;

@@ -9,7 +9,7 @@ import { useUsers, SubscribeUserEvents } from "../components/users";
 
 import WelcomeModal from "./WelcomeModal";
 import NavBar from "./NavBar";
-import AutoSave from "../components/AutoSave";
+import AutoSaveSession from "../components/AutoSaveSession";
 import ImageDropNPaste from "../components/ImageDropNPaste";
 import { getComponent } from "../components/boardComponents";
 import { useGame } from "../hooks/useGame";
@@ -33,7 +33,7 @@ const BoardContainer = styled.div`
   background-color: var(--color-darkGrey);
 `;
 
-export const BoardView = ({ namespace, edit: editMode = false }) => {
+export const BoardView = ({ namespace, edit: editMode = false, session }) => {
   const { t } = useTranslation();
   const { currentUser, users } = useUsers();
   const [showWelcomeModal, setShowWelcomeModal] = React.useState(
@@ -64,7 +64,7 @@ export const BoardView = ({ namespace, edit: editMode = false }) => {
       <NavBar editMode={editMode} />
       <WelcomeModal show={showWelcomeModal} setShow={setShowWelcomeModal} />
       <SubscribeUserEvents />
-      <AutoSave />
+      {!editMode && <AutoSaveSession session={session} />}
       {gameLoaded && (
         <BoardContainer>
           <ImageDropNPaste namespace={namespace}>
