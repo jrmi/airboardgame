@@ -9,7 +9,7 @@ import { SOCKET_URL, SOCKET_OPTIONS } from "../utils/settings";
 import BoardView from "../views/BoardView";
 import Waiter from "../ui/Waiter";
 
-import { getGame } from "../utils/api";
+import { getGame, getSession } from "../utils/api";
 
 import GameProvider from "../hooks/useGame";
 import { useTranslation } from "react-i18next";
@@ -20,7 +20,7 @@ const newGameData = {
   board: { size: 1000, scale: 1, name: "New game" },
 };
 
-export const GameView = ({ edit }) => {
+export const GameView = ({ edit, session }) => {
   const [c2c, joined, isMaster] = useC2C();
   const { gameId } = useParams();
   const [realGameId, setRealGameId] = React.useState();
@@ -32,7 +32,7 @@ export const GameView = ({ edit }) => {
   React.useEffect(() => {
     let isMounted = true;
 
-    const loadGameData = async () => {
+    const loadGameInitialData = async () => {
       try {
         let gameData;
 
@@ -42,7 +42,14 @@ export const GameView = ({ edit }) => {
           setRealGameId(nanoid());
         } else {
           // Load game from server
-          gameData = await getGame(gameId);
+          try {
+            // First from session if exists
+            gameData = await getSession(session);
+          } catch {
+            // Then from initial game
+            gameData = await getGame(gameId);
+          }
+
           setRealGameId(gameId);
         }
 
@@ -65,13 +72,13 @@ export const GameView = ({ edit }) => {
 
     if (joined && isMaster && !gameLoaded && !gameLoadingRef.current) {
       gameLoadingRef.current = true;
-      loadGameData();
+      loadGameInitialData();
     }
 
     return () => {
       isMounted = false;
     };
-  }, [c2c, gameId, gameLoaded, isMaster, joined]);
+  }, [c2c, gameId, gameLoaded, isMaster, joined, session]);
 
   // Load game from master if any
   React.useEffect(() => {
@@ -100,7 +107,7 @@ export const GameView = ({ edit }) => {
 
   return (
     <GameProvider game={game} gameId={realGameId}>
-      <BoardView namespace={realGameId} edit={edit} />
+      <BoardView namespace={realGameId} edit={edit} session={session} />
     </GameProvider>
   );
 };
@@ -110,7 +117,7 @@ const ConnectedGameView = ({ edit = false }) => {
   return (
     <Provider url={SOCKET_URL} options={SOCKET_OPTIONS}>
       <C2CProvider room={room}>
-        <GameView edit={edit} />
+        <GameView edit={edit} session={room} />
       </C2CProvider>
     </Provider>
   );

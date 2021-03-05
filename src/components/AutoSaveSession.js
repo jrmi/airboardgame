@@ -1,7 +1,8 @@
 import React from "react";
 import { useRecoilCallback } from "recoil";
+import { useC2C } from "../hooks/useC2C";
 
-import useGameStorage from "./Board/game/useGameStorage";
+import { updateSession } from "../utils/api";
 
 import {
   AvailableItemListAtom,
@@ -9,8 +10,8 @@ import {
   AllItemsSelector,
 } from "./Board/";
 
-export const AutoSave = () => {
-  const [, setGameLocalSave] = useGameStorage();
+export const AutoSaveSession = ({ session }) => {
+  const [, , isMaster] = useC2C();
 
   const updateAutoSave = useRecoilCallback(
     ({ snapshot }) => async () => {
@@ -24,19 +25,25 @@ export const AutoSave = () => {
         items: itemList,
         board: boardConfig,
         availableItems: availableItemList,
+        timestamp: Date.now(),
       };
+
       if (game.items.length) {
-        setGameLocalSave(game);
+        try {
+          await updateSession(session, game);
+        } catch (e) {
+          console.log(e);
+        }
       }
     },
-    [setGameLocalSave]
+    [session]
   );
 
   React.useEffect(() => {
     let mounted = true;
 
     const cancel = setInterval(() => {
-      if (!mounted) return;
+      if (!mounted || !isMaster) return;
       updateAutoSave();
     }, 5000);
 
@@ -44,9 +51,9 @@ export const AutoSave = () => {
       mounted = false;
       clearInterval(cancel);
     };
-  }, [updateAutoSave]);
+  }, [isMaster, updateAutoSave]);
 
   return null;
 };
 
-export default AutoSave;
+export default AutoSaveSession;
