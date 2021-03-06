@@ -1,6 +1,7 @@
 import React from "react";
-import { useRecoilCallback } from "recoil";
+import { useRecoilValue } from "recoil";
 import { useC2C } from "../hooks/useC2C";
+import debounce from "lodash.debounce";
 
 import { updateSession } from "../utils/api";
 
@@ -13,14 +14,13 @@ import {
 export const AutoSaveSession = ({ session }) => {
   const [, , isMaster] = useC2C();
 
-  const updateAutoSave = useRecoilCallback(
-    ({ snapshot }) => async () => {
-      const availableItemList = await snapshot.getPromise(
-        AvailableItemListAtom
-      );
-      const boardConfig = await snapshot.getPromise(BoardConfigAtom);
-      const itemList = await snapshot.getPromise(AllItemsSelector);
+  const itemList = useRecoilValue(AllItemsSelector);
+  const boardConfig = useRecoilValue(BoardConfigAtom);
+  const availableItemList = useRecoilValue(AvailableItemListAtom);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const autoSave = React.useCallback(
+    debounce(async ({ availableItemList, boardConfig, itemList }) => {
       const game = {
         items: itemList,
         board: boardConfig,
@@ -35,23 +35,15 @@ export const AutoSaveSession = ({ session }) => {
           console.log(e);
         }
       }
-    },
+    }, 1000),
     [session]
   );
 
   React.useEffect(() => {
-    let mounted = true;
-
-    const cancel = setInterval(() => {
-      if (!mounted || !isMaster) return;
-      updateAutoSave();
-    }, 5000);
-
-    return () => {
-      mounted = false;
-      clearInterval(cancel);
-    };
-  }, [isMaster, updateAutoSave]);
+    if (isMaster) {
+      autoSave({ itemList, boardConfig, availableItemList });
+    }
+  }, [isMaster, autoSave, itemList, boardConfig, availableItemList]);
 
   return null;
 };
