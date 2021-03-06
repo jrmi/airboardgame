@@ -2,7 +2,9 @@ import React from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { getBestTranslationFromConfig } from "../utils/api";
+import { deleteGame, getBestTranslationFromConfig } from "../utils/api";
+import { confirmAlert } from "react-confirm-alert";
+import { toast } from "react-toastify";
 
 const Game = styled.li`
   position: relative;
@@ -143,6 +145,7 @@ const GameListItem = ({
   },
   game,
   userId,
+  onDelete,
 }) => {
   const { t, i18n } = useTranslation();
 
@@ -150,6 +153,36 @@ const GameListItem = ({
     () => getBestTranslationFromConfig(game, i18n.languages),
     [game, i18n.languages]
   );
+
+  const deleteGameHandler = async () => {
+    confirmAlert({
+      title: t("Confirmation"),
+      message: t("Do you really want to remove this game ?"),
+      buttons: [
+        {
+          label: t("Yes"),
+          onClick: async () => {
+            try {
+              await deleteGame(id);
+              onDelete(id);
+              toast.success(t("Game deleted"), { autoClose: 1500 });
+            } catch (e) {
+              if (e.message === "Forbidden") {
+                toast.error(t("Action forbidden. Try logging in again."));
+              } else {
+                console.log(e);
+                toast.error(t("Error while deleting game. Try again later..."));
+              }
+            }
+          },
+        },
+        {
+          label: t("No"),
+          onClick: () => {},
+        },
+      ],
+    });
+  };
 
   let playerCountDisplay = undefined;
   if (playerCount && playerCount.length) {
@@ -198,7 +231,7 @@ const GameListItem = ({
               <span
                 className="back"
                 style={{ backgroundImage: `url(${imageUrl})` }}
-              />{" "}
+              />
               <img className="img" src={imageUrl} />
             </>
           )}
@@ -206,7 +239,16 @@ const GameListItem = ({
       </Link>
       {userId && (userId === owner || !owner) && (
         <span className="extra-actions">
-          <Link to={`/game/${id}/edit`} className="button edit icon-only">
+          <button
+            onClick={deleteGameHandler}
+            className="button edit icon-only error"
+          >
+            <img
+              src="https://icongr.am/feather/trash.svg?size=16&color=ffffff"
+              alt={t("Delete")}
+            />
+          </button>
+          <Link to={`/game/${id}/edit`} className="button edit icon-only ">
             <img
               src="https://icongr.am/feather/edit.svg?size=16&color=ffffff"
               alt={t("Edit")}

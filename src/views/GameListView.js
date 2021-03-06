@@ -203,6 +203,12 @@ const GameListView = () => {
     };
   }, []);
 
+  const onGameDelete = React.useCallback((idToRemove) => {
+    setGameList((prevList) => {
+      return prevList.filter(({ id }) => id !== idToRemove);
+    });
+  }, []);
+
   const forceBeta = query.get("beta") === "true";
 
   React.useEffect(() => {
@@ -261,7 +267,12 @@ const GameListView = () => {
                   published || (userId && (!owner || owner === userId))
               )
               .map((game) => (
-                <GameListItem key={game.id} game={game} userId={userId} />
+                <GameListItem
+                  key={game.id}
+                  game={game}
+                  userId={userId}
+                  onDelete={onGameDelete}
+                />
               ))}
           </GameList>
         </Content>
