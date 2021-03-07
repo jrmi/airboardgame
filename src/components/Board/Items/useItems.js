@@ -61,15 +61,16 @@ const useItems = () => {
   );
 
   const moveItems = React.useCallback(
-    (itemIds, posDelta, sync = true, gridSize = 1) => {
+    (itemIds, posDelta, sync = true) => {
       setItemMap((prevItemMap) => {
         const result = { ...prevItemMap };
         itemIds.forEach((id) => {
           const item = prevItemMap[id];
+
           result[id] = {
             ...item,
-            x: Math.round((item.x + posDelta.x) / gridSize) * gridSize,
-            y: Math.round((item.y + posDelta.y) / gridSize) * gridSize,
+            x: item.x + posDelta.x,
+            y: item.y + posDelta.y,
           };
         });
         return result;
@@ -80,6 +81,33 @@ const useItems = () => {
           itemIds,
           posDelta,
         });
+      }
+    },
+    [c2c, setItemMap]
+  );
+
+  const placeItems = React.useCallback(
+    (itemIds, gridSize, sync = true) => {
+      const updatedItems = {};
+      setItemMap((prevItemMap) => {
+        const result = { ...prevItemMap };
+        itemIds.forEach((id) => {
+          const item = prevItemMap[id];
+          const newX = Math.round(item.x / gridSize) * gridSize;
+          const newY = Math.round(item.y / gridSize) * gridSize;
+
+          result[id] = {
+            ...item,
+            x: newX,
+            y: newY,
+          };
+          updatedItems[id] = result[id];
+        });
+        return result;
+      });
+
+      if (sync) {
+        c2c.publish(`batchItemsUpdate`, updatedItems);
       }
     },
     [c2c, setItemMap]
@@ -235,6 +263,7 @@ const useItems = () => {
     batchUpdateItems,
     updateItemOrder,
     moveItems,
+    placeItems,
     updateItem,
     swapItems,
     reverseItemsOrder,

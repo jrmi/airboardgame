@@ -13,7 +13,7 @@ import { insideClass, hasClass } from "../../utils";
 import Gesture from "./Gesture";
 
 const ActionPane = ({ children }) => {
-  const { putItemsOnTop, moveItems } = useItems();
+  const { putItemsOnTop, moveItems, placeItems } = useItems();
 
   const setSelectedItems = useSetRecoilState(selectedItemsAtom);
   const setBoardState = useSetRecoilState(BoardStateAtom);
@@ -65,50 +65,47 @@ const ActionPane = ({ children }) => {
     ({ snapshot }) => async ({ deltaX, deltaY }) => {
       if (actionRef.current.moving) {
         const panZoomRotate = await snapshot.getPromise(PanZoomRotateAtom);
-        const { gridSize: boardGridSize = 1 } = await snapshot.getPromise(
-          BoardConfigAtom
-        );
-        const gridSize = boardGridSize || 1; // avoid 0 grid size
-
         const moveX = actionRef.current.remainX + deltaX / panZoomRotate.scale;
         const moveY = actionRef.current.remainY + deltaY / panZoomRotate.scale;
-        const realMoveX = Math.round(moveX / gridSize) * gridSize;
-        const realMoveY = Math.round(moveY / gridSize) * gridSize;
 
-        if (realMoveX || realMoveY) {
-          // Put items on top of others on first move
-          if (!actionRef.current.onTop) {
-            putItemsOnTop(selectedItemRef.current.items);
-            actionRef.current.onTop = true;
-          }
-
-          moveItems(
-            selectedItemRef.current.items,
-            {
-              x: realMoveX,
-              y: realMoveY,
-            },
-            true,
-            gridSize
-          );
-
-          setBoardState((prev) =>
-            !prev.movingItems ? { ...prev, movingItems: true } : prev
-          );
+        // Put items on top of others on first move
+        if (!actionRef.current.onTop) {
+          putItemsOnTop(selectedItemRef.current.items);
+          actionRef.current.onTop = true;
         }
-        actionRef.current.remainX = moveX - realMoveX;
-        actionRef.current.remainY = moveY - realMoveY;
+
+        moveItems(
+          selectedItemRef.current.items,
+          {
+            x: moveX,
+            y: moveY,
+          },
+          true
+        );
+
+        setBoardState((prev) =>
+          !prev.movingItems ? { ...prev, movingItems: true } : prev
+        );
       }
     },
     [moveItems, putItemsOnTop, setBoardState]
   );
 
-  const onDragEnd = React.useCallback(() => {
-    if (actionRef.current.moving) {
-      actionRef.current = { moving: false };
-      setBoardState((prev) => ({ ...prev, movingItems: false }));
-    }
-  }, [setBoardState]);
+  const onDragEnd = useRecoilCallback(
+    ({ snapshot }) => async () => {
+      if (actionRef.current.moving) {
+        const { gridSize: boardGridSize = 1 } = await snapshot.getPromise(
+          BoardConfigAtom
+        );
+        const gridSize = boardGridSize || 1; // avoid 0 grid size
+
+        actionRef.current = { moving: false };
+        placeItems(selectedItemRef.current.items, gridSize);
+        setBoardState((prev) => ({ ...prev, movingItems: false }));
+      }
+    },
+    [placeItems, setBoardState]
+  );
 
   return (
     <Gesture onDragStart={onDragStart} onDrag={onDrag} onDragEnd={onDragEnd}>
