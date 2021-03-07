@@ -7,6 +7,7 @@ import AutoSave from "../ui/formUtils/AutoSave";
 import Label from "../ui/formUtils/Label";
 import useBoardConfig from "./useBoardConfig";
 import ImageField from "../ui/formUtils/ImageField";
+import Hint from "../ui/formUtils/Hint";
 
 import { Range } from "rc-slider";
 import { nanoid } from "nanoid";
@@ -55,6 +56,16 @@ const BoardConfig = () => {
       render={() => (
         <BoardConfigForm>
           <AutoSave save={onSubmitHandler} />
+          <Label>
+            {t("Publish")}
+            <Field
+              name="published"
+              component="input"
+              type="checkbox"
+              initialValue={boardConfig.published}
+            />
+            <Hint>{t("Check it to make your board publicly visible")}</Hint>
+          </Label>
           <Label>
             {t("Players count")}
             <Field
@@ -287,15 +298,6 @@ const BoardConfig = () => {
             })}
             <button onClick={addTranslation}>{t("Add translation")}</button>
           </div>
-          <Label>
-            {t("Publish")}
-            <Field
-              name="published"
-              component="input"
-              type="checkbox"
-              initialValue={boardConfig.published}
-            />
-          </Label>
         </BoardConfigForm>
       )}
     />
