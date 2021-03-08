@@ -202,7 +202,7 @@ const BoundingBox = ({
   return <BoundingBoxZone {...boundingBoxLast} />;
 };
 
-export const SelectedItemsPane = () => {
+export const SelectedItemsPane = ({ hideMenu = false }) => {
   const { availableActions, actionMap } = useItemActions();
   const [showEdit, setShowEdit] = React.useState(false);
 
@@ -311,7 +311,10 @@ export const SelectedItemsPane = () => {
         <ActionPane
           {...boundingBoxLast}
           hide={
-            boardState.zooming || boardState.panning || boardState.movingItems
+            hideMenu ||
+            boardState.zooming ||
+            boardState.panning ||
+            boardState.movingItems
           }
         >
           {(selectedItems.length > 1 || boardState.selecting) && (

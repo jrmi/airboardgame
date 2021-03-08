@@ -73,6 +73,25 @@ const StyledNavBar = styled.div.attrs(() => ({ className: "nav" }))`
   }
 
   @media screen and (max-width: 640px) {
+    & .nav-center h3 {
+      position: relative;
+      padding: 0;
+
+      background-color: transparent;
+      box-shadow: none;
+      line-height: 1.2em;
+      font-size: 1.2em;
+      transform: none;
+    }
+
+    & .nav-right {
+      display: none;
+    }
+
+    & .spacer {
+      flex: 0;
+    }
+
     & {
       flex-direction: row;
     }

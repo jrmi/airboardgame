@@ -33,6 +33,35 @@ const BoardContainer = styled.div`
   background-color: var(--color-darkGrey);
 `;
 
+const ActionBar = styled.div`
+  position: fixed;
+  bottom: 1em;
+  right: 1em;
+  display: flex;
+  width: 40%;
+  text-shadow: 1px 1px 2px #222;
+  font-size: 0.8em;
+
+  & .spacer {
+    flex: 1;
+  }
+
+  @media screen and (max-width: 1024px) {
+    & {
+      width: 50%;
+    }
+  }
+
+  @media screen and (max-width: 640px) {
+    & {
+      width: 80%;
+    }
+    & .spacer {
+      flex: 0;
+    }
+  }
+`;
+
 export const BoardView = ({ namespace, edit: editMode = false, session }) => {
   const { t } = useTranslation();
   const { currentUser, users } = useUsers();
@@ -41,6 +70,7 @@ export const BoardView = ({ namespace, edit: editMode = false, session }) => {
   );
 
   const [moveFirst, setMoveFirst] = React.useState(false);
+  const [hideMenu, setHideMenu] = React.useState(false);
   const { gameLoaded } = useGame();
 
   React.useEffect(() => {
@@ -73,20 +103,13 @@ export const BoardView = ({ namespace, edit: editMode = false, session }) => {
               users={users}
               getComponent={getComponent}
               moveFirst={moveFirst}
+              hideMenu={hideMenu}
             />
           </ImageDropNPaste>
-          <SelectedItemsPane />
+          <SelectedItemsPane hideMenu={hideMenu} />
         </BoardContainer>
       )}
-      <div
-        style={{
-          position: "fixed",
-          bottom: "1em",
-          right: "1em",
-          display: "flex",
-          width: "20%",
-        }}
-      >
+      <ActionBar>
         <Touch
           onClick={() => setMoveFirst(false)}
           alt={t("Select mode")}
@@ -94,7 +117,6 @@ export const BoardView = ({ namespace, edit: editMode = false, session }) => {
           title={t("Switch to select mode")}
           icon={"mouse-pointer"}
           active={!moveFirst}
-          style={{ flex: 1 }}
         />
         <Touch
           onClick={() => setMoveFirst(true)}
@@ -103,10 +125,19 @@ export const BoardView = ({ namespace, edit: editMode = false, session }) => {
           title={t("Switch to move mode")}
           icon={"hand"}
           active={moveFirst}
+          style={{ flex: 1 }}
         />
-        <div style={{ flex: 1 }} />
+        <Touch
+          onClick={() => setHideMenu((prev) => !prev)}
+          alt={hideMenu ? t("Show menu") : t("Hide menu")}
+          label={hideMenu ? t("Show menu") : t("Hide menu")}
+          title={hideMenu ? t("Show action menu") : t("Hide action menu")}
+          icon={hideMenu ? "eye-with-line" : "eye"}
+          style={{ flex: 1 }}
+        />
+        <div className="spacer" />
         <AddItemButton />
-      </div>
+      </ActionBar>
     </StyledBoardView>
   );
 };

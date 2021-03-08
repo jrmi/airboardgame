@@ -189,5 +189,9 @@
   "Error while deleting game. Try again later...": "Suppression du jeu impossible. Essayez plus tard.",
   "Delete": "Effacer",
   "Load": "Charger",
-  "Save session": "Enregistrer la session"
+  "Save session": "Enregistrer la session",
+  "Show menu": "Aff. menu",
+  "Hide menu": "Cacher menu",
+  "Show action menu": "Afficher le menu d'action",
+  "Hide action menu": "Cacher le menu d'action"
 }

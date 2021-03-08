@@ -29,6 +29,7 @@ const StyledButton = styled.div.attrs(({ active }) => ({
   &.active {
     background-color: var(--color-primary);
   }
+  box-shadow: 3px 3px 6px #00000050;
 `;
 
 const Touch = ({
