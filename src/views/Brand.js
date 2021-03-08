@@ -24,12 +24,31 @@ const StyledBrand = styled.div`
     font-weight: 300;
     font-size: 1.5rem;
   }
+  & .short {
+    display: none;
+  }
+  @media screen and (max-width: 1024px) {
+    & span {
+      display: none;
+    }
+    & h1 {
+      display: none;
+    }
+    & .short {
+      display: block;
+    }
+  }
+  @media screen and (max-width: 640px) {
+  }
 `;
 
 const Brand = () => (
   <StyledBrand>
     <h1>
       <Link to="/">Air Board Game</Link>
+    </h1>
+    <h1 className="short">
+      <Link to="/">ABG</Link>
     </h1>
     <span>Beta</span>
   </StyledBrand>
