@@ -157,7 +157,7 @@ const GameListItem = ({
   const deleteGameHandler = async () => {
     confirmAlert({
       title: t("Confirmation"),
-      message: t("Do you really want to remove this game ?"),
+      message: t("Do you really want to remove this game?"),
       buttons: [
         {
           label: t("Yes"),

@@ -146,6 +146,31 @@ const ItemFormFactory = () => {
             </Field>
           </Label>
           <FieldsComponent initialValues={initialValues} />
+          <h3>{t("Snap to grid")}</h3>
+          <Label>
+            {t("Grid type")}
+            <Field
+              name="grid.type"
+              initialValue={initialValues.grid?.type}
+              component="select"
+            >
+              <option value="">{t("None")}</option>
+              <option value="grid">{t("Grid")}</option>
+              <option value="hexH">{t("Horizontal hexagons")}</option>
+              <option value="hexV">{t("Vertical hexagons")}</option>
+            </Field>
+          </Label>
+          <Label>
+            {t("Size")}
+            <Field
+              name="grid.size"
+              component="input"
+              initialValue={initialValues.grid?.size}
+            >
+              {(props) => <input {...props.input} type="number" />}
+            </Field>
+          </Label>
+
           <h3>{t("Available actions")}</h3>
           <Label>
             <Field name="actions" initialValue={initialValues.actions}>

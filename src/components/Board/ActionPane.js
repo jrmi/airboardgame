@@ -100,7 +100,10 @@ const ActionPane = ({ children }) => {
         const gridSize = boardGridSize || 1; // avoid 0 grid size
 
         actionRef.current = { moving: false };
-        placeItems(selectedItemRef.current.items, gridSize);
+        placeItems(selectedItemRef.current.items, {
+          type: "grid",
+          size: gridSize,
+        });
         setBoardState((prev) => ({ ...prev, movingItems: false }));
       }
     },

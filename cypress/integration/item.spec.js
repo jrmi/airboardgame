@@ -51,7 +51,7 @@ describe("Item interactions", () => {
     cy.get("img[src='/games/JC.jpg']")
       .parents(".item")
       .parent()
-      .should("have.css", "transform", "matrix(1, 0, 0, 1, 520, 500)");
+      .should("have.css", "transform", "matrix(1, 0, 0, 1, 520, 500.5)");
   });
 
   it("should flip item", () => {
