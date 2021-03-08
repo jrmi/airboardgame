@@ -87,19 +87,85 @@ const useItems = () => {
   );
 
   const placeItems = React.useCallback(
-    (itemIds, gridSize, sync = true) => {
+    (itemIds, { type: globalType, size: globalSize } = {}, sync = true) => {
       const updatedItems = {};
       setItemMap((prevItemMap) => {
         const result = { ...prevItemMap };
         itemIds.forEach((id) => {
           const item = prevItemMap[id];
-          const newX = Math.round(item.x / gridSize) * gridSize;
-          const newY = Math.round(item.y / gridSize) * gridSize;
+          const elem = document.getElementById(id);
+
+          const { type: itemType, size: itemSize } = item.grid || {};
+          let type = globalType;
+          let size = globalSize || 1;
+          // If item specific
+          if (itemType) {
+            type = itemType;
+            size = itemSize;
+          }
+
+          const [centerX, centerY] = [
+            item.x + elem.clientWidth / 2,
+            item.y + elem.clientHeight / 2,
+          ];
+
+          let newX, newY, sizeX, sizeY, px1, px2, py1, py2, h, diff1, diff2;
+          h = size / 1.1547;
+
+          switch (type) {
+            case "grid":
+              newX = Math.round(centerX / size) * size;
+              newY = Math.round(centerY / size) * size;
+              break;
+            case "hexH":
+              sizeX = 2 * h;
+              sizeY = 3 * size;
+              px1 = Math.round(centerX / sizeX) * sizeX;
+              py1 = Math.round(centerY / sizeY) * sizeY;
+
+              px2 = px1 > centerX ? px1 - h : px1 + h;
+              py2 = py1 > centerY ? py1 - 1.5 * size : py1 + 1.5 * size;
+
+              diff1 = Math.hypot(...[px1 - centerX, py1 - centerY]);
+              diff2 = Math.hypot(...[px2 - centerX, py2 - centerY]);
+
+              if (diff1 < diff2) {
+                newX = px1;
+                newY = py1;
+              } else {
+                newX = px2;
+                newY = py2;
+              }
+              break;
+            case "hexV":
+              sizeX = 3 * size;
+              sizeY = 2 * h;
+              px1 = Math.round(centerX / sizeX) * sizeX;
+              py1 = Math.round(centerY / sizeY) * sizeY;
+
+              px2 = px1 > centerX ? px1 - 1.5 * size : px1 + 1.5 * size;
+              py2 = py1 > centerY ? py1 - h : py1 + h;
+
+              diff1 = Math.hypot(...[px1 - centerX, py1 - centerY]);
+              diff2 = Math.hypot(...[px2 - centerX, py2 - centerY]);
+
+              if (diff1 < diff2) {
+                newX = px1;
+                newY = py1;
+              } else {
+                newX = px2;
+                newY = py2;
+              }
+              break;
+            default:
+              newX = item.x;
+              newY = item.y;
+          }
 
           result[id] = {
             ...item,
-            x: newX,
-            y: newY,
+            x: newX - elem.clientWidth / 2,
+            y: newY - elem.clientHeight / 2,
           };
           updatedItems[id] = result[id];
         });

@@ -60,6 +60,7 @@ const ImageField = ({ value, onChange }) => {
           border: "3px dashed white",
           margin: "0.5em",
           padding: "0.5em",
+          textAlign: "center",
         }}
       >
         <input {...getInputProps()} />
