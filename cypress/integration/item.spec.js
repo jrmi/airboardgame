@@ -17,25 +17,27 @@ describe("Item interactions", () => {
   });
 
   it("should move item", () => {
-    cy.get("img[src='/games/JC.jpg']")
+    cy.get("img[src='/game_assets/JC.jpg']")
       .parents(".item")
       .parent()
       .should("have.css", "transform", "matrix(1, 0, 0, 1, 420, 400)");
 
     // Select card
-    cy.get("img[src='/games/JC.jpg']")
+    cy.get("img[src='/game_assets/JC.jpg']")
       .parents(".item")
       .click(500, 500, { force: true });
 
-    cy.get("img[src='/games/JC.jpg']").parents(".item").trigger("pointerdown", {
-      button: 0,
-      clientX: 430,
-      clientY: 430,
-      force: true,
-      pointerId: 1,
-    });
+    cy.get("img[src='/game_assets/JC.jpg']")
+      .parents(".item")
+      .trigger("pointerdown", {
+        button: 0,
+        clientX: 430,
+        clientY: 430,
+        force: true,
+        pointerId: 1,
+      });
 
-    cy.get("img[src='/games/JC.jpg']")
+    cy.get("img[src='/game_assets/JC.jpg']")
       .parents(".item")
       .trigger("pointermove", {
         button: 0,
@@ -48,7 +50,7 @@ describe("Item interactions", () => {
         force: true,
         pointerId: 1,
       });
-    cy.get("img[src='/games/JC.jpg']")
+    cy.get("img[src='/game_assets/JC.jpg']")
       .parents(".item")
       .parent()
       .should("have.css", "transform", "matrix(1, 0, 0, 1, 520, 500.5)");
@@ -56,40 +58,40 @@ describe("Item interactions", () => {
 
   it("should flip item", () => {
     // Check before
-    cy.get("img[src='/games/JC.jpg']")
-      .siblings("img[src='/games/Red_back.jpg']")
+    cy.get("img[src='/game_assets/JC.jpg']")
+      .siblings("img[src='/game_assets/Red_back.jpg']")
       .should("have.css", "opacity", "0");
-    cy.get("img[src='/games/JC.jpg']").should("have.css", "opacity", "1");
+    cy.get("img[src='/game_assets/JC.jpg']").should("have.css", "opacity", "1");
 
     // Select card
-    cy.get("img[src='/games/JC.jpg']")
+    cy.get("img[src='/game_assets/JC.jpg']")
       .parents(".item")
       .click(500, 500, { force: true });
 
     cy.get('[title = "Reveal/Hide"]').click({ force: true });
 
     // Check after
-    cy.get("img[src='/games/JC.jpg']").should("have.css", "opacity", "0");
-    cy.get("img[src='/games/JC.jpg']")
-      .siblings("img[src='/games/Red_back.jpg']")
+    cy.get("img[src='/game_assets/JC.jpg']").should("have.css", "opacity", "0");
+    cy.get("img[src='/game_assets/JC.jpg']")
+      .siblings("img[src='/game_assets/Red_back.jpg']")
       .should("have.css", "opacity", "1");
   });
 
   it("should tap item", () => {
     // Check before
-    cy.get("img[src='/games/JC.jpg']")
+    cy.get("img[src='/game_assets/JC.jpg']")
       .parents(".item")
       .should("have.css", "transform", "matrix(1, 0, 0, 1, 0, 0)");
 
     // Select card
-    cy.get("img[src='/games/JC.jpg']")
+    cy.get("img[src='/game_assets/JC.jpg']")
       .parents(".item")
       .click(500, 500, { force: true });
 
     cy.get('[title = "Tap/Untap"]').click({ force: true });
 
     // Check after
-    cy.get("img[src='/games/JC.jpg']")
+    cy.get("img[src='/game_assets/JC.jpg']")
       .parents(".item")
       .should(
         "have.css",

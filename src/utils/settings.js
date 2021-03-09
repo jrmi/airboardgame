@@ -1,24 +1,25 @@
-export const USE_PROXY = process.env.REACT_APP_USE_PROXY !== "0";
+export const USE_PROXY =
+  import.meta.env.DEV && import.meta.env.VITE_USE_PROXY !== "0";
 
 export const API_ENDPOINT = USE_PROXY
   ? ""
-  : process.env.REACT_APP_API_ENDPOINT ||
+  : import.meta.env.VITE_API_ENDPOINT ||
     window.location.origin ||
     "http://localhost:3001";
 
 export const SOCKET_URL =
-  process.env.REACT_APP_SOCKET_URL ||
+  import.meta.env.VITE_SOCKET_URL ||
   window.location.origin ||
   "http://localhost:3001";
 
-export const SOCKET_PATH = process.env.REACT_APP_SOCKET_PATH || "/socket.io";
+export const SOCKET_PATH = import.meta.env.VITE_SOCKET_PATH || "/socket.io";
 
-export const SHOW_WELCOME = process.env.REACT_APP_NO_WELCOME !== "1";
+export const SHOW_WELCOME = import.meta.env.VITE_NO_WELCOME !== "1";
 
 export const GAMELIST_URL =
-  process.env.REACT_APP_GAMELIST_URL || "/gamelist.json";
+  import.meta.env.VITE_GAMELIST_URL || "/gamelist.json";
 
-export const IS_PRODUCTION = process.env.NODE_ENV === "production";
+export const IS_PRODUCTION = import.meta.env.PROD;
 
 export const SOCKET_OPTIONS = {
   forceNew: true,
