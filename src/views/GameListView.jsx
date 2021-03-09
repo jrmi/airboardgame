@@ -2,7 +2,7 @@ import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useTranslation, Trans } from "react-i18next";
 import styled from "styled-components";
-import CookieConsent from "react-cookie-consent";
+//import CookieConsent from "react-cookie-consent";
 
 import { getGames } from "../utils/api";
 import Account from "../components/Account";
@@ -162,10 +162,11 @@ const GameListView = () => {
     console.log("Beta activated");
   }
 
-  const [cookieConsent, setCookieConsent] = useLocalStorage(
+  /*const [cookieConsent, setCookieConsent] = useLocalStorage(
     "cookieConsent",
     false
-  );
+  );*/
+  const cookieConsent = true;
   const [showAboutModal, setShowAboutModal] = React.useState(false);
 
   let query = useQuery();
@@ -223,7 +224,7 @@ const GameListView = () => {
         <Nav>
           <Brand />
           {isAuthenticated && (
-            <Link to={`/game/`} className="button new-game">
+            <Link to={"/game/"} className="button new-game">
               {t("Create new game")}
             </Link>
           )}
@@ -286,7 +287,7 @@ const GameListView = () => {
         </footer>
       </GameView>
       <AboutModal show={showAboutModal} setShow={setShowAboutModal} />
-      <CookieConsent
+      {/*<CookieConsent
         location="bottom"
         buttonText={t("Got it!")}
         enableDeclineButton
@@ -306,7 +307,7 @@ const GameListView = () => {
         }}
       >
         {t("This site use a cookie only to know if your are authenticated.")}
-      </CookieConsent>
+      </CookieConsent>*/}
     </>
   );
 };

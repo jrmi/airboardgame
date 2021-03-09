@@ -40,7 +40,7 @@ const genGame = () => {
       materialLanguage: "Multi-lang",
       minAge: "10",
       duration: [30, 90],
-      imageUrl: "/games/testgame.png",
+      imageUrl: "/game_assets/testgame.png",
       gridSize: 1,
     },
   };

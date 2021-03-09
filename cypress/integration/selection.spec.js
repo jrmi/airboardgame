@@ -59,13 +59,13 @@ describe("Selection action", () => {
       force: true,
     });
 
-    cy.get("img[src='/games/AS.jpg']")
+    cy.get("img[src='/game_assets/AS.jpg']")
       .parents(".item")
       .should("have.class", "selected");
-    cy.get("img[src='/games/JC.jpg']")
+    cy.get("img[src='/game_assets/JC.jpg']")
       .parents(".item")
       .should("have.class", "selected");
-    cy.get("img[src='/games/BH.jpg']")
+    cy.get("img[src='/game_assets/BH.jpg']")
       .parents(".item")
       .should("have.class", "selected");
   });

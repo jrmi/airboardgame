@@ -79,8 +79,7 @@ export const getGames = async () => {
       url: `${gameURI}/${game._id}`,
     }));
   }
-
-  if (!IS_PRODUCTION) {
+  if (!IS_PRODUCTION || import.meta.env.VITE_CI) {
     gameList = [
       {
         ...testGame,
