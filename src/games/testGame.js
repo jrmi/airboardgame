@@ -3,8 +3,8 @@ const genGame = () => {
 
   items.push({
     type: "image",
-    content: "/games/AS.jpg",
-    backContent: "/games/Red_back.jpg",
+    content: "/game_assets/AS.jpg",
+    backContent: "/game_assets/Red_back.jpg",
     text: "frontLabel",
     width: 100,
     x: 400,
@@ -25,8 +25,8 @@ const genGame = () => {
 
   items.push({
     type: "image",
-    content: "/games/BH.jpg",
-    backContent: "/games/Red_back.jpg",
+    content: "/game_assets/BH.jpg",
+    backContent: "/game_assets/Red_back.jpg",
     text: "frontLabel",
     backText: "backLabel",
     width: 100,
@@ -36,9 +36,9 @@ const genGame = () => {
 
   items.push({
     type: "image",
-    content: "/games/JC.jpg",
-    backContent: "/games/Red_back.jpg",
-    overlay: { content: "/games/overlay.png" },
+    content: "/game_assets/JC.jpg",
+    backContent: "/game_assets/Red_back.jpg",
+    overlay: { content: "/game_assets/overlay.png" },
     width: 100,
     x: 420,
     y: 400,
@@ -220,7 +220,7 @@ const genGame = () => {
       materialLanguage: "Multi-lang",
       minAge: "10",
       duration: [30, 90],
-      imageUrl: "/games/testgame.png",
+      imageUrl: "/game_assets/testgame.png",
       gridSize: 1,
     },
   };
