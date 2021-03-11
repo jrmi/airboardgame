@@ -9,9 +9,9 @@ jobs:
       name: node/default
     environment:
       NETLIFY_SITE_ID: airboardgame.netlify.app
-      REACT_APP_SOCKET_URL: https://public.jeremiez.net/
-      REACT_APP_SOCKET_PATH: /wamp2/socket.io
-      REACT_APP_GAMELIST_URL: https://airgames.netlify.app/gameList.json
+      REACT_APP_SOCKET_URL: https://ricochetjs.herokuapp.com/
+      #REACT_APP_SOCKET_PATH: /wamp2/socket.io
+      #REACT_APP_GAMELIST_URL: https://airgames.netlify.app/gameList.json
       REACT_APP_API_ENDPOINT: /api
       REACT_APP_USE_PROXY: 0
       CYPRESS_INSTALL_BINARY: 0
@@ -26,7 +26,7 @@ jobs:
             - run: npm run build
             - run: |
                 cat \<<EOF > ./build/_redirects
-                /api/*  https://public.jeremiez.net/ricochet/:splat  200
+                /api/*  https://ricochetjs.herokuapp.com/:splat  200
                 /*    /index.html   200
                 EOF
             - run:
@@ -38,11 +38,12 @@ jobs:
       name: node/default
     environment:
       NETLIFY_SITE_ID: airboardgame.netlify.app
-      REACT_APP_SOCKET_URL: https://public.jeremiez.net/
-      REACT_APP_SOCKET_PATH: /wamp2/socket.io
-      REACT_APP_GAMELIST_URL: https://airgames.netlify.app/gameList.json
+      REACT_APP_SOCKET_URL: https://ricochetjs.herokuapp.com/
+      #REACT_APP_SOCKET_PATH: /wamp2/socket.io
+      #REACT_APP_GAMELIST_URL: https://airgames.netlify.app/gameList.json
       REACT_APP_USE_PROXY: 0
       REACT_APP_API_ENDPOINT: /api
+      CYPRESS_INSTALL_BINARY: 0
     steps:
       - checkout
       - node/with-cache:
@@ -53,7 +54,7 @@ jobs:
             - run: npm run build
             - run: |
                 cat \<<EOF > ./build/_redirects
-                /api/*  https://public.jeremiez.net/ricochet/:splat  200
+                /api/*  https://ricochetjs.herokuapp.com/:splat  200
                 /*    /index.html   200
                 EOF
             - run:
@@ -64,7 +65,7 @@ workflows:
   e2etest:
     jobs:
       - cypress/run:
-          start: REACT_APP_NO_WELCOME=1 REACT_APP_SOCKET_URL=https://public.jeremiez.net/ REACT_APP_SOCKET_PATH=/wamp2/socket.io REACT_APP_API_ENDPOINT=https://public.jeremiez.net/ricochet CI=true npm start
+          start: REACT_APP_NO_WELCOME=1 REACT_APP_SOCKET_URL=https://ricochetjs.herokuapp.com/ REACT_APP_API_ENDPOINT=https://ricochetjs.herokuapp.com/ CI=true npm start
           wait-on: "http-get://localhost:3000"
           no-workspace: true
           store_artifacts: true
