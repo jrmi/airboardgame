@@ -16,6 +16,7 @@ import useBoardConfig from "../components/useBoardConfig";
 import { useTranslation } from "react-i18next";
 
 import Brand from "./Brand";
+import { useC2C } from "../hooks/useC2C";
 
 const StyledNavBar = styled.div.attrs(() => ({ className: "nav" }))`
   position: fixed;
@@ -121,6 +122,7 @@ const StyledNavBar = styled.div.attrs(() => ({ className: "nav" }))`
 
 const NavBar = ({ editMode }) => {
   const { t, i18n } = useTranslation();
+  const [, , isMaster] = useC2C();
   const [showLoadGameModal, setShowLoadGameModal] = React.useState(false);
   const [showSaveGameModal, setShowSaveGameModal] = React.useState(false);
   const [showHelpModal, setShowHelpModal] = React.useState(false);
@@ -147,12 +149,14 @@ const NavBar = ({ editMode }) => {
         <div className="nav-right">
           {!editMode && <UserList />}
           <div className="spacer" />
-          <Touch
-            onClick={() => setShowLoadGameModal((prev) => !prev)}
-            alt={t("Load")}
-            title={t("Load game")}
-            icon={"upload-to-cloud"}
-          />
+          {(isMaster || editMode) && (
+            <Touch
+              onClick={() => setShowLoadGameModal((prev) => !prev)}
+              alt={t("Load")}
+              title={t("Load game")}
+              icon={"upload-to-cloud"}
+            />
+          )}
           <Touch
             onClick={() => setShowSaveGameModal((prev) => !prev)}
             alt={t("Save")}
