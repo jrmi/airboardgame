@@ -307,14 +307,11 @@ export const SelectedItemsPane = ({ hideMenu = false }) => {
           </div>
         </SidePanel>
       )}
-      {selectedItems.length && (
+      {selectedItems.length && !hideMenu && (
         <ActionPane
           {...boundingBoxLast}
           hide={
-            hideMenu ||
-            boardState.zooming ||
-            boardState.panning ||
-            boardState.movingItems
+            boardState.zooming || boardState.panning || boardState.movingItems
           }
         >
           {(selectedItems.length > 1 || boardState.selecting) && (
