@@ -4,7 +4,6 @@ import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 //import CookieConsent from "react-cookie-consent";
 
-import "react-confirm-alert/src/react-confirm-alert.css";
 import useLocalStorage from "../hooks/useLocalStorage";
 
 import HomeNav from "./HomeNav";

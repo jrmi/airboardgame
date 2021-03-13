@@ -19,7 +19,6 @@ import SidePanel from "../ui/SidePanel";
 import ItemFormFactory from "./boardComponents/ItemFormFactory";
 
 // import { confirmAlert } from "react-confirm-alert";
-import "react-confirm-alert/src/react-confirm-alert.css";
 
 import { useTranslation } from "react-i18next";
 

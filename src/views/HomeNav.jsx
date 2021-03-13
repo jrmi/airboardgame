@@ -6,8 +6,6 @@ import styled from "styled-components";
 import Account from "../components/Account";
 import useAuth from "../hooks/useAuth";
 
-import "react-confirm-alert/src/react-confirm-alert.css";
-
 import Brand from "./Brand";
 
 const Nav = styled.nav`

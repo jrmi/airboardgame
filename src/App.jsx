@@ -13,6 +13,7 @@ import { ToastContainer } from "react-toastify";
 
 import "react-toastify/dist/ReactToastify.css";
 import "rc-slider/assets/index.css";
+import "react-confirm-alert/src/react-confirm-alert.css";
 
 import Home from "./views/Home";
 import GameView from "./views/GameView";
@@ -42,13 +43,13 @@ const App = () => {
             <Route path="/game/:gameId?">
               <GameView edit />
             </Route>
-            <Route path="/">
-              <Home />
-            </Route>
             <Route exact path="/login/:userHash/:token">
               <AuthView />
             </Route>
-            <Redirect from="/" to="/games/" />
+            <Redirect from="/" to="/games/" exact />
+            <Route path="/">
+              <Home />
+            </Route>
           </Switch>
         </Router>
       </RecoilRoot>

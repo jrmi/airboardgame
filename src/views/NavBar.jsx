@@ -1,6 +1,8 @@
 import React from "react";
 
 import styled from "styled-components";
+import { useTranslation } from "react-i18next";
+import { useHistory } from "react-router-dom";
 
 import HelpModal from "../views/HelpModal";
 import InfoModal from "../views/InfoModal";
@@ -12,11 +14,10 @@ import { getBestTranslationFromConfig } from "../utils/api";
 import Touch from "../ui/Touch";
 
 import useBoardConfig from "../components/useBoardConfig";
-
-import { useTranslation } from "react-i18next";
-
-import Brand from "./Brand";
 import { useC2C } from "../hooks/useC2C";
+import Brand from "./Brand";
+
+import { confirmAlert } from "react-confirm-alert";
 
 const StyledNavBar = styled.div.attrs(() => ({ className: "nav" }))`
   position: fixed;
@@ -60,6 +61,7 @@ const StyledNavBar = styled.div.attrs(() => ({ className: "nav" }))`
       flex: 1;
     }
     padding-left: 40px;
+    justify-content: flex-start;
   }
 
   & .nav-right {
@@ -123,6 +125,7 @@ const StyledNavBar = styled.div.attrs(() => ({ className: "nav" }))`
 const NavBar = ({ editMode }) => {
   const { t, i18n } = useTranslation();
   const [, , isMaster] = useC2C();
+  const history = useHistory();
   const [showLoadGameModal, setShowLoadGameModal] = React.useState(false);
   const [showSaveGameModal, setShowSaveGameModal] = React.useState(false);
   const [showHelpModal, setShowHelpModal] = React.useState(false);
@@ -135,11 +138,39 @@ const NavBar = ({ editMode }) => {
     [boardConfig, i18n.languages]
   );
 
+  const handleGoBack = React.useCallback(() => {
+    confirmAlert({
+      title: t("Confirmation"),
+      message: t("Do you really want to quit game edition?"),
+      buttons: [
+        {
+          label: t("Yes"),
+          onClick: async () => {
+            history.push("/studio");
+          },
+        },
+        {
+          label: t("No"),
+          onClick: () => {},
+        },
+      ],
+    });
+  }, [history, t]);
+
   return (
     <>
       <StyledNavBar>
         <div className="nav-left">
-          <Brand />
+          {!editMode && <Brand />}
+          {editMode && (
+            <Touch
+              onClick={handleGoBack}
+              alt={t("Go back to studio")}
+              title={t("Go back to studio")}
+              icon={"chevron-left"}
+              style={{ display: "inline" }}
+            />
+          )}
         </div>
 
         <div className="nav-center">
