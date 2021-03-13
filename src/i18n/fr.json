@@ -1,10 +1,8 @@
 {
   "Please select or load a game": "Veuillez choisir un jeu…",
   "Games": "Jeux",
-  "Save/Load": "Sauvegardes",
   "Save game": "Sauvegarder",
   "Box Content": "Boite",
-  "Load last game": "Dernière partie",
   "Dragn drop file here": "Cliquez ou déposez un fichier ici pour charger une sauvegarde",
   "Confirmation": "Confirmation",
   "Do you really want to remove selected items ?": "Souhaitez-vous supprimer la sélection ?",
@@ -72,8 +70,6 @@
   "What is it?": "Qu'est-ce que c'est ?",
   "Invite your friends": "Invitez vos amis",
   "More information": "Plus d'informations",
-  "welcomeText": "<0>Airboardgame est un simulateur de table de jeu qui vous permet de jouer en ligne avec vos amis à vos jeux de société préférés.</0>",
-  "InviteFriends": "<0>Pour inviter d'autres joueurs, partagez le lien suivant avec vos amis.</0>",
   "moreInformation": "<0>Pour plus d'informations, visitez le <2>dépôt github</2>.</0>",
   "I want to play...": "Je veux jouer...",
   "Zone": "Zone",
@@ -94,7 +90,7 @@
   "Standard": "Standard",
   "Other": "Autre",
   "Export game": "Exporter le jeu",
-  "Uploading image(s)...": "Envoi des image(s) en cours…",
+  "Uploading image(s)...": "Envoi des images en cours…",
   "Items": "Élements",
   "Edit": "Éditer",
   "No image": "Pas d'image",
@@ -102,8 +98,6 @@
   "Click or drag'n'drop file here": "Cliquez ou déposez des fichiers dans cette zone",
   "Create new game": "Nouveau jeu",
   "Game loading...": "Chargement…",
-  "Go to home": "Accueil",
-  "Configure game": "Configurer le jeu",
   "Ready to play ?": "Prêt à jouer ?",
   "Add all": "Ajouter tout",
   "Enter your email here": "Saisissez votre email…",
@@ -217,5 +211,7 @@
   "You can also save it to your computer.": "Vous pouvez également le sauvegarder sur votre ordinateur.",
   "Export": "Exporter",
   "You game will be saved and you can access it later in the studio!": "Votre jeu sera sauvegardé et vous pourrez de nouveau y accéder via le studio de création.",
-  "If you have checked the publish checkbox your game will be public.": "Si vous avait coché l'option « Publier », votre jeu sera visibile publiquement." 
+  "If you have checked the publish checkbox your game will be public.": "Si vous avait coché l'option « Publier », votre jeu sera visibile publiquement.",
+  "Share this link with your friends": "Partagez ce lien avec vos amis",
+  "welcomeTip": "<0>Astuce: Utilisez un système de conférence audio pour parler avec vos amis, comme <1>Jitsi</1> (libre & gratuit).</0>"
 }

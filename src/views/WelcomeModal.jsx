@@ -10,25 +10,24 @@ import Modal from "../ui/Modal";
 
 import { useC2C } from "../hooks/useC2C";
 
-const WelcomeContent = styled.div`
-  & .url {
-    background-color: var(--bg-color);
-    padding: 0.5em;
-    border-radius: 2px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+const StyledUrl = styled.div`
+  background-color: var(--color-midGrey);
+  padding: 0.5em;
+  border-radius: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2em;
 
-    & span {
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-    }
+  & span {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
 
-    & img {
-      margin-left: 1em;
-      cursor: pointer;
-    }
+  & img {
+    margin-left: 1em;
+    cursor: pointer;
   }
 `;
 
@@ -65,16 +64,11 @@ const WelcomeModal = ({ show, setShow }) => {
         </button>
       }
     >
-      <WelcomeContent>
-        <h3>{t("Invite your friends")}</h3>
-        <Trans i18nKey="InviteFriends">
-          <p>
-            To invite other players to play with you, share the following link
-            with your friends.
-          </p>
-        </Trans>
-
-        <div className="url">
+      <header>
+        <h3>{t("Share this link with your friends")}</h3>
+      </header>
+      <section>
+        <StyledUrl>
           <span>{currentUrl}</span>
           <img
             className="copy"
@@ -82,33 +76,21 @@ const WelcomeModal = ({ show, setShow }) => {
             alt={t("Copy")}
             onClick={handleCopy}
           />
-        </div>
+        </StyledUrl>
 
-        <h3>{t("Talk with your friends")}</h3>
-        <Trans i18nKey="useAudioConf">
+        <Trans i18nKey="welcomeTip">
           <p>
-            We recommend you to use any audio conferencing system to talk with
-            your friends. For example you can use <a href={meetUrl}>Jitsi</a>.
+            Tip: Use an audio conferencing system to talk with other players,
+            like <a href={meetUrl}>Jitsi</a> (free & open-source).
           </p>
         </Trans>
-
-        <h3>{t("More information")}</h3>
-        <Trans i18nKey="moreInformation">
-          <p>
-            For more information, visit{" "}
-            <a href="https://github.com/jrmi/airboardgame/">
-              github repository
-            </a>
-            .
-          </p>
-        </Trans>
-        <input
-          value={currentUrl}
-          readOnly
-          ref={inputRef}
-          style={{ display: "none" }}
-        />
-      </WelcomeContent>
+      </section>
+      <input
+        value={currentUrl}
+        readOnly
+        ref={inputRef}
+        style={{ display: "none" }}
+      />
     </Modal>
   );
 };

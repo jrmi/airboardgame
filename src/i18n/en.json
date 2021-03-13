@@ -1,8 +1,7 @@
 {
   "Please select or load a game": "Please select or load a game…",
   "Games": "Games",
-  "Save/Load": "Save/Load",
-  "Save game": "Save game",
+  "Save game": "Save",
   "Box Content": "Box Content",
   "Load last game": "Load last game",
   "Dragn drop file here": "Drop file here to load it",
@@ -72,8 +71,6 @@
   "What is it?": "What is it?",
   "Invite your friends": "Invite your friends",
   "More information": "More information",
-  "welcomeText": "<0>Airboardgame is a tabletop simulator to play your favorite board games with your friends online.</0>",
-  "InviteFriends": "<0>To invite other players to play with you, share the following link with your friends.</0>",
   "moreInformation": "<0>For more information, visit <2>github repository</2>.</0>",
   "I want to play...": "I want to play...",
   "Zone": "Zone",
@@ -103,8 +100,6 @@
   "Create new game": "New game",
   "Play your favorite games online with your friends": "Play your favorite games online with your friends",
   "Game loading...": "Game loading...",
-  "Go to home": "Home",
-  "Configure game": "Configure game",
   "Ready to play ?": "Ready to play ?",
   "Add all": "Add all",
   "Enter your email here": "Enter your email here",
@@ -218,5 +213,7 @@
   "You can also save it to your computer.": "You can also save it to your computer.",
   "Export": "Export",
   "You game will be saved and you can access it later in the studio!": "You game will be saved and you can access it later in the studio!",
-  "If you have checked the publish checkbox your game will be public.": "If you have checked the publish checkbox your game will be public."
+  "If you have checked the publish checkbox your game will be public.": "If you have checked the publish checkbox your game will be public.",
+  "Share this link with your friends": "Share this link with your friends",
+  "welcomeTip": "<0>Tip: Use an audio conferencing system to talk with other players, like <1>Jitsi</1> (free & open-source).</0>"
 }
