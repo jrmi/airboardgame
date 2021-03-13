@@ -17,7 +17,7 @@ import { useTranslation } from "react-i18next";
 const newGameData = {
   items: [],
   availableItems: [],
-  board: { size: 1000, scale: 1, name: "New game" },
+  board: { size: 2000, scale: 1, name: "New game" },
 };
 
 export const GameView = ({ edit, session }) => {
@@ -38,6 +38,7 @@ export const GameView = ({ edit, session }) => {
 
         if (!gameId) {
           // Create new game
+          newGameData.board.name = t("New game");
           gameData = JSON.parse(JSON.stringify(newGameData));
           setRealGameId(nanoid());
         } else {
@@ -78,7 +79,7 @@ export const GameView = ({ edit, session }) => {
     return () => {
       isMounted = false;
     };
-  }, [c2c, gameId, gameLoaded, isMaster, joined, session]);
+  }, [c2c, gameId, gameLoaded, isMaster, joined, session, t]);
 
   // Load game from master if any
   React.useEffect(() => {

@@ -195,5 +195,13 @@
   "Show menu": "Aff. le menu",
   "Hide menu": "Cacher le menu",
   "Show action menu": "Afficher le menu d'action",
-  "Hide action menu": "Cacher le menu d'action"
+  "Hide action menu": "Cacher le menu d'action",
+  "Your games": "Vos jeux",
+  "All games": "Jouer",
+  "Game studio": "Créer",
+  "Do you really want to quit game edition?": "Souhaitez-vous réellement quitter l'édition du jeu ?",
+  "Go back to studio": "Retourner au studio",
+  "Create a new game": "Ajouter un jeu",
+  "New game": "Nouveau jeu",
+  "Edit game info": "Éditer les informations sur le jeu"
 }

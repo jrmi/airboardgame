@@ -5,7 +5,7 @@
   "Save game": "Save game",
   "Box Content": "Box Content",
   "Load last game": "Load last game",
-  "Dragn drop file here": "Drop file here to load them",
+  "Dragn drop file here": "Drop file here to load it",
   "Confirmation": "Confirmation",
   "Do you really want to remove selected items ?": "Do you really want to remove selected items ?",
   "Yes": "Yes",
@@ -196,5 +196,13 @@
   "Show menu": "Show menu",
   "Hide menu": "Hide menu",
   "Show action menu": "Show action menu",
-  "Hide action menu": "Hide action menu"
+  "Hide action menu": "Hide action menu",
+  "Your games": "Your games",
+  "All games": "Play",
+  "Game studio": "Studio",
+  "Do you really want to quit game edition?": "Do you really want to quit game edition?",
+  "Go back to studio": "Go back to studio",
+  "Create a new game": "Add a game",
+  "New game": "New game",
+  "Edit game info": "Edit game information"
 }
