@@ -204,5 +204,19 @@
   "Go back to studio": "Go back to studio",
   "Create a new game": "Add a game",
   "New game": "New game",
-  "Edit game info": "Edit game information"
+  "Edit game info": "Edit game information",
+  "Want to continue later?": "Want to continue later?",
+  "You can save the current session on your computer to load it later!": "You can save the current session on your computer to load it later!",
+  "Edit game information": "Edit game information",
+  "Help & info": "Help & info",
+  "Load previously exported work?": "Load previously exported work?",
+  "Load session": "Load session",
+  "Continue a saved game session?": "Continue a saved game session?",
+  "Save & export": "Save & export",
+  "Save you work?": "Save you work?",
+  "Export the board?": "Export the board?",
+  "You can also save it to your computer.": "You can also save it to your computer.",
+  "Export": "Export",
+  "You game will be saved and you can access it later in the studio!": "You game will be saved and you can access it later in the studio!",
+  "If you have checked the publish checkbox your game will be public.": "If you have checked the publish checkbox your game will be public."
 }

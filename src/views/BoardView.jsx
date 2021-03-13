@@ -36,7 +36,7 @@ const BoardContainer = styled.div`
 const ActionBar = styled.div`
   position: fixed;
   bottom: 1em;
-  right: 1em;
+  right: 0em;
   display: flex;
   width: 40%;
   text-shadow: 1px 1px 2px #222;
