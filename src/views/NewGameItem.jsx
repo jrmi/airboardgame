@@ -22,8 +22,21 @@ const Game = styled.li`
     position: relative;
     width: 100%;
     padding-top: 64.5%;
-    background-color: var(--color-blueGrey);
-    border-radius: 5px;
+    & > span {
+      background-color: var(--color-blueGrey);
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      border-radius: 5px;
+      & img {
+        flex: 0;
+      }
+    }
   }
 
   @media screen and (max-width: 1024px) {
@@ -53,7 +66,17 @@ const GameListItem = () => {
 
   return (
     <Game>
-      <Link to={"/game/"} className="img-wrapper"></Link>
+      <Link to={"/game/"} className="img-wrapper">
+        <span>
+          <img
+            src={
+              "https://icongr.am/entypo/squared-plus.svg?size=128&color=f9fbfa"
+            }
+            alt={"alt"}
+            title={"title"}
+          />
+        </span>
+      </Link>
       <div className="details">
         <span></span>
       </div>
