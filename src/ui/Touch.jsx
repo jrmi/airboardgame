@@ -1,5 +1,7 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
+import { useHistory } from "react-router-dom";
 
 const StyledWrapper = styled.div`
   display: flex;
@@ -32,19 +34,21 @@ const StyledButton = styled.div.attrs(({ active }) => ({
   box-shadow: 3px 3px 6px #00000050;
 `;
 
-const Touch = ({
-  onClick = () => {},
-  icon,
-  title,
-  alt,
-  active,
-  label,
-  ...rest
-}) => {
+const Touch = ({ onClick, to, icon, title, alt, active, label, ...rest }) => {
   // Touch icon
+  const history = useHistory();
+  const handleClick = React.useCallback(() => {
+    if (onClick) {
+      onClick();
+    }
+    if (to) {
+      history.push(to);
+    }
+  }, [history, to, onClick]);
+
   return (
     <StyledWrapper {...rest}>
-      <StyledButton onClick={onClick} active={active}>
+      <StyledButton onClick={handleClick} active={active}>
         <img
           src={`https://icongr.am/entypo/${icon}.svg?size=24&color=f9fbfa`}
           alt={alt}
