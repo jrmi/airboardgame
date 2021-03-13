@@ -3,7 +3,6 @@ import { useTranslation, Trans } from "react-i18next";
 import styled from "styled-components";
 
 import { getGames } from "../utils/api";
-import useAuth from "../hooks/useAuth";
 
 import StyledGameList from "./StyledGameList";
 import GameListItem from "./GameListItem";
@@ -82,7 +81,6 @@ const GameListView = () => {
   const { t } = useTranslation();
 
   const [gameList, setGameList] = React.useState([]);
-  const { userId } = useAuth();
 
   React.useEffect(() => {
     let mounted = true;
@@ -139,7 +137,7 @@ const GameListView = () => {
           {gameList
             .filter(({ published }) => published)
             .map((game) => (
-              <GameListItem key={game.id} game={game} userId={userId} />
+              <GameListItem key={game.id} game={game} />
             ))}
         </StyledGameList>
       </Content>

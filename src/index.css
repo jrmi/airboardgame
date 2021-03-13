@@ -12,10 +12,11 @@ body {
   --font-color: #f9fbfa;
   --font-color2: #b3b3b3;
   --color-darkGrey: #121212;
+  --color-darkBlueGrey: #151a23;
   --color-blueGrey: #19202c;
   --color-lightGrey: #90969d;
   --color-grey: #454545;
-  --color-midGrey: #2C3749;
+  --color-midGrey: #2c3749;
   --color-primary: #db5034;
   --color-secondary: #00a698ff;
   --color-error: #d43939;
@@ -35,6 +36,7 @@ button {
   padding: 1rem 2.5rem;
   color: var(--font-color);
   background: var(--color-lightGrey);
+  border-radius: 0;
 }
 
 .button:hover,

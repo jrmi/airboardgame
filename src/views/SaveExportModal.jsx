@@ -10,7 +10,7 @@ import { toast } from "react-toastify";
 
 import Modal from "../ui/Modal";
 
-const SaveGameModal = ({ show, setShow, edit }) => {
+const SaveExportGameModal = ({ show, setShow }) => {
   const { t } = useTranslation();
 
   const { gameId, getGame } = useGame();
@@ -36,15 +36,40 @@ const SaveGameModal = ({ show, setShow, edit }) => {
   }, [gameId, getGame, setShow, t]);
 
   return (
-    <Modal title={t("Save game")} setShow={setShow} show={show}>
-      {edit && (
-        <button className="primary button" onClick={handleSave}>
-          {t("Save game")}
-        </button>
-      )}
-      <DownloadGameLink />
+    <Modal title={t("Save & export")} setShow={setShow} show={show}>
+      <>
+        <header>
+          <h3>{t("Save you work?")}</h3>
+        </header>
+        <section>
+          <p>
+            {t(
+              "You game will be saved and you can access it later in the studio!"
+            )}
+          </p>
+          <p>
+            {t(
+              "If you have checked the publish checkbox your game will be public."
+            )}
+          </p>
+          <button className="primary button icon" onClick={handleSave}>
+            {t("Save game")}
+            <img
+              src={"https://icongr.am/entypo/save.svg?size=24&color=f9fbfa"}
+              alt="icon"
+            />
+          </button>
+        </section>
+        <header>
+          <h3>{t("Export the board?")}</h3>
+        </header>
+        <section>
+          <p>{t("You can also save it to your computer.")}</p>
+          <DownloadGameLink />
+        </section>
+      </>
     </Modal>
   );
 };
 
-export default SaveGameModal;
+export default SaveExportGameModal;

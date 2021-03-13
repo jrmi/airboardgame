@@ -34,7 +34,6 @@ const LoadGame = ({ onLoad = () => {} }) => {
       {...getRootProps()}
       style={{
         border: "1px dashed white",
-        margin: "0.5em",
         padding: "0.5em",
         cursor: "pointer",
         fontSize: "1.5em",

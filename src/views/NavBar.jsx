@@ -4,11 +4,12 @@ import styled from "styled-components";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 
-import HelpModal from "../views/HelpModal";
 import InfoModal from "../views/InfoModal";
 import InfoEditModal from "../views/InfoEditModal";
-import LoadModal from "../views/LoadModal";
-import SaveModal from "../views/SaveModal";
+import LoadGameModal from "../views/LoadGameModal";
+import LoadSessionModal from "../views/LoadSessionModal";
+import ExportModal from "../views/ExportModal";
+import SaveExportModal from "../views/SaveExportModal";
 import { UserList } from "../components/users";
 import { getBestTranslationFromConfig } from "../utils/api";
 import Touch from "../ui/Touch";
@@ -66,7 +67,7 @@ const StyledNavBar = styled.div.attrs(() => ({ className: "nav" }))`
 
   & .nav-right {
     justify-content: flex-end;
-    padding-right: 5px;
+    padding-right: 1em;
     gap: 1em;
   }
 
@@ -128,7 +129,7 @@ const NavBar = ({ editMode }) => {
   const history = useHistory();
   const [showLoadGameModal, setShowLoadGameModal] = React.useState(false);
   const [showSaveGameModal, setShowSaveGameModal] = React.useState(false);
-  const [showHelpModal, setShowHelpModal] = React.useState(false);
+  const [showEditInfoModal, setShowEditInfoModal] = React.useState(false);
   const [showInfoModal, setShowInfoModal] = React.useState(false);
 
   const [boardConfig] = useBoardConfig();
@@ -183,49 +184,64 @@ const NavBar = ({ editMode }) => {
           {(isMaster || editMode) && (
             <Touch
               onClick={() => setShowLoadGameModal((prev) => !prev)}
-              alt={t("Load")}
-              title={t("Load game")}
+              alt={editMode ? t("Load game") : t("Load session")}
+              title={editMode ? t("Load game") : t("Load session")}
               icon={"upload-to-cloud"}
             />
           )}
           <Touch
             onClick={() => setShowSaveGameModal((prev) => !prev)}
             alt={t("Save")}
-            title={t("Save session")}
-            icon={"download"}
+            title={editMode ? t("Save game") : t("Save session")}
+            icon={editMode ? "save" : "download"}
           />
           <div className="spacer" />
+          {editMode && (
+            <Touch
+              onClick={() => setShowEditInfoModal((prev) => !prev)}
+              alt={t("Edit game info")}
+              title={t("Edit game info")}
+              icon={"new-message"}
+            />
+          )}
           <Touch
             onClick={() => setShowInfoModal((prev) => !prev)}
-            alt={editMode ? t("Edit game info") : t("Info")}
-            title={editMode ? t("Edit game info") : t("Info")}
-            icon={editMode ? "new-message" : "info"}
-          />
-          <Touch
-            onClick={() => setShowHelpModal((prev) => !prev)}
-            alt={t("Help")}
-            title={t("Help")}
-            icon={"help"}
+            alt={t("Help & info")}
+            title={t("Help & info")}
+            icon={"info"}
           />
         </div>
       </StyledNavBar>
-      <HelpModal show={showHelpModal} setShow={setShowHelpModal} />
+      <InfoModal show={showInfoModal} setShow={setShowInfoModal} />
+      {editMode && (
+        <InfoEditModal
+          show={showEditInfoModal}
+          setShow={setShowEditInfoModal}
+        />
+      )}
       {!editMode && (
-        <InfoModal show={showInfoModal} setShow={setShowInfoModal} />
+        <LoadSessionModal
+          show={showLoadGameModal}
+          setShow={setShowLoadGameModal}
+          edit={editMode}
+        />
       )}
       {editMode && (
-        <InfoEditModal show={showInfoModal} setShow={setShowInfoModal} />
+        <LoadGameModal
+          show={showLoadGameModal}
+          setShow={setShowLoadGameModal}
+          edit={editMode}
+        />
       )}
-      <LoadModal
-        show={showLoadGameModal}
-        setShow={setShowLoadGameModal}
-        edit={editMode}
-      />
-      <SaveModal
-        show={showSaveGameModal}
-        setShow={setShowSaveGameModal}
-        edit={editMode}
-      />
+      {!editMode && (
+        <ExportModal show={showSaveGameModal} setShow={setShowSaveGameModal} />
+      )}
+      {editMode && (
+        <SaveExportModal
+          show={showSaveGameModal}
+          setShow={setShowSaveGameModal}
+        />
+      )}
     </>
   );
 };

@@ -8,7 +8,7 @@ import { nanoid } from "nanoid";
 
 import Modal from "../ui/Modal";
 
-const LoadSaveGameModal = ({ show, setShow }) => {
+const LoadGameModal = ({ show, setShow }) => {
   const { t } = useTranslation();
   const [c2c] = useC2C();
 
@@ -23,9 +23,16 @@ const LoadSaveGameModal = ({ show, setShow }) => {
 
   return (
     <Modal title={t("Load game")} setShow={setShow} show={show}>
-      <LoadGame onLoad={loadGame} />
+      <>
+        <header>
+          <h3>{t("Load previously exported work?")}</h3>
+        </header>
+        <section>
+          <LoadGame onLoad={loadGame} />
+        </section>
+      </>
     </Modal>
   );
 };
 
-export default LoadSaveGameModal;
+export default LoadGameModal;
