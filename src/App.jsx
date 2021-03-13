@@ -14,7 +14,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "rc-slider/assets/index.css";
 
-import GameListView from "./views/GameListView";
+import Home from "./views/Home";
 import GameView from "./views/GameView";
 import AuthView from "./views/AuthView";
 
@@ -42,8 +42,8 @@ const App = () => {
             <Route path="/game/:gameId?">
               <GameView edit />
             </Route>
-            <Route exact path="/games/">
-              <GameListView />
+            <Route path="/">
+              <Home />
             </Route>
             <Route exact path="/login/:userHash/:token">
               <AuthView />
