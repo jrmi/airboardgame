@@ -48,7 +48,7 @@ const ItemWrapper = styled.div.attrs(({ rotation, locked, selected }) => {
   padding: 4px;
 
   &.selected {
-    border: 2px dashed #ff0000a0;
+    border: 2px dashed var(--color-primary);
     padding: 2px;
     cursor: pointer;
   }
