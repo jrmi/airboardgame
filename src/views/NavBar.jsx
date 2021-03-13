@@ -197,9 +197,9 @@ const NavBar = ({ editMode }) => {
           <div className="spacer" />
           <Touch
             onClick={() => setShowInfoModal((prev) => !prev)}
-            alt={t("Info")}
-            title={t("Info")}
-            icon={editMode ? "tools" : "info"}
+            alt={editMode ? t("Edit game info") : t("Info")}
+            title={editMode ? t("Edit game info") : t("Info")}
+            icon={editMode ? "new-message" : "info"}
           />
           <Touch
             onClick={() => setShowHelpModal((prev) => !prev)}
