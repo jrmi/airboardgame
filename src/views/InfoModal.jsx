@@ -94,6 +94,22 @@ const InfoModal = ({ show, setShow }) => {
             </ul>
           </Trans>
         </section>
+
+        <header>
+          <h3>{t("More information")}</h3>
+        </header>
+
+        <section>
+          <Trans i18nKey="moreInformation">
+            <p>
+              For more information, visit{" "}
+              <a href="https://github.com/jrmi/airboardgame/">
+                github repository
+              </a>
+              .
+            </p>
+          </Trans>
+        </section>
       </>
     </Modal>
   );

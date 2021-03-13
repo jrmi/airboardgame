@@ -23,14 +23,12 @@ const LoadSessionModal = ({ show, setShow }) => {
 
   return (
     <Modal title={t("Load session")} setShow={setShow} show={show}>
-      <>
-        <header>
-          <h3>{t("Continue a saved game session?")}</h3>
-        </header>
-        <section>
-          <LoadGame onLoad={loadGame} />
-        </section>
-      </>
+      <header>
+        <h3>{t("Continue a saved game session?")}</h3>
+      </header>
+      <section>
+        <LoadGame onLoad={loadGame} />
+      </section>
     </Modal>
   );
 };
