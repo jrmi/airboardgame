@@ -102,13 +102,24 @@ export const itemMap = {
           "flipSelf",
           "tap",
           "stack",
+          "alignAsLine",
+          "alignAsSquare",
           "shuffle",
           "clone",
           "lock",
           "remove",
         ];
       } else {
-        return ["tap", "stack", "shuffle", "clone", "lock", "remove"];
+        return [
+          "tap",
+          "stack",
+          "alignAsLine",
+          "alignAsSquare",
+          "shuffle",
+          "clone",
+          "lock",
+          "remove",
+        ];
       }
     },
     availableActions: (item) => {
@@ -123,6 +134,8 @@ export const itemMap = {
           "rotate90",
           "rotate180",
           "stack",
+          "alignAsLine",
+          "alignAsSquare",
           "shuffle",
           "randomlyRotate30",
           "randomlyRotate45",
@@ -142,6 +155,8 @@ export const itemMap = {
           "rotate90",
           "rotate180",
           "stack",
+          "alignAsLine",
+          "alignAsSquare",
           "shuffle",
           "randomlyRotate30",
           "randomlyRotate45",
