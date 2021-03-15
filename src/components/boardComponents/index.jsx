@@ -176,13 +176,24 @@ export const itemMap = {
           "flipSelf",
           "tap",
           "stack",
+          "alignAsLine",
+          "alignAsSquare",
           "shuffle",
           "clone",
           "lock",
           "remove",
         ];
       } else {
-        return ["tap", "stack", "shuffle", "clone", "lock", "remove"];
+        return [
+          "tap",
+          "stack",
+          "alignAsLine",
+          "alignAsSquare",
+          "shuffle",
+          "clone",
+          "lock",
+          "remove",
+        ];
       }
     },
     availableActions: (item) => {
