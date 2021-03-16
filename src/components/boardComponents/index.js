@@ -111,8 +111,6 @@ export const itemMap = {
         return [
           "tap",
           "stack",
-          "alignAsLine",
-          "alignAsSquare",
           "shuffle",
           "clone",
           "lock",
