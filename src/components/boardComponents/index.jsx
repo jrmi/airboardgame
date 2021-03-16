@@ -176,8 +176,6 @@ export const itemMap = {
           "flipSelf",
           "tap",
           "stack",
-          "alignAsLine",
-          "alignAsSquare",
           "shuffle",
           "clone",
           "lock",
