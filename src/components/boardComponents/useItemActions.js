@@ -202,7 +202,7 @@ export const useItemActions = () => {
         return {
           ...item,
           x: newX + currentColumn * clientWidth,
-          y: newY - currentRow * clientHeight,
+          y: newY + currentRow * clientHeight,
         };
       });
     },
