@@ -186,10 +186,6 @@ export const useItemActions = () => {
         )
       );
 
-      // const [newX, newY] = [
-      //   (minMax.min.x + minMax.max.x) / 2,
-      //   (minMax.min.y + minMax.max.y) / 2,
-      // ];
       const [newX, newY] = [minMax.min.x, minMax.max.y];
       let index = -1;
       let currentColumn = -1;
