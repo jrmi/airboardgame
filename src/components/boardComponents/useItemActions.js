@@ -182,7 +182,7 @@ export const useItemActions = () => {
       );
       minMax.max.y = Math.max(
         ...selectedItemList.map(
-          ({ y, id }) => y //+ document.getElementById(id).clientHeight
+          ({ y, id }) => y
         )
       );
 
