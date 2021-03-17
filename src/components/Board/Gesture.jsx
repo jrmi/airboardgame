@@ -117,13 +117,13 @@ const Gesture = ({
         let scale = deltaY;
 
         switch (deltaMode) {
-          case 1: // Pixel
-            scale *= LINE_HEIGHT;
-            break;
-          case 2:
-            scale *= PAGE_HEIGHT;
-            break;
-          default:
+        case 1: // Pixel
+          scale *= LINE_HEIGHT;
+          break;
+        case 2:
+          scale *= PAGE_HEIGHT;
+          break;
+        default:
         }
 
         if (isMacOS()) {
@@ -238,7 +238,14 @@ const Gesture = ({
           ctrlKey,
           metaKey,
           pointerType,
+          buttons,
         } = e;
+
+        // Guard to prevent missed events
+        if (buttons === 0) {
+          onPointerUp(e);
+          return;
+        }
 
         if (stateRef.current.mainPointer !== pointerId) {
           // Event from other pointer
