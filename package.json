@@ -26,7 +26,6 @@
     "react": "^17.0.1",
     "react-color": "^2.18.1",
     "react-confirm-alert": "^2.6.1",
-    "react-cookie-consent": "^6.2.3",
     "react-dom": "^17.0.1",
     "react-draggable": "^4.4.2",
     "react-dropzone": "^11.0.1",

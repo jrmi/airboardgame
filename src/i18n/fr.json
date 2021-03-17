@@ -116,7 +116,7 @@
   "Duration": "Durée",
   "Minimal age (years)": "Age minimum",
   "Board size": "Taille du plateau",
-  "Material language": "Langue du materiel",
+  "Material language": "Langue du matériel",
   "Informations": "Informations",
   "Default language": "Langue par défaut",
   "Game name": "Nom du jeu",
@@ -140,8 +140,8 @@
   "en": "Anglais",
   "Url copied to clipboard!": "L'Url a été copiée dans le presse-papier",
   "Copy": "Copier",
-  "Talk with your friends": "Parlez avec vos amis",
-  "useAudioConf": "<0>Nous vous recommandons d'utiliser une application de conférence audio pour discuter avec vos amis. Par exemple vous pouvez utiliser <1>Jitsi</1>.</0>",
+  "Talk with your friends": "Parlez avec vos ami·e·s",
+  "useAudioConf": "<0>Nous vous recommandons d'utiliser une application de conférence audio pour discuter avec vos ami·e·s. Par exemple vous pouvez utiliser <1>Jitsi</1>.</0>",
   "Error while logging, verify your email address": "Une erreur est survenue lors de l'envoi du lien d'authentification, vérifiez votre adresse.",
   "Move mode": "Mode déplacement",
   "Switch to move mode": "Basculer vers le mode déplacement",
@@ -213,5 +213,6 @@
   "You game will be saved and you can access it later in the studio!": "Votre jeu sera sauvegardé et vous pourrez de nouveau y accéder via le studio de création.",
   "If you have checked the publish checkbox your game will be public.": "Si vous avait coché l'option « Publier », votre jeu sera visibile publiquement.",
   "Share this link with your friends": "Partagez ce lien avec vos amis",
-  "welcomeTip": "<0>Astuce: Utilisez un système de conférence audio pour parler avec vos amis, comme <1>Jitsi</1> (libre & gratuit).</0>"
+  "welcomeTip": "<0>Astuce: Utilisez un système de conférence audio pour parler avec vos amis, comme <1>Jitsi</1> (libre & gratuit).</0>",
+  "Cookie consent message": "Ce site utilise des cookies ou des technologies équivalentes uniquement dans un but technique. Vous pouvez refuser ces cookies mais dans ce cas vous ne pourrez plus vous authentifier."
 }
