@@ -30,12 +30,26 @@ const Kbd = styled.kbd`
 const InfoModal = ({ show, setShow }) => {
   const { t, i18n } = useTranslation();
 
+  const [info, setInfo] = React.useState("");
+
   const boardConfig = useRecoilValue(BoardConfigAtom);
 
   const translation = React.useMemo(
     () => getBestTranslationFromConfig(boardConfig, i18n.languages),
     [boardConfig, i18n.languages]
   );
+
+  React.useEffect(() => {
+    const renderer = new marked.Renderer();
+    renderer.link = (href, title, text) => {
+      return `<a target="_blank" rel="noopener" href="${href}" title="${title}">${text}</a>`;
+    };
+    setInfo(
+      marked(translation.description || "", {
+        renderer: renderer,
+      })
+    );
+  }, [setInfo, translation.description]);
 
   return (
     <Modal title={t("Help & info")} setShow={setShow} show={show}>
@@ -47,7 +61,7 @@ const InfoModal = ({ show, setShow }) => {
           {translation.description && (
             <div
               dangerouslySetInnerHTML={{
-                __html: marked(translation.description),
+                __html: info,
               }}
             ></div>
           )}
