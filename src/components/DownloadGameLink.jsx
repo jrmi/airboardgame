@@ -63,7 +63,7 @@ export const DownloadGameLink = () => {
     <>
       {genOnce && (
         <a
-          className="button primary icon"
+          className="button success icon"
           href={downloadURI}
           download={`airboardgame_${date}.json`}
         >
@@ -75,7 +75,7 @@ export const DownloadGameLink = () => {
         </a>
       )}
       {!genOnce && (
-        <button className="button primary" disabled>
+        <button className="button" disabled>
           {t("Generating export")}...
         </button>
       )}
