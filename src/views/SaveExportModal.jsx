@@ -52,7 +52,7 @@ const SaveExportGameModal = ({ show, setShow }) => {
               "If you have checked the publish checkbox your game will be public."
             )}
           </p>
-          <button className="primary button icon" onClick={handleSave}>
+          <button className="success button icon" onClick={handleSave}>
             {t("Save game")}
             <img
               src={"https://icongr.am/entypo/save.svg?size=24&color=f9fbfa"}
