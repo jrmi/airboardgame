@@ -46,6 +46,7 @@ const StyledBoard = styled.div.attrs(() => ({ className: "board" }))`
   border-radius: 2px;
 
   box-shadow: 0px 3px 6px #00000029;
+  user-select: none;
 `;
 
 export const Board = ({ user, users, getComponent, moveFirst = true }) => {
