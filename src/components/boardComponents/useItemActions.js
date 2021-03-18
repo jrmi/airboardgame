@@ -155,7 +155,7 @@ export const useItemActions = () => {
         return {
           ...item,
           x: newX + index * clientWidth,
-          y: newY - index,
+          y: newY,
         };
       });
     },
