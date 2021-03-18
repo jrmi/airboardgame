@@ -141,11 +141,7 @@ export const useItemActions = () => {
           ({ x, id }) => x + document.getElementById(id).clientWidth
         )
       );
-      minMax.max.y = Math.max(
-        ...selectedItemList.map(
-          ({ y, id }) => y
-        )
-      );
+      minMax.max.y = Math.max(...selectedItemList.map(({ y, id }) => y));
 
       const [newX, newY] = [minMax.min.x, minMax.max.y];
       let index = -1;
@@ -180,11 +176,7 @@ export const useItemActions = () => {
           ({ x, id }) => x + document.getElementById(id).clientWidth
         )
       );
-      minMax.max.y = Math.max(
-        ...selectedItemList.map(
-          ({ y, id }) => y
-        )
-      );
+      minMax.max.y = Math.max(...selectedItemList.map(({ y, id }) => y));
 
       const [newX, newY] = [minMax.min.x, minMax.max.y];
       let index = -1;
