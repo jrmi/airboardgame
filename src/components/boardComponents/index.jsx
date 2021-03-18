@@ -182,14 +182,7 @@ export const itemMap = {
           "remove",
         ];
       } else {
-        return [
-          "tap",
-          "stack",
-          "shuffle",
-          "clone",
-          "lock",
-          "remove",
-        ];
+        return ["tap", "stack", "shuffle", "clone", "lock", "remove"];
       }
     },
     availableActions: (item) => {
