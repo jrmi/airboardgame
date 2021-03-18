@@ -1,6 +1,8 @@
 import saveGame from "./saveGame";
 import deleteGame from "./deleteGame";
 
+const SESSION_DURATION = 60; // Session duration in days
+
 const replaceImageUrl = async ({ store }) => {
   console.log("Migrate images...");
 
@@ -72,7 +74,7 @@ export const main = async ({ store, functions, schedules }) => {
           console.log("Delete session without timestamp ", session._id);
           await store.delete("session", session._id);
         }
-        if (now - session.timestamp > 30 * 24 * 60 * 60 * 100) {
+        if (now - session.timestamp > SESSION_DURATION * 24 * 60 * 60 * 1000) {
           console.log("Delete too old session ", session._id);
           await store.delete("session", session._id);
         }
