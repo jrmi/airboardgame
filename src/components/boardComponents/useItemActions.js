@@ -141,13 +141,13 @@ export const useItemActions = () => {
           ({ x, id }) => x + document.getElementById(id).clientWidth
         )
       );
-      minMax.max.y = Math.max(...selectedItemList.map(({ y, id }) => y));
+      minMax.max.y = Math.max(...selectedItemList.map(({ y }) => y));
 
       const [newX, newY] = [minMax.min.x, minMax.max.y];
       let index = -1;
       batchUpdateItems(selectedItems, (item) => {
         index += 1;
-        const { clientWidth, clientHeight } = document.getElementById(item.id);
+        const { clientWidth } = document.getElementById(item.id);
         return {
           ...item,
           x: newX + index * clientWidth,
@@ -176,14 +176,12 @@ export const useItemActions = () => {
           ({ x, id }) => x + document.getElementById(id).clientWidth
         )
       );
-      minMax.max.y = Math.max(...selectedItemList.map(({ y, id }) => y));
+      minMax.max.y = Math.max(...selectedItemList.map(({ y }) => y));
 
       const [newX, newY] = [minMax.min.x, minMax.max.y];
-      let index = -1;
       let currentColumn = -1;
       let currentRow = 0;
       batchUpdateItems(selectedItems, (item) => {
-        index += 1;
         currentColumn += 1;
         if (currentColumn + 1 > numberOfColumns) {
           currentColumn = 0;
@@ -491,6 +489,8 @@ export const useItemActions = () => {
       toggleLock,
       removeSelectedItems,
       randomlyRotateSelectedItems,
+      alignAsLine,
+      alignAsSquare,
     ]
   );
 
