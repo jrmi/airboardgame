@@ -16,6 +16,7 @@ import ImageDropNPaste from "../components/ImageDropNPaste";
 import { getComponent } from "../components/boardComponents";
 import { useGame } from "../hooks/useGame";
 import AddItemButton from "../components/AddItemButton";
+import MessageButton from "../components/MessageButton";
 
 import { insideClass } from "../utils";
 
@@ -138,6 +139,7 @@ export const BoardView = ({ namespace, edit: editMode = false, session }) => {
           icon={hideMenu ? "eye-with-line" : "eye"}
           style={{ flex: 1 }}
         />
+        <MessageButton />
         <div className="spacer" />
         <AddItemButton />
       </ActionBar>

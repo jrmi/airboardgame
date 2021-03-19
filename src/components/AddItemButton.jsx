@@ -34,43 +34,42 @@ const AddItemButton = () => {
         icon={showAddPanel ? "cross" : "plus"}
         style={{ flex: 1 }}
       />
-      {showAddPanel && (
-        <SidePanel
-          onClose={() => {
-            setShowAddPanel(false);
-          }}
-          position="right"
-        >
-          <nav className="tabs">
-            {
-              // eslint-disable-next-line
+      <SidePanel
+        open={showAddPanel}
+        onClose={() => {
+          setShowAddPanel(false);
+        }}
+        position="right"
+      >
+        <nav className="tabs">
+          {
+            // eslint-disable-next-line
               <a
-                onClick={() => setTab("standard")}
-                className={tab === "standard" ? "active" : ""}
-              >
-                {t("Standard")}
-              </a>
-            }
-            {availableItemList && availableItemList.length > 0 && (
-              // eslint-disable-next-line
+              onClick={() => setTab("standard")}
+              className={tab === "standard" ? "active" : ""}
+            >
+              {t("Standard")}
+            </a>
+          }
+          {availableItemList && availableItemList.length > 0 && (
+            // eslint-disable-next-line
               <a
-                onClick={() => setTab("other")}
-                className={tab === "other" ? "active" : ""}
-              >
-                {t("Other")}
-              </a>
-            )}
-          </nav>
-          <section className="content">
-            {tab === "standard" && <NewItems />}
-            {tab === "other" && (
-              <AvailableItemList>
-                <AvailableItems />
-              </AvailableItemList>
-            )}
-          </section>
-        </SidePanel>
-      )}
+              onClick={() => setTab("other")}
+              className={tab === "other" ? "active" : ""}
+            >
+              {t("Other")}
+            </a>
+          )}
+        </nav>
+        <section className="content">
+          {tab === "standard" && <NewItems />}
+          {tab === "other" && (
+            <AvailableItemList>
+              <AvailableItems />
+            </AvailableItemList>
+          )}
+        </section>
+      </SidePanel>
     </>
   );
 };
