@@ -10,7 +10,7 @@ import Modal from "../ui/Modal";
 
 const LoadGameModal = ({ show, setShow }) => {
   const { t } = useTranslation();
-  const [c2c] = useC2C();
+  const {c2c} = useC2C();
 
   const loadGame = React.useCallback(
     (game) => {

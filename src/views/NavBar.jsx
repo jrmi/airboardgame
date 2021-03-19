@@ -125,7 +125,7 @@ const StyledNavBar = styled.div.attrs(() => ({ className: "nav" }))`
 
 const NavBar = ({ editMode }) => {
   const { t, i18n } = useTranslation();
-  const [, , isMaster] = useC2C();
+  const { isMaster } = useC2C();
   const history = useHistory();
   const [showLoadGameModal, setShowLoadGameModal] = React.useState(false);
   const [showSaveGameModal, setShowSaveGameModal] = React.useState(false);

@@ -12,7 +12,7 @@ const SubscribeUserEvents = () => {
   const setUsers = useSetRecoilState(usersAtom);
   const [currentUser, setCurrentUserState] = useRecoilState(userAtom);
 
-  const [c2c, joined, isMaster] = useC2C();
+  const { c2c, joined, isMaster } = useC2C();
 
   React.useEffect(() => {
     if (joined) {

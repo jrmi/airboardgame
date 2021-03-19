@@ -6,7 +6,7 @@ import { useSetRecoilState } from "recoil";
 import { ItemMapAtom } from "../";
 
 export const SubcribeItemEvents = () => {
-  const [c2c] = useC2C();
+  const { c2c } = useC2C();
 
   const setItemMap = useSetRecoilState(ItemMapAtom);
 
@@ -27,7 +27,7 @@ export const SubcribeItemEvents = () => {
   );
 
   React.useEffect(() => {
-    const unsub = c2c.subscribe(`batchItemsUpdate`, (updatedItems) => {
+    const unsub = c2c.subscribe("batchItemsUpdate", (updatedItems) => {
       batchUpdate(updatedItems);
     });
     return unsub;
@@ -35,7 +35,7 @@ export const SubcribeItemEvents = () => {
 
   React.useEffect(() => {
     const unsub = c2c.subscribe(
-      `selectedItemsMove`,
+      "selectedItemsMove",
       ({ itemIds, posDelta }) => {
         moveItems(itemIds, posDelta, false);
       }
@@ -44,28 +44,28 @@ export const SubcribeItemEvents = () => {
   }, [c2c, moveItems]);
 
   React.useEffect(() => {
-    const unsub = c2c.subscribe(`updateItemListOrder`, (itemIds) => {
+    const unsub = c2c.subscribe("updateItemListOrder", (itemIds) => {
       updateItemOrder(itemIds, false);
     });
     return unsub;
   }, [c2c, updateItemOrder]);
 
   React.useEffect(() => {
-    const unsub = c2c.subscribe(`pushItem`, (newItem) => {
+    const unsub = c2c.subscribe("pushItem", (newItem) => {
       insertItemBefore(newItem, null, false);
     });
     return unsub;
   }, [c2c, insertItemBefore]);
 
   React.useEffect(() => {
-    const unsub = c2c.subscribe(`insertItemBefore`, ([newItem, beforeId]) => {
+    const unsub = c2c.subscribe("insertItemBefore", ([newItem, beforeId]) => {
       insertItemBefore(newItem, beforeId, false);
     });
     return unsub;
   }, [c2c, insertItemBefore]);
 
   React.useEffect(() => {
-    const unsub = c2c.subscribe(`removeItems`, (itemIds) => {
+    const unsub = c2c.subscribe("removeItems", (itemIds) => {
       removeItems(itemIds, false);
     });
     return unsub;

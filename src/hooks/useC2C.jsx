@@ -73,7 +73,7 @@ export const C2CProvider = ({ room, ...props }) => {
 
 export const useC2C = () => {
   const [c2c, joined, isMaster, room] = useContext(C2CContext);
-  return [c2c, joined, isMaster, room];
+  return { c2c, joined, isMaster, room };
 };
 
 export default { C2CContext, C2CProvider, useC2C };

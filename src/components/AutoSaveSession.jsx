@@ -12,7 +12,7 @@ import {
 } from "./Board/";
 
 export const AutoSaveSession = ({ session }) => {
-  const [, , isMaster] = useC2C();
+  const { isMaster } = useC2C();
 
   const itemList = useRecoilValue(AllItemsSelector);
   const boardConfig = useRecoilValue(BoardConfigAtom);

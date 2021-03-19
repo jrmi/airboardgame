@@ -66,7 +66,7 @@ const ActionBar = styled.div`
 export const BoardView = ({ namespace, edit: editMode = false, session }) => {
   const { t } = useTranslation();
   const { currentUser, users } = useUsers();
-  const [, , isMaster] = useC2C();
+  const { isMaster } = useC2C();
 
   const [showWelcomeModal, setShowWelcomeModal] = React.useState(
     SHOW_WELCOME && !editMode && isMaster
