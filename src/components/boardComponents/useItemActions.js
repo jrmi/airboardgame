@@ -18,6 +18,8 @@ import { shuffle as shuffleArray, randInt } from "../../utils";
 
 import deleteIcon from "../../images/delete.svg";
 import stackIcon from "../../images/stack.svg";
+import alignAsLineIcon from "../../images/alignAsLine.svg";
+import alignAsSquareIcon from "../../images/alignAsSquare.svg";
 import duplicateIcon from "../../images/duplicate.svg";
 import seeIcon from "../../images/see.svg";
 import flipIcon from "../../images/flip.svg";
@@ -119,6 +121,80 @@ export const useItemActions = () => {
           ...item,
           x: newX - clientWidth / 2 + index,
           y: newY - clientHeight / 2 - index,
+        };
+      });
+    },
+    [getSelectedItemList, batchUpdateItems, selectedItems]
+  );
+
+  // Align selection to a line
+  const alignAsLine = useRecoilCallback(
+    ({ snapshot }) => async () => {
+      const selectedItemList = await getSelectedItemList(snapshot);
+
+      // Compute
+      const minMax = { min: {}, max: {} };
+      minMax.min.x = Math.min(...selectedItemList.map(({ x }) => x));
+      minMax.min.y = Math.min(...selectedItemList.map(({ y }) => y));
+      minMax.max.x = Math.max(
+        ...selectedItemList.map(
+          ({ x, id }) => x + document.getElementById(id).clientWidth
+        )
+      );
+      minMax.max.y = Math.max(...selectedItemList.map(({ y, id }) => y));
+
+      const [newX, newY] = [minMax.min.x, minMax.max.y];
+      let index = -1;
+      batchUpdateItems(selectedItems, (item) => {
+        index += 1;
+        const { clientWidth, clientHeight } = document.getElementById(item.id);
+        return {
+          ...item,
+          x: newX + index * clientWidth,
+          y: newY,
+        };
+      });
+    },
+    [getSelectedItemList, batchUpdateItems, selectedItems]
+  );
+
+  // Align selection to an array
+  const alignAsSquare = useRecoilCallback(
+    ({ snapshot }) => async () => {
+      const selectedItemList = await getSelectedItemList(snapshot);
+
+      // Count number of elements
+      const numberOfElements = selectedItemList.length;
+      const numberOfColumns = Math.ceil(Math.sqrt(numberOfElements));
+
+      // Compute
+      const minMax = { min: {}, max: {} };
+      minMax.min.x = Math.min(...selectedItemList.map(({ x }) => x));
+      minMax.min.y = Math.min(...selectedItemList.map(({ y }) => y));
+      minMax.max.x = Math.max(
+        ...selectedItemList.map(
+          ({ x, id }) => x + document.getElementById(id).clientWidth
+        )
+      );
+      minMax.max.y = Math.max(...selectedItemList.map(({ y, id }) => y));
+
+      const [newX, newY] = [minMax.min.x, minMax.max.y];
+      let index = -1;
+      let currentColumn = -1;
+      let currentRow = 0;
+      batchUpdateItems(selectedItems, (item) => {
+        index += 1;
+        currentColumn += 1;
+        if (currentColumn + 1 > numberOfColumns) {
+          currentColumn = 0;
+          currentRow += 1;
+        }
+
+        const { clientWidth, clientHeight } = document.getElementById(item.id);
+        return {
+          ...item,
+          x: newX + currentColumn * clientWidth,
+          y: newY + currentRow * clientHeight,
         };
       });
     },
@@ -298,6 +374,20 @@ export const useItemActions = () => {
         shortcut: "",
         multiple: true,
         icon: stackIcon,
+      },
+      alignAsLine: {
+        action: alignAsLine,
+        label: t("Align as line"),
+        shortcut: "",
+        multiple: true,
+        icon: alignAsLineIcon,
+      },
+      alignAsSquare: {
+        action: alignAsSquare,
+        label: t("Align as square"),
+        shortcut: "",
+        multiple: true,
+        icon: alignAsSquareIcon,
       },
       shuffle: {
         action: shuffleSelectedItems,
