@@ -58,11 +58,6 @@ const Message = ({
   );
 };
 
-const StyledMessageList = styled.div`
-  height: 100%;
-  overflow: auto;
-`;
-
 const computeMessageGroup = (messages, userMap, maxTimeDiff = 30000) => {
   if (!messages || messages.length === 0) return [];
 
@@ -104,6 +99,11 @@ const computeMessageGroup = (messages, userMap, maxTimeDiff = 30000) => {
   });
   return messageGroups;
 };
+
+const StyledMessageList = styled.div`
+  height: 100%;
+  overflow: auto;
+`;
 
 const MessageList = ({ messages }) => {
   const messageList = React.useRef(null);
@@ -216,9 +216,10 @@ const MessageButton = () => {
         }}
         position="left"
         noMargin
+        title={t("Chat")}
+        width="25%"
       >
         <StyledChat>
-          <h3>{t("Chat")}</h3>
           <MessageList messages={messages} />
           <Composer sendMessage={sendMessage} />
         </StyledChat>

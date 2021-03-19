@@ -53,78 +53,76 @@ const InfoModal = ({ show, setShow }) => {
 
   return (
     <Modal title={t("Help & info")} setShow={setShow} show={show}>
-      <>
-        <header>
-          <h3>{t("Game information")}</h3>
-        </header>
-        <section>
-          {translation.description && (
-            <div
-              dangerouslySetInnerHTML={{
-                __html: info,
-              }}
-            ></div>
-          )}
-          {!translation.description && <div>{t("No information")}</div>}
-        </section>
-        <header>
-          <h3>{t("Board interactions")}</h3>
-        </header>
-        <section>
-          <Trans i18nKey="helpBoard">
-            <ul>
-              <li>
-                Move the board with middle mouse button click. Alternatively you
-                can use left button with alt key.
-              </li>
-              <li>Zoom with mouse wheel.</li>
-              <li>
-                Switch to edit mode with top button to be able to edit the game.
-              </li>
-              <li>You can save and reload game by clicking the burger menu.</li>
-            </ul>
-          </Trans>{" "}
-        </section>
-        <header>
-          <h3>{t("Item interactions")}</h3>
-        </header>
-        <section>
-          <Trans i18nKey="helpItem">
-            <ul>
-              <li>Double click on any item that can be flipped to flip it.</li>
-              <li>
-                <Kbd>t</Kbd> key to tap/untap selected items.
-              </li>
-              <li>
-                <Kbd>f</Kbd> key to flip/unflip selected items.
-              </li>
-              <li>
-                <Kbd>o</Kbd> key to reveal front side of selected flipped items
-                ONLY ONLY to you.
-              </li>
-              <li>
-                <Kbd>l</Kbd> key to be able to selected previously locked item.
-              </li>
-            </ul>
-          </Trans>
-        </section>
+      <header>
+        <h3>{t("Game information")}</h3>
+      </header>
+      <section>
+        {translation.description && (
+          <div
+            dangerouslySetInnerHTML={{
+              __html: info,
+            }}
+          ></div>
+        )}
+        {!translation.description && <div>{t("No information")}</div>}
+      </section>
+      <header>
+        <h3>{t("Board interactions")}</h3>
+      </header>
+      <section>
+        <Trans i18nKey="helpBoard">
+          <ul>
+            <li>
+              Move the board with middle mouse button click. Alternatively you
+              can use left button with alt key.
+            </li>
+            <li>Zoom with mouse wheel.</li>
+            <li>
+              Switch to edit mode with top button to be able to edit the game.
+            </li>
+            <li>You can save and reload game by clicking the burger menu.</li>
+          </ul>
+        </Trans>
+      </section>
+      <header>
+        <h3>{t("Item interactions")}</h3>
+      </header>
+      <section>
+        <Trans i18nKey="helpItem">
+          <ul>
+            <li>Double click on any item that can be flipped to flip it.</li>
+            <li>
+              <Kbd>t</Kbd> key to tap/untap selected items.
+            </li>
+            <li>
+              <Kbd>f</Kbd> key to flip/unflip selected items.
+            </li>
+            <li>
+              <Kbd>o</Kbd> key to reveal front side of selected flipped items
+              ONLY ONLY to you.
+            </li>
+            <li>
+              <Kbd>l</Kbd> key to be able to selected previously locked item.
+            </li>
+          </ul>
+        </Trans>
+      </section>
 
-        <header>
-          <h3>{t("More information")}</h3>
-        </header>
+      <header>
+        <h3>{t("More information")}</h3>
+      </header>
 
-        <section>
-          <Trans i18nKey="moreInformation">
-            <p>
-              For more information, visit{" "}
-              <a href="https://github.com/jrmi/airboardgame/">
-                github repository
-              </a>
-              .
-            </p>
-          </Trans>
-        </section>
-      </>
+      <section>
+        <Trans i18nKey="moreInformation">
+          <p>
+            For more information, visit{" "}
+            <a href="https://github.com/jrmi/airboardgame/">
+              github repository
+            </a>
+            .
+          </p>
+        </Trans>
+      </section>
     </Modal>
   );
 };

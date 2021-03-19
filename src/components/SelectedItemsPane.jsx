@@ -286,26 +286,31 @@ export const SelectedItemsPane = ({ hideMenu = false }) => {
     });
   };*/
 
+  let title = "";
+  if (selectedItems.length === 1) {
+    title = t("Edit item");
+  }
+  if (selectedItems.length > 1) {
+    title = t("Edit all items");
+  }
+
   return (
     <>
-      {showEdit && !boardState.selecting && (
-        <SidePanel
-          key={selectedItems[0]}
-          onClose={() => {
-            setShowEdit(false);
-          }}
-        >
-          <div>
-            <header>
-              {selectedItems.length === 1 && <h3>{t("Edit item")}</h3>}
-              {selectedItems.length > 1 && <h3>{t("Edit all items")}</h3>}
-            </header>
-            <CardContent>
-              <ItemFormFactory />
-            </CardContent>
-          </div>
-        </SidePanel>
-      )}
+      <SidePanel
+        key={selectedItems[0]}
+        open={showEdit && !boardState.selecting}
+        onClose={() => {
+          setShowEdit(false);
+        }}
+        title={title}
+        width="25%"
+      >
+        <div>
+          <CardContent>
+            <ItemFormFactory />
+          </CardContent>
+        </div>
+      </SidePanel>
       {selectedItems.length && !hideMenu && (
         <ActionPane
           {...boundingBoxLast}
