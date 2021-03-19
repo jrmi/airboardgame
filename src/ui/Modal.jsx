@@ -1,107 +1,15 @@
 import React from "react";
-import { useTranslation } from "react-i18next";
+import SidePanel from "./SidePanel";
 
-import styled from "styled-components";
-
-import { hasClass } from "../utils";
-
-const StyledModal = styled.div.attrs(() => ({ className: "overlay" }))`
-  position: fixed;
-  z-index: 20;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  overflow: auto;
-  background-color: rgba(0, 0, 0, 0.4);
-  border-radius: 5px;
-
-  .modal-content {
-    max-width: 500px;
-    min-height: 100%;
-    position: absolute;
-    top: 0px;
-    right: 0px;
-    padding: 8px 8px 8px 8px;
-    padding: 2em;
-    border-radius: 2px;
-
-    background-color: var(--color-darkGrey);
-    box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px,
-      rgba(0, 0, 0, 0.23) 0px 6px 6px;
-  }
-  & .title {
-    font-weight: 700;
-  }
-  & .content {
-    & header {
-      padding: 0.5em;
-      margin-top: 2em;
-      background-color: var(--color-blueGrey);
-      border-radius: 0.5em 0.5em 0em 0em;
-      & h3 {
-        margin: 0.2em 0.2em 0.2em;
-        font-weight: 300;
-      }
-    }
-    & section {
-      border-radius: 0em 0em 0.5em 0.5em;
-      padding: 2em;
-      background-color: var(--color-darkBlueGrey);
-    }
-  }
-  & .close {
-    position: fixed;
-    top: 1em;
-    right: 1em;
-    padding: 0.5rem;
-    margin: 0;
-  }
-  & footer {
-    margin-top: 1em;
-  }
-
-  @media screen and (max-width: 640px) {
-    & .modal-content {
-      max-width: 90%;
-    }
-  }
-`;
-
-export const Modal = ({ setShow, show, children, footer, title }) => {
-  const { t } = useTranslation();
-
-  if (!show) {
-    return null;
-  }
-
+export const Modal = ({ setShow, show, ...rest }) => {
   return (
-    <StyledModal
-      onClick={(e) => {
-        if (hasClass(e.target, "overlay")) setShow(false);
-      }}
-    >
-      <div className="modal-content">
-        <article>
-          <header>
-            <h2 className="title">{title}</h2>
-            <button
-              className="button clear icon-only close"
-              onClick={() => {
-                setShow(false);
-              }}
-            >
-              <img
-                src="https://icongr.am/feather/x.svg?size=42&color=ffffff"
-                alt={t("Close")}
-              />
-            </button>
-          </header>
-          <div className="content">{children}</div>
-          <footer>{footer}</footer>
-        </article>
-      </div>
-    </StyledModal>
+    <SidePanel
+      open={show}
+      onClose={() => setShow(false)}
+      position="right"
+      modal
+      {...rest}
+    />
   );
 };
 

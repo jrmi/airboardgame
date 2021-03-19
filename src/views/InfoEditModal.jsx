@@ -10,11 +10,9 @@ const InfoModal = ({ show, setShow }) => {
 
   return (
     <Modal title={t("Edit game information")} setShow={setShow} show={show}>
-      <>
-        <section>
-          <BoardConfig />
-        </section>
-      </>
+      <section>
+        <BoardConfig />
+      </section>
     </Modal>
   );
 };

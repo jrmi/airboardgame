@@ -40,6 +40,7 @@ const AddItemButton = () => {
           setShowAddPanel(false);
         }}
         position="right"
+        width="33%"
       >
         <nav className="tabs">
           {
@@ -47,6 +48,7 @@ const AddItemButton = () => {
               <a
               onClick={() => setTab("standard")}
               className={tab === "standard" ? "active" : ""}
+              style={{ cursor: "pointer" }}
             >
               {t("Standard")}
             </a>
@@ -56,6 +58,7 @@ const AddItemButton = () => {
               <a
               onClick={() => setTab("other")}
               className={tab === "other" ? "active" : ""}
+              style={{ cursor: "pointer" }}
             >
               {t("Other")}
             </a>

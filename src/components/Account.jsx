@@ -72,7 +72,12 @@ const Account = ({ disabled, ...props }) => {
         )}
       </div>
       {loginInProgress && <Waiter message={t("In progress...")} />}
-      <Modal show={showLogin} setShow={setShowLogin} title={t("Login")}>
+      <Modal
+        show={showLogin}
+        setShow={setShowLogin}
+        title={t("Login")}
+        width="33%"
+      >
         {!emailSent && (
           <>
             <input
@@ -88,7 +93,7 @@ const Account = ({ disabled, ...props }) => {
                 marginTop: "2em",
               }}
             >
-              <button onClick={handleSubmit} className="button primary">
+              <button onClick={handleSubmit} className="button success">
                 {t("Ask authentication link")}
               </button>
             </div>
@@ -107,7 +112,7 @@ const Account = ({ disabled, ...props }) => {
               }}
             >
               <button
-                className="button primary"
+                className="button success"
                 onClick={() => setShowLogin(false)}
               >
                 Ok
