@@ -214,5 +214,8 @@
   "If you have checked the publish checkbox your game will be public.": "Si vous avait coché l'option « Publier », votre jeu sera visibile publiquement.",
   "Share this link with your friends": "Partagez ce lien avec vos amis",
   "welcomeTip": "<0>Astuce: Utilisez un système de conférence audio pour parler avec vos amis, comme <1>Jitsi</1> (libre & gratuit).</0>",
-  "Cookie consent message": "Ce site utilise des cookies ou des technologies équivalentes uniquement dans un but technique. Vous pouvez refuser ces cookies mais dans ce cas vous ne pourrez plus vous authentifier."
+  "Cookie consent message": "Ce site utilise des cookies ou des technologies équivalentes uniquement dans un but technique. Vous pouvez refuser ces cookies mais dans ce cas vous ne pourrez plus vous authentifier.",
+  "Enter your message and press ENTER": "Saisissez votre message…",
+  "Send": "Envoyer",
+  "Chat": "Messagerie"
 }
