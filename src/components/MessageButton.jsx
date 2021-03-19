@@ -214,7 +214,7 @@ const MessageButton = () => {
         onClose={() => {
           setShowPanel(false);
         }}
-        position="left"
+        position="right"
         noMargin
         title={t("Chat")}
         width="25%"
