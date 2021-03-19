@@ -6,6 +6,8 @@ import { SHOW_WELCOME } from "../utils/settings";
 import { Board } from "../components/Board";
 import SelectedItemsPane from "../components/SelectedItemsPane";
 import { useUsers, SubscribeUserEvents } from "../components/users";
+import Touch from "../ui/Touch";
+import { useC2C } from "../hooks/useC2C";
 
 import WelcomeModal from "./WelcomeModal";
 import NavBar from "./NavBar";
@@ -14,7 +16,6 @@ import ImageDropNPaste from "../components/ImageDropNPaste";
 import { getComponent } from "../components/boardComponents";
 import { useGame } from "../hooks/useGame";
 import AddItemButton from "../components/AddItemButton";
-import Touch from "../ui/Touch";
 
 import { insideClass } from "../utils";
 
@@ -65,9 +66,10 @@ const ActionBar = styled.div`
 export const BoardView = ({ namespace, edit: editMode = false, session }) => {
   const { t } = useTranslation();
   const { currentUser, users } = useUsers();
+  const [, , isMaster] = useC2C();
 
   const [showWelcomeModal, setShowWelcomeModal] = React.useState(
-    SHOW_WELCOME && !editMode
+    SHOW_WELCOME && !editMode && isMaster
   );
 
   const [moveFirst, setMoveFirst] = React.useState(false);
