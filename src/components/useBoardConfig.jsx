@@ -7,7 +7,7 @@ import debounce from "lodash.debounce";
 import { BoardConfigAtom } from "./Board/game/atoms";
 
 export const useBoardConfig = () => {
-  const [c2c] = useC2C();
+  const { c2c } = useC2C();
   const [boardConfig, setBoardConfig] = useRecoilState(BoardConfigAtom);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps

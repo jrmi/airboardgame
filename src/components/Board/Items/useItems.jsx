@@ -5,7 +5,7 @@ import { useSetRecoilState, useRecoilCallback } from "recoil";
 import { ItemListAtom, selectedItemsAtom, ItemMapAtom } from "../";
 
 const useItems = () => {
-  const [c2c] = useC2C();
+  const {c2c} = useC2C();
 
   const setItemList = useSetRecoilState(ItemListAtom);
   const setItemMap = useSetRecoilState(ItemMapAtom);

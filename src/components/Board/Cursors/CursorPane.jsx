@@ -5,7 +5,7 @@ import { PanZoomRotateAtom } from "../";
 import { useRecoilValue } from "recoil";
 
 export const Board = ({ children, user, users }) => {
-  const [c2c] = useC2C();
+  const { c2c } = useC2C();
   const panZoomRotate = useRecoilValue(PanZoomRotateAtom);
 
   const publish = React.useCallback(

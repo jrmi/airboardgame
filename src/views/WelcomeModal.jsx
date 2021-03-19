@@ -36,7 +36,7 @@ const WelcomeModal = ({ show, setShow }) => {
   const currentUrl = window.location.href;
   const inputRef = React.useRef();
 
-  const [, , , room] = useC2C();
+  const { room } = useC2C();
 
   const handleCopy = () => {
     inputRef.current.style.display = "block";

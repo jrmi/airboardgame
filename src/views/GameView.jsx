@@ -21,7 +21,7 @@ const newGameData = {
 };
 
 export const GameView = ({ edit, session }) => {
-  const [c2c, joined, isMaster] = useC2C();
+  const { c2c, joined, isMaster } = useC2C();
   const { gameId } = useParams();
   const [realGameId, setRealGameId] = React.useState();
   const [gameLoaded, setGameLoaded] = React.useState(false);
