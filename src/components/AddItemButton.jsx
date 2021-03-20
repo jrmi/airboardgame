@@ -32,7 +32,6 @@ const AddItemButton = () => {
         title={t("Add item")}
         label={t("Add")}
         icon={showAddPanel ? "cross" : "plus"}
-        style={{ flex: 1 }}
       />
       <SidePanel
         open={showAddPanel}

@@ -31,7 +31,7 @@ const StyledSidePanel = styled.div`
 
   min-width: 280px;
   max-width: 500px;
-  ${({ width }) => (width ? `width: ${width};` : "")}
+  width: ${({ width }) => (width ? `${width}` : "25%")};
 
   overflow-y: auto;
 

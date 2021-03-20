@@ -8,6 +8,7 @@ export const Modal = ({ setShow, show, ...rest }) => {
       onClose={() => setShow(false)}
       position="right"
       modal
+      width="33%"
       {...rest}
     />
   );

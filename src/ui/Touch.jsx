@@ -7,6 +7,12 @@ const StyledWrapper = styled.div`
   flex-direction: column;
   align-items: center;
   text-align: center;
+
+  @media screen and (max-width: 640px) {
+    & > span {
+      font-size: 0.8em;
+    }
+  }
 `;
 
 const StyledButton = styled.div.attrs(({ active }) => ({
