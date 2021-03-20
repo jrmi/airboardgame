@@ -219,5 +219,9 @@
   "Cookie consent message": "This site uses cookies or similar technologies for technical purposes only. You can refuse these cookies but in this case you will not be able to authenticate yourself.",
   "Enter your message and press ENTER": "Enter your message...",
   "Send": "Send",
-  "Chat": "Messages"
+  "Chat": "Messages",
+  "User details": "User details",
+  "Username": "Username",
+  "All players": "All players",
+  "Invite more player": "Invite more player"
 }

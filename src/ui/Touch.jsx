@@ -7,6 +7,7 @@ const StyledWrapper = styled.div`
   flex-direction: column;
   align-items: center;
   text-align: center;
+  line-height: 38px;
 
   @media screen and (max-width: 640px) {
     & > span {

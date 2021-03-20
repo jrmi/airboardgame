@@ -31,7 +31,7 @@ const StyledUrl = styled.div`
   }
 `;
 
-const WelcomeModal = ({ show, setShow }) => {
+const WelcomeModal = ({ show, setShow, welcome = true }) => {
   const { t } = useTranslation();
   const currentUrl = window.location.href;
   const inputRef = React.useRef();
@@ -49,7 +49,11 @@ const WelcomeModal = ({ show, setShow }) => {
   const meetUrl = `https://meet.jit.si/airboardgame__${room}`;
 
   return (
-    <Modal title={t("Ready to play ?")} setShow={setShow} show={show}>
+    <Modal
+      title={welcome ? t("Ready to play ?") : t("Invite more player")}
+      setShow={setShow}
+      show={show}
+    >
       <header>
         <h3>{t("Share this link with your friends")}</h3>
       </header>
@@ -71,15 +75,17 @@ const WelcomeModal = ({ show, setShow }) => {
           </p>
         </Trans>
       </section>
-      <button
-        onClick={() => {
-          setShow(false);
-        }}
-        className="button success"
-        style={{ margin: "1em auto" }}
-      >
-        {t("I want to play...")}
-      </button>
+      {welcome && (
+        <button
+          onClick={() => {
+            setShow(false);
+          }}
+          className="button success"
+          style={{ margin: "1em auto" }}
+        >
+          {t("I want to play...")}
+        </button>
+      )}
       <input
         value={currentUrl}
         readOnly

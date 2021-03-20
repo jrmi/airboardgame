@@ -19,6 +19,7 @@ import { useC2C } from "../hooks/useC2C";
 import Brand from "./Brand";
 
 import { confirmAlert } from "react-confirm-alert";
+import WelcomeModal from "./WelcomeModal";
 
 const StyledNavBar = styled.div.attrs(() => ({ className: "nav" }))`
   position: fixed;
@@ -131,6 +132,7 @@ const NavBar = ({ editMode }) => {
   const [showSaveGameModal, setShowSaveGameModal] = React.useState(false);
   const [showEditInfoModal, setShowEditInfoModal] = React.useState(false);
   const [showInfoModal, setShowInfoModal] = React.useState(false);
+  const [showLink, setShowLink] = React.useState(false);
 
   const [boardConfig] = useBoardConfig();
 
@@ -179,7 +181,18 @@ const NavBar = ({ editMode }) => {
         </div>
 
         <div className="nav-right">
-          {!editMode && <UserList />}
+          {!editMode && (
+            <>
+              <UserList />
+              <Touch
+                onClick={() => {
+                  setShowLink(true);
+                }}
+                icon="add-user"
+                title={t("Invite more player")}
+              />
+            </>
+          )}
           <div className="spacer" />
           {(isMaster || editMode) && (
             <Touch
@@ -213,6 +226,10 @@ const NavBar = ({ editMode }) => {
         </div>
       </StyledNavBar>
       <InfoModal show={showInfoModal} setShow={setShowInfoModal} />
+
+      {!editMode && (
+        <WelcomeModal show={showLink} setShow={setShowLink} welcome={false} />
+      )}
       {editMode && (
         <InfoEditModal
           show={showEditInfoModal}
