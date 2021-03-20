@@ -89,7 +89,7 @@ export const useItemActions = () => {
     updateAvailableActions();
   }, [selectedItems, updateAvailableActions]);
 
-  // Align selection to center
+  // Align selection as a stack
   const align = useRecoilCallback(
     ({ snapshot }) => async () => {
       const selectedItemList = await getSelectedItemList(snapshot);
@@ -109,18 +109,15 @@ export const useItemActions = () => {
         )
       );
 
-      const [newX, newY] = [
-        (minMax.min.x + minMax.max.x) / 2,
-        (minMax.min.y + minMax.max.y) / 2,
-      ];
+      const [newX, newY] = [minMax.min.x, minMax.min.y];
       let index = -1;
       batchUpdateItems(selectedItems, (item) => {
         index += 1;
         const { clientWidth, clientHeight } = document.getElementById(item.id);
         return {
           ...item,
-          x: newX - clientWidth / 2 + index,
-          y: newY - clientHeight / 2 - index,
+          x: newX + index,
+          y: newY + index,
         };
       });
     },
@@ -131,6 +128,9 @@ export const useItemActions = () => {
   const alignAsLine = useRecoilCallback(
     ({ snapshot }) => async () => {
       const selectedItemList = await getSelectedItemList(snapshot);
+
+      // Count number of elements
+      const numberOfElements = selectedItemList.length;
 
       // Compute
       const minMax = { min: {}, max: {} };
@@ -143,8 +143,8 @@ export const useItemActions = () => {
       );
       minMax.max.y = Math.max(...selectedItemList.map(({ y }) => y));
 
-      const [newX, newY] = [minMax.min.x, minMax.max.y];
-      let index = -1;
+      const [newX, newY] = [minMax.min.x, minMax.min.y];
+      let index = numberOfElements;
       batchUpdateItems(selectedItems, (item) => {
         index += 1;
         const { clientWidth } = document.getElementById(item.id);
