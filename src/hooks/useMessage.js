@@ -12,10 +12,10 @@ export const MessagesAtom = atom({
   default: [],
 });
 
-const generateMsg = ({ user: { name, uid }, content }) => {
+const generateMsg = ({ user: { name, uid, color }, content }) => {
   const newMessage = {
     type: "message",
-    user: { name, uid },
+    user: { name, uid, color },
     content,
     uid: nanoid(),
     timestamp: dayjs().toISOString(),

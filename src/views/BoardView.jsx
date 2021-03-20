@@ -40,26 +40,29 @@ const ActionBar = styled.div`
   bottom: 1em;
   right: 0em;
   display: flex;
-  width: 40%;
+  width: 100%;
   text-shadow: 1px 1px 2px #222;
   font-size: 0.8em;
+  & > * {
+    padding: 0 1.5em;
+  }
 
   & .spacer {
     flex: 1;
   }
 
-  @media screen and (max-width: 1024px) {
-    & {
-      width: 50%;
+  @media screen and (max-width: 640px) {
+    & > * {
+      padding: 0 0.5em;
+    }
+    & .spacer {
+      padding: 0;
     }
   }
 
-  @media screen and (max-width: 640px) {
-    & {
-      width: 80%;
-    }
-    & .spacer {
-      flex: 0;
+  @media screen and (max-width: 420px) {
+    & > * {
+      padding: 0 0.2em;
     }
   }
 `;
@@ -114,6 +117,8 @@ export const BoardView = ({ namespace, edit: editMode = false, session }) => {
         </BoardContainer>
       )}
       <ActionBar>
+        <MessageButton />
+        <div className="spacer" />
         <Touch
           onClick={() => setMoveFirst(false)}
           alt={t("Select mode")}
@@ -129,7 +134,6 @@ export const BoardView = ({ namespace, edit: editMode = false, session }) => {
           title={t("Switch to move mode")}
           icon={"hand"}
           active={moveFirst}
-          style={{ flex: 1 }}
         />
         <Touch
           onClick={() => setHideMenu((prev) => !prev)}
@@ -137,9 +141,7 @@ export const BoardView = ({ namespace, edit: editMode = false, session }) => {
           label={hideMenu ? t("Show menu") : t("Hide menu")}
           title={hideMenu ? t("Show action menu") : t("Hide action menu")}
           icon={hideMenu ? "eye-with-line" : "eye"}
-          style={{ flex: 1 }}
         />
-        <MessageButton />
         <div className="spacer" />
         <AddItemButton />
       </ActionBar>
