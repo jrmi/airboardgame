@@ -119,6 +119,14 @@ const SidePanel = ({
     }
   }, [openPortal, closePortal, open]);
 
+  React.useEffect(() => {
+    if (isOpen && modal) {
+      document.getElementById("root").classList.add("blurry");
+    } else {
+      document.getElementById("root").classList.remove("blurry");
+    }
+  }, [isOpen, modal]);
+
   return (
     <>
       <Portal>

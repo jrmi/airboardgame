@@ -28,6 +28,10 @@ body {
   --font-family-mono: monaco, "Consolas", "Lucida Console", monospace;
 }
 
+.blurry{
+  filter: blur(3px);
+}
+
 .button,
 [type="button"],
 [type="reset"],
