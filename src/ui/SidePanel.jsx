@@ -77,6 +77,11 @@ const StyledSidePanel = styled.div`
         font-weight: 300;
       }
     }
+
+    & header:first-child {
+      margin-top: 0;
+    }
+
     & section {
       border-radius: 0em 0em 0.5em 0.5em;
       padding: 2em;
