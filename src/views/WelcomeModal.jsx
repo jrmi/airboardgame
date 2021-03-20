@@ -49,21 +49,7 @@ const WelcomeModal = ({ show, setShow }) => {
   const meetUrl = `https://meet.jit.si/airboardgame__${room}`;
 
   return (
-    <Modal
-      title={t("Ready to play ?")}
-      setShow={setShow}
-      show={show}
-      footer={
-        <button
-          onClick={() => {
-            setShow(false);
-          }}
-          className="button"
-        >
-          {t("I want to play...")}
-        </button>
-      }
-    >
+    <Modal title={t("Ready to play ?")} setShow={setShow} show={show}>
       <header>
         <h3>{t("Share this link with your friends")}</h3>
       </header>
@@ -85,6 +71,15 @@ const WelcomeModal = ({ show, setShow }) => {
           </p>
         </Trans>
       </section>
+      <button
+        onClick={() => {
+          setShow(false);
+        }}
+        className="button success"
+        style={{ margin: "1em auto" }}
+      >
+        {t("I want to play...")}
+      </button>
       <input
         value={currentUrl}
         readOnly
