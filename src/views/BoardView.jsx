@@ -16,7 +16,7 @@ import ImageDropNPaste from "../components/ImageDropNPaste";
 import { getComponent } from "../components/boardComponents";
 import { useGame } from "../hooks/useGame";
 import AddItemButton from "../components/AddItemButton";
-import MessageButton from "../components/MessageButton";
+import { MessageButton } from "../components/Message";
 
 import { insideClass } from "../utils";
 
