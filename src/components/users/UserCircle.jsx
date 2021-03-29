@@ -11,6 +11,7 @@ const StyledUserCircle = styled.div`
   border-radius: 100%;
   text-align: center;
   line-height: 38px;
+  text-transform: capitalize;
   ${({ isSelf }) => (isSelf ? "text-decoration: underline;" : "")};
   cursor: ${({ isSelf }) => (isSelf ? "pointer" : "default")};
 
@@ -29,7 +30,7 @@ const StyledUserCircle = styled.div`
 `;
 
 const UserCircle = ({ name, ...rest }) => {
-  const pre = name[0].toUpperCase() + name[1].toLowerCase();
+  let pre = name.slice(0, 2).toLowerCase();
   return <StyledUserCircle {...rest}>{pre}</StyledUserCircle>;
 };
 
