@@ -48,7 +48,7 @@ const UserConfig = ({ user, setUser, editable, index }) => {
         color={user.color}
         onClick={() => editable && setShowDetails(true)}
         title={user.name}
-        name={user.name}
+        name={user.name || `${index}`}
         isSelf={editable}
       />
       <Modal
