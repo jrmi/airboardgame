@@ -116,8 +116,8 @@ export const useItemActions = () => {
         const { clientWidth, clientHeight } = document.getElementById(item.id);
         return {
           ...item,
-          x: newX + index,
-          y: newY + index,
+          x: newX + index * 0.5,
+          y: newY + index * 0.5,
         };
       });
     },
@@ -141,13 +141,13 @@ export const useItemActions = () => {
           ({ x, id }) => x + document.getElementById(id).clientWidth
         )
       );
-      minMax.max.y = Math.max(...selectedItemList.map(({ y }) => y));
+      minMax.max.y = Math.max(...selectedItemList.map(({ y, id }) => y));
 
       const [newX, newY] = [minMax.min.x, minMax.min.y];
       let index = numberOfElements;
       batchUpdateItems(selectedItems, (item) => {
-        index += 1;
-        const { clientWidth } = document.getElementById(item.id);
+        index -= 1;
+        const { clientWidth, clientHeight } = document.getElementById(item.id);
         return {
           ...item,
           x: newX + index * clientWidth,
@@ -171,21 +171,20 @@ export const useItemActions = () => {
       const minMax = { min: {}, max: {} };
       minMax.min.x = Math.min(...selectedItemList.map(({ x }) => x));
       minMax.min.y = Math.min(...selectedItemList.map(({ y }) => y));
-      minMax.max.x = Math.max(
-        ...selectedItemList.map(
-          ({ x, id }) => x + document.getElementById(id).clientWidth
-        )
-      );
-      minMax.max.y = Math.max(...selectedItemList.map(({ y }) => y));
 
-      const [newX, newY] = [minMax.min.x, minMax.max.y];
-      let currentColumn = -1;
-      let currentRow = 0;
+      const [newX, newY] = [minMax.min.x, minMax.min.y];
+      let currentColumn = numberOfElements % numberOfColumns;
+      let currentRow = Math.ceil(numberOfElements / numberOfColumns) - 1; // Compute last row.
+
+      if (currentColumn == 0) {
+        currentColumn = numberOfColumns;
+      }
+
       batchUpdateItems(selectedItems, (item) => {
-        currentColumn += 1;
-        if (currentColumn + 1 > numberOfColumns) {
-          currentColumn = 0;
-          currentRow += 1;
+        currentColumn -= 1;
+        if (currentColumn < 0) {
+          currentColumn = numberOfColumns - 1;
+          currentRow -= 1;
         }
 
         const { clientWidth, clientHeight } = document.getElementById(item.id);
