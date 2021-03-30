@@ -4,10 +4,10 @@ export const USE_PROXY =
 export const SITEID = import.meta.env.VITE_RICOCHET_SITEID;
 
 export const API_ENDPOINT = USE_PROXY
-  ? ""
-  : import.meta.env.VITE_API_ENDPOINT ||
-    window.location.origin ||
-    "http://localhost:3001";
+  ? `/${SITEID}`
+  : `${import.meta.env.VITE_API_ENDPOINT}/${SITEID}` ||
+    `${window.location.origin}/${SITEID}` ||
+    `http://localhost:3001/${SITEID}`;
 
 export const SOCKET_URL =
   import.meta.env.VITE_SOCKET_URL ||
