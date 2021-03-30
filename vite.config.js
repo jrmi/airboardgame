@@ -48,15 +48,16 @@ if (useProxy) {
         "/socket.io": socketServer
           .replace("https", "wss")
           .replace("http", "ws"),
-        "/store": server,
-        "/execute": server,
         "/file": server,
-        "/auth": server,
         [`/${siteId}`]: server,
       },
     },
   };
 }
+
+/*"/store": server,
+        "/execute": server,
+        "/auth": server,*/
 
 // https://vitejs.dev/config/
 export default defineConfig({
