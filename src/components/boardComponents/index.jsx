@@ -13,6 +13,7 @@ import Meeple from "./Meeple";
 import Jewel from "./Jewel";
 import Pawn from "./Pawn";
 import CheckerBoard from "./CheckerBoard";
+import Cylinder from "./Cylinder";
 
 import ImageFormFields from "./forms/ImageFormFields";
 import CounterFormFields from "./forms/CounterFormFields";
@@ -27,6 +28,7 @@ import MeepleFormFields from "./forms/MeepleFormFields";
 import JewelFormFields from "./forms/JewelFormFields";
 import PawnFormFields from "./forms/PawnFormFields";
 import CheckerBoardFormFields from "./forms/CheckerBoardFormFields";
+import CylinderFormFields from "./forms/CylinderFormFields";
 
 export const itemMap = {
   rect: {
@@ -59,6 +61,22 @@ export const itemMap = {
     ],
     form: CubeFormFields,
     label: i18n.t("Cube"),
+    template: {},
+  },
+  cylinder: {
+    component: Cylinder,
+    defaultActions: ["clone", "lock", "remove"],
+    availableActions: [
+      "stack",
+      "alignAsLine",
+      "alignAsSquare",
+      "shuffle",
+      "clone",
+      "lock",
+      "remove",
+    ],
+    form: CylinderFormFields,
+    label: i18n.t("Cylinder"),
     template: {},
   },
   round: {
