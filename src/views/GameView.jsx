@@ -1,9 +1,12 @@
 import React from "react";
+import { useSetRecoilState } from "recoil";
 import { useParams } from "react-router-dom";
 import { nanoid } from "nanoid";
 import { Provider } from "@scripters/use-socket.io";
 
 import { C2CProvider, useC2C } from "../hooks/useC2C";
+import { MessagesAtom, parseMessage } from "../hooks/useMessage";
+
 import { SOCKET_URL, SOCKET_OPTIONS } from "../utils/settings";
 
 import BoardView from "../views/BoardView";
@@ -27,6 +30,8 @@ export const GameView = ({ edit, session }) => {
   const [gameLoaded, setGameLoaded] = React.useState(false);
   const [game, setGame] = React.useState(null);
   const gameLoadingRef = React.useRef(false);
+  const setMessages = useSetRecoilState(MessagesAtom);
+
   const { t } = useTranslation();
 
   React.useEffect(() => {
@@ -63,6 +68,8 @@ export const GameView = ({ edit, session }) => {
         if (!isMounted) return;
 
         setGame(gameData);
+        const { messages = [] } = gameData;
+        setMessages(messages.map((m) => parseMessage(m)));
         // Send loadGame event for other user
         c2c.publish("loadGame", gameData);
         setGameLoaded(true);

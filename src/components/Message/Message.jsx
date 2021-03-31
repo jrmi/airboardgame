@@ -20,7 +20,7 @@ const StyledMessage = styled.div`
   }
   & .left-block {
     padding: 0 1rem;
-    opacity: 0;
+    opacity: 0.05;
   }
   &:hover {
     & .line {
