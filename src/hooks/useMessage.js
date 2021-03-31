@@ -23,7 +23,7 @@ const generateMsg = ({ user: { name, uid, color }, content }) => {
   return newMessage;
 };
 
-const parseMessage = (message) => {
+export const parseMessage = (message) => {
   try {
     return {
       ...message,
