@@ -72,55 +72,56 @@ const Account = ({ disabled, ...props }) => {
         )}
       </div>
       {loginInProgress && <Waiter message={t("In progress...")} />}
-      <Modal
-        show={showLogin}
-        setShow={setShowLogin}
-        title={t("Login")}
-        width="33%"
-      >
-        {!emailSent && (
-          <>
-            <input
-              value={email}
-              onChange={handleChange}
-              placeholder={t("Enter your email here")}
-              onKeyDown={handleKeyDown}
-            />
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                marginTop: "2em",
-              }}
+      {!emailSent && (
+        <Modal
+          show={showLogin}
+          setShow={setShowLogin}
+          title={t("Login")}
+          width="33%"
+        >
+          <input
+            value={email}
+            onChange={handleChange}
+            placeholder={t("Enter your email here")}
+            onKeyDown={handleKeyDown}
+          />
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              marginTop: "2em",
+            }}
+          >
+            <button onClick={handleSubmit} className="button success">
+              {t("Ask authentication link")}
+            </button>
+          </div>
+        </Modal>
+      )}
+      {emailSent && (
+        <Modal
+          show={showLogin}
+          setShow={setShowLogin}
+          title={t("Login")}
+          width="33%"
+        >
+          <p>{t("Mail sent, check your inbox and click the link to login.")}</p>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              marginTop: "2em",
+            }}
+          >
+            <button
+              className="button success"
+              onClick={() => setShowLogin(false)}
             >
-              <button onClick={handleSubmit} className="button success">
-                {t("Ask authentication link")}
-              </button>
-            </div>
-          </>
-        )}
-        {emailSent && (
-          <>
-            <p>
-              {t("Mail sent, check your inbox and click the link to login.")}
-            </p>
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                marginTop: "2em",
-              }}
-            >
-              <button
-                className="button success"
-                onClick={() => setShowLogin(false)}
-              >
-                Ok
-              </button>
-            </div>
-          </>
-        )}
-      </Modal>
+              Ok
+            </button>
+          </div>
+        </Modal>
+      )}
     </>
   );
 };
