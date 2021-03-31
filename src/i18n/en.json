@@ -43,6 +43,7 @@
   "Rectangle": "Rectangle",
   "Image": "Image",
   "Round": "Round",
+  "Cylinder": "Cylinder",
   "Note": "Note",
   "Counter": "Counter",
   "Dice": "Dice",
