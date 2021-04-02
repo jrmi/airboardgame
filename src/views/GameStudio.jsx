@@ -6,7 +6,7 @@ import styled from "styled-components";
 import { getGames } from "../utils/api";
 import useAuth from "../hooks/useAuth";
 
-import StyledGameList from "./StyledGameList";
+import { StyledGameList } from "./StyledGameList";
 import NewGameItem from "./NewGameItem";
 import GameListItem from "./GameListItem";
 
