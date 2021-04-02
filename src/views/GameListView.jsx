@@ -1,10 +1,16 @@
 import React from "react";
 import { useTranslation, Trans } from "react-i18next";
 import styled from "styled-components";
+import Diacritics from "diacritic";
 
 import { getGames } from "../utils/api";
 
-import StyledGameList from "./StyledGameList";
+import {
+  StyledGameList,
+  StyledGameFilters,
+  StyledGameResultNumber,
+} from "./StyledGameList";
+
 import GameListItem from "./GameListItem";
 
 const Header = styled.header`
@@ -77,10 +83,29 @@ const Content = styled.div`
   background-color: var(--bg-secondary-color);
 `;
 
+const cleanWord = function (word) {
+  return Diacritics.clean(word).toLowerCase();
+}
+
 const GameListView = () => {
   const { t } = useTranslation();
+  const NULL_SEARCH_TERM = "";
 
   const [gameList, setGameList] = React.useState([]);
+  const [searchTerm, setSearchTerm] = React.useState(NULL_SEARCH_TERM);
+
+  const handleChange = (event) => {
+    setSearchTerm(event.target.value);
+  };
+
+  const filteredGameList = React.useMemo(() => {
+    return gameList.filter((game) => {
+      return (
+        searchTerm === NULL_SEARCH_TERM ||
+        cleanWord(game.defaultName).includes(cleanWord(searchTerm))
+      );
+    });
+  }, [gameList, searchTerm]);
 
   React.useEffect(() => {
     let mounted = true;
@@ -132,9 +157,25 @@ const GameListView = () => {
       <Content>
         <Filter>
           <h2 className="incentive">{t("Start a game now")}</h2>
+          <StyledGameFilters>
+            <li>
+              <input
+                type="search"
+                id="game-search"
+                name="game-search"
+                aria-label={t("Search for a game")}
+                placeholder={t("Search for a game")}
+                value={searchTerm}
+                onChange={handleChange}
+              />
+            </li>
+          </StyledGameFilters>
+          <StyledGameResultNumber>
+            {t("games-available", { nbOfGames: `${filteredGameList.length}` })}
+          </StyledGameResultNumber>
         </Filter>
         <StyledGameList>
-          {gameList
+          {filteredGameList
             .filter(({ published }) => published)
             .map((game) => (
               <GameListItem key={game.id} game={game} />

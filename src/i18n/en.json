@@ -224,5 +224,7 @@
   "User details": "User details",
   "Username": "Username",
   "All players": "All players",
-  "Invite more player": "Invite more player"
+  "Invite more player": "Invite more player",
+  "Search for a game": "Search for a game",
+  "games-available": "{{ nbOfGames }} games available"
 }

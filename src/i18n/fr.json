@@ -222,5 +222,7 @@
   "User details": "Informations utilisateur",
   "Username": "Nom",
   "All players": "Tous les joueurs",
-  "Invite more player": "Invitez vos ami·e·s"
+  "Invite more player": "Invitez vos ami·e·s",
+  "Search for a game": "Cherchez un jeu",
+  "games-available": "{{ nbOfGames }} jeux disponibles"
 }
