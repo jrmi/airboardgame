@@ -12,7 +12,7 @@ import { SOCKET_URL, SOCKET_OPTIONS } from "../utils/settings";
 import BoardView from "../views/BoardView";
 import Waiter from "../ui/Waiter";
 
-import { getGame } from "../utils/api";
+import { getGame, getSession } from "../utils/api";
 
 import GameProvider from "../hooks/useGame";
 import { useTranslation } from "react-i18next";
@@ -41,17 +41,16 @@ export const GameView = ({ session }) => {
       try {
         let gameData;
 
-        if (!gameId) {
-          // Create new game
-          newGameData.board.name = t("New game");
-          gameData = JSON.parse(JSON.stringify(newGameData));
-          setRealGameId(nanoid());
-        } else {
-          // Load game from server
+        // Load game from server
+        try {
+          // First from session if exists
+          gameData = await getSession(session);
+        } catch {
+          // Then from initial game
           gameData = await getGame(gameId);
-
-          setRealGameId(gameId);
         }
+
+        setRealGameId(gameId);
 
         // Add id if necessary
         gameData.items = gameData.items.map((item) => ({
@@ -62,9 +61,11 @@ export const GameView = ({ session }) => {
         if (!isMounted) return;
 
         setGame(gameData);
+        const { messages = [] } = gameData;
+        setMessages(messages.map((m) => parseMessage(m)));
 
         // Send loadGame event for other user
-        //c2c.publish("loadGame", gameData);
+        c2c.publish("loadGame", gameData);
 
         setGameLoaded(true);
       } catch (e) {
@@ -80,7 +81,7 @@ export const GameView = ({ session }) => {
     return () => {
       isMounted = false;
     };
-  }, [c2c, gameId, gameLoaded, isMaster, joined, setMessages, t]);
+  }, [c2c, gameId, gameLoaded, isMaster, joined, session, setMessages, t]);
 
   // Load game from master if any
   React.useEffect(() => {
@@ -109,7 +110,7 @@ export const GameView = ({ session }) => {
 
   return (
     <GameProvider game={game} gameId={realGameId}>
-      <BoardView namespace={realGameId} edit={true} session={session} />
+      <BoardView namespace={realGameId} session={session} />
     </GameProvider>
   );
 };

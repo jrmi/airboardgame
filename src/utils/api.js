@@ -1,21 +1,20 @@
-import { API_ENDPOINT, IS_PRODUCTION, SITEID } from "./settings";
-//import { nanoid } from "nanoid";
+import { API_ENDPOINT, IS_PRODUCTION } from "./settings";
 
 import testGame from "../games/testGame";
 import perfGame from "../games/perfGame";
 import unpublishedGame from "../games/unpublishedGame";
 import { nanoid } from "nanoid";
 
-const uploadURI = `${API_ENDPOINT}/file`;
-const gameURI = `${API_ENDPOINT}/${SITEID}/store/game`;
-const sessionURI = `${API_ENDPOINT}/${SITEID}/store/session`;
-const execURI = `${API_ENDPOINT}/${SITEID}/execute`;
-const authURI = `${API_ENDPOINT}/${SITEID}/auth`;
+const oldUploadURI = `${API_ENDPOINT}/file`;
+const gameURI = `${API_ENDPOINT}/store/game`;
+const sessionURI = `${API_ENDPOINT}/store/session`;
+//const execURI = `${API_ENDPOINT}/execute`;
+const authURI = `${API_ENDPOINT}/auth`;
 
 export const uploadImage = async (namespace, file) => {
   const payload = new FormData();
   payload.append("file", file);
-  const result = await fetch(`${uploadURI}/${namespace}/`, {
+  const result = await fetch(`${oldUploadURI}/${namespace}/`, {
     method: "POST",
     body: payload, // this sets the `Content-Type` header to `multipart/form-data`
   });
@@ -23,7 +22,40 @@ export const uploadImage = async (namespace, file) => {
   return await result.text();
 };
 
-// TODO Add delete Image
+export const uploadResourceImage = async (boxId, resourceId, file) => {
+  const uploadGameURI = `${API_ENDPOINT}/store/${boxId}/${resourceId}/file`;
+
+  const payload = new FormData();
+  payload.append("file", file);
+
+  const result = await fetch(`${uploadGameURI}/`, {
+    method: "POST",
+    body: payload, // this sets the `Content-Type` header to `multipart/form-data`
+    credentials: "include",
+  });
+
+  return await result.text();
+};
+
+export const listResourceImage = async (boxId, resourceId) => {
+  const uploadGameURI = `${API_ENDPOINT}/store/${boxId}/${resourceId}/file`;
+
+  const result = await fetch(`${uploadGameURI}/`, {
+    method: "GET",
+    credentials: "include",
+  });
+
+  return await result.json();
+};
+
+export const deleteResourceImage = async (filePath) => {
+  const result = await fetch(`${API_ENDPOINT}/${filePath}`, {
+    method: "DELETE",
+    credentials: "include",
+  });
+
+  return await result.json();
+};
 
 export const getBestTranslationFromConfig = (
   {
@@ -143,7 +175,7 @@ export const createGame = async (data) => {
 };
 
 export const updateGame = async (id, data) => {
-  const result = await fetch(`${execURI}/saveGame/${id}`, {
+  const result = await fetch(`${gameURI}/${id}`, {
     method: "POST",
     headers: {
       Accept: "application/json",
@@ -165,7 +197,7 @@ export const updateGame = async (id, data) => {
 };
 
 export const deleteGame = async (id) => {
-  const result = await fetch(`${execURI}/deleteGame/${id}`, {
+  const result = await fetch(`${gameURI}/${id}`, {
     method: "POST",
     credentials: "include",
   });

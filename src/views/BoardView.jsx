@@ -119,7 +119,7 @@ export const BoardView = ({ namespace, edit: editMode = false, session }) => {
         </BoardContainer>
       )}
       <ActionBar>
-        <MessageButton />
+        {!editMode && <MessageButton />}
         <div className="spacer" />
         <Touch
           onClick={() => setMoveFirst(false)}
