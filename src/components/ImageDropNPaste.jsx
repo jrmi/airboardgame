@@ -10,10 +10,14 @@ import { nanoid } from "nanoid";
 import { useRecoilCallback } from "recoil";
 import { useTranslation } from "react-i18next";
 
+import { useGame } from "../hooks/useGame";
+
 const ImageDropNPaste = ({ namespace, children }) => {
   const { t } = useTranslation();
   const [uploading, setUploading] = React.useState(false);
   const { pushItem } = useItems();
+
+  const { addFile } = useGame();
 
   const addImageItem = useRecoilCallback(
     ({ snapshot }) => async (location) => {
@@ -34,13 +38,14 @@ const ImageDropNPaste = ({ namespace, children }) => {
       setUploading(true);
       await Promise.all(
         acceptedFiles.map(async (file) => {
-          const location = await uploadImage(namespace, file);
+          const location = await addFile(file);
+          //const location = await uploadImage(namespace, file);
           await addImageItem(location);
         })
       );
       setUploading(false);
     },
-    [addImageItem, namespace]
+    [addImageItem, addFile]
   );
 
   const { getRootProps } = useDropzone({ onDrop });

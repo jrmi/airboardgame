@@ -1,6 +1,7 @@
 import React, { memo } from "react";
 import { useUsers } from "../users";
 import styled from "styled-components";
+import { media2Url } from "../../utils/media";
 
 import eye from "../../images/eye.svg";
 
@@ -84,6 +85,8 @@ const Image = ({
 }) => {
   const { currentUser, users } = useUsers();
 
+  const imageContent = media2Url(content);
+
   const size = {};
 
   if (width) {
@@ -119,7 +122,7 @@ const Image = ({
       </UnflippedFor>
       <FrontImage
         visible={!flippedForMe}
-        src={content}
+        src={imageContent}
         alt=""
         draggable={false}
         {...size}

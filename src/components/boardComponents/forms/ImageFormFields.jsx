@@ -6,7 +6,11 @@ import Label from "../../../ui/formUtils/Label";
 
 import ImageField from "../../../ui/formUtils/ImageField";
 
+import { useGame } from "../../../hooks/useGame";
+
 const ImageForm = ({ initialValues }) => {
+  const { addFile } = useGame();
+
   const { t } = useTranslation();
   return (
     <>
@@ -58,7 +62,13 @@ const ImageForm = ({ initialValues }) => {
         {t("Front image")}
         <Field name="content" initialValue={initialValues.content}>
           {({ input: { value, onChange } }) => {
-            return <ImageField value={value} onChange={onChange} />;
+            return (
+              <ImageField
+                value={value}
+                onChange={onChange}
+                uploadFile={addFile}
+              />
+            );
           }}
         </Field>
       </Label>
@@ -67,7 +77,13 @@ const ImageForm = ({ initialValues }) => {
         {t("Back image")}
         <Field name="backContent" initialValue={initialValues.backContent}>
           {({ input: { value, onChange } }) => {
-            return <ImageField value={value} onChange={onChange} />;
+            return (
+              <ImageField
+                value={value}
+                onChange={onChange}
+                uploadFile={addFile}
+              />
+            );
           }}
         </Field>
       </Label>
@@ -80,7 +96,13 @@ const ImageForm = ({ initialValues }) => {
           }
         >
           {({ input: { value, onChange } }) => {
-            return <ImageField value={value} onChange={onChange} />;
+            return (
+              <ImageField
+                value={value}
+                onChange={onChange}
+                uploadFile={addFile}
+              />
+            );
           }}
         </Field>
       </Label>

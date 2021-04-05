@@ -1,5 +1,3 @@
-console.log("Save game");
-
 const throwError = (message, code = 400) => {
   const errorObject = new Error(message);
   errorObject.statusCode = code;

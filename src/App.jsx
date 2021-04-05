@@ -17,6 +17,7 @@ import "./react-confirm-alert.css";
 
 import Home from "./views/Home";
 import GameView from "./views/GameView";
+import SessionView from "./views/SessionView";
 import AuthView from "./views/AuthView";
 
 import Waiter from "./ui/Waiter";
@@ -38,10 +39,10 @@ const App = () => {
               }}
             </Route>
             <Route path="/game/:gameId/session/:room/">
-              <GameView />
+              <SessionView />
             </Route>
             <Route path="/game/:gameId?">
-              <GameView edit />
+              <GameView />
             </Route>
             <Route exact path="/login/:userHash/:token">
               <AuthView />
