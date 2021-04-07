@@ -43,14 +43,19 @@ const StyledButton = styled.div.attrs(({ active }) => ({
 const Touch = ({ onClick, to, icon, title, alt, active, label, ...rest }) => {
   // Touch icon
   const history = useHistory();
-  const handleClick = React.useCallback(() => {
-    if (onClick) {
-      onClick();
-    }
-    if (to) {
-      history.push(to);
-    }
-  }, [history, to, onClick]);
+  const handleClick = React.useCallback(
+    (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      if (onClick) {
+        onClick(e);
+      }
+      if (to) {
+        history.push(to);
+      }
+    },
+    [history, to, onClick]
+  );
 
   return (
     <StyledWrapper {...rest}>

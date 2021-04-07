@@ -2,6 +2,7 @@ import React from "react";
 import { useTranslation, Trans } from "react-i18next";
 import styled from "styled-components";
 import Diacritics from "diacritic";
+import { useQuery } from "react-query";
 
 import { getGames } from "../utils/api";
 
@@ -85,58 +86,49 @@ const Content = styled.div`
 
 const cleanWord = function (word) {
   return Diacritics.clean(word).toLowerCase();
-}
+};
 
 const GameListView = () => {
   const { t } = useTranslation();
   const NULL_SEARCH_TERM = "";
 
-  const [gameList, setGameList] = React.useState([]);
   const [searchTerm, setSearchTerm] = React.useState(NULL_SEARCH_TERM);
+
+  const { isLoading, data: gameList } = useQuery("games", async () =>
+    (await getGames())
+      .filter((game) => game.published)
+      .sort((a, b) => {
+        const [nameA, nameB] = [
+          a.board.defaultName || a.board.name,
+          b.board.defaultName || b.board.name,
+        ];
+        if (nameA < nameB) {
+          return -1;
+        }
+        if (nameA > nameB) {
+          return 1;
+        }
+        return 0;
+      })
+  );
 
   const handleChange = (event) => {
     setSearchTerm(event.target.value);
   };
 
   const filteredGameList = React.useMemo(() => {
-    return gameList.filter(
-      (game) =>
-        searchTerm === NULL_SEARCH_TERM ||
-        cleanWord(game.defaultName).includes(cleanWord(searchTerm))
-    );
+    return gameList
+      ? gameList.filter(
+          (game) =>
+          searchTerm === NULL_SEARCH_TERM ||
+            cleanWord(game.defaultNamse).includes(cleanWord(searchTerm))
+      )
+      : [];
   }, [gameList, searchTerm]);
 
-  React.useEffect(() => {
-    let mounted = true;
-
-    const loadGames = async () => {
-      const content = await getGames();
-      if (!mounted) return;
-
-      setGameList(
-        content
-          .filter((game) => game.published)
-          .sort((a, b) => {
-            const [nameA, nameB] = [
-              a.board.defaultName || a.board.name,
-              b.board.defaultName || b.board.name,
-            ];
-            if (nameA < nameB) {
-              return -1;
-            }
-            if (nameA > nameB) {
-              return 1;
-            }
-            return 0;
-          })
-      );
-    };
-
-    loadGames();
-    return () => {
-      mounted = false;
-    };
-  }, []);
+  if (isLoading) {
+    return null;
+  }
 
   return (
     <>

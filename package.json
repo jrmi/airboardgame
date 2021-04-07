@@ -33,6 +33,7 @@
     "react-dropzone": "^11.0.1",
     "react-final-form": "^6.5.0",
     "react-i18next": "^11.7.0",
+    "react-query": "^3.13.4",
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
     "react-toastify": "^6.1.0",
