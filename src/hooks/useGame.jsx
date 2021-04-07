@@ -14,7 +14,6 @@ import {
 import useBoardConfig from "../components/useBoardConfig";
 
 import { uploadResourceImage } from "../utils/api";
-import { API_BASE } from "../utils/settings";
 
 export const GameContext = React.createContext({});
 
@@ -64,17 +63,6 @@ export const GameProvider = ({ gameId, game, children }) => {
     []
   );
 
-  const addFile = React.useCallback(
-    async (file) => {
-      const filePath = await uploadResourceImage("game", gameId, file);
-      return {
-        type: "local",
-        content: filePath,
-      };
-    },
-    [gameId]
-  );
-
   React.useEffect(() => {
     if (game) {
       setGame(game);
@@ -83,7 +71,7 @@ export const GameProvider = ({ gameId, game, children }) => {
 
   return (
     <GameContext.Provider
-      value={{ setGame, getGame: getCurrentGame, gameId, gameLoaded, addFile }}
+      value={{ setGame, getGame: getCurrentGame, gameId, gameLoaded }}
     >
       {gameLoaded && children}
       <SubscribeGameEvents getGame={getCurrentGame} setGame={setGame} />

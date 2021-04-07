@@ -10,19 +10,17 @@ const ExportModal = ({ show, setShow }) => {
 
   return (
     <Modal title={t("Save game")} setShow={setShow} show={show}>
-      <>
-        <header>
-          <h3>{t("Want to continue later?")}</h3>
-        </header>
-        <section>
-          <p>
-            {t(
-              "You can save the current session on your computer to load it later!"
-            )}
-          </p>
-          <DownloadGameLink />
-        </section>
-      </>
+      <header>
+        <h3>{t("Want to continue later?")}</h3>
+      </header>
+      <section>
+        <p>
+          {t(
+            "You can save the current session on your computer to load it later!"
+          )}
+        </p>
+        <DownloadGameLink />
+      </section>
     </Modal>
   );
 };

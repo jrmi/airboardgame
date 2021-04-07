@@ -1,7 +1,7 @@
 import React, { memo } from "react";
 import { useUsers } from "../users";
 import styled from "styled-components";
-import { media2Url } from "../../utils/media";
+import { media2Url } from "../../components/mediaLibrary";
 
 import eye from "../../images/eye.svg";
 
@@ -76,7 +76,7 @@ const Image = ({
   width,
   height,
   content = "/default.png",
-  backContent,
+  backContent: rawBackContent,
   flipped = false,
   unflippedFor,
   text,
@@ -86,6 +86,8 @@ const Image = ({
   const { currentUser, users } = useUsers();
 
   const imageContent = media2Url(content);
+  const backContent = media2Url(rawBackContent);
+  const overlayContent = media2Url(overlay?.content);
 
   const size = {};
 
@@ -134,13 +136,8 @@ const Image = ({
         draggable={false}
         {...size}
       />
-      {overlay && overlay.content && (
-        <OverlayImage
-          src={overlay.content}
-          draggable={false}
-          alt=""
-          {...size}
-        />
+      {overlayContent && (
+        <OverlayImage src={overlayContent} draggable={false} alt="" {...size} />
       )}
       {flippedForMe && backText && <Label>{backText}</Label>}
       {(!flippedForMe || !backText) && text && <Label>{text}</Label>}

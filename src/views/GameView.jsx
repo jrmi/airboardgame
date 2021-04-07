@@ -5,7 +5,7 @@ import { nanoid } from "nanoid";
 import { Provider } from "@scripters/use-socket.io";
 
 import { C2CProvider, useC2C } from "../hooks/useC2C";
-import { MessagesAtom, parseMessage } from "../hooks/useMessage";
+import { MessagesAtom } from "../hooks/useMessage";
 
 import { SOCKET_URL, SOCKET_OPTIONS } from "../utils/settings";
 

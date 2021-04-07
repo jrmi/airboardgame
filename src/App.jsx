@@ -1,4 +1,5 @@
 import React, { Suspense } from "react";
+import { QueryClient, QueryClientProvider } from "react-query";
 
 import {
   BrowserRouter as Router,
@@ -22,37 +23,43 @@ import AuthView from "./views/AuthView";
 
 import Waiter from "./ui/Waiter";
 
+const queryClient = new QueryClient();
+
 const App = () => {
   return (
     <Suspense fallback={<Waiter message={"Loading…"} />}>
       <RecoilRoot>
-        <Router>
-          <Switch>
-            <Route path="/game/:gameId/session/" exact>
-              {({
-                match: {
-                  params: { gameId },
-                },
-              }) => {
-                // Redirect to new session id
-                return <Redirect to={`/game/${gameId}/session/${nanoid()}`} />;
-              }}
-            </Route>
-            <Route path="/game/:gameId/session/:room/">
-              <SessionView />
-            </Route>
-            <Route path="/game/:gameId?">
-              <GameView />
-            </Route>
-            <Route exact path="/login/:userHash/:token">
-              <AuthView />
-            </Route>
-            <Redirect from="/" to="/games/" exact />
-            <Route path="/">
-              <Home />
-            </Route>
-          </Switch>
-        </Router>
+        <QueryClientProvider client={queryClient}>
+          <Router>
+            <Switch>
+              <Route path="/game/:gameId/session/" exact>
+                {({
+                  match: {
+                    params: { gameId },
+                  },
+                }) => {
+                  // Redirect to new session id
+                  return (
+                    <Redirect to={`/game/${gameId}/session/${nanoid()}`} />
+                  );
+                }}
+              </Route>
+              <Route path="/game/:gameId/session/:room/">
+                <SessionView />
+              </Route>
+              <Route path="/game/:gameId?">
+                <GameView />
+              </Route>
+              <Route exact path="/login/:userHash/:token">
+                <AuthView />
+              </Route>
+              <Redirect from="/" to="/games/" exact />
+              <Route path="/">
+                <Home />
+              </Route>
+            </Switch>
+          </Router>
+        </QueryClientProvider>
       </RecoilRoot>
       <ToastContainer
         position="top-center"

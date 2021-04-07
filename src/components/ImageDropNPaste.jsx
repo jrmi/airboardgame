@@ -2,32 +2,30 @@ import React from "react";
 
 import Waiter from "../ui/Waiter";
 import { useDropzone } from "react-dropzone";
-import { uploadImage } from "../utils/api";
 import { PanZoomRotateAtom } from "./Board";
 import { useItems } from "../components/Board/Items";
+import { useMediaLibrary } from "../components/mediaLibrary";
 import { nanoid } from "nanoid";
 
 import { useRecoilCallback } from "recoil";
 import { useTranslation } from "react-i18next";
 
-import { useGame } from "../hooks/useGame";
-
-const ImageDropNPaste = ({ namespace, children }) => {
+const ImageDropNPaste = ({ children }) => {
   const { t } = useTranslation();
   const [uploading, setUploading] = React.useState(false);
   const { pushItem } = useItems();
 
-  const { addFile } = useGame();
+  const { addMedia, libraries } = useMediaLibrary();
 
   const addImageItem = useRecoilCallback(
-    ({ snapshot }) => async (location) => {
+    ({ snapshot }) => async (media) => {
       const { centerX, centerY } = await snapshot.getPromise(PanZoomRotateAtom);
       pushItem({
         type: "image",
         x: centerX,
         y: centerY,
         id: nanoid(),
-        content: location,
+        content: media,
       });
     },
     [pushItem]
@@ -38,14 +36,13 @@ const ImageDropNPaste = ({ namespace, children }) => {
       setUploading(true);
       await Promise.all(
         acceptedFiles.map(async (file) => {
-          const location = await addFile(file);
-          //const location = await uploadImage(namespace, file);
-          await addImageItem(location);
+          const media = await addMedia(libraries[0], file);
+          await addImageItem(media);
         })
       );
       setUploading(false);
     },
-    [addImageItem, addFile]
+    [addImageItem, addMedia, libraries]
   );
 
   const { getRootProps } = useDropzone({ onDrop });
@@ -58,13 +55,13 @@ const ImageDropNPaste = ({ namespace, children }) => {
         const item = items[i];
         if (item.type.indexOf("image") !== -1) {
           const file = item.getAsFile();
-          const location = await uploadImage(namespace, file);
+          const location = await addMedia(file);
           await addImageItem(location);
         }
       }
       setUploading(false);
     },
-    [addImageItem, namespace]
+    [addImageItem, addMedia]
   );
 
   React.useEffect(() => {

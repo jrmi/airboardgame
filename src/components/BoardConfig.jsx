@@ -6,7 +6,7 @@ import { Form, Field } from "react-final-form";
 import AutoSave from "../ui/formUtils/AutoSave";
 import Label from "../ui/formUtils/Label";
 import useBoardConfig from "./useBoardConfig";
-import ImageField from "../ui/formUtils/ImageField";
+import { ImageField } from "./mediaLibrary";
 import Hint from "../ui/formUtils/Hint";
 import { useGame } from "../hooks/useGame";
 

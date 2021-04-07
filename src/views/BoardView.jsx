@@ -10,6 +10,7 @@ import Touch from "../ui/Touch";
 import { useC2C } from "../hooks/useC2C";
 
 import WelcomeModal from "./WelcomeModal";
+import { MediaLibraryProvider } from "../components/mediaLibrary";
 import NavBar from "./NavBar";
 import AutoSaveSession from "../components/AutoSaveSession";
 import ImageDropNPaste from "../components/ImageDropNPaste";
@@ -82,6 +83,23 @@ export const BoardView = ({ namespace, edit: editMode = false, session }) => {
   const [hideMenu, setHideMenu] = React.useState(false);
   const { gameLoaded } = useGame();
 
+  const libraries = React.useMemo(() => {
+    if (editMode) {
+      return [
+        { id: "game", name: t("Game"), boxId: "game", resourceId: namespace },
+      ];
+    }
+    return [
+      {
+        id: "session",
+        name: t("Session"),
+        boxId: "session",
+        resourceId: session,
+      },
+      { id: "game", name: t("Game"), boxId: "game", resourceId: namespace },
+    ];
+  }, [editMode, namespace, session, t]);
+
   React.useEffect(() => {
     // Chrome-related issue.
     // Making the wheel event non-passive, which allows to use preventDefault() to prevent
@@ -100,53 +118,55 @@ export const BoardView = ({ namespace, edit: editMode = false, session }) => {
 
   return (
     <StyledBoardView>
-      <NavBar editMode={editMode} />
-      <WelcomeModal show={showWelcomeModal} setShow={setShowWelcomeModal} />
-      <SubscribeUserEvents />
-      {!editMode && <AutoSaveSession session={session} />}
-      {gameLoaded && (
-        <BoardContainer>
-          <ImageDropNPaste namespace={namespace}>
-            <Board
-              user={currentUser}
-              users={users}
-              getComponent={getComponent}
-              moveFirst={moveFirst}
-              hideMenu={hideMenu}
-            />
-          </ImageDropNPaste>
-          <SelectedItemsPane hideMenu={hideMenu} />
-        </BoardContainer>
-      )}
-      <ActionBar>
-        {!editMode && <MessageButton />}
-        <div className="spacer" />
-        <Touch
-          onClick={() => setMoveFirst(false)}
-          alt={t("Select mode")}
-          label={t("Select")}
-          title={t("Switch to select mode")}
-          icon={"mouse-pointer"}
-          active={!moveFirst}
-        />
-        <Touch
-          onClick={() => setMoveFirst(true)}
-          alt={t("Move mode")}
-          label={t("Move")}
-          title={t("Switch to move mode")}
-          icon={"hand"}
-          active={moveFirst}
-        />
-        <Touch
-          onClick={() => setHideMenu((prev) => !prev)}
-          alt={hideMenu ? t("Show menu") : t("Hide menu")}
-          label={hideMenu ? t("Show menu") : t("Hide menu")}
-          title={hideMenu ? t("Show action menu") : t("Hide action menu")}
-          icon={hideMenu ? "eye-with-line" : "eye"}
-        />
-        <div className="spacer" />
-        <AddItemButton />
-      </ActionBar>
+      <MediaLibraryProvider libraries={libraries}>
+        <NavBar editMode={editMode} />
+        <WelcomeModal show={showWelcomeModal} setShow={setShowWelcomeModal} />
+        <SubscribeUserEvents />
+        {!editMode && <AutoSaveSession session={session} />}
+        {gameLoaded && (
+          <BoardContainer>
+            <ImageDropNPaste>
+              <Board
+                user={currentUser}
+                users={users}
+                getComponent={getComponent}
+                moveFirst={moveFirst}
+                hideMenu={hideMenu}
+              />
+            </ImageDropNPaste>
+            <SelectedItemsPane hideMenu={hideMenu} />
+          </BoardContainer>
+        )}
+        <ActionBar>
+          {!editMode && <MessageButton />}
+          <div className="spacer" />
+          <Touch
+            onClick={() => setMoveFirst(false)}
+            alt={t("Select mode")}
+            label={t("Select")}
+            title={t("Switch to select mode")}
+            icon={"mouse-pointer"}
+            active={!moveFirst}
+          />
+          <Touch
+            onClick={() => setMoveFirst(true)}
+            alt={t("Move mode")}
+            label={t("Move")}
+            title={t("Switch to move mode")}
+            icon={"hand"}
+            active={moveFirst}
+          />
+          <Touch
+            onClick={() => setHideMenu((prev) => !prev)}
+            alt={hideMenu ? t("Show menu") : t("Hide menu")}
+            label={hideMenu ? t("Show menu") : t("Hide menu")}
+            title={hideMenu ? t("Show action menu") : t("Hide action menu")}
+            icon={hideMenu ? "eye-with-line" : "eye"}
+          />
+          <div className="spacer" />
+          <AddItemButton />
+        </ActionBar>
+      </MediaLibraryProvider>
     </StyledBoardView>
   );
 };
