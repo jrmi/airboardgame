@@ -99,12 +99,11 @@ const GameListView = () => {
   };
 
   const filteredGameList = React.useMemo(() => {
-    return gameList.filter((game) => {
-      return (
+    return gameList.filter(
+      (game) =>
         searchTerm === NULL_SEARCH_TERM ||
         cleanWord(game.defaultName).includes(cleanWord(searchTerm))
-      );
-    });
+    );
   }, [gameList, searchTerm]);
 
   React.useEffect(() => {
@@ -115,19 +114,21 @@ const GameListView = () => {
       if (!mounted) return;
 
       setGameList(
-        content.sort((a, b) => {
-          const [nameA, nameB] = [
-            a.board.defaultName || a.board.name,
-            b.board.defaultName || b.board.name,
-          ];
-          if (nameA < nameB) {
-            return -1;
-          }
-          if (nameA > nameB) {
-            return 1;
-          }
-          return 0;
-        })
+        content
+          .filter((game) => game.published)
+          .sort((a, b) => {
+            const [nameA, nameB] = [
+              a.board.defaultName || a.board.name,
+              b.board.defaultName || b.board.name,
+            ];
+            if (nameA < nameB) {
+              return -1;
+            }
+            if (nameA > nameB) {
+              return 1;
+            }
+            return 0;
+          })
       );
     };
 
@@ -175,11 +176,9 @@ const GameListView = () => {
           </StyledGameResultNumber>
         </Filter>
         <StyledGameList>
-          {filteredGameList
-            .filter(({ published }) => published)
-            .map((game) => (
-              <GameListItem key={game.id} game={game} />
-            ))}
+          {filteredGameList.map((game) => (
+            <GameListItem key={game.id} game={game} />
+          ))}
         </StyledGameList>
       </Content>
     </>
