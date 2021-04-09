@@ -3,6 +3,7 @@ import { API_ENDPOINT, IS_PRODUCTION } from "./settings";
 
 import testGame from "../games/testGame";
 import perfGame from "../games/perfGame";
+import unpublishedGame from "../games/unpublishedGame";
 import { nanoid } from "nanoid";
 
 const uploadURI = `${API_ENDPOINT}/file`;
@@ -96,6 +97,14 @@ export const getGames = async () => {
         id: "perf",
         published: true,
         ...perfGame.board,
+      },
+      {
+        ...unpublishedGame,
+        name: "Unpublished Game",
+        data: unpublishedGame,
+        id: "unpublished",
+        published: false,
+        ...unpublishedGame.board,
       },
       ...gameList,
     ];
