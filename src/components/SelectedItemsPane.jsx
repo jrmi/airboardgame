@@ -264,7 +264,7 @@ export const SelectedItemsPane = ({ hideMenu = false }) => {
     };
   }, [onDblClick]);
 
-  if (selectedItems.length === 0) {
+  if (hideMenu || selectedItems.length === 0) {
     return null;
   }
 
@@ -305,11 +305,9 @@ export const SelectedItemsPane = ({ hideMenu = false }) => {
         title={title}
         width="25%"
       >
-        <div>
-          <CardContent>
-            <ItemFormFactory />
-          </CardContent>
-        </div>
+        <CardContent>
+          <ItemFormFactory />
+        </CardContent>
       </SidePanel>
       {selectedItems.length && !hideMenu && (
         <ActionPane

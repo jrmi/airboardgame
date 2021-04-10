@@ -157,7 +157,7 @@ const SidePanel = ({
               />
             </button>
           </header>
-          <div className="content">{children}</div>
+          <div className="content">{open && children}</div>
           {footer && <footer>{footer}</footer>}
         </StyledSidePanel>
       </Portal>
