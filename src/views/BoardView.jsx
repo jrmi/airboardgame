@@ -43,8 +43,10 @@ const ActionBar = styled.div`
   width: 100%;
   text-shadow: 1px 1px 2px #222;
   font-size: 0.8em;
-  & > * {
+  pointer-events: none;
+  & > *:not(.spacer) {
     padding: 0 1.5em;
+    pointer-events: all;
   }
 
   & .spacer {
