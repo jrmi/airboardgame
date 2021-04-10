@@ -29,6 +29,15 @@ export const StyledGameFilters = styled.ul`
     flex: auto;
     max-width: 30rem;
     margin: 0 1rem;
+    padding: 1rem;
+    text-align: center;
+    background: #1d1d1d;
+    border-radius: 0.5rem;
+
+    .filter-title {
+      text-transform: uppercase;
+      color: var(--font-color2);
+    }
   }
 
   input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="color"]):not([type="button"]):not([type="reset"]) {

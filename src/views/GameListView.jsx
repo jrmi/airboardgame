@@ -4,6 +4,7 @@ import styled from "styled-components";
 import Diacritics from "diacritic";
 
 import { getGames } from "../utils/api";
+import SliderRange from "../ui/SliderRange";
 
 import {
   StyledGameList,
@@ -85,26 +86,31 @@ const Content = styled.div`
 
 const cleanWord = function (word) {
   return Diacritics.clean(word).toLowerCase();
-}
+};
 
 const GameListView = () => {
   const { t } = useTranslation();
   const NULL_SEARCH_TERM = "";
 
   const [gameList, setGameList] = React.useState([]);
-  const [searchTerm, setSearchTerm] = React.useState(NULL_SEARCH_TERM);
-
-  const handleChange = (event) => {
-    setSearchTerm(event.target.value);
-  };
+  const [filterCriteria, setFilterCriteria] = React.useState({
+    searchTerm: NULL_SEARCH_TERM,
+    nbOfPlayersMin: 1,
+    nbOfPlayersMax: 9,
+  });
 
   const filteredGameList = React.useMemo(() => {
-    return gameList.filter(
-      (game) =>
-        searchTerm === NULL_SEARCH_TERM ||
-        cleanWord(game.defaultName).includes(cleanWord(searchTerm))
-    );
-  }, [gameList, searchTerm]);
+    return gameList.filter((game) => {
+      return (
+        (filterCriteria.searchTerm === NULL_SEARCH_TERM ||
+          cleanWord(game.defaultName).includes(
+            cleanWord(filterCriteria.searchTerm)
+          )) &&
+        filterCriteria.nbOfPlayersMin <= game.playerCount[1] &&
+        filterCriteria.nbOfPlayersMax >= game.playerCount[0]
+      );
+    });
+  }, [gameList, filterCriteria]);
 
   React.useEffect(() => {
     let mounted = true;
@@ -138,6 +144,21 @@ const GameListView = () => {
     };
   }, []);
 
+  const onChangeNbOfPlayersSlider = function (values) {
+    setFilterCriteria({
+      ...filterCriteria,
+      nbOfPlayersMin: values[0],
+      nbOfPlayersMax: values[1],
+    });
+  };
+
+  const onChangeSearchTerm = (event) => {
+    setFilterCriteria({
+      ...filterCriteria,
+      searchTerm: event.target.value,
+    });
+  };
+
   return (
     <>
       <Header>
@@ -166,8 +187,22 @@ const GameListView = () => {
                 name="game-search"
                 aria-label={t("Search for a game")}
                 placeholder={t("Search for a game")}
-                value={searchTerm}
-                onChange={handleChange}
+                value={filterCriteria.searchTerm}
+                onChange={onChangeSearchTerm}
+              />
+            </li>
+            <li>
+              <span className="filter-title">{t("Number of players")}</span>
+              <SliderRange
+                defaultValue={[1, 9]}
+                value={[
+                  filterCriteria.nbOfPlayersMin,
+                  filterCriteria.nbOfPlayersMax,
+                ]}
+                min={1}
+                max={9}
+                step={1}
+                onChange={onChangeNbOfPlayersSlider}
               />
             </li>
           </StyledGameFilters>
