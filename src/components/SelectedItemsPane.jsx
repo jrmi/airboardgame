@@ -48,7 +48,7 @@ const ActionPane = styled.div.attrs(({ top, left, height }) => {
   align-items: center;
   border-radius: 4px;
   padding: 0.1em 0.5em;
-  transition: opacity 300ms;
+  transition: opacity 100ms;
   opacity: ${({ hide }) => (hide ? 0 : 0.9)};
   
   box-shadow: 2px 2px 10px 0.3px rgba(0, 0, 0, 0.5);
@@ -371,11 +371,13 @@ export const SelectedItemsPane = ({ hideMenu = false }) => {
           )}
         </ActionPane>
       )}
-      <BoundingBox
-        boundingBoxLast={boundingBoxLast}
-        setBoundingBoxLast={setBoundingBoxLast}
-        selectedItems={selectedItems}
-      />
+      {!boardState.movingItems && (
+        <BoundingBox
+          boundingBoxLast={boundingBoxLast}
+          setBoundingBoxLast={setBoundingBoxLast}
+          selectedItems={selectedItems}
+        />
+      )}
     </>
   );
 };
