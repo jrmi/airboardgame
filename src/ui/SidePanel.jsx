@@ -17,7 +17,7 @@ const StyledSidePanel = styled.div`
   ${({ position }) => (position === "right" ? "right: 0;" : "left: 0;")}
   top: 0;
   bottom: 0;
-  z-index: 22;
+  z-index: ${({ modal }) => (modal ? 32 : 22)};
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -36,7 +36,7 @@ const StyledSidePanel = styled.div`
   overflow-y: auto;
 
   transform: translateX(100%);
-  transition: all 500ms cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
 
   ${({ open, position }) => {
     let start = -100;
