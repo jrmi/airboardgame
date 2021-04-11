@@ -1,7 +1,7 @@
 import saveGame from "./saveGame";
 import deleteGame from "./deleteGame";
 import { replaceImageUrl } from "./migrations";
-import { ownerOrNewHooks } from "./hooks";
+import { ownerOrNewHooks, onlySelfOrPublicGames } from "./hooks";
 
 const SESSION_DURATION = 60; // Session duration in days
 
@@ -14,6 +14,7 @@ export const main = async ({ store, functions, schedules, hooks }) => {
   };*/
 
   hooks.before = [ownerOrNewHooks];
+  hooks.after = [ownerOrNewHooks, onlySelfOrPublicGames];
   hooks.beforeFile = [ownerOrNewHooks];
 
   // Declare stores
