@@ -100,7 +100,7 @@ const MediaLibraryModal = ({ show, setShow, onSelect }) => {
         {libraries.map(({ id, name }, index) => {
           if (tab === id) {
             return (
-              <>
+              <div key={id}>
                 {index === 0 && (
                   <>
                     <h3>{t("Add file")}</h3>
@@ -130,7 +130,7 @@ const MediaLibraryModal = ({ show, setShow, onSelect }) => {
                     ))}
                   </ImageGrid>
                 )}
-              </>
+              </div>
             );
           } else {
             return null;
