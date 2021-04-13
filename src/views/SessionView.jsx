@@ -17,12 +17,6 @@ import { getGame, getSession } from "../utils/api";
 import GameProvider from "../hooks/useGame";
 import { useTranslation } from "react-i18next";
 
-const newGameData = {
-  items: [],
-  availableItems: [],
-  board: { size: 2000, scale: 1, name: "New game" },
-};
-
 export const GameView = ({ session }) => {
   const { c2c, joined, isMaster } = useC2C();
   const { gameId } = useParams();
