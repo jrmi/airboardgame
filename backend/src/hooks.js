@@ -52,13 +52,17 @@ export const ownerOrNewHooks = async (context) => {
 };
 
 export const onlySelfOrPublicGames = async (context) => {
-  const { boxId, userId } = context;
+  const { boxId, userId, method, response, resourceId } = context;
   if (boxId !== "game") {
     return context;
   }
+  if (!["GET"].includes(method) || resourceId) {
+    return context;
+  }
+
   const newContext = { ...context };
-  console.log(newContext.response[0]);
-  newContext.response = context.response.filter(
+
+  newContext.response = response.filter(
     ({ board: { published }, owner }) => published || owner === userId
   );
   return newContext;
