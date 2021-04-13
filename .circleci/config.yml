@@ -10,6 +10,7 @@ jobs:
       NETLIFY_SITE_ID: airboardgame.netlify.app
       VITE_SOCKET_URL: https://ricochetjs.herokuapp.com/
       VITE_API_ENDPOINT: /api
+      VITE_RICOCHET_SITEID: airboardgame
       VITE_USE_PROXY: 0
       CYPRESS_INSTALL_BINARY: 0
     steps:
@@ -38,6 +39,7 @@ jobs:
       VITE_SOCKET_URL: https://ricochetjs.herokuapp.com/
       VITE_USE_PROXY: 0
       VITE_API_ENDPOINT: /api
+      VITE_RICOCHET_SITEID: airboardgame
       CYPRESS_INSTALL_BINARY: 0
     steps:
       - checkout
