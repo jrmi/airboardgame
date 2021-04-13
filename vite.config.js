@@ -7,6 +7,7 @@ dotenv.config();
 const useProxy = process.env.VITE_USE_PROXY;
 const server = process.env.VITE_API_ENDPOINT;
 const socketServer = process.env.VITE_SOCKET_URL;
+const siteId = process.env.VITE_RICOCHET_SITEID;
 
 const checkDeprecatedVars = () => {
   const deprecatedVars = [
@@ -51,6 +52,7 @@ if (useProxy) {
         "/execute": server,
         "/file": server,
         "/auth": server,
+        [`/${siteId}`]: server,
       },
     },
   };

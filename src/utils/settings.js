@@ -1,6 +1,8 @@
 export const USE_PROXY =
   import.meta.env.DEV && import.meta.env.VITE_USE_PROXY !== "0";
 
+export const SITEID = import.meta.env.VITE_RICOCHET_SITEID;
+
 export const API_ENDPOINT = USE_PROXY
   ? ""
   : import.meta.env.VITE_API_ENDPOINT ||

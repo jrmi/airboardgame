@@ -1,4 +1,4 @@
-import { API_ENDPOINT, IS_PRODUCTION } from "./settings";
+import { API_ENDPOINT, IS_PRODUCTION, SITEID } from "./settings";
 //import { nanoid } from "nanoid";
 
 import testGame from "../games/testGame";
@@ -7,10 +7,10 @@ import unpublishedGame from "../games/unpublishedGame";
 import { nanoid } from "nanoid";
 
 const uploadURI = `${API_ENDPOINT}/file`;
-const gameURI = `${API_ENDPOINT}/store/game`;
-const sessionURI = `${API_ENDPOINT}/store/session`;
-const execURI = `${API_ENDPOINT}/execute`;
-const authURI = `${API_ENDPOINT}/auth`;
+const gameURI = `${API_ENDPOINT}/${SITEID}/store/game`;
+const sessionURI = `${API_ENDPOINT}/${SITEID}/store/session`;
+const execURI = `${API_ENDPOINT}/${SITEID}/execute`;
+const authURI = `${API_ENDPOINT}/${SITEID}/auth`;
 
 export const uploadImage = async (namespace, file) => {
   const payload = new FormData();
