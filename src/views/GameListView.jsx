@@ -121,7 +121,7 @@ const GameListView = () => {
       ? gameList.filter(
           (game) =>
           searchTerm === NULL_SEARCH_TERM ||
-            cleanWord(game.defaultNamse).includes(cleanWord(searchTerm))
+            cleanWord(game.defaultName).includes(cleanWord(searchTerm))
       )
       : [];
   }, [gameList, searchTerm]);

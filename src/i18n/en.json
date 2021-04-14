@@ -226,5 +226,15 @@
   "All players": "All players",
   "Invite more player": "Invite more player",
   "Search for a game": "Search for a game",
-  "games-available": "{{ nbOfGames }} games available"
+  "games-available": "{{ nbOfGames }} games available",
+  "Library": "Library",
+  "Enter an image url...": "Enter an image url...",
+  "Change image": "Change",
+  "Select image": "Select",
+  "Select media": "Select media",
+  "Media library": "Media library",
+  "Add file": "Add file",
+  "Game": "Game",
+  "Session": "Session",
+  "External": "External"
 }

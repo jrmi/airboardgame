@@ -63,9 +63,6 @@ export const GameView = ({ session }) => {
 
         setGame(gameData);
 
-        // Send loadGame event for other user
-        //c2c.publish("loadGame", gameData);
-
         setGameLoaded(true);
       } catch (e) {
         console.log(e);
