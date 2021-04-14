@@ -1,7 +1,6 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
-//import { useDropzone } from "react-dropzone";
 import { MediaLibraryButton, media2Url } from "./";
 import backgroundGrid from "../../images/background-grid.png";
 
@@ -68,7 +67,7 @@ const ImageField = ({ value, onChange }) => {
             onChange={handleTypeChange}
             checked={type === "empty"}
           />
-          No image
+          {t("No image")}
         </label>
         <label>
           <input
@@ -77,7 +76,7 @@ const ImageField = ({ value, onChange }) => {
             onChange={handleTypeChange}
             checked={type === "local"}
           />
-          Library
+          {t("Library")}
         </label>
         <label>
           <input
@@ -86,7 +85,7 @@ const ImageField = ({ value, onChange }) => {
             checked={type === "external"}
             onChange={handleTypeChange}
           />
-          External
+          {t("External")}
         </label>
       </form>
 

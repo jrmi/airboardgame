@@ -94,7 +94,7 @@
   "Uploading image(s)...": "Envoi des images en cours…",
   "Items": "Élements",
   "Edit": "Éditer",
-  "No image": "Pas d'image",
+  "No image": "Aucune",
   "Sending file...": "Envoi en cours…",
   "Click or drag'n'drop file here": "Cliquez ou déposez des fichiers dans cette zone",
   "Create new game": "Nouveau jeu",
@@ -224,5 +224,15 @@
   "All players": "Tous les joueurs",
   "Invite more player": "Invitez vos ami·e·s",
   "Search for a game": "Cherchez un jeu",
-  "games-available": "{{ nbOfGames }} jeux disponibles"
+  "games-available": "{{ nbOfGames }} jeux disponibles",
+  "Library": "Bibliothèque",
+  "Enter an image url...": "Saisissez une URL.",
+  "Change image": "Changer",
+  "Select image": "Sélectionner",
+  "Select media": "Sélectionner un media",
+  "Media library": "Bibliothèque de media",
+  "Add file": "Ajouter un fichier",
+  "Game": "Jeu",
+  "Session": "Partie",
+  "External": "Externe"
 }

@@ -1,18 +1,9 @@
-import saveGame from "./saveGame";
-import deleteGame from "./deleteGame";
 import { replaceImageUrl } from "./migrations";
 import { ownerOrNewHooks, onlySelfOrPublicGames } from "./hooks";
 
 const SESSION_DURATION = 60; // Session duration in days
 
-export const main = async ({ store, functions, schedules, hooks }) => {
-  // Add remote functions
-  /*functions.saveGame = saveGame;
-  functions.deleteGame = deleteGame;
-  functions.test = ({ store }) => {
-    console.log("Test function call is a success", store);
-  };*/
-
+export const main = async ({ store, schedules, hooks }) => {
   hooks.before = [ownerOrNewHooks];
   hooks.after = [ownerOrNewHooks, onlySelfOrPublicGames];
   hooks.beforeFile = [ownerOrNewHooks];

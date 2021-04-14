@@ -198,7 +198,7 @@ export const updateGame = async (id, data) => {
 
 export const deleteGame = async (id) => {
   const result = await fetch(`${gameURI}/${id}`, {
-    method: "POST",
+    method: "DELETE",
     credentials: "include",
   });
   if (result.status === 404) {

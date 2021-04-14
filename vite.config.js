@@ -55,10 +55,6 @@ if (useProxy) {
   };
 }
 
-/*"/store": server,
-        "/execute": server,
-        "/auth": server,*/
-
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
