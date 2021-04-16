@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import { deleteGame, getBestTranslationFromConfig } from "../utils/api";
 import { confirmAlert } from "react-confirm-alert";
 import { toast } from "react-toastify";
+import { media2Url } from "../components/mediaLibrary";
 
 const Game = styled.li`
   position: relative;
@@ -222,17 +223,19 @@ const GameListItem = ({
 
   let materialLanguageDisplay = t(materialLanguage);
 
+  const realImageUrl = media2Url(imageUrl);
+
   return (
     <Game>
       <Link to={`/game/${id}/session/`} className="img-wrapper">
         <span>
-          {imageUrl && (
+          {realImageUrl && (
             <>
               <span
                 className="back"
-                style={{ backgroundImage: `url(${imageUrl})` }}
+                style={{ backgroundImage: `url(${realImageUrl})` }}
               />
-              <img className="img" src={imageUrl} />
+              <img className="img" src={realImageUrl} />
             </>
           )}
         </span>
