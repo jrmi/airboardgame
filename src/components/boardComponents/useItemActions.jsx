@@ -117,7 +117,7 @@ export const useItemActions = () => {
         return {
           ...item,
           x: newX + index * 0.5,
-          y: newY + index * 0.5,
+          y: newY + (selectedItemList.length - index - 1) * 0.5,
         };
       });
     },
