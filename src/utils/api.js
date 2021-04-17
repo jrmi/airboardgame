@@ -1,4 +1,4 @@
-import { API_ENDPOINT, IS_PRODUCTION } from "./settings";
+import { API_ENDPOINT, IS_PRODUCTION, API_BASE } from "./settings";
 
 import testGame from "../games/testGame";
 import perfGame from "../games/perfGame";
@@ -49,7 +49,7 @@ export const listResourceImage = async (boxId, resourceId) => {
 };
 
 export const deleteResourceImage = async (filePath) => {
-  const result = await fetch(`${API_ENDPOINT}/${filePath}`, {
+  const result = await fetch(`${API_BASE}/${filePath}`, {
     method: "DELETE",
     credentials: "include",
   });

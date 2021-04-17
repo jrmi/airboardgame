@@ -236,5 +236,8 @@
   "Add file": "Add file",
   "Game": "Game",
   "Session": "Session",
-  "External": "External"
+  "External": "External",
+  "Do you really want to remove this media?": "Do you really want to remove this media?",
+  "Media deleted": "Media deleted",
+  "Error while deleting media. Try again later...": "Error while deleting media. Try again later..."
 }

@@ -234,5 +234,8 @@
   "Add file": "Ajouter un fichier",
   "Game": "Jeu",
   "Session": "Partie",
-  "External": "Externe"
+  "External": "Externe",
+  "Do you really want to remove this media?": "Souhaitez-vous supprimer ce media ?",
+  "Media deleted": "Media supprimé",
+  "Error while deleting media. Try again later...": "Suppression du media impossible. Essayez plus tard."
 }
