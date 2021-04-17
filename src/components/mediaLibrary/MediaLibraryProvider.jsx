@@ -1,6 +1,9 @@
 import React, { useContext } from "react";
-import { uploadResourceImage } from "../../utils/api";
-import { listResourceImage } from "../../utils/api";
+import {
+  uploadResourceImage,
+  listResourceImage,
+  deleteResourceImage,
+} from "../../utils/api";
 
 export const MediaLibraryContext = React.createContext({});
 
@@ -13,6 +16,10 @@ export const MediaLibraryProvider = ({ children, libraries = [] }) => {
     };
   }, []);
 
+  const removeMedia = React.useCallback(async (key) => {
+    return await deleteResourceImage(key);
+  }, []);
+
   const getLibraryMedia = React.useCallback(
     async ({ boxId, resourceId }) => listResourceImage(boxId, resourceId),
     []
@@ -20,7 +27,7 @@ export const MediaLibraryProvider = ({ children, libraries = [] }) => {
 
   return (
     <MediaLibraryContext.Provider
-      value={{ addMedia, getLibraryMedia, libraries }}
+      value={{ addMedia, getLibraryMedia, libraries, removeMedia }}
     >
       {children}
     </MediaLibraryContext.Provider>

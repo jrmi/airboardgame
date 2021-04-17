@@ -6,6 +6,9 @@ import styled from "styled-components";
 import { API_BASE } from "../../utils/settings";
 import backgroundGrid from "../../images/background-grid.png";
 
+import { confirmAlert } from "react-confirm-alert";
+import { toast } from "react-toastify";
+
 import Modal from "../../ui/Modal";
 
 import { useMediaLibrary } from ".";
@@ -14,6 +17,9 @@ import { useDropzone } from "react-dropzone";
 const ImageGrid = styled.div`
   display: flex;
   flex-wrap: wrap;
+  & > div {
+    position: relative;
+  }
   & img {
     height: 100px;
     margin: 0.5em;
@@ -25,12 +31,22 @@ const ImageGrid = styled.div`
       border: 1px dotted var(--color-primary);
     }
   }
+  & .remove {
+    position: absolute;
+    top: 15px;
+    right: 5px;
+  }
 `;
 
 const MediaLibraryModal = ({ show, setShow, onSelect }) => {
   const { t } = useTranslation();
 
-  const { getLibraryMedia, addMedia, libraries } = useMediaLibrary();
+  const {
+    getLibraryMedia,
+    addMedia,
+    removeMedia,
+    libraries,
+  } = useMediaLibrary();
 
   const queryClient = useQueryClient();
   const [tab, setTab] = React.useState(libraries[0].id);
@@ -71,6 +87,37 @@ const MediaLibraryModal = ({ show, setShow, onSelect }) => {
       },
     }
   );
+
+  const onRemove = React.useCallback((key) => {
+    confirmAlert({
+      title: t("Confirmation"),
+      message: t("Do you really want to remove this media?"),
+      buttons: [
+        {
+          label: t("Yes"),
+          onClick: async () => {
+            try {
+              await removeMedia(key);
+              toast.success(t("Media deleted"), { autoClose: 1500 });
+            } catch (e) {
+              if (e.message === "Forbidden") {
+                toast.error(t("Action forbidden. Try logging in again."));
+              } else {
+                console.log(e);
+                toast.error(
+                  t("Error while deleting media. Try again later...")
+                );
+              }
+            }
+          },
+        },
+        {
+          label: t("No"),
+          onClick: () => {},
+        },
+      ],
+    });
+  }, []);
 
   const { getRootProps, getInputProps } = useDropzone({
     onDrop: uploadMediaMutation.mutate,
@@ -122,11 +169,19 @@ const MediaLibraryModal = ({ show, setShow, onSelect }) => {
                 {!isLoading && (
                   <ImageGrid>
                     {data.map((key) => (
-                      <img
-                        src={`${API_BASE}/${key}`}
-                        key={key}
-                        onClick={() => handleSelect(key)}
-                      />
+                      <div key={key}>
+                        <img
+                          src={`${API_BASE}/${key}`}
+                          onClick={() => handleSelect(key)}
+                        />
+                        <button
+                          onClick={() => onRemove(key)}
+                          className="button icon-only remove"
+                          title={t("Remove")}
+                        >
+                          X
+                        </button>
+                      </div>
                     ))}
                   </ImageGrid>
                 )}

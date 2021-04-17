@@ -1,4 +1,3 @@
-import { replaceImageUrl } from "./migrations";
 import { ownerOrNewHooks, onlySelfOrPublicGames } from "./hooks";
 
 const SESSION_DURATION = 60; // Session duration in days
