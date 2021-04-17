@@ -17,7 +17,8 @@ import { toast } from "react-toastify";
 import { shuffle as shuffleArray, randInt } from "../../utils";
 
 import deleteIcon from "../../images/delete.svg";
-import stackIcon from "../../images/stack.svg";
+import stackToCenterIcon from "../../images/stackToCenter.svg";
+import stackToTopLeftIcon from "../../images/stackToTopLeft.svg";
 import alignAsLineIcon from "../../images/alignAsLine.svg";
 import alignAsSquareIcon from "../../images/alignAsSquare.svg";
 import duplicateIcon from "../../images/duplicate.svg";
@@ -89,8 +90,49 @@ export const useItemActions = () => {
     updateAvailableActions();
   }, [selectedItems, updateAvailableActions]);
 
-  // Align selection as a stack
-  const align = useRecoilCallback(
+// Stack selection to Center
+const stackToCenter = useRecoilCallback(
+  ({ snapshot }) => async () => {
+    const selectedItemList = await getSelectedItemList(snapshot);
+
+    // Compute
+    const minMax = { min: {}, max: {} };
+    minMax.min.x = Math.min(...selectedItemList.map(({ x }) => x));
+    minMax.min.y = Math.min(...selectedItemList.map(({ y }) => y));
+    minMax.max.x = Math.max(
+      ...selectedItemList.map(
+        ({ x, id }) => x + document.getElementById(id).clientWidth
+      )
+    );
+    minMax.max.y = Math.max(
+      ...selectedItemList.map(
+        ({ y, id }) => y + document.getElementById(id).clientHeight
+      )
+    );
+
+    const [newX, newY] = [minMax.min.x + (minMax.max.x - minMax.min.x) / 2 ,  minMax.min.y + (minMax.max.y - minMax.min.y) / 2];
+    let stackThickness = 0;
+      if (selectedItemList.length >= 32) {
+          stackThickness = 0.5;
+        } else {
+          stackThickness = 1;
+        }
+    let index = -1;
+    batchUpdateItems(selectedItems, (item) => {
+      index += 1;
+      const { clientWidth, clientHeight } = document.getElementById(item.id);
+      return {
+        ...item,
+        x: newX - clientWidth / 2 + index * stackThickness,
+        y: newY - clientHeight / 2 + (selectedItemList.length - index - 1) * stackThickness,
+      };
+    });
+  },
+  [getSelectedItemList, batchUpdateItems, selectedItems]
+);
+
+  // Stack selection to Top Left
+  const stackToTopLeft = useRecoilCallback(
     ({ snapshot }) => async () => {
       const selectedItemList = await getSelectedItemList(snapshot);
 
@@ -110,14 +152,21 @@ export const useItemActions = () => {
       );
 
       const [newX, newY] = [minMax.min.x, minMax.min.y];
+      let stackThickness = 0;
+      if (selectedItemList.length >= 32) {
+          stackThickness = 0.5;
+        } else {
+          stackThickness = 1;
+        }
       let index = -1;
+      
       batchUpdateItems(selectedItems, (item) => {
         index += 1;
         const { clientWidth, clientHeight } = document.getElementById(item.id);
         return {
           ...item,
-          x: newX + index * 0.5,
-          y: newY + (selectedItemList.length - index - 1) * 0.5,
+          x: newX + index * stackThickness,
+          y: newY + (selectedItemList.length - index - 1) * stackThickness,
         };
       });
     },
@@ -365,12 +414,19 @@ export const useItemActions = () => {
         shortcut: "t",
         icon: tapIcon,
       },
-      stack: {
-        action: align,
-        label: t("Stack"),
+      stackToCenter: {
+        action: stackToCenter,
+        label: t("Stack To Center"),
         shortcut: "",
         multiple: true,
-        icon: stackIcon,
+        icon: stackToCenterIcon,
+      },
+      stackToTopLeft: {
+        action: stackToTopLeft,
+        label: t("Stack To Top Left"),
+        shortcut: "",
+        multiple: true,
+        icon: stackToTopLeftIcon,
       },
       alignAsLine: {
         action: alignAsLine,
@@ -482,7 +538,8 @@ export const useItemActions = () => {
       toggleFlipSelf,
       toggleTap,
       rotate,
-      align,
+      stackToCenter,
+      stackToTopLeft,
       shuffleSelectedItems,
       cloneItem,
       toggleLock,
@@ -494,7 +551,8 @@ export const useItemActions = () => {
   );
 
   return {
-    align,
+    stackToCenter,
+    stackToTopLeft,
     remove: removeSelectedItems,
     toggleFlip,
     toggleFlipSelf,
