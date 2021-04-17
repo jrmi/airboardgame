@@ -55,13 +55,13 @@ const ImageDropNPaste = ({ children }) => {
         const item = items[i];
         if (item.type.indexOf("image") !== -1) {
           const file = item.getAsFile();
-          const location = await addMedia(file);
+          const location = await addMedia(libraries[0], file);
           await addImageItem(location);
         }
       }
       setUploading(false);
     },
-    [addImageItem, addMedia]
+    [addImageItem, addMedia, libraries]
   );
 
   React.useEffect(() => {
