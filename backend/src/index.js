@@ -30,7 +30,7 @@ export const main = async ({ store, schedules, hooks }) => {
     },
   ];
 
-  await replaceImageUrl({ store });
+  //await replaceImageUrl({ store });
 
   console.log("Setup loaded with session");
 };
