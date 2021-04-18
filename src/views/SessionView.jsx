@@ -17,8 +17,10 @@ import { getGame, getSession } from "../utils/api";
 import GameProvider from "../hooks/useGame";
 import { useTranslation } from "react-i18next";
 
-export const GameView = ({ session }) => {
-  const { c2c, joined, isMaster } = useC2C();
+import useAsyncEffect from "use-async-effect";
+
+export const SessionView = ({ session }) => {
+  const { c2c, isMaster } = useC2C();
   const { gameId } = useParams();
   const [realGameId, setRealGameId] = React.useState();
   const [gameLoaded, setGameLoaded] = React.useState(false);
@@ -28,58 +30,51 @@ export const GameView = ({ session }) => {
 
   const { t } = useTranslation();
 
-  React.useEffect(() => {
-    let isMounted = true;
-
-    const loadGameInitialData = async () => {
-      try {
-        let gameData;
-
-        // Load game from server
+  useAsyncEffect(
+    async (isMounted) => {
+      if (isMaster && !gameLoaded && !gameLoadingRef.current) {
+        gameLoadingRef.current = true;
         try {
-          // First from session if exists
-          gameData = await getSession(session);
-        } catch {
-          // Then from initial game
-          gameData = await getGame(gameId);
+          let gameData;
+
+          // Load game from server
+          try {
+            // First from session if exists
+            gameData = await getSession(session);
+          } catch {
+            // Then from initial game
+            gameData = await getGame(gameId);
+          }
+
+          setRealGameId(gameId);
+
+          // Add id if necessary
+          gameData.items = gameData.items.map((item) => ({
+            ...item,
+            id: nanoid(),
+          }));
+
+          if (!isMounted) return;
+
+          setGame(gameData);
+          const { messages = [] } = gameData;
+          setMessages(messages.map((m) => parseMessage(m)));
+
+          // Send loadGame event for other user
+          c2c.publish("loadGame", gameData);
+
+          setGameLoaded(true);
+        } catch (e) {
+          console.log(e);
         }
-
-        setRealGameId(gameId);
-
-        // Add id if necessary
-        gameData.items = gameData.items.map((item) => ({
-          ...item,
-          id: nanoid(),
-        }));
-
-        if (!isMounted) return;
-
-        setGame(gameData);
-        const { messages = [] } = gameData;
-        setMessages(messages.map((m) => parseMessage(m)));
-
-        // Send loadGame event for other user
-        c2c.publish("loadGame", gameData);
-
-        setGameLoaded(true);
-      } catch (e) {
-        console.log(e);
       }
-    };
-
-    if (joined && isMaster && !gameLoaded && !gameLoadingRef.current) {
-      gameLoadingRef.current = true;
-      loadGameInitialData();
-    }
-
-    return () => {
-      isMounted = false;
-    };
-  }, [c2c, gameId, gameLoaded, isMaster, joined, session, setMessages, t]);
+    },
+    [c2c, gameId, gameLoaded, isMaster, session, setMessages, t]
+  );
 
   // Load game from master if any
   React.useEffect(() => {
-    if (joined && !isMaster && !gameLoaded && !gameLoadingRef.current) {
+    if (!isMaster && !gameLoaded && !gameLoadingRef.current) {
       gameLoadingRef.current = true;
       const onReceiveGame = (receivedGame) => {
         setGame(receivedGame);
@@ -96,7 +91,7 @@ export const GameView = ({ session }) => {
         );
       });
     }
-  }, [c2c, isMaster, joined, gameLoaded]);
+  }, [c2c, isMaster, gameLoaded]);
 
   if (!gameLoaded) {
     return <Waiter message={t("Game loading...")} />;
@@ -109,15 +104,15 @@ export const GameView = ({ session }) => {
   );
 };
 
-const ConnectedGameView = () => {
+const ConnectedSessionView = () => {
   const { room = nanoid() } = useParams();
   return (
     <Provider url={SOCKET_URL} options={SOCKET_OPTIONS}>
       <C2CProvider room={room}>
-        <GameView session={room} />
+        <SessionView session={room} />
       </C2CProvider>
     </Provider>
   );
 };
 
-export default ConnectedGameView;
+export default ConnectedSessionView;

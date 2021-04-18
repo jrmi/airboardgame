@@ -24,7 +24,7 @@ const newGameData = {
 };
 
 export const GameView = ({ session }) => {
-  const { c2c, joined, isMaster } = useC2C();
+  const { c2c, isMaster } = useC2C();
   const { gameId } = useParams();
   const [realGameId, setRealGameId] = React.useState();
   const [gameLoaded, setGameLoaded] = React.useState(false);
@@ -69,7 +69,7 @@ export const GameView = ({ session }) => {
       }
     };
 
-    if (joined && isMaster && !gameLoaded && !gameLoadingRef.current) {
+    if (isMaster && !gameLoaded && !gameLoadingRef.current) {
       gameLoadingRef.current = true;
       loadGameInitialData();
     }
@@ -77,11 +77,11 @@ export const GameView = ({ session }) => {
     return () => {
       isMounted = false;
     };
-  }, [c2c, gameId, gameLoaded, isMaster, joined, setMessages, t]);
+  }, [c2c, gameId, gameLoaded, isMaster, setMessages, t]);
 
   // Load game from master if any
   React.useEffect(() => {
-    if (joined && !isMaster && !gameLoaded && !gameLoadingRef.current) {
+    if (!isMaster && !gameLoaded && !gameLoadingRef.current) {
       gameLoadingRef.current = true;
       const onReceiveGame = (receivedGame) => {
         setGame(receivedGame);
@@ -98,7 +98,7 @@ export const GameView = ({ session }) => {
         );
       });
     }
-  }, [c2c, isMaster, joined, gameLoaded]);
+  }, [c2c, isMaster, gameLoaded]);
 
   if (!gameLoaded) {
     return <Waiter message={t("Game loading...")} />;
