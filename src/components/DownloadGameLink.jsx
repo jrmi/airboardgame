@@ -1,12 +1,7 @@
 import React from "react";
-import { useRecoilCallback } from "recoil";
 import { useTranslation } from "react-i18next";
 
-import {
-  AvailableItemListAtom,
-  BoardConfigAtom,
-  AllItemsSelector,
-} from "./Board/";
+import useGame from "../hooks/useGame";
 
 const generateDownloadURI = (data) => {
   return (
@@ -16,31 +11,20 @@ const generateDownloadURI = (data) => {
 
 export const DownloadGameLink = () => {
   const { t } = useTranslation();
+  const { getGame } = useGame();
 
   const [downloadURI, setDownloadURI] = React.useState("");
   const [date, setDate] = React.useState(Date.now());
   const [genOnce, setGenOnce] = React.useState(false);
 
-  const updateSaveLink = useRecoilCallback(
-    ({ snapshot }) => async () => {
-      const availableItemList = await snapshot.getPromise(
-        AvailableItemListAtom
-      );
-      const boardConfig = await snapshot.getPromise(BoardConfigAtom);
-      const itemList = await snapshot.getPromise(AllItemsSelector);
-      const game = {
-        items: itemList,
-        board: boardConfig,
-        availableItems: availableItemList,
-      };
-      if (game.items.length) {
-        setDownloadURI(generateDownloadURI(game));
-        setDate(Date.now());
-        setGenOnce(true);
-      }
-    },
-    []
-  );
+  const updateSaveLink = React.useCallback(async () => {
+    const game = await getGame();
+    if (game.items.length) {
+      setDownloadURI(generateDownloadURI(game));
+      setDate(Date.now());
+      setGenOnce(true);
+    }
+  }, [getGame]);
 
   React.useEffect(() => {
     let mounted = true;
