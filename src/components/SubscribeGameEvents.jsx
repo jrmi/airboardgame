@@ -5,14 +5,14 @@ import { useC2C } from "../hooks/useC2C";
 import useBoardConfig from "./useBoardConfig";
 
 export const SubscribeGameEvents = ({ getGame, setGame }) => {
-  const { c2c, joined, isMaster } = useC2C();
+  const { c2c, isMaster } = useC2C();
 
   const [, setBoardConfig] = useBoardConfig();
 
   // if first player register callback to allow other user to load game
   React.useEffect(() => {
     const unsub = [];
-    if (joined && isMaster) {
+    if (isMaster) {
       c2c
         .register("getGame", async () => {
           return await getGame();
@@ -24,7 +24,7 @@ export const SubscribeGameEvents = ({ getGame, setGame }) => {
     return () => {
       unsub.forEach((u) => u());
     };
-  }, [c2c, getGame, isMaster, joined]);
+  }, [c2c, getGame, isMaster]);
 
   // Subscribe loadGame and updateBoardConfig events
   React.useEffect(() => {

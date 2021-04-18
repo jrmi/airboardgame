@@ -39,7 +39,7 @@ const noop = () => {};
 
 const useMessage = (onMessage = noop) => {
   const [messages, setMessages] = useRecoilState(MessagesAtom);
-  const { c2c, joined, isMaster } = useC2C();
+  const { c2c, isMaster } = useC2C();
   const { currentUser } = useUsers();
 
   const getMessage = useRecoilCallback(
@@ -77,14 +77,12 @@ const useMessage = (onMessage = noop) => {
   React.useEffect(() => {
     const unsub = [];
 
-    if (joined) {
-      initEvents(unsub);
-    }
+    initEvents(unsub);
 
     return () => {
       unsub.forEach((u) => u());
     };
-  }, [initEvents, joined]);
+  }, [initEvents]);
 
   const sendMessage = React.useCallback(
     (messageContent) => {
