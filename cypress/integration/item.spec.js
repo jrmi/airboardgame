@@ -2,9 +2,9 @@ describe("Item interactions", () => {
   beforeEach(() => {
     cy.viewport(1000, 600);
     cy.visit("/");
-    cy.contains("0 Test game").parent().find("img").click();
+    cy.contains("0 Test game", { timeout: 10000 }).parent().find("img").click();
     // Way board loading
-    cy.get(".board-pane").should(
+    cy.get(".board-pane", { timeout: 10000 }).should(
       "have.css",
       "transform",
       "matrix(1, 0, 0, 1, 0, -200)"
