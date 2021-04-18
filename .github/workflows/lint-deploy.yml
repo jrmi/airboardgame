@@ -1,0 +1,49 @@
+# .github/workflows/netlify.yml
+name: Build and Deploy to Netlify
+on:
+  pull_request:
+  push:
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+        
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 14
+
+      - run: npm install -g npm && npm ci && npm rebuild node-sass
+      - run: npm run lint 
+      - run: cd backend && npm ci && npm run build
+        env:      
+          RICOCHET_SECRET_KEY: ${{ secrets.RICOCHET_SECRET_KEY }}
+      - run: npm run build
+        env:
+          VITE_SOCKET_URL: https://ricochetjs.herokuapp.com/
+          VITE_API_ENDPOINT: /api
+          VITE_RICOCHET_SITEID: airboardgame
+          VITE_USE_PROXY: 0
+          CYPRESS_INSTALL_BINARY: 0
+      - run: |
+          cat <<EOF > ./dist/_redirects
+          /api/*  https://ricochetjs.herokuapp.com/:splat  200
+          /*    /index.html   200
+          EOF
+      - run: cat ./dist/_redirects
+      - run: ls ./dist
+
+      - name: Deploy to Netlify
+        uses: nwtgck/actions-netlify@v1.1
+        with:
+          publish-dir: './dist'
+          production-branch: master
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          deploy-message: "Deploy from GitHub Actions"
+          enable-pull-request-comment: false
+          enable-commit-comment: true
+          overwrites-pull-request-comment: true
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+        timeout-minutes: 1
