@@ -8,8 +8,7 @@ import { getBestTranslationFromConfig } from "../utils/api";
 
 import { BoardConfigAtom } from "../components/Board/";
 import styled from "styled-components";
-
-import marked from "marked";
+import useAsyncEffect from "use-async-effect";
 
 const Kbd = styled.kbd`
   background-color: #eee;
@@ -39,17 +38,23 @@ const InfoModal = ({ show, setShow }) => {
     [boardConfig, i18n.languages]
   );
 
-  React.useEffect(() => {
-    const renderer = new marked.Renderer();
-    renderer.link = (href, title, text) => {
-      return `<a target="_blank" rel="noopener" href="${href}" title="${title}">${text}</a>`;
-    };
-    setInfo(
-      marked(translation.description || "", {
-        renderer: renderer,
-      })
-    );
-  }, [setInfo, translation.description]);
+  useAsyncEffect(
+    async (isMounted) => {
+      const marked = (await import("marked")).default;
+      if (!isMounted()) return;
+
+      const renderer = new marked.Renderer();
+      renderer.link = (href, title, text) => {
+        return `<a target="_blank" rel="noopener" href="${href}" title="${title}">${text}</a>`;
+      };
+      setInfo(
+        marked(translation.description || "", {
+          renderer: renderer,
+        })
+      );
+    },
+    [setInfo, translation.description]
+  );
 
   return (
     <Modal title={t("Help & info")} setShow={setShow} show={show}>
