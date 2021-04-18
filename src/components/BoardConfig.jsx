@@ -67,7 +67,7 @@ const BoardConfig = () => {
             <Hint>{t("Check it to make your board publicly visible")}</Hint>
           </Label>
           <Label>
-            {t("Players count")}
+            {t("Number of players")}
             <Field
               name="playerCount"
               initialValue={boardConfig.playerCount || defaultPlayerCount}
@@ -100,7 +100,7 @@ const BoardConfig = () => {
             </Field>
           </Label>
           <Label>
-            {t("Duration")}
+            {t("Duration (mins)")}
             <Field
               name="duration"
               initialValue={
@@ -176,8 +176,8 @@ const BoardConfig = () => {
             >
               <option />
               <option value="Multi-lang">🌍 {t("Multi-lang")}</option>
-              <option value="en">🇬🇧 {t("en")}</option>
-              <option value="fr">🇫🇷 {t("fr")}</option>
+              <option value="en">🇬🇧 {t("English")}</option>
+              <option value="fr">🇫🇷 {t("French")}</option>
             </Field>
           </Label>
           <fieldset style={{ marginBottom: "2em", paddingBottom: "1em" }}>
@@ -192,8 +192,8 @@ const BoardConfig = () => {
                 style={{ width: "15em" }}
               >
                 <option />
-                <option value="en">🇬🇧 {t("en")}</option>
-                <option value="fr">🇫🇷 {t("fr")}</option>
+                <option value="en">🇬🇧 {t("English")}</option>
+                <option value="fr">🇫🇷 {t("French")}</option>
               </Field>
             </Label>
 
@@ -259,8 +259,8 @@ const BoardConfig = () => {
                       style={{ width: "15em" }}
                     >
                       <option />
-                      <option value="en">🇬🇧 {t("en")}</option>
-                      <option value="fr">🇫🇷 {t("fr")}</option>
+                      <option value="en">🇬🇧 {t("English")}</option>
+                      <option value="fr">🇫🇷 {t("French")}</option>
                     </Field>
                   </Label>
 

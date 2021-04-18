@@ -116,7 +116,6 @@
   "Edit all items": "Edit all items",
   "about": "<0>Air Board Game is a plateform designed to play any board games with your friends online. For more information or to access source code visit <1>Github</1>.</0><1>Legal mentions</1><2>This site is hosted by Netlify (San Francisco, US) and OVH (2, rue Kellermann, 59100 Roubaix)</2><3>Abuse report</3><4>To report abuse, please email at abu<1>anti-span</1>se-report@airboardgame.com</4><5>RGPD</5><6>No personnal data are collected. When you use your email to login, this information is lost and not used for anything else than sending you an authentication link.</6><7>Credits</7><8>Thanks to everybody !</8>",
   "In progress...": "In progress...",
-  "Duration": "Duration",
   "Minimal age (years)": "Minimal age",
   "Board size": "Board size",
   "Material language": "Material language",
@@ -128,7 +127,6 @@
   "Language": "Language",
   "Add translation": "Add translation",
   "Unpublished": "Unpublished",
-  "Players count": "Players count",
   "{{min}} - {{max}} players": "{{min}} - {{max}} players",
   "{{count}} player": "{{count}} player",
   "{{count}} player_plural": "{{count}} players",
@@ -139,8 +137,6 @@
   "Game saved": "Game saved",
   "Error while saving game. Try again later...": "Error while saving game. Try again later...",
   "Multi-lang": "All",
-  "fr": "French",
-  "en": "English",
   "Url copied to clipboard!": "Url copied to clipboard!",
   "Copy": "Copy",
   "Talk with your friends": "Talk with your friends",
@@ -239,5 +235,10 @@
   "External": "External",
   "Do you really want to remove this media?": "Do you really want to remove this media?",
   "Media deleted": "Media deleted",
-  "Error while deleting media. Try again later...": "Error while deleting media. Try again later..."
+  "Error while deleting media. Try again later...": "Error while deleting media. Try again later...",
+  "Number of players": "Number of players",
+  "Duration (mins)": "Duration (mins)",
+  "Age": "Age",
+  "French": "French",
+  "English": "English"
 }
