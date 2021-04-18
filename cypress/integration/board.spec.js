@@ -78,3 +78,10 @@ describe("Board interactions", () => {
     );
   });
 });
+
+/* TODO
+
+- Change main navigation
+- show/Hide menu
+
+*/
