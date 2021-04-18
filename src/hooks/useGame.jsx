@@ -1,8 +1,7 @@
 import React, { useContext } from "react";
 import { useSetRecoilState, useRecoilCallback } from "recoil";
-import { nanoid } from "nanoid";
 
-import { getGame } from "../utils/api";
+import { updateGame } from "../utils/api";
 
 import SubscribeGameEvents from "../components/SubscribeGameEvents";
 import { useItems } from "../components/Board/Items";
@@ -12,8 +11,6 @@ import {
   BoardConfigAtom,
 } from "../components/Board";
 import useBoardConfig from "../components/useBoardConfig";
-
-import { uploadResourceImage } from "../utils/api";
 
 export const GameContext = React.createContext({});
 
@@ -26,24 +23,13 @@ export const GameProvider = ({ gameId, game, children }) => {
 
   const setGame = React.useCallback(
     async (newGame) => {
-      try {
-        const originalGame = await getGame(gameId);
-        setAvailableItemList(
-          originalGame.availableItems.map((item) => ({
-            ...item,
-            id: nanoid(),
-          }))
-        );
-      } catch {
-        setAvailableItemList(
-          newGame.availableItems.map((item) => ({ ...item, id: nanoid() }))
-        );
-      }
-      setItemList(newGame.items.filter((item) => item)); // The filter avoid the empty item bug on reload
+      setAvailableItemList(newGame.availableItems);
+      // The filter prevent the empty item bug on reload
+      setItemList(newGame.items.filter((item) => item));
       setBoardConfig(newGame.board, false);
       setGameLoaded(true);
     },
-    [setAvailableItemList, setBoardConfig, setItemList, gameId]
+    [setAvailableItemList, setBoardConfig, setItemList]
   );
 
   const getCurrentGame = useRecoilCallback(
@@ -63,6 +49,11 @@ export const GameProvider = ({ gameId, game, children }) => {
     []
   );
 
+  const saveGame = React.useCallback(async () => {
+    const currentGame = await getCurrentGame();
+    return updateGame(gameId, currentGame);
+  }, [gameId, getCurrentGame]);
+
   React.useEffect(() => {
     if (game) {
       setGame(game);
@@ -71,7 +62,7 @@ export const GameProvider = ({ gameId, game, children }) => {
 
   return (
     <GameContext.Provider
-      value={{ setGame, getGame: getCurrentGame, gameId, gameLoaded }}
+      value={{ setGame, getGame: getCurrentGame, saveGame, gameLoaded }}
     >
       {gameLoaded && children}
       <SubscribeGameEvents getGame={getCurrentGame} setGame={setGame} />
@@ -83,4 +74,4 @@ export const useGame = () => {
   return useContext(GameContext);
 };
 
-export default GameProvider;
+export default useGame;

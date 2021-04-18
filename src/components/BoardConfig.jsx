@@ -8,7 +8,6 @@ import Label from "../ui/formUtils/Label";
 import useBoardConfig from "./useBoardConfig";
 import { ImageField } from "./mediaLibrary";
 import Hint from "../ui/formUtils/Hint";
-import { useGame } from "../hooks/useGame";
 
 import { Range } from "rc-slider";
 import { nanoid } from "nanoid";
@@ -24,7 +23,6 @@ const BoardConfigForm = styled.div`
 const BoardConfig = () => {
   const { t } = useTranslation();
   const [boardConfig, setBoardConfig] = useBoardConfig();
-  const { addFile } = useGame();
 
   const [defaultPlayerCount] = React.useState([]);
 
@@ -164,13 +162,7 @@ const BoardConfig = () => {
             {t("Image")}
             <Field name="imageUrl" initialValue={boardConfig.imageUrl}>
               {({ input: { value, onChange } }) => {
-                return (
-                  <ImageField
-                    value={value}
-                    onChange={onChange}
-                    uploadFile={addFile}
-                  />
-                );
+                return <ImageField value={value} onChange={onChange} />;
               }}
             </Field>
           </Label>

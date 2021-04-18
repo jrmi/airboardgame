@@ -104,7 +104,7 @@ export const getGames = async () => {
     const serverGames = await result.json();
 
     gameList = serverGames.map((game) => ({
-      name: game.board.name,
+      name: game.board.defaultName || game.board.name,
       id: game._id,
       owner: game.owner,
       ...game.board,
@@ -153,19 +153,36 @@ const fetchGame = async (url) => {
 };
 
 export const getGame = async (gameId) => {
-  const games = await getGames();
-  const game = games.find(({ id }) => id === gameId);
-  if (!game) {
-    throw new Error("Resource not found");
+  let game;
+
+  switch (gameId) {
+    // Demo games
+    case "test":
+      game = testGame;
+      break;
+    case "perf":
+      game = perfGame;
+      break;
+    case "unpublished":
+      game = unpublishedGame;
+      break;
+    // Real games
+    default:
+      game = await fetchGame(`${gameURI}/${gameId}`);
   }
 
-  const { url, data } = game;
+  // Add id if missing
+  game.items = game.items.map((item) => ({
+    id: nanoid(),
+    ...item,
+  }));
 
-  if (url) {
-    return await fetchGame(url);
-  } else {
-    return data;
-  }
+  game.availableItems = game.availableItems.map((item) => ({
+    id: nanoid(),
+    ...item,
+  }));
+
+  return game;
 };
 
 export const createGame = async (data) => {
@@ -174,8 +191,12 @@ export const createGame = async (data) => {
   return result;
 };
 
-export const updateGame = async (id, data) => {
-  const result = await fetch(`${gameURI}/${id}`, {
+export const updateGame = async (gameId, data) => {
+  // fake games
+  if (["test", "perf", "unpublished"].includes(gameId)) {
+    return data;
+  }
+  const result = await fetch(`${gameURI}/${gameId}`, {
     method: "POST",
     headers: {
       Accept: "application/json",
@@ -196,8 +217,8 @@ export const updateGame = async (id, data) => {
   return await result.json();
 };
 
-export const deleteGame = async (id) => {
-  const result = await fetch(`${gameURI}/${id}`, {
+export const deleteGame = async (gameId) => {
+  const result = await fetch(`${gameURI}/${gameId}`, {
     method: "DELETE",
     credentials: "include",
   });

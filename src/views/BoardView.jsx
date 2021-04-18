@@ -15,7 +15,6 @@ import NavBar from "./NavBar";
 import AutoSaveSession from "../components/AutoSaveSession";
 import ImageDropNPaste from "../components/ImageDropNPaste";
 import { getComponent } from "../components/boardComponents";
-import { useGame } from "../hooks/useGame";
 import AddItemButton from "../components/AddItemButton";
 import { MessageButton } from "../components/Message";
 
@@ -81,7 +80,6 @@ export const BoardView = ({ namespace, edit: editMode = false, session }) => {
 
   const [moveFirst, setMoveFirst] = React.useState(false);
   const [hideMenu, setHideMenu] = React.useState(false);
-  const { gameLoaded } = useGame();
 
   const libraries = React.useMemo(() => {
     if (editMode) {
@@ -123,20 +121,18 @@ export const BoardView = ({ namespace, edit: editMode = false, session }) => {
         <WelcomeModal show={showWelcomeModal} setShow={setShowWelcomeModal} />
         <SubscribeUserEvents />
         {!editMode && <AutoSaveSession session={session} />}
-        {gameLoaded && (
-          <BoardContainer>
-            <ImageDropNPaste>
-              <Board
-                user={currentUser}
-                users={users}
-                getComponent={getComponent}
-                moveFirst={moveFirst}
-                hideMenu={hideMenu}
-              />
-            </ImageDropNPaste>
-            <SelectedItemsPane hideMenu={hideMenu} />
-          </BoardContainer>
-        )}
+        <BoardContainer>
+          <ImageDropNPaste>
+            <Board
+              user={currentUser}
+              users={users}
+              getComponent={getComponent}
+              moveFirst={moveFirst}
+              hideMenu={hideMenu}
+            />
+          </ImageDropNPaste>
+          <SelectedItemsPane hideMenu={hideMenu} />
+        </BoardContainer>
         <ActionBar>
           {!editMode && <MessageButton />}
           <div className="spacer" />

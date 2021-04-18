@@ -14,7 +14,7 @@ import Waiter from "../ui/Waiter";
 
 import { getGame, getSession } from "../utils/api";
 
-import GameProvider from "../hooks/useGame";
+import { GameProvider } from "../hooks/useGame";
 import { useTranslation } from "react-i18next";
 
 import useAsyncEffect from "use-async-effect";
@@ -41,20 +41,18 @@ export const SessionView = ({ session }) => {
           try {
             // First from session if exists
             gameData = await getSession(session);
+
+            // Update availableItems from original game
+            const originalGame = await getGame(gameId);
+            gameData.availableItems = originalGame.availableItems;
           } catch {
             // Then from initial game
             gameData = await getGame(gameId);
           }
 
-          setRealGameId(gameId);
-
-          // Add id if necessary
-          gameData.items = gameData.items.map((item) => ({
-            ...item,
-            id: nanoid(),
-          }));
-
           if (!isMounted) return;
+
+          setRealGameId(gameId);
 
           setGame(gameData);
           const { messages = [] } = gameData;

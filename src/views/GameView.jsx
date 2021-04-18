@@ -14,13 +14,15 @@ import Waiter from "../ui/Waiter";
 
 import { getGame } from "../utils/api";
 
-import GameProvider from "../hooks/useGame";
+import { GameProvider } from "../hooks/useGame";
 import { useTranslation } from "react-i18next";
+
+import useAsyncEffect from "use-async-effect";
 
 const newGameData = {
   items: [],
   availableItems: [],
-  board: { size: 2000, scale: 1, name: "New game" },
+  board: { size: 2000, scale: 1 },
 };
 
 export const GameView = ({ session }) => {
@@ -34,50 +36,35 @@ export const GameView = ({ session }) => {
 
   const { t } = useTranslation();
 
-  React.useEffect(() => {
-    let isMounted = true;
+  useAsyncEffect(
+    async (isMounted) => {
+      if (isMaster && !gameLoaded && !gameLoadingRef.current) {
+        gameLoadingRef.current = true;
+        try {
+          let gameData;
+          let newRealGameId = gameId;
 
-    const loadGameInitialData = async () => {
-      try {
-        let gameData;
+          if (!gameId) {
+            // Create new game
+            newGameData.board.defaultName = t("New game");
+            gameData = JSON.parse(JSON.stringify(newGameData));
+            newRealGameId = nanoid();
+          } else {
+            // Load game from server
+            gameData = await getGame(gameId);
+          }
+          if (!isMounted) return;
 
-        if (!gameId) {
-          // Create new game
-          newGameData.board.name = t("New game");
-          gameData = JSON.parse(JSON.stringify(newGameData));
-          setRealGameId(nanoid());
-        } else {
-          // Load game from server
-          gameData = await getGame(gameId);
-
-          setRealGameId(gameId);
+          setRealGameId(newRealGameId);
+          setGame(gameData);
+          setGameLoaded(true);
+        } catch (e) {
+          console.log(e);
         }
-
-        // Add id if necessary
-        gameData.items = gameData.items.map((item) => ({
-          ...item,
-          id: nanoid(),
-        }));
-
-        if (!isMounted) return;
-
-        setGame(gameData);
-
-        setGameLoaded(true);
-      } catch (e) {
-        console.log(e);
       }
-    };
-
-    if (isMaster && !gameLoaded && !gameLoadingRef.current) {
-      gameLoadingRef.current = true;
-      loadGameInitialData();
-    }
-
-    return () => {
-      isMounted = false;
-    };
-  }, [c2c, gameId, gameLoaded, isMaster, setMessages, t]);
+    },
+    [c2c, gameId, gameLoaded, isMaster, setMessages, t]
+  );
 
   // Load game from master if any
   React.useEffect(() => {
