@@ -72,8 +72,8 @@ const GameListItem = () => {
             src={
               "https://icongr.am/entypo/squared-plus.svg?size=128&color=f9fbfa"
             }
-            alt={"alt"}
-            title={"title"}
+            alt={t("Create a new game")}
+            title={t("Create a new game")}
           />
         </span>
       </Link>

@@ -133,35 +133,34 @@ const SidePanel = ({
   }, [isOpen, modal]);
 
   return (
-    <>
-      <Portal>
-        {modal && isOpen && <Overlay onClick={closePortal} />}
-        <StyledSidePanel
-          position={position}
-          open={isOpen}
-          onTransitionEnd={onAnimationEnd}
-          noMargin={noMargin}
-          ref={ref}
-          width={width}
-          modal={modal}
-        >
-          <header>
-            {title && <h2 className="title">{title}</h2>}
-            <button
-              className="button clear icon-only close"
-              onClick={closePortal}
-            >
-              <img
-                src="https://icongr.am/feather/x.svg?size=42&color=ffffff"
-                alt={t("Close")}
-              />
-            </button>
-          </header>
-          <div className="content">{open && children}</div>
-          {footer && <footer>{footer}</footer>}
-        </StyledSidePanel>
-      </Portal>
-    </>
+    <Portal>
+      {modal && isOpen && <Overlay onClick={closePortal} />}
+      <StyledSidePanel
+        position={position}
+        open={isOpen}
+        onTransitionEnd={onAnimationEnd}
+        noMargin={noMargin}
+        ref={ref}
+        width={width}
+        modal={modal}
+        className={isOpen ? "side-panel open" : "side-panel"}
+      >
+        <header>
+          {title && <h2 className="title">{title}</h2>}
+          <button
+            className="button clear icon-only close"
+            onClick={closePortal}
+          >
+            <img
+              src="https://icongr.am/feather/x.svg?size=42&color=ffffff"
+              alt={t("Close")}
+            />
+          </button>
+        </header>
+        <div className="content">{open && children}</div>
+        {footer && <footer>{footer}</footer>}
+      </StyledSidePanel>
+    </Portal>
   );
 };
 
