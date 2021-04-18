@@ -30,8 +30,6 @@ jobs:
           /api/*  https://ricochetjs.herokuapp.com/:splat  200
           /*    /index.html   200
           EOF
-      - run: cat ./dist/_redirects
-      - run: ls ./dist
 
       - name: Deploy to Netlify
         uses: nwtgck/actions-netlify@v1.1
