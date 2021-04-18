@@ -114,7 +114,6 @@
   "Edit all items": "Modifier tous les éléments",
   "about": "<0>Air Board Game is a plateform designed to play any board games with your friends online. For more information or to access source code visit <1>Github</1>.</0><1>Legal mentions</1><2>This site is hosted by Netlify (San Francisco, US) and OVH (2, rue Kellermann, 59100 Roubaix)</2><3>Abuse report</3><4>To report abuse, please email at abu<1>anti-span</1>se-report@airboardgame.com</4><5>RGPD</5><6>No personnal data are collected. When you use your email to login, this information is lost and not used for anything else than sending you an authentication link.</6><7>Credits</7><8>Thanks to everybody !</8>",
   "In progress...": "Demande en cours…",
-  "Duration": "Durée",
   "Minimal age (years)": "Age minimum",
   "Board size": "Taille du plateau",
   "Material language": "Langue du matériel",
@@ -126,7 +125,6 @@
   "Language": "Langue",
   "Add translation": "Ajouter une traduction",
   "Unpublished": "Privé",
-  "Players count": "Nombre de joueurs",
   "{{min}} - {{max}} players": "{{min}} - {{max}} joueurs",
   "{{count}} player": "{{count}} joueur",
   "{{count}} player_plural": "{{count}} joueurs",
@@ -137,8 +135,6 @@
   "Game saved": "Partie sauvegardée",
   "Error while saving game. Try again later...": "Une erreur est survenue lors de l'enregistrement du jeu. Veuillez essayez plus tard…",
   "Multi-lang": "Multilingue",
-  "fr": "Français",
-  "en": "Anglais",
   "Url copied to clipboard!": "L'Url a été copiée dans le presse-papier",
   "Copy": "Copier",
   "Talk with your friends": "Parlez avec vos ami·e·s",
@@ -237,5 +233,10 @@
   "External": "Externe",
   "Do you really want to remove this media?": "Souhaitez-vous supprimer ce media ?",
   "Media deleted": "Media supprimé",
-  "Error while deleting media. Try again later...": "Suppression du media impossible. Essayez plus tard."
+  "Error while deleting media. Try again later...": "Suppression du media impossible. Essayez plus tard.",
+  "Number of players": "Nombre de joueurs",
+  "Duration (mins)": "Durée (mins)",
+  "Age": "Age",
+  "French": "Français",
+  "English": "Anglais"
 }
