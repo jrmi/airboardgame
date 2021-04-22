@@ -1,6 +1,14 @@
 describe("Item interactions", () => {
   beforeEach(() => {
     cy.viewport(1000, 600);
+    cy.intercept(
+      {
+        method: "GET",
+        url: "/airboardgame/store/game*",
+      },
+      // eslint-disable-next-line quotes
+      "[]"
+    );
     cy.visit("/");
     cy.contains("0 Test game", { timeout: 10000 }).parent().find("img").click();
     // Way board loading
@@ -98,5 +106,18 @@ describe("Item interactions", () => {
         "transform",
         "matrix(6.12323e-17, 1, -1, 6.12323e-17, 0, 0)"
       );
+  });
+
+  it("should hide menu", () => {
+    // Select card
+    cy.get("img[src='/game_assets/JC.jpg']")
+      .parents(".item")
+      .click(500, 500, { force: true });
+
+    cy.get("img[alt='Edit']").should("exist");
+
+    cy.get("img[alt='Hide menu']").click();
+
+    cy.get("img[alt='Edit']").should("not.exist");
   });
 });

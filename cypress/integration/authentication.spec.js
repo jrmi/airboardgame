@@ -1,6 +1,13 @@
 describe("Studio", () => {
   beforeEach(() => {
     cy.viewport(1000, 600);
+    cy.intercept(
+      {
+        method: "GET",
+        url: "/airboardgame/store/game*",
+      },
+      "[]"
+    );
     cy.visit("/");
   });
 
@@ -31,7 +38,7 @@ describe("Studio", () => {
     cy.contains("Mail sent").should("not.exist");
   });
 
-  it.only("Can verify login", () => {
+  it("Can verify login", () => {
     cy.intercept(
       {
         method: "GET",

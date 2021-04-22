@@ -1,6 +1,13 @@
 describe("Board interactions", () => {
   beforeEach(() => {
     cy.viewport(1000, 600);
+    cy.intercept(
+      {
+        method: "GET",
+        url: "/airboardgame/store/game*",
+      },
+      "[]"
+    );
     cy.visit("/");
     cy.contains("0 Test game", { timeout: 10000 }).parent().find("img").click();
     // Way board loading
@@ -75,6 +82,39 @@ describe("Board interactions", () => {
       "have.css",
       "transform",
       "matrix(1, 0, 0, 1, 100, -100)"
+    );
+  });
+
+  it("Pan board with left click when is main action", () => {
+    cy.get("[title^='Switch to move mode']").click();
+
+    cy.get(".board")
+      .trigger("pointerdown", {
+        button: 0,
+        x: 300,
+        y: 600,
+        clientX: 300,
+        clientY: 600,
+        pointerId: 1,
+      })
+      .trigger("pointermove", {
+        button: 0,
+        x: 400,
+        y: 400,
+        clientX: 400,
+        clientY: 400,
+        pointerId: 1,
+        force: true,
+      })
+      .trigger("pointerup", {
+        force: true,
+        pointerId: 1,
+        isPrimary: true,
+      });
+    cy.get(".board-pane").should(
+      "have.css",
+      "transform",
+      "matrix(1, 0, 0, 1, 100, -400)"
     );
   });
 });
