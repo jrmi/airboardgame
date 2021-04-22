@@ -90,12 +90,37 @@ export const useItemActions = () => {
     updateAvailableActions();
   }, [selectedItems, updateAvailableActions]);
 
-// Stack selection to Center
+
+  // Stack selection to Center
 const stackToCenter = useRecoilCallback(
   ({ snapshot }) => async () => {
     const selectedItemList = await getSelectedItemList(snapshot);
 
-    // Compute
+    // Rule to manage thickness of the stack.
+    let stackThickness = 0;
+    if (selectedItemList.length >= 32) {
+        stackThickness = 0.5;
+      } else {
+        stackThickness = 1;
+      };
+
+    // To avoid displacement effects.
+    let isSameGap = true;
+    for (let i = 1; i < selectedItemList.length; i++) {
+      if(Math.abs(selectedItemList[i].x - selectedItemList[i-1].x) != stackThickness) {
+        isSameGap = false;
+        break;
+      }
+      if(Math.abs(selectedItemList[i].y - selectedItemList[i-1].y) != stackThickness) {
+        isSameGap = false;
+        break;
+      }
+    }
+    if (isSameGap == true) {
+      return;
+    }
+
+    // Compute middle position
     const minMax = { min: {}, max: {} };
     minMax.min.x = Math.min(...selectedItemList.map(({ x }) => x));
     minMax.min.y = Math.min(...selectedItemList.map(({ y }) => y));
@@ -109,69 +134,53 @@ const stackToCenter = useRecoilCallback(
         ({ y, id }) => y + document.getElementById(id).clientHeight
       )
     );
+    const { clientWidth, clientHeight } = document.getElementById(selectedItemList[0].id);
+    let newX = minMax.min.x + (minMax.max.x - minMax.min.x) / 2 - clientWidth / 2;
+    let newY = minMax.min.y + (minMax.max.y - minMax.min.y) / 2 - clientHeight / 2; 
+    
 
-    const [newX, newY] = [minMax.min.x + (minMax.max.x - minMax.min.x) / 2 ,  minMax.min.y + (minMax.max.y - minMax.min.y) / 2];
-    let stackThickness = 0;
-      if (selectedItemList.length >= 32) {
-          stackThickness = 0.5;
-        } else {
-          stackThickness = 1;
-        }
-    let index = -1;
-    batchUpdateItems(selectedItems, (item) => {
-      index += 1;
-      const { clientWidth, clientHeight } = document.getElementById(item.id);
-      return {
-        ...item,
-        x: newX - clientWidth / 2 + index * stackThickness,
-        y: newY - clientHeight / 2 + (selectedItemList.length - index - 1) * stackThickness,
-      };
-    });
+      batchUpdateItems(selectedItems, (item) => {
+        const newItem = {
+          ...item,
+          x: newX,
+          y: newY,
+        };
+        newX += stackThickness;
+        newY -= stackThickness;
+        return newItem;
+      });
   },
   [getSelectedItemList, batchUpdateItems, selectedItems]
 );
 
-  // Stack selection to Top Left
-  const stackToTopLeft = useRecoilCallback(
-    ({ snapshot }) => async () => {
-      const selectedItemList = await getSelectedItemList(snapshot);
+// Stack selection to Top Left
+const stackToTopLeft = useRecoilCallback(
+  ({ snapshot }) => async () => {
+    const selectedItemList = await getSelectedItemList(snapshot);
 
-      // Compute
-      const minMax = { min: {}, max: {} };
-      minMax.min.x = Math.min(...selectedItemList.map(({ x }) => x));
-      minMax.min.y = Math.min(...selectedItemList.map(({ y }) => y));
-      minMax.max.x = Math.max(
-        ...selectedItemList.map(
-          ({ x, id }) => x + document.getElementById(id).clientWidth
-        )
-      );
-      minMax.max.y = Math.max(
-        ...selectedItemList.map(
-          ({ y, id }) => y + document.getElementById(id).clientHeight
-        )
-      );
+    let newX = selectedItemList[0].x;
+    let newY = selectedItemList[0].y;
+    let stackThickness = 0;
 
-      const [newX, newY] = [minMax.min.x, minMax.min.y];
-      let stackThickness = 0;
-      if (selectedItemList.length >= 32) {
-          stackThickness = 0.5;
-        } else {
-          stackThickness = 1;
-        }
-      let index = -1;
-      
-      batchUpdateItems(selectedItems, (item) => {
-        index += 1;
-        const { clientWidth, clientHeight } = document.getElementById(item.id);
-        return {
-          ...item,
-          x: newX + index * stackThickness,
-          y: newY + (selectedItemList.length - index - 1) * stackThickness,
-        };
-      });
-    },
-    [getSelectedItemList, batchUpdateItems, selectedItems]
-  );
+    if (selectedItemList.length >= 32) {
+        stackThickness = 0.5;
+      } else {
+        stackThickness = 1;
+      }
+    
+    batchUpdateItems(selectedItems, (item) => {
+      const newItem = {
+        ...item,
+        x: newX,
+        y: newY,
+      };
+      newX += stackThickness;
+      newY -= stackThickness;
+      return newItem;
+    });
+  },
+  [getSelectedItemList, batchUpdateItems, selectedItems]
+);
 
   // Align selection to a line
   const alignAsLine = useRecoilCallback(
@@ -181,27 +190,20 @@ const stackToCenter = useRecoilCallback(
       // Count number of elements
       const numberOfElements = selectedItemList.length;
 
-      // Compute
-      const minMax = { min: {}, max: {} };
-      minMax.min.x = Math.min(...selectedItemList.map(({ x }) => x));
-      minMax.min.y = Math.min(...selectedItemList.map(({ y }) => y));
-      minMax.max.x = Math.max(
-        ...selectedItemList.map(
-          ({ x, id }) => x + document.getElementById(id).clientWidth
-        )
-      );
-      minMax.max.y = Math.max(...selectedItemList.map(({ y, id }) => y));
-
-      const [newX, newY] = [minMax.min.x, minMax.min.y];
+      let newX = selectedItemList[0].x;
+      let newY = selectedItemList[0].y;
       let index = numberOfElements;
+      let gapBetweenItems = 5; // Negative value is possible.
       batchUpdateItems(selectedItems, (item) => {
         index -= 1;
-        const { clientWidth, clientHeight } = document.getElementById(item.id);
-        return {
+        const { clientWidth } = document.getElementById(item.id);
+        const newItem = {
           ...item,
-          x: newX + index * clientWidth,
+          x: newX,
           y: newY,
         };
+        newX += clientWidth + gapBetweenItems;
+        return newItem;
       });
     },
     [getSelectedItemList, batchUpdateItems, selectedItems]
@@ -216,32 +218,28 @@ const stackToCenter = useRecoilCallback(
       const numberOfElements = selectedItemList.length;
       const numberOfColumns = Math.ceil(Math.sqrt(numberOfElements));
 
-      // Compute
-      const minMax = { min: {}, max: {} };
-      minMax.min.x = Math.min(...selectedItemList.map(({ x }) => x));
-      minMax.min.y = Math.min(...selectedItemList.map(({ y }) => y));
+      let newX = selectedItemList[0].x;
+      let newY = selectedItemList[0].y;
 
-      const [newX, newY] = [minMax.min.x, minMax.min.y];
-      let currentColumn = numberOfElements % numberOfColumns;
-      let currentRow = Math.ceil(numberOfElements / numberOfColumns) - 1; // Compute last row.
+      let currentColumn = 1;
+      let isNewRow = false;
 
-      if (currentColumn == 0) {
-        currentColumn = numberOfColumns;
-      }
-
+      let gapBetweenItems = 5; // Negative value is possible.
       batchUpdateItems(selectedItems, (item) => {
-        currentColumn -= 1;
-        if (currentColumn < 0) {
-          currentColumn = numberOfColumns - 1;
-          currentRow -= 1;
-        }
-
         const { clientWidth, clientHeight } = document.getElementById(item.id);
-        return {
+        const newItem = {
           ...item,
-          x: newX + currentColumn * clientWidth,
-          y: newY + currentRow * clientHeight,
+          x: newX,
+          y: newY,
         };
+        newX += clientWidth + gapBetweenItems;
+        currentColumn += 1;
+        if (currentColumn > numberOfColumns) {
+          currentColumn = 1;
+          newX = selectedItemList[0].x;
+          newY += clientHeight + gapBetweenItems;
+        }
+        return newItem;
       });
     },
     [getSelectedItemList, batchUpdateItems, selectedItems]
