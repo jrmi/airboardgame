@@ -1,5 +1,12 @@
 describe("Homepage", () => {
   beforeEach(() => {
+    cy.intercept(
+      {
+        method: "GET",
+        url: "/airboardgame/store/game*",
+      },
+      "[]"
+    );
     cy.visit("/games");
   });
 

@@ -10,6 +10,15 @@ describe("Studio", () => {
       '{"message":"success"}'
     );
 
+    cy.intercept(
+      {
+        method: "GET",
+        url: "/airboardgame/store/game*",
+      },
+      // eslint-disable-next-line quotes
+      "[]"
+    );
+
     cy.visit("/", {
       onBeforeLoad: (win) => {
         win.localStorage.setItem("isAuthenticated", "true");

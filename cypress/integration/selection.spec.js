@@ -1,6 +1,13 @@
 describe("Selection action", () => {
   beforeEach(() => {
     cy.viewport(1000, 600);
+    cy.intercept(
+      {
+        method: "GET",
+        url: "/airboardgame/store/game*",
+      },
+      "[]"
+    );
     cy.visit("/");
     cy.contains("0 Test game", { timeout: 10000 }).parent().find("img").click();
     // Way board loading
