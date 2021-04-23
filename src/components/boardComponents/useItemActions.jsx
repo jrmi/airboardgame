@@ -158,8 +158,7 @@ const stackToTopLeft = useRecoilCallback(
   ({ snapshot }) => async () => {
     const selectedItemList = await getSelectedItemList(snapshot);
 
-    let newX = selectedItemList[0].x;
-    let newY = selectedItemList[0].y;
+    let { x:newX, y:newY} = selectedItemList[0];
     let stackThickness = 0;
 
     if (selectedItemList.length >= 32) {
@@ -190,8 +189,7 @@ const stackToTopLeft = useRecoilCallback(
       // Count number of elements
       const numberOfElements = selectedItemList.length;
 
-      let newX = selectedItemList[0].x;
-      let newY = selectedItemList[0].y;
+      let { x:newX, y:newY} = selectedItemList[0];
       let index = numberOfElements;
       let gapBetweenItems = 5; // Negative value is possible.
       batchUpdateItems(selectedItems, (item) => {
@@ -218,8 +216,7 @@ const stackToTopLeft = useRecoilCallback(
       const numberOfElements = selectedItemList.length;
       const numberOfColumns = Math.ceil(Math.sqrt(numberOfElements));
 
-      let newX = selectedItemList[0].x;
-      let newY = selectedItemList[0].y;
+      let { x:newX, y:newY} = selectedItemList[0];
 
       let currentColumn = 1;
       let isNewRow = false;
