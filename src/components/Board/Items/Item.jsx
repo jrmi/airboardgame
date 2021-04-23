@@ -71,7 +71,7 @@ const ItemWrapper = styled.div.attrs(({ rotation, locked, selected }) => {
   }
 `;
 
-const Item = ({
+/*const Item = ({
   setState,
   state: { type, x, y, rotation = 0, id, locked, layer, ...rest } = {},
   animate = "hvr-pop",
@@ -155,6 +155,81 @@ const Item = ({
       </ItemWrapper>
     </div>
   );
+};*/
+
+const Item = ({
+  setState,
+  state: { type, rotation = 0, id, locked, layer, ...rest } = {},
+  animate = "hvr-pop",
+  isSelected,
+  getComponent,
+}) => {
+  const itemRef = React.useRef(null);
+  const [unlock, setUnlock] = React.useState(false);
+  const isMountedRef = React.useRef(false);
+  const animateRef = React.useRef(null);
+
+  // Allow to operate on locked item if key is pressed
+  React.useEffect(() => {
+    const onKeyDown = (e) => {
+      if (e.key === "u" || e.key === "l") {
+        setUnlock(true);
+      }
+    };
+    const onKeyUp = (e) => {
+      if (e.key === "u" || e.key === "l") {
+        setUnlock(false);
+      }
+    };
+    document.addEventListener("keydown", onKeyDown);
+    document.addEventListener("keyup", onKeyUp);
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+      document.removeEventListener("keyup", onKeyUp);
+    };
+  }, []);
+
+  const Component = getComponent(type);
+
+  const updateState = React.useCallback(
+    (callbackOrItem, sync = true) => setState(id, callbackOrItem, sync),
+    [setState, id]
+  );
+
+  // Update actual size when update
+  React.useEffect(() => {
+    isMountedRef.current = true;
+    return () => {
+      isMountedRef.current = false;
+    };
+  }, []);
+
+  React.useEffect(() => {
+    animateRef.current.className = animate;
+  }, [animate]);
+
+  const removeClass = (e) => {
+    e.target.className = "";
+  };
+
+  return (
+    <ItemWrapper
+      rotation={rotation}
+      locked={locked && !unlock}
+      selected={isSelected}
+      ref={itemRef}
+      layer={layer}
+      id={id}
+    >
+      <div ref={animateRef} onAnimationEnd={removeClass}>
+        <Component {...rest} setState={updateState} />
+        <div className="corner top-left"></div>
+        <div className="corner top-right"></div>
+        <div className="corner bottom-left"></div>
+        <div className="corner bottom-right"></div>
+      </div>
+    </ItemWrapper>
+  );
 };
 
 const MemoizedItem = memo(
@@ -171,4 +246,25 @@ const MemoizedItem = memo(
   }
 );
 
-export default MemoizedItem;
+// Exclude positionning from memoization
+const PositionedItem = ({
+  state: { x, y, layer, ...stateRest } = {},
+  ...rest
+}) => {
+  return (
+    <div
+      style={{
+        transform: `translate(${x}px, ${y}px)`,
+        display: "inline-block",
+        zIndex: (layer || 0) + 3,
+        position: "absolute",
+        top: 0,
+        left: 0,
+      }}
+    >
+      <MemoizedItem {...rest} state={stateRest} />
+    </div>
+  );
+};
+
+export default PositionedItem;
