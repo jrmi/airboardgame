@@ -4,8 +4,6 @@ import styled from "styled-components";
 
 import "rc-slider/assets/index.css";
 
-import { sliderStyling } from "./Slider";
-
 const StyledSliderRange = styled.div`
   display: flex;
   align-items: center;
@@ -16,6 +14,28 @@ const StyledSliderRange = styled.div`
     color: var(--font-color2);
   }
 `;
+
+const sliderRangeStyling = {
+  trackStyle: [
+    {
+      backgroundColor: "var(--color-primary)",
+      height: "5px",
+    },
+  ],
+  railStyle: {
+    backgroundColor: "var(--font-color2)",
+  },
+  handleStyle: [
+    {
+      backgroundColor: "white",
+      borderColor: "white",
+    },
+    {
+      backgroundColor: "white",
+      borderColor: "white",
+    },
+  ],
+};
 
 // Please check https://github.com/react-component/slider#user-content-common-api
 // for all available props.
@@ -35,15 +55,12 @@ const SliderRange = ({
   };
 
   return (
-    <StyledSliderRange>
+    <StyledSliderRange className={props.className}>
       <span>{`${minMaxValues[0]}`}</span>
       <Range
         {...props}
-        {...sliderStyling}
+        {...sliderRangeStyling}
         value={props.value.length ? props.value : [defaultMin, defaultMax]}
-        style={{
-          width: "20em",
-        }}
         onChange={onChangeCustom}
       />
       <span>{`${minMaxValues[1]}${

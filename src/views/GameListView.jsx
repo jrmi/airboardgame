@@ -304,7 +304,7 @@ const GameListView = () => {
             <li className="duration-filter">
               <span className="filter-title">{t("Duration (mins)")}</span>
               <SliderRange
-                defaultValue={[2, 4]}
+                defaultValue={[15, 90]}
                 min={15}
                 max={90}
                 value={filterCriteria.durations}

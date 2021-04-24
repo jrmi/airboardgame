@@ -13,7 +13,6 @@ import { nanoid } from "nanoid";
 import { ToastContainer } from "react-toastify";
 
 import "react-toastify/dist/ReactToastify.css";
-import "rc-slider/assets/index.css";
 import "./react-confirm-alert.css";
 
 import Home from "./views/Home";
