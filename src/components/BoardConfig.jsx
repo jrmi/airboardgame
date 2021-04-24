@@ -11,7 +11,6 @@ import AutoSave from "../ui/formUtils/AutoSave";
 import Hint from "../ui/formUtils/Hint";
 import Label from "../ui/formUtils/Label";
 import SliderRange from "../ui/SliderRange";
-import { Range } from "rc-slider";
 
 const BoardConfigForm = styled.div`
   display: flex;

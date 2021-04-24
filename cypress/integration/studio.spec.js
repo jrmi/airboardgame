@@ -194,7 +194,7 @@ describe("Studio", () => {
 
       cy.get(".item").parent().should("have.css", "z-index", "3");
 
-      cy.get(".rc-slider-mark-text").contains("-1").click();
+      cy.get(".slider-layer .rc-slider-mark-text").contains("-1").click();
 
       cy.get(".item").parent().should("have.css", "z-index", "2");
     });

@@ -4,7 +4,6 @@ import { useTranslation } from "react-i18next";
 
 import { useRecoilValue } from "recoil";
 
-import Slider from "rc-slider";
 import { Form, Field } from "react-final-form";
 
 import AutoSave from "../../ui/formUtils/AutoSave";
@@ -14,6 +13,7 @@ import { useItems } from "../Board/Items";
 
 import Label from "../../ui/formUtils/Label";
 import Hint from "../../ui/formUtils/Hint";
+import Slider from "../../ui/Slider";
 
 import ActionsField from "./ActionsField";
 
@@ -104,6 +104,7 @@ const ItemFormFactory = () => {
                     step={5}
                     included={false}
                     marks={{
+                      "-180": -180,
                       "-90": -90,
                       "-45": -45,
                       "-30": -30,
@@ -111,8 +112,10 @@ const ItemFormFactory = () => {
                       30: 30,
                       45: 45,
                       90: 90,
+                      180: 180,
                     }}
                     onChange={onChange}
+                    className={"slider-rotation"}
                   />
                 );
               }}
@@ -140,6 +143,7 @@ const ItemFormFactory = () => {
                       "3": 3,
                     }}
                     onChange={onChange}
+                    className={"slider-layer"}
                   />
                 );
               }}
