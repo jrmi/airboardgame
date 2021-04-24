@@ -1,16 +1,17 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
-
+import { nanoid } from "nanoid";
 import { Form, Field } from "react-final-form";
-import AutoSave from "../ui/formUtils/AutoSave";
-import Label from "../ui/formUtils/Label";
+
 import useBoardConfig from "./useBoardConfig";
 import { ImageField } from "./mediaLibrary";
-import Hint from "../ui/formUtils/Hint";
 
+import AutoSave from "../ui/formUtils/AutoSave";
+import Hint from "../ui/formUtils/Hint";
+import Label from "../ui/formUtils/Label";
+import SliderRange from "../ui/SliderRange";
 import { Range } from "rc-slider";
-import { nanoid } from "nanoid";
 
 const BoardConfigForm = styled.div`
   display: flex;
@@ -74,26 +75,13 @@ const BoardConfig = () => {
             >
               {({ input: { onChange, value } }) => {
                 return (
-                  <Range
+                  <SliderRange
                     defaultValue={[2, 4]}
                     value={value}
                     min={1}
                     max={9}
                     step={1}
-                    marks={{
-                      1: "1",
-                      2: "2",
-                      3: "3",
-                      4: "4",
-                      5: "5",
-                      6: "6",
-                      7: "7",
-                      8: "8",
-                      9: "9+",
-                    }}
-                    style={{ width: "20em" }}
                     onChange={onChange}
-                    dots
                   />
                 );
               }}
@@ -111,20 +99,12 @@ const BoardConfig = () => {
             >
               {({ input: { onChange, value } }) => {
                 return (
-                  <Range
-                    defaultValue={[2, 4]}
+                  <SliderRange
+                    defaultValue={[15, 90]}
                     value={value}
                     min={15}
                     max={90}
-                    step={null}
-                    marks={{
-                      15: "15",
-                      30: "30",
-                      45: "45",
-                      60: "60",
-                      90: "90+",
-                    }}
-                    style={{ width: "20em" }}
+                    step={15}
                     onChange={onChange}
                   />
                 );

@@ -294,6 +294,8 @@ const GameListView = () => {
               <span className="filter-title">{t("Number of players")}</span>
               <SliderRange
                 defaultValue={[1, 9]}
+                min={1}
+                max={9}
                 value={filterCriteria.nbOfPlayers}
                 step={1}
                 onChange={onChangeNbOfPlayersSlider}
@@ -302,7 +304,9 @@ const GameListView = () => {
             <li className="duration-filter">
               <span className="filter-title">{t("Duration (mins)")}</span>
               <SliderRange
-                defaultValue={[15, 90]}
+                defaultValue={[2, 4]}
+                min={15}
+                max={90}
                 value={filterCriteria.durations}
                 step={15}
                 onChange={onChangeDurationSlider}
