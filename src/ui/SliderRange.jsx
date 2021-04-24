@@ -19,8 +19,15 @@ const StyledSliderRange = styled.div`
 
 // Please check https://github.com/react-component/slider#user-content-common-api
 // for all available props.
-const SliderRange = ({ defaultValue: [min, max], ...props }) => {
-  const [minMaxValues, setMinMaxValues] = React.useState([min, max]);
+const SliderRange = ({
+  defaultValue: [defaultMin, defaultMax],
+  plusSignMode = true,
+  ...props
+}) => {
+  const [minMaxValues, setMinMaxValues] = React.useState([
+    props.value.length ? props.value[0] : defaultMin,
+    props.value.length ? props.value[1] : defaultMax,
+  ]);
 
   const onChangeCustom = function (values) {
     setMinMaxValues(values);
@@ -33,14 +40,15 @@ const SliderRange = ({ defaultValue: [min, max], ...props }) => {
       <Range
         {...props}
         {...sliderStyling}
-        min={min}
-        max={max}
+        value={props.value.length ? props.value : [defaultMin, defaultMax]}
         style={{
           width: "20em",
         }}
         onChange={onChangeCustom}
       />
-      <span>{`${minMaxValues[1]}`}</span>
+      <span>{`${minMaxValues[1]}${
+        plusSignMode && minMaxValues[1] == props.max ? "+" : ""
+      }`}</span>
     </StyledSliderRange>
   );
 };
