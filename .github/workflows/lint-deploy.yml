@@ -2,7 +2,8 @@
 name: Build and Deploy to Netlify
 on:
   pull_request:
-  #push:
+  push:
+  workflow_dispatch:
 jobs:
   build:
     runs-on: ubuntu-20.04
