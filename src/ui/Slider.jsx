@@ -18,16 +18,6 @@ const StyledSlider = styled.div`
     border-radius: 1rem;
     padding: 2px 7px 0px 7px;
     background-color: var(--color-primary);
-
-    &:before {
-      content: "";
-      position: absolute;
-      margin-top: -10px; // adjust position, arrow has a height of 30px.
-      left: 5px;
-      border: solid 5px transparent;
-      border-bottom-color: var(--color-primary);
-      z-index: 1;
-    }
   }
 `;
 
