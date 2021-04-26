@@ -20,6 +20,14 @@ const BoardConfigForm = styled.div`
   }
 `;
 
+const filterEmptyArraysAndFalsyNonBooleanValues = (dataObject) => {
+  return Object.fromEntries(
+    Object.entries(dataObject).filter(([_, v]) =>
+      Array.isArray(v) ? v.length != 0 : typeof v === "boolean" ? true : !!v
+    )
+  );
+};
+
 const BoardConfig = () => {
   const { t } = useTranslation();
   const [boardConfig, setBoardConfig] = useBoardConfig();
@@ -29,8 +37,8 @@ const BoardConfig = () => {
   const onSubmitHandler = React.useCallback(
     (data) => {
       setBoardConfig((prev) => ({
-        ...prev,
-        ...data,
+        ...filterEmptyArraysAndFalsyNonBooleanValues(prev),
+        ...filterEmptyArraysAndFalsyNonBooleanValues(data),
       }));
     },
     [setBoardConfig]
