@@ -13,6 +13,8 @@ const StyledUserCircle = styled.div`
   line-height: 38px;
   text-transform: capitalize;
   ${({ isSelf }) => (isSelf ? "text-decoration: underline;" : "")};
+  ${({ isSelf }) =>
+    isSelf ? "border: 3px solid #777; line-height: 32px;" : ""};
   cursor: ${({ isSelf }) => (isSelf ? "pointer" : "default")};
 
   &:hover {

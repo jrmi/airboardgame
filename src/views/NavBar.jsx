@@ -21,6 +21,8 @@ import Brand from "./Brand";
 import { confirmAlert } from "react-confirm-alert";
 import WelcomeModal from "./WelcomeModal";
 
+import WebConferenceButton from "../components/webconf/WebConferenceButton";
+
 const StyledNavBar = styled.div.attrs(() => ({ className: "nav" }))`
   position: fixed;
   top: 0;
@@ -191,6 +193,7 @@ const NavBar = ({ editMode }) => {
                 icon="add-user"
                 title={t("Invite more player")}
               />
+              <WebConferenceButton />
             </>
           )}
           <div className="spacer" />
