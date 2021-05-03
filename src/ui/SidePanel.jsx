@@ -101,7 +101,8 @@ const SidePanel = ({
   onClose = () => {},
   title,
   footer,
-  open,
+  show,
+  open = show,
   modal = false,
   width,
 }) => {
