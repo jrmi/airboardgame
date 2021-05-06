@@ -535,7 +535,6 @@ const stackToTopLeft = useRecoilCallback(
       toggleFlipSelf,
       toggleTap,
       rotate,
-      stackToCenter,
       stackToTopLeft,
       shuffleSelectedItems,
       cloneItem,
@@ -548,7 +547,6 @@ const stackToTopLeft = useRecoilCallback(
   );
 
   return {
-    stackToCenter,
     stackToTopLeft,
     remove: removeSelectedItems,
     toggleFlip,
