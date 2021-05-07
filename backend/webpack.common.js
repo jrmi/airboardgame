@@ -4,6 +4,7 @@ require("dotenv").config({
 });
 const CopyPlugin = require("copy-webpack-plugin");
 const EncryptPlugin = require("ricochet-js").EncryptPlugin;
+const Dotenv = require("dotenv-webpack");
 
 const SECRET_KEY = process.env.RICOCHET_SECRET_KEY;
 
@@ -19,11 +20,12 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, "../public"),
     filename: "setup.js",
-    library: "main",
-    libraryTarget: "var",
-    libraryExport: "default",
+    library: {
+      type: "commonjs",
+    },
   },
   plugins: [
+    new Dotenv(),
     new CopyPlugin({
       patterns: [
         {

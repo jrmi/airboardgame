@@ -23,6 +23,10 @@ import WelcomeModal from "./WelcomeModal";
 
 import WebConferenceButton from "../components/webconf/WebConferenceButton";
 
+import { ENABLE_WEBCONFERENCE } from "../utils/settings";
+
+import useLocalStorage from "../hooks/useLocalStorage";
+
 const StyledNavBar = styled.div.attrs(() => ({ className: "nav" }))`
   position: fixed;
   top: 0;
@@ -135,6 +139,7 @@ const NavBar = ({ editMode }) => {
   const [showEditInfoModal, setShowEditInfoModal] = React.useState(false);
   const [showInfoModal, setShowInfoModal] = React.useState(false);
   const [showLink, setShowLink] = React.useState(false);
+  const [isBeta] = useLocalStorage("isBeta", false);
 
   const [boardConfig] = useBoardConfig();
 
@@ -193,7 +198,7 @@ const NavBar = ({ editMode }) => {
                 icon="add-user"
                 title={t("Invite more player")}
               />
-              <WebConferenceButton />
+              {ENABLE_WEBCONFERENCE && isBeta && <WebConferenceButton />}
             </>
           )}
           <div className="spacer" />

@@ -8,7 +8,7 @@ import { nanoid } from "nanoid";
 const oldUploadURI = `${API_ENDPOINT}/file`;
 const gameURI = `${API_ENDPOINT}/store/game`;
 const sessionURI = `${API_ENDPOINT}/store/session`;
-//const execURI = `${API_ENDPOINT}/execute`;
+const execURI = `${API_ENDPOINT}/execute`;
 const authURI = `${API_ENDPOINT}/auth`;
 
 export const uploadImage = async (namespace, file) => {
@@ -322,4 +322,25 @@ export const logout = async () => {
   if (result.status !== 200) {
     throw new Error("Logout failed");
   }
+};
+
+export const getConfToken = async (session) => {
+  const result = await fetch(`${execURI}/getConfToken?session=${session}`, {
+    credentials: "include",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (result.status === 404) {
+    throw new Error("Webconference not enabled");
+  }
+  if (result.status === 403) {
+    throw new Error("Forbidden");
+  }
+  if (result.status >= 300) {
+    throw new Error("Server error");
+  }
+  return await result.json();
 };
