@@ -34,3 +34,6 @@ export const SOCKET_OPTIONS = {
   path: SOCKET_PATH,
   transports: ["websocket"],
 };
+
+export const ENABLE_WEBCONFERENCE =
+  import.meta.env.VITE_ENABLE_WEBCONFERENCE === "1";

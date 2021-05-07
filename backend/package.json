@@ -17,13 +17,16 @@
     "babel-loader": "^8.2.2",
     "clean-webpack-plugin": "^3.0.0",
     "copy-webpack-plugin": "^7.0.0",
+    "dotenv-webpack": "^7.0.2",
     "transform-loader": "^0.2.4",
     "webpack": "^5.10.0",
     "webpack-cli": "^4.2.0",
     "webpack-dev-server": "^3.11.0"
   },
   "dependencies": {
+    "btoa": "^1.2.1",
     "dotenv": "^8.2.0",
+    "node-fetch": "^2.6.1",
     "pino-tiny": "^1.0.0",
     "ricochet-js": "^0.8.0"
   }

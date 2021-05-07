@@ -97,8 +97,8 @@ class LocalStream {
         videoSource: undefined, // The source of video. If undefined default webcam
         publishAudio: true, // Whether you want to start publishing with your audio unmuted or not
         publishVideo: true, // Whether you want to start publishing with your video enabled or not
-        resolution: "640x480", // The resolution of your video
-        frameRate: 30, // The frame rate of your video
+        resolution: "320x240", // The resolution of your video
+        frameRate: 10, // The frame rate of your video
         mirror: false, // Whether to mirror your local video or not
         ...config,
       });
