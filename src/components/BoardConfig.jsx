@@ -20,25 +20,18 @@ const BoardConfigForm = styled.div`
   }
 `;
 
-const filterEmptyArraysAndFalsyNonBooleanValues = (dataObject) => {
-  return Object.fromEntries(
-    Object.entries(dataObject).filter(([_, v]) =>
-      Array.isArray(v) ? v.length != 0 : typeof v === "boolean" ? true : !!v
-    )
-  );
-};
-
 const BoardConfig = () => {
   const { t } = useTranslation();
   const [boardConfig, setBoardConfig] = useBoardConfig();
 
-  const [defaultPlayerCount] = React.useState([]);
+  const DEFAULT_PlAYER_COUNT = [2, 4];
+  const DEFAULT_DURATION = [15, 90];
 
   const onSubmitHandler = React.useCallback(
     (data) => {
       setBoardConfig((prev) => ({
-        ...filterEmptyArraysAndFalsyNonBooleanValues(prev),
-        ...filterEmptyArraysAndFalsyNonBooleanValues(data),
+        ...prev,
+        ...data,
       }));
     },
     [setBoardConfig]
@@ -78,12 +71,16 @@ const BoardConfig = () => {
             {t("Number of players")}
             <Field
               name="playerCount"
-              initialValue={boardConfig.playerCount || defaultPlayerCount}
+              initialValue={
+                boardConfig.playerCount && boardConfig.playerCount.length != 0
+                  ? boardConfig.playerCount
+                  : DEFAULT_PlAYER_COUNT
+              }
             >
               {({ input: { onChange, value } }) => {
                 return (
                   <SliderRange
-                    defaultValue={[2, 4]}
+                    defaultValue={DEFAULT_PlAYER_COUNT}
                     value={value}
                     min={1}
                     max={9}
@@ -99,15 +96,15 @@ const BoardConfig = () => {
             <Field
               name="duration"
               initialValue={
-                Array.isArray(boardConfig.duration)
+                boardConfig.duration && boardConfig.duration.length != 0
                   ? boardConfig.duration
-                  : defaultPlayerCount
+                  : DEFAULT_DURATION
               }
             >
               {({ input: { onChange, value } }) => {
                 return (
                   <SliderRange
-                    defaultValue={[15, 90]}
+                    defaultValue={DEFAULT_DURATION}
                     value={value}
                     min={15}
                     max={90}
