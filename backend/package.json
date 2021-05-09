@@ -28,6 +28,6 @@
     "dotenv": "^8.2.0",
     "node-fetch": "^2.6.1",
     "pino-tiny": "^1.0.0",
-    "ricochet-js": "^0.8.0"
+    "ricochet-js": "^0.8.1"
   }
 }
