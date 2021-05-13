@@ -239,9 +239,9 @@ const MemoizedItem = memo(
     { state: nextState, setState: nextSetState, isSelected: nextIsSelected }
   ) => {
     return (
-      JSON.stringify(prevState) === JSON.stringify(nextState) &&
+      prevIsSelected === nextIsSelected &&
       prevSetState === nextSetState &&
-      prevIsSelected === nextIsSelected
+      JSON.stringify(prevState) === JSON.stringify(nextState)
     );
   }
 );
@@ -267,4 +267,6 @@ const PositionedItem = ({
   );
 };
 
-export default PositionedItem;
+const MemoizedPositionedItem = memo(PositionedItem);
+
+export default MemoizedPositionedItem;
