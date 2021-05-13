@@ -2,23 +2,23 @@ import React from "react";
 import styled from "styled-components";
 import { useTranslation } from "react-i18next";
 
-import { SHOW_WELCOME } from "../utils/settings";
-import { Board } from "../components/Board";
-import SelectedItemsPane from "../components/SelectedItemsPane";
-import { useUsers, SubscribeUserEvents } from "../components/users";
-import Touch from "../ui/Touch";
-import { useC2C } from "../hooks/useC2C";
+import { SHOW_WELCOME } from "../../utils/settings";
+import { Board } from "../../components/Board";
+import SelectedItemsPane from "../../components/SelectedItemsPane";
+import { useUsers, SubscribeUserEvents } from "../../components/users";
+import Touch from "../../ui/Touch";
+import { useC2C } from "../../hooks/useC2C";
 
 import WelcomeModal from "./WelcomeModal";
-import { MediaLibraryProvider } from "../components/mediaLibrary";
+import { MediaLibraryProvider } from "../../components/mediaLibrary";
 import NavBar from "./NavBar";
-import AutoSaveSession from "../components/AutoSaveSession";
-import ImageDropNPaste from "../components/ImageDropNPaste";
-import { getComponent } from "../components/boardComponents";
-import AddItemButton from "../components/AddItemButton";
-import { MessageButton } from "../components/Message";
+import AutoSaveSession from "../../components/AutoSaveSession";
+import ImageDropNPaste from "../../components/ImageDropNPaste";
+import { getComponent } from "../../components/boardComponents";
+import AddItemButton from "../../components/AddItemButton";
+import { MessageButton } from "../../components/Message";
 
-import { insideClass } from "../utils";
+import { insideClass } from "../../utils";
 
 const StyledBoardView = styled.div`
   width: 100vw;

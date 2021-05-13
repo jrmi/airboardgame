@@ -1,9 +1,9 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 
-import DownloadGameLink from "../components/DownloadGameLink";
+import DownloadGameLink from "../../components/DownloadGameLink";
 
-import Modal from "../ui/Modal";
+import Modal from "../../ui/Modal";
 
 const ExportModal = ({ show, setShow }) => {
   const { t } = useTranslation();

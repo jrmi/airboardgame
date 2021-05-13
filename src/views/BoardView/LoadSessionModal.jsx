@@ -1,12 +1,12 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 
-import LoadGame from "../components/LoadGame";
+import LoadGame from "../../components/LoadGame";
 
-import { useC2C } from "../hooks/useC2C";
+import { useC2C } from "../../hooks/useC2C";
 import { nanoid } from "nanoid";
 
-import Modal from "../ui/Modal";
+import Modal from "../../ui/Modal";
 
 const LoadSessionModal = ({ show, setShow }) => {
   const { t } = useTranslation();

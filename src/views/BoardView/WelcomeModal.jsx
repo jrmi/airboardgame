@@ -6,9 +6,9 @@ import styled from "styled-components";
 
 import { toast } from "react-toastify";
 
-import Modal from "../ui/Modal";
+import Modal from "../../ui/Modal";
 
-import { useC2C } from "../hooks/useC2C";
+import { useC2C } from "../../hooks/useC2C";
 
 const StyledUrl = styled.div`
   background-color: var(--color-midGrey);
