@@ -1,30 +1,27 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 
-import useGame from "../hooks/useGame";
-
 const generateDownloadURI = (data) => {
   return (
     "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(data))
   );
 };
 
-export const DownloadGameLink = () => {
+export const DownloadLink = ({ getData = () => {} }) => {
   const { t } = useTranslation();
-  const { getGame } = useGame();
 
   const [downloadURI, setDownloadURI] = React.useState("");
   const [date, setDate] = React.useState(Date.now());
   const [genOnce, setGenOnce] = React.useState(false);
 
   const updateSaveLink = React.useCallback(async () => {
-    const game = await getGame();
-    if (game.items.length) {
-      setDownloadURI(generateDownloadURI(game));
+    const data = await getData();
+    if (data.items.length) {
+      setDownloadURI(generateDownloadURI(data));
       setDate(Date.now());
       setGenOnce(true);
     }
-  }, [getGame]);
+  }, [getData]);
 
   React.useEffect(() => {
     let mounted = true;
@@ -67,4 +64,4 @@ export const DownloadGameLink = () => {
   );
 };
 
-export default DownloadGameLink;
+export default DownloadLink;

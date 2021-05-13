@@ -3,7 +3,7 @@ import { useSetRecoilState, useRecoilCallback } from "recoil";
 
 import { updateGame } from "../utils/api";
 
-import SubscribeGameEvents from "../components/SubscribeGameEvents";
+//import SubscribeGameEvents from "../components/SubscribeGameEvents";
 import { useItems } from "../components/Board/Items";
 import {
   AvailableItemListAtom,
@@ -62,10 +62,10 @@ export const GameProvider = ({ gameId, game, children }) => {
 
   return (
     <GameContext.Provider
-      value={{ setGame, getGame: getCurrentGame, saveGame, gameLoaded }}
+      value={{ setGame, getGame: getCurrentGame, saveGame, gameLoaded, gameId }}
     >
       {gameLoaded && children}
-      <SubscribeGameEvents getGame={getCurrentGame} setGame={setGame} />
+      {/*<SubscribeGameEvents getGame={getCurrentGame} setGame={setGame} />*/}
     </GameContext.Provider>
   );
 };

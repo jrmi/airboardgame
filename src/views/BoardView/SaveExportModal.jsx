@@ -2,14 +2,14 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 
-import DownloadGameLink from "../../components/DownloadGameLink";
+import DownloadLink from "../../components/DownloadLink";
 import useGame from "../../hooks/useGame";
 import Modal from "../../ui/Modal";
 
 const SaveExportGameModal = ({ show, setShow }) => {
   const { t } = useTranslation();
 
-  const { saveGame } = useGame();
+  const { saveGame, getGame } = useGame();
 
   const handleSave = React.useCallback(async () => {
     try {
@@ -55,7 +55,7 @@ const SaveExportGameModal = ({ show, setShow }) => {
       </header>
       <section>
         <p>{t("You can also save it to your computer.")}</p>
-        <DownloadGameLink />
+        <DownloadLink getData={getGame} />
       </section>
     </Modal>
   );

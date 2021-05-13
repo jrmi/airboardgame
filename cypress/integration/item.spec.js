@@ -24,7 +24,7 @@ describe("Item interactions", () => {
       .should("have.css", "transform", "none");
   });
 
-  it("should move item", () => {
+  it.only("should move item", () => {
     cy.get("img[src='/game_assets/JC.jpg']")
       .parents(".item")
       .parent()
@@ -58,6 +58,7 @@ describe("Item interactions", () => {
         force: true,
         pointerId: 1,
       });
+
     cy.get("img[src='/game_assets/JC.jpg']")
       .parents(".item")
       .parent()

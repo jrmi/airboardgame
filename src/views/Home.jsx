@@ -1,10 +1,11 @@
 import React from "react";
-import { Switch, Route, useLocation } from "react-router-dom";
+import { Switch, Route } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import CookieNotice, { useCookieConsent } from "./CookieNotice";
 
 import useLocalStorage from "../hooks/useLocalStorage";
+import useQueryParam from "../hooks/useQueryParam";
 
 import HomeNav from "./HomeNav";
 import AboutModal from "./AboutModal";
@@ -23,10 +24,6 @@ const StyledHome = styled.div`
   }
 `;
 
-const useQuery = () => {
-  return new URLSearchParams(useLocation().search);
-};
-
 const Home = () => {
   const { t } = useTranslation();
   const cookieConsent = useCookieConsent();
@@ -39,7 +36,7 @@ const Home = () => {
 
   const [showAboutModal, setShowAboutModal] = React.useState(false);
 
-  let query = useQuery();
+  let query = useQueryParam();
 
   const forceBeta = query.get("beta") === "true";
 
