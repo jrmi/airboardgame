@@ -227,7 +227,7 @@ const GameListItem = ({
 
   return (
     <Game>
-      <Link to={`/game/${id}/session/`} className="img-wrapper">
+      <Link to={`/session/?fromGame=${id}`} className="img-wrapper">
         <span>
           {realImageUrl && (
             <>

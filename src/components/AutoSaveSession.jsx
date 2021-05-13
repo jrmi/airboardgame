@@ -3,9 +3,8 @@ import { useRecoilValue } from "recoil";
 import { useC2C } from "../hooks/useC2C";
 import { MessagesAtom } from "../hooks/useMessage";
 import useTimeout from "../hooks/useTimeout";
+import useSession from "../hooks/useSession";
 import debounce from "lodash.debounce";
-
-import { updateSession } from "../utils/api";
 
 import {
   AvailableItemListAtom,
@@ -13,8 +12,10 @@ import {
   AllItemsSelector,
 } from "./Board/";
 
-export const AutoSaveSession = ({ session }) => {
+export const AutoSaveSession = () => {
   const { isMaster } = useC2C();
+
+  const { saveSession } = useSession();
 
   // Delay the first update to avoid too many session
   const readyRef = React.useRef(false);
@@ -28,30 +29,13 @@ export const AutoSaveSession = ({ session }) => {
   const availableItemList = useRecoilValue(AvailableItemListAtom);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const autoSave = React.useCallback(
-    debounce(async ({ availableItemList, boardConfig, itemList, messages }) => {
-      const game = {
-        items: itemList,
-        board: boardConfig,
-        availableItems: availableItemList,
-        messages: messages.slice(-50),
-        timestamp: Date.now(),
-      };
-
-      if (game.items.length) {
-        try {
-          await updateSession(session, game);
-        } catch (e) {
-          console.log(e);
-        }
-      }
-    }, 1000),
-    [session]
-  );
+  const autoSave = React.useCallback(debounce(saveSession, 1000), [
+    saveSession,
+  ]);
 
   React.useEffect(() => {
     if (isMaster && readyRef.current) {
-      autoSave({ itemList, boardConfig, availableItemList, messages });
+      autoSave();
     }
   }, [isMaster, autoSave, itemList, boardConfig, availableItemList, messages]);
 

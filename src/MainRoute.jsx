@@ -1,11 +1,6 @@
 import React from "react";
 
-import {
-  BrowserRouter as Router,
-  Route,
-  Switch,
-  Redirect,
-} from "react-router-dom";
+import { Route, Switch, Redirect } from "react-router-dom";
 
 import { nanoid } from "nanoid";
 
@@ -27,11 +22,40 @@ const MainRoute = () => {
           },
         }) => {
           // Redirect to new session id
-          return <Redirect to={`/game/${gameId}/session/${nanoid()}`} />;
+          return <Redirect to={`/session/${nanoid()}/?fromGame=${gameId}`} />;
         }}
       </Route>
-      <Route path="/game/:gameId/session/:room/">
-        <SessionView />
+      <Route path="/session/" exact>
+        {({ location: { search } }) => {
+          const params = new URLSearchParams(search);
+          const fromGame = params.get("fromGame");
+
+          // Redirect to new session id
+          return <Redirect to={`/session/${nanoid()}/?fromGame=${fromGame}`} />;
+        }}
+      </Route>
+      <Route path="/game/:gameId/session/:sessionId/?fromGame=:fromGame">
+        {({
+          match: {
+            params: { gameId, sessionId },
+          },
+        }) => {
+          return <Redirect to={`/session/${sessionId}/?fromGame=${gameId}`} />;
+        }}
+      </Route>
+      <Route path="/session/:sessionId/">
+        {({
+          location: { search },
+          match: {
+            params: { sessionId },
+          },
+        }) => {
+          const params = new URLSearchParams(search);
+          const fromGame = params.get("fromGame");
+
+          // Redirect to new session id
+          return <SessionView sessionId={sessionId} fromGame={fromGame} />;
+        }}
       </Route>
       <Route path="/game/:gameId?">
         <GameView />

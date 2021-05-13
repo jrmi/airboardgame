@@ -1,12 +1,14 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 
-import DownloadGameLink from "../../components/DownloadGameLink";
+import useSession from "../../hooks/useSession";
+import DownloadLink from "../../components/DownloadLink";
 
 import Modal from "../../ui/Modal";
 
 const ExportModal = ({ show, setShow }) => {
   const { t } = useTranslation();
+  const { getSession } = useSession();
 
   return (
     <Modal title={t("Save game")} setShow={setShow} show={show}>
@@ -19,7 +21,7 @@ const ExportModal = ({ show, setShow }) => {
             "You can save the current session on your computer to load it later!"
           )}
         </p>
-        <DownloadGameLink />
+        <DownloadLink getData={getSession} />
       </section>
     </Modal>
   );
