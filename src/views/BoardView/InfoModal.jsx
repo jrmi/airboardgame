@@ -3,10 +3,10 @@ import { useTranslation, Trans } from "react-i18next";
 
 import { useRecoilValue } from "recoil";
 
-import Modal from "../ui/Modal";
-import { getBestTranslationFromConfig } from "../utils/api";
+import Modal from "../../ui/Modal";
+import { getBestTranslationFromConfig } from "../../utils/api";
 
-import { BoardConfigAtom } from "../components/Board/";
+import { BoardConfigAtom } from "../../components/Board/";
 import styled from "styled-components";
 import useAsyncEffect from "use-async-effect";
 
