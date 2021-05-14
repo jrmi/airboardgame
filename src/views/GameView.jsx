@@ -1,11 +1,11 @@
 import React from "react";
-import { useSetRecoilState } from "recoil";
 import { useParams } from "react-router-dom";
 import { nanoid } from "nanoid";
 import { Provider } from "@scripters/use-socket.io";
 
-import { C2CProvider, useC2C } from "../hooks/useC2C";
-import { MessagesAtom } from "../hooks/useMessage";
+import { getComponent } from "../components/boardComponents";
+
+import useC2C, { C2CProvider } from "../hooks/useC2C";
 
 import { SOCKET_URL, SOCKET_OPTIONS } from "../utils/settings";
 
@@ -25,14 +25,13 @@ const newGameData = {
   board: { size: 2000, scale: 1 },
 };
 
-export const GameView = ({ session }) => {
-  const { c2c, isMaster } = useC2C();
+export const GameView = () => {
+  const { c2c, isMaster } = useC2C("board");
   const { gameId } = useParams();
   const [realGameId, setRealGameId] = React.useState();
   const [gameLoaded, setGameLoaded] = React.useState(false);
   const [game, setGame] = React.useState(null);
   const gameLoadingRef = React.useRef(false);
-  const setMessages = useSetRecoilState(MessagesAtom);
 
   const { t } = useTranslation();
 
@@ -63,7 +62,7 @@ export const GameView = ({ session }) => {
         }
       }
     },
-    [c2c, gameId, gameLoaded, isMaster, setMessages, t]
+    [c2c, gameId, gameLoaded, isMaster, t]
   );
 
   // Load game from master if any
@@ -87,13 +86,24 @@ export const GameView = ({ session }) => {
     }
   }, [c2c, isMaster, gameLoaded]);
 
+  const libraries = React.useMemo(
+    () => [
+      { id: "game", name: t("Game"), boxId: "game", resourceId: realGameId },
+    ],
+    [realGameId, t]
+  );
+
   if (!gameLoaded) {
     return <Waiter message={t("Game loading...")} />;
   }
 
   return (
     <GameProvider game={game} gameId={realGameId}>
-      <BoardView namespace={realGameId} edit={true} session={session} />
+      <BoardView
+        edit={true}
+        mediaLibrairies={libraries}
+        getComponent={getComponent}
+      />
     </GameProvider>
   );
 };
@@ -102,8 +112,8 @@ const ConnectedGameView = () => {
   const { room = nanoid() } = useParams();
   return (
     <Provider url={SOCKET_URL} options={SOCKET_OPTIONS}>
-      <C2CProvider room={room}>
-        <GameView session={room} />
+      <C2CProvider room={room} channel="board">
+        <GameView />
       </C2CProvider>
     </Provider>
   );

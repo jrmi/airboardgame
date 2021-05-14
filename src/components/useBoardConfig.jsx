@@ -1,5 +1,5 @@
 import React from "react";
-import { useC2C } from "../hooks/useC2C";
+import useC2C from "../hooks/useC2C";
 import { useRecoilState } from "recoil";
 
 import debounce from "lodash.debounce";
@@ -7,7 +7,7 @@ import debounce from "lodash.debounce";
 import { BoardConfigAtom } from "./Board/game/atoms";
 
 export const useBoardConfig = () => {
-  const { c2c } = useC2C();
+  const { c2c } = useC2C("board");
   const [boardConfig, setBoardConfig] = useRecoilState(BoardConfigAtom);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -15,7 +15,7 @@ export const WeConferenceButton = () => {
         onClick={() => setWebConference((prev) => !prev)}
         alt={t("Web conference")}
         title={t("Web conference")}
-        icon={"video-camera"}
+        icon="https://icongr.am/material/message-video.svg?size=24&color=f9fbfa"
         active={webConference}
       />
       {webConference && <WebConference />}

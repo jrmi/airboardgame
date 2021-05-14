@@ -5,7 +5,7 @@ import { atom, useRecoilState, useRecoilCallback } from "recoil";
 import dayjs from "dayjs";
 
 import { useUsers } from "../components/users";
-import { useC2C } from "./useC2C";
+import useC2C from "./useC2C";
 
 export const MessagesAtom = atom({
   key: "messages",
@@ -38,8 +38,8 @@ export const parseMessage = (message) => {
 const noop = () => {};
 
 const useMessage = (onMessage = noop) => {
-  const [messages, setMessages] = useRecoilState(MessagesAtom);
-  const { c2c, isMaster } = useC2C();
+  const [messages, setMessagesState] = useRecoilState(MessagesAtom);
+  const { c2c, isMaster } = useC2C("board");
   const { currentUser } = useUsers();
 
   const getMessage = useRecoilCallback(
@@ -50,11 +50,18 @@ const useMessage = (onMessage = noop) => {
     []
   );
 
+  const setMessages = React.useCallback(
+    (newMessages, sync = false) => {
+      setMessagesState(newMessages.map((m) => parseMessage(m)));
+    },
+    [setMessagesState]
+  );
+
   const initEvents = React.useCallback(
     (unsub) => {
       unsub.push(
         c2c.subscribe("newMessage", (newMessage) => {
-          setMessages((prevMessages) => [
+          setMessagesState((prevMessages) => [
             ...prevMessages,
             parseMessage(newMessage),
           ]);
@@ -67,11 +74,11 @@ const useMessage = (onMessage = noop) => {
         });
       } else {
         c2c.call("getMessageHistory").then((messageHistory) => {
-          setMessages(messageHistory.map((m) => parseMessage(m)));
+          setMessages(messageHistory);
         });
       }
     },
-    [c2c, getMessage, isMaster, onMessage, setMessages]
+    [c2c, getMessage, isMaster, onMessage, setMessages, setMessagesState]
   );
 
   React.useEffect(() => {

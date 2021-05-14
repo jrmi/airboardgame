@@ -1,9 +1,9 @@
 import React from "react";
-import { useC2C } from "../../../hooks/useC2C";
+import useC2C from "../../../hooks/useC2C";
 import Cursor from "./Cursor";
 
 export const Cursors = ({ users }) => {
-  const { c2c } = useC2C();
+  const { c2c } = useC2C("board");
   const [cursors, setCursors] = React.useState({});
 
   const preventRef = React.useRef(false);

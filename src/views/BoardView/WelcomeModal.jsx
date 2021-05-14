@@ -8,7 +8,7 @@ import { toast } from "react-toastify";
 
 import Modal from "../../ui/Modal";
 
-import { useC2C } from "../../hooks/useC2C";
+import useC2C from "../../hooks/useC2C";
 
 const StyledUrl = styled.div`
   background-color: var(--color-midGrey);
@@ -36,7 +36,7 @@ const WelcomeModal = ({ show, setShow, welcome = true }) => {
   const currentUrl = window.location.href;
   const inputRef = React.useRef();
 
-  const { room } = useC2C();
+  const { room } = useC2C("board");
 
   const handleCopy = () => {
     inputRef.current.style.display = "block";

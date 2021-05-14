@@ -1,11 +1,11 @@
 import React from "react";
 import Cursors from "./Cursors";
-import { useC2C } from "../../../hooks/useC2C";
+import useC2C from "../../../hooks/useC2C";
 import { PanZoomRotateAtom } from "../";
 import { useRecoilValue } from "recoil";
 
 export const Board = ({ children, user, users }) => {
-  const { c2c } = useC2C();
+  const { c2c } = useC2C("board");
   const panZoomRotate = useRecoilValue(PanZoomRotateAtom);
 
   const publish = React.useCallback(

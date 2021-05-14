@@ -11,10 +11,12 @@ import Home from "./views/Home";
 import GameView from "./views/GameView";
 import SessionView from "./views/SessionView";
 import AuthView from "./views/AuthView";
+import RoomView from "./views/RoomView";
 
 const MainRoute = () => {
   return (
     <Switch>
+      {/* for compat with old url scheme */}
       <Route path="/game/:gameId/session/" exact>
         {({
           match: {
@@ -25,16 +27,8 @@ const MainRoute = () => {
           return <Redirect to={`/session/${nanoid()}/?fromGame=${gameId}`} />;
         }}
       </Route>
-      <Route path="/session/" exact>
-        {({ location: { search } }) => {
-          const params = new URLSearchParams(search);
-          const fromGame = params.get("fromGame");
-
-          // Redirect to new session id
-          return <Redirect to={`/session/${nanoid()}/?fromGame=${fromGame}`} />;
-        }}
-      </Route>
-      <Route path="/game/:gameId/session/:sessionId/?fromGame=:fromGame">
+      {/* for compat with old url scheme */}
+      <Route path="/game/:gameId/session/:sessionId/">
         {({
           match: {
             params: { gameId, sessionId },
@@ -43,7 +37,25 @@ const MainRoute = () => {
           return <Redirect to={`/session/${sessionId}/?fromGame=${gameId}`} />;
         }}
       </Route>
-      <Route path="/session/:sessionId/">
+      {/* Start a new session from this game */}
+      <Route path="/playgame/:gameId" exact>
+        {({
+          match: {
+            params: { gameId },
+          },
+        }) => {
+          // Redirect to new session id
+          return (
+            <Redirect
+              to={{
+                pathname: `/session/${nanoid()}/`,
+                search: `?fromGame=${gameId}`,
+              }}
+            />
+          );
+        }}
+      </Route>
+      <Route path="/session/:sessionId">
         {({
           location: { search },
           match: {
@@ -57,12 +69,32 @@ const MainRoute = () => {
           return <SessionView sessionId={sessionId} fromGame={fromGame} />;
         }}
       </Route>
+      {/* Game edition */}
       <Route path="/game/:gameId?">
         <GameView />
       </Route>
+      {/* Room routes */}
+      {/*<Route path="/room/:roomId/session/:sessionId">
+        {({
+          match: {
+            params: { sessionId },
+          },
+        }) => {
+          return <SessionView sessionId={sessionId} />;
+        }}
+      </Route>*/}
+      <Route path="/room/:roomId">
+        {({
+          match: {
+            params: { roomId },
+          },
+        }) => <RoomView roomId={roomId} />}
+      </Route>
+      {/* Auth rout */}
       <Route exact path="/login/:userHash/:token">
         <AuthView />
       </Route>
+      {/* Default route */}
       <Redirect from="/" to="/games/" exact />
       <Route path="/">
         <Home />

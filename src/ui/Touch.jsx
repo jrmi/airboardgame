@@ -57,14 +57,14 @@ const Touch = ({ onClick, to, icon, title, alt, active, label, ...rest }) => {
     [history, to, onClick]
   );
 
+  const iconSrc = icon.startsWith("http")
+    ? icon
+    : `https://icongr.am/entypo/${icon}.svg?size=24&color=f9fbfa`;
+
   return (
     <StyledWrapper {...rest}>
       <StyledButton onClick={handleClick} active={active}>
-        <img
-          src={`https://icongr.am/entypo/${icon}.svg?size=24&color=f9fbfa`}
-          alt={alt}
-          title={title}
-        />
+        <img src={iconSrc} alt={alt} title={title} />
       </StyledButton>
       {label && <span>{label}</span>}
     </StyledWrapper>

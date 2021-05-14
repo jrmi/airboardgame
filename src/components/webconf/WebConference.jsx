@@ -1,7 +1,7 @@
 import React from "react";
 import { OpenViduProvider } from "./useOpenVidu";
 
-import { useC2C } from "../../hooks/useC2C";
+import useC2C from "../../hooks/useC2C";
 
 import useUsers from "../../components/users/useUsers";
 import StreamList from "./StreamList";
@@ -9,7 +9,7 @@ import StreamList from "./StreamList";
 import { getConfToken } from "../../utils/api";
 
 const WebConference = () => {
-  const { room } = useC2C();
+  const { room } = useC2C("board");
   const { currentUser } = useUsers();
 
   const getUserData = React.useCallback(

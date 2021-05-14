@@ -5,14 +5,14 @@ import { userAtom, usersAtom } from "./atoms";
 
 import debounce from "lodash.debounce";
 
-import { useC2C } from "../../hooks/useC2C";
+import useC2C from "../../hooks/useC2C";
 
 const SubscribeUserEvents = () => {
   const usersRef = React.useRef([]);
   const setUsers = useSetRecoilState(usersAtom);
   const [currentUser, setCurrentUserState] = useRecoilState(userAtom);
 
-  const { c2c, isMaster } = useC2C();
+  const { c2c, isMaster } = useC2C("board");
 
   React.useEffect(() => {
     setCurrentUserState((prevUser) => ({

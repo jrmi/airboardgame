@@ -8,6 +8,7 @@ import InfoModal from "./InfoModal";
 import InfoEditModal from "./InfoEditModal";
 import LoadGameModal from "./LoadGameModal";
 import LoadSessionModal from "./LoadSessionModal";
+import ChangeGameModal from "./ChangeGameModal";
 import ExportModal from "./ExportModal";
 import SaveExportModal from "./SaveExportModal";
 import { UserList } from "../../components/users";
@@ -15,8 +16,7 @@ import { getBestTranslationFromConfig } from "../../utils/api";
 import Touch from "../../ui/Touch";
 
 import useBoardConfig from "../../components/useBoardConfig";
-import { useC2C } from "../../hooks/useC2C";
-import Brand from "../Brand";
+import useC2C from "../../hooks/useC2C";
 
 import { confirmAlert } from "react-confirm-alert";
 import WelcomeModal from "./WelcomeModal";
@@ -66,7 +66,8 @@ const StyledNavBar = styled.div.attrs(() => ({ className: "nav" }))`
 
   & .nav-left {
     & > div {
-      flex: 1;
+      //flex: 1;
+      padding-right: 1em;
     }
     padding-left: 40px;
     justify-content: flex-start;
@@ -132,11 +133,12 @@ const StyledNavBar = styled.div.attrs(() => ({ className: "nav" }))`
 
 const NavBar = ({ editMode }) => {
   const { t, i18n } = useTranslation();
-  const { isMaster } = useC2C();
+  const { isMaster } = useC2C("board");
   const history = useHistory();
   const [showLoadGameModal, setShowLoadGameModal] = React.useState(false);
   const [showSaveGameModal, setShowSaveGameModal] = React.useState(false);
   const [showEditInfoModal, setShowEditInfoModal] = React.useState(false);
+  const [showChangeGameModal, setShowChangeGameModal] = React.useState(false);
   const [showInfoModal, setShowInfoModal] = React.useState(false);
   const [showLink, setShowLink] = React.useState(false);
   const [isBeta] = useLocalStorage("isBeta", false);
@@ -156,7 +158,7 @@ const NavBar = ({ editMode }) => {
         {
           label: t("Yes"),
           onClick: async () => {
-            history.push("/studio");
+            history.goBack();
           },
         },
         {
@@ -171,7 +173,31 @@ const NavBar = ({ editMode }) => {
     <>
       <StyledNavBar>
         <div className="nav-left">
-          {!editMode && <Brand />}
+          {!editMode && (
+            <>
+              <Touch
+                onClick={history.goBack}
+                alt={t("Go back")}
+                title={t("Go back")}
+                icon={"chevron-left"}
+                style={{ display: "inline" }}
+              />
+              {isMaster && (
+                <>
+                  <Touch
+                    onClick={() => setShowChangeGameModal((prev) => !prev)}
+                    alt={t("Change game")}
+                    title={t("Change game")}
+                    icon="https://icongr.am/material/cards-playing-outline.svg?size=24&color=f9fbfa"
+                  />
+                  <ChangeGameModal
+                    show={showChangeGameModal}
+                    setShow={setShowChangeGameModal}
+                  />
+                </>
+              )}
+            </>
+          )}
           {editMode && (
             <Touch
               onClick={handleGoBack}
