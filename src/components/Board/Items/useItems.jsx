@@ -1,11 +1,11 @@
 import React from "react";
-import { useC2C } from "../../../hooks/useC2C";
+import useC2C from "../../../hooks/useC2C";
 import { useSetRecoilState, useRecoilCallback } from "recoil";
 
 import { ItemListAtom, selectedItemsAtom, ItemMapAtom } from "../";
 
 const useItems = () => {
-  const {c2c} = useC2C();
+  const { c2c } = useC2C("board");
 
   const setItemList = useSetRecoilState(ItemListAtom);
   const setItemMap = useSetRecoilState(ItemMapAtom);
@@ -30,7 +30,7 @@ const useItems = () => {
           updatedItems[id] = newItem;
         });
         if (sync) {
-          c2c.publish(`batchItemsUpdate`, updatedItems);
+          c2c.publish("batchItemsUpdate", updatedItems);
         }
         return result;
       });
@@ -77,7 +77,7 @@ const useItems = () => {
       });
 
       if (sync) {
-        c2c.publish(`selectedItemsMove`, {
+        c2c.publish("selectedItemsMove", {
           itemIds,
           posDelta,
         });
@@ -173,7 +173,7 @@ const useItems = () => {
       });
 
       if (sync) {
-        c2c.publish(`batchItemsUpdate`, updatedItems);
+        c2c.publish("batchItemsUpdate", updatedItems);
       }
     },
     [c2c, setItemMap]
@@ -183,7 +183,7 @@ const useItems = () => {
     (newOrder, sync = true) => {
       setItemList(newOrder);
       if (sync) {
-        c2c.publish(`updateItemListOrder`, newOrder);
+        c2c.publish("updateItemListOrder", newOrder);
       }
     },
     [c2c, setItemList]
@@ -199,7 +199,7 @@ const useItems = () => {
           itemIdsToMove.includes(id)
         );
         const result = [...filtered, ...toBePutOnTop];
-        c2c.publish(`updateItemListOrder`, result);
+        c2c.publish("updateItemListOrder", result);
         return result;
       });
     },
@@ -218,7 +218,7 @@ const useItems = () => {
           }
           return itemId;
         });
-        c2c.publish(`updateItemListOrder`, result);
+        c2c.publish("updateItemListOrder", result);
         return result;
       });
     },
@@ -247,7 +247,7 @@ const useItems = () => {
           prev[toItem.id] = newItem;
           return prev;
         }, {});
-        c2c.publish(`batchItemsUpdate`, updatedItems);
+        c2c.publish("batchItemsUpdate", updatedItems);
         return { ...prevItemMap, ...updatedItems };
       });
 
@@ -264,7 +264,7 @@ const useItems = () => {
           return itemId;
         });
 
-        c2c.publish(`updateItemListOrder`, result);
+        c2c.publish("updateItemListOrder", result);
         return result;
       });
     },
@@ -290,7 +290,7 @@ const useItems = () => {
         }
       });
       if (sync) {
-        c2c.publish(`insertItemBefore`, [newItem, beforeId]);
+        c2c.publish("insertItemBefore", [newItem, beforeId]);
       }
     },
     [c2c, setItemList, setItemMap]
@@ -318,7 +318,7 @@ const useItems = () => {
       });
 
       if (sync) {
-        c2c.publish(`removeItems`, itemsIdToRemove);
+        c2c.publish("removeItems", itemsIdToRemove);
       }
     },
     [c2c, setItemList, setItemMap, setSelectItems]

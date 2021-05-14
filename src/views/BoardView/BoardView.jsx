@@ -7,18 +7,17 @@ import { Board } from "../../components/Board";
 import SelectedItemsPane from "../../components/SelectedItemsPane";
 import { useUsers, SubscribeUserEvents } from "../../components/users";
 import Touch from "../../ui/Touch";
-import { useC2C } from "../../hooks/useC2C";
+import useC2C from "../../hooks/useC2C";
 
 import WelcomeModal from "./WelcomeModal";
 import { MediaLibraryProvider } from "../../components/mediaLibrary";
-import NavBar from "./NavBar";
 import AutoSaveSession from "../../components/AutoSaveSession";
 import ImageDropNPaste from "../../components/ImageDropNPaste";
-import { getComponent } from "../../components/boardComponents";
 import AddItemButton from "../../components/AddItemButton";
 import { MessageButton } from "../../components/Message";
-
 import { insideClass } from "../../utils";
+
+import NavBar from "./NavBar";
 
 const StyledBoardView = styled.div`
   width: 100vw;
@@ -69,10 +68,14 @@ const ActionBar = styled.div`
   }
 `;
 
-export const BoardView = ({ namespace, edit: editMode = false, session }) => {
+export const BoardView = ({
+  edit: editMode = false,
+  mediaLibraries,
+  getComponent,
+}) => {
   const { t } = useTranslation();
   const { currentUser, users } = useUsers();
-  const { isMaster } = useC2C();
+  const { isMaster } = useC2C("board");
 
   const [showWelcomeModal, setShowWelcomeModal] = React.useState(
     SHOW_WELCOME && !editMode && isMaster
@@ -80,23 +83,6 @@ export const BoardView = ({ namespace, edit: editMode = false, session }) => {
 
   const [moveFirst, setMoveFirst] = React.useState(false);
   const [hideMenu, setHideMenu] = React.useState(false);
-
-  const libraries = React.useMemo(() => {
-    if (editMode) {
-      return [
-        { id: "game", name: t("Game"), boxId: "game", resourceId: namespace },
-      ];
-    }
-    return [
-      {
-        id: "session",
-        name: t("Session"),
-        boxId: "session",
-        resourceId: session,
-      },
-      { id: "game", name: t("Game"), boxId: "game", resourceId: namespace },
-    ];
-  }, [editMode, namespace, session, t]);
 
   React.useEffect(() => {
     // Chrome-related issue.
@@ -116,11 +102,11 @@ export const BoardView = ({ namespace, edit: editMode = false, session }) => {
 
   return (
     <StyledBoardView>
-      <MediaLibraryProvider libraries={libraries}>
+      <MediaLibraryProvider libraries={mediaLibraries}>
         <NavBar editMode={editMode} />
         <WelcomeModal show={showWelcomeModal} setShow={setShowWelcomeModal} />
         <SubscribeUserEvents />
-        {!editMode && <AutoSaveSession session={session} />}
+        {!editMode && <AutoSaveSession />}
         <BoardContainer>
           <ImageDropNPaste>
             <Board

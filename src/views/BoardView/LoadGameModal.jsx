@@ -1,36 +1,31 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 
-import LoadGame from "../../components/LoadGame";
-
-import { useC2C } from "../../hooks/useC2C";
-import { nanoid } from "nanoid";
+import LoadData from "./LoadData";
 
 import Modal from "../../ui/Modal";
+import useGame from "../../hooks/useGame";
 
 const LoadGameModal = ({ show, setShow }) => {
   const { t } = useTranslation();
-  const { c2c } = useC2C();
+  const { setGame } = useGame();
 
   const loadGame = React.useCallback(
     (game) => {
-      game.items = game.items.map((item) => ({ ...item, id: nanoid() }));
-      c2c.publish("loadGame", game, true);
+      setGame(game);
       setShow(false);
     },
-    [c2c, setShow]
+    [setGame, setShow]
   );
 
   return (
     <Modal title={t("Load game")} setShow={setShow} show={show}>
-      <>
-        <header>
-          <h3>{t("Load previously exported work?")}</h3>
-        </header>
-        <section>
-          <LoadGame onLoad={loadGame} />
-        </section>
-      </>
+      <header>
+        <h3>{t("Load previously exported work?")}</h3>
+      </header>
+      <section>
+        <LoadData onLoad={loadGame} />
+      </section>
     </Modal>
   );
 };

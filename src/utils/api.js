@@ -8,6 +8,7 @@ import { nanoid } from "nanoid";
 const oldUploadURI = `${API_ENDPOINT}/file`;
 const gameURI = `${API_ENDPOINT}/store/game`;
 const sessionURI = `${API_ENDPOINT}/store/session`;
+const roomURI = `${API_ENDPOINT}/store/room`;
 const execURI = `${API_ENDPOINT}/execute`;
 const authURI = `${API_ENDPOINT}/auth`;
 
@@ -257,6 +258,49 @@ export const getSession = async (id) => {
 
 export const updateSession = async (id, data) => {
   const result = await fetch(`${sessionURI}/${id}`, {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+    credentials: "include",
+  });
+  if (result.status === 404) {
+    throw new Error("Resource not found");
+  }
+  if (result.status === 403) {
+    throw new Error("Forbidden");
+  }
+  if (result.status >= 300) {
+    throw new Error("Server error");
+  }
+  return await result.json();
+};
+
+export const getRoom = async (id) => {
+  const result = await fetch(`${roomURI}/${id}`, {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+  });
+  if (result.status === 404) {
+    throw new Error("Resource not found");
+  }
+  if (result.status === 403) {
+    throw new Error("Forbidden");
+  }
+  if (result.status >= 300) {
+    throw new Error("Server error");
+  }
+  return await result.json();
+};
+
+export const updateRoom = async (id, data) => {
+  const result = await fetch(`${roomURI}/${id}`, {
     method: "POST",
     headers: {
       Accept: "application/json",

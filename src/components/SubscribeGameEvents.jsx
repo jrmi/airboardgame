@@ -1,11 +1,11 @@
 import React from "react";
 
-import { useC2C } from "../hooks/useC2C";
+import useC2C from "../hooks/useC2C";
 
 import useBoardConfig from "./useBoardConfig";
 
 export const SubscribeGameEvents = ({ getGame, setGame }) => {
-  const { c2c, isMaster } = useC2C();
+  const { c2c, isMaster } = useC2C("board");
 
   const [, setBoardConfig] = useBoardConfig();
 

@@ -5,15 +5,24 @@ import { useTranslation } from "react-i18next";
 
 import Waiter from "../ui/Waiter";
 
-export const C2CContext = React.createContext([null, false]);
+const contextMap = {};
 
-export const C2CProvider = ({ room, ...props }) => {
+export const C2CProvider = ({ room, channel, children }) => {
   const { t } = useTranslation();
   const socket = useSocket();
   const [joined, setJoined] = React.useState(false);
   const [isMaster, setIsMaster] = React.useState(false);
   const [c2c, setC2c] = React.useState(null);
   const roomRef = React.useRef(null);
+
+  if (!contextMap[channel]) {
+    contextMap[channel] = React.createContext({
+      joined: false,
+      isMaster: false,
+    });
+  }
+
+  const Context = contextMap[channel];
 
   React.useEffect(() => {
     const disconnect = () => {
@@ -39,7 +48,7 @@ export const C2CProvider = ({ room, ...props }) => {
       socket,
       room,
       onMaster: () => {
-        console.log("Is now first player…");
+        console.log("Is now master…");
         setIsMaster(true);
       },
       onJoined: (newRoom) => {
@@ -65,15 +74,15 @@ export const C2CProvider = ({ room, ...props }) => {
   }
 
   return (
-    <C2CContext.Provider value={[c2c, joined, isMaster, room]}>
-      {props.children}
-    </C2CContext.Provider>
+    <Context.Provider value={{ c2c, joined, isMaster, room }}>
+      {children}
+    </Context.Provider>
   );
 };
 
-export const useC2C = () => {
-  const [c2c, joined, isMaster, room] = useContext(C2CContext);
-  return { c2c, joined, isMaster, room };
+export const useC2C = (channel) => {
+  const Context = contextMap[channel];
+  return useContext(Context);
 };
 
-export default { C2CContext, C2CProvider, useC2C };
+export default useC2C;

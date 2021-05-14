@@ -1,11 +1,11 @@
 import React from "react";
 
-import { useC2C } from "../hooks/useC2C";
+import useC2C from "../hooks/useC2C";
 
 import useBoardConfig from "./useBoardConfig";
 
 export const SubscribeSessionEvents = ({ getSession, setSession }) => {
-  const { c2c, isMaster } = useC2C();
+  const { c2c, isMaster } = useC2C("board");
 
   const [, setBoardConfig] = useBoardConfig();
 
@@ -26,7 +26,7 @@ export const SubscribeSessionEvents = ({ getSession, setSession }) => {
     };
   }, [c2c, getSession, isMaster]);
 
-  // Subscribe loadGame and updateBoardConfig events
+  // Subscribe loadSession and updateBoardConfig events
   React.useEffect(() => {
     const unsub = [];
     unsub.push(

@@ -12,6 +12,7 @@ export const main = async ({ store, schedules, hooks, functions }) => {
 
   // Declare stores
   await store.createOrUpdateBox("game", { security: "readOnly" });
+  await store.createOrUpdateBox("room", { security: "public" });
   await store.createOrUpdateBox("session", { security: "public" });
 
   // Add schedules

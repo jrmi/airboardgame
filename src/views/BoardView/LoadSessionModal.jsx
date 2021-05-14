@@ -1,24 +1,25 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 
-import LoadGame from "../../components/LoadGame";
+import LoadData from "./LoadData";
 
-import { useC2C } from "../../hooks/useC2C";
-import { nanoid } from "nanoid";
+import useC2C from "../../hooks/useC2C";
+import useSession from "../../hooks/useSession";
 
 import Modal from "../../ui/Modal";
 
 const LoadSessionModal = ({ show, setShow }) => {
   const { t } = useTranslation();
-  const { c2c } = useC2C();
+  const { c2c } = useC2C("board");
+  const { setSession } = useSession();
 
-  const loadGame = React.useCallback(
-    (game) => {
-      game.items = game.items.map((item) => ({ ...item, id: nanoid() }));
-      c2c.publish("loadGame", game, true);
+  const loadSession = React.useCallback(
+    (sessionData) => {
+      setSession(sessionData);
+      c2c.publish("loadSession", sessionData);
       setShow(false);
     },
-    [c2c, setShow]
+    [c2c, setSession, setShow]
   );
 
   return (
@@ -27,7 +28,7 @@ const LoadSessionModal = ({ show, setShow }) => {
         <h3>{t("Continue a saved game session?")}</h3>
       </header>
       <section>
-        <LoadGame onLoad={loadGame} />
+        <LoadData onLoad={loadSession} />
       </section>
     </Modal>
   );
