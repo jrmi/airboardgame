@@ -25,7 +25,12 @@ const useUsers = () => {
     [setCurrentUserState]
   );
 
-  return { currentUser, setCurrentUser, users };
+  const localUsers = React.useMemo(
+    () => users.filter(({ space }) => space === currentUser.space),
+    [currentUser.space, users]
+  );
+
+  return { currentUser, setCurrentUser, users, localUsers };
 };
 
 export default useUsers;

@@ -40,7 +40,7 @@ const UserListItem = styled.li`
 
 export const Users = () => {
   const { t } = useTranslation();
-  const { currentUser, setCurrentUser, users } = useUsers();
+  const { currentUser, setCurrentUser, localUsers: users } = useUsers();
   const [openUserlist, setOpenUserList] = React.useState(false);
 
   const firstUsers = users.slice(0, 3);

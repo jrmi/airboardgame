@@ -70,15 +70,15 @@ const WebConferenceContent = () => {
   const [showLocalVideo, toggleVideo] = useToggle(true);
   const [showLocalAudio, toggleAudio] = useToggle(true);
 
-  const { users } = useUsers();
+  const { localUsers: users } = useUsers();
 
-  const userMap = React.useMemo(
+  const streamMap = React.useMemo(
     () =>
-      users.reduce((acc, user) => {
-        acc[user.uid] = user;
+      remoteStreams.reduce((acc, stream) => {
+        acc[stream.data.uid] = stream;
         return acc;
       }, {}),
-    [users]
+    [remoteStreams]
   );
 
   return (
@@ -110,17 +110,17 @@ const WebConferenceContent = () => {
           </div>
         </div>
       )}
-      {remoteStreams.map((stream) => (
-        <div key={stream.uid} className="remote-stream">
-          <RemoteStream stream={stream} />
-          <span
-            className="name"
-            style={{ backgroundColor: userMap[stream.data.uid]?.color }}
-          >
-            {userMap[stream.data.uid]?.name}
-          </span>
-        </div>
-      ))}
+      {users.map(
+        ({ name, uid, color }) =>
+          streamMap[uid] && (
+            <div key={uid} className="remote-stream">
+              <RemoteStream stream={streamMap[uid]} />
+              <span className="name" style={{ backgroundColor: color }}>
+                {name}
+              </span>
+            </div>
+          )
+      )}
     </StyledWebConference>
   );
 };

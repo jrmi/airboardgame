@@ -83,7 +83,7 @@ const Image = ({
   backText,
   overlay,
 }) => {
-  const { currentUser, users } = useUsers();
+  const { currentUser, localUsers: users } = useUsers();
 
   const imageContent = media2Url(content);
   const backContent = media2Url(rawBackContent);
