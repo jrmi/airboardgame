@@ -5,7 +5,7 @@ import Touch from "../../ui/Touch";
 
 import WebConference from "./WebConference";
 
-export const WeConferenceButton = () => {
+export const WeConferenceButton = ({ room }) => {
   const { t } = useTranslation();
   const [webConference, setWebConference] = React.useState(false);
 
@@ -18,7 +18,7 @@ export const WeConferenceButton = () => {
         icon="https://icongr.am/material/message-video.svg?size=24&color=f9fbfa"
         active={webConference}
       />
-      {webConference && <WebConference />}
+      {webConference && <WebConference room={room} />}
     </>
   );
 };

@@ -133,7 +133,8 @@ const StyledNavBar = styled.div.attrs(() => ({ className: "nav" }))`
 
 const NavBar = ({ editMode }) => {
   const { t, i18n } = useTranslation();
-  const { isMaster } = useC2C("board");
+  const { isMaster, room } = useC2C("board");
+
   const history = useHistory();
   const [showLoadGameModal, setShowLoadGameModal] = React.useState(false);
   const [showSaveGameModal, setShowSaveGameModal] = React.useState(false);
@@ -224,7 +225,9 @@ const NavBar = ({ editMode }) => {
                 icon="add-user"
                 title={t("Invite more player")}
               />
-              {ENABLE_WEBCONFERENCE && isBeta && <WebConferenceButton />}
+              {ENABLE_WEBCONFERENCE && isBeta && (
+                <WebConferenceButton room={room} />
+              )}
             </>
           )}
           <div className="spacer" />

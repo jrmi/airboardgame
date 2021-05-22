@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { SHOW_WELCOME } from "../../utils/settings";
 import { Board } from "../../components/Board";
 import SelectedItemsPane from "../../components/SelectedItemsPane";
-import { useUsers, SubscribeUserEvents } from "../../components/users";
+import { useUsers } from "../../components/users";
 import Touch from "../../ui/Touch";
 import useC2C from "../../hooks/useC2C";
 
@@ -74,7 +74,7 @@ export const BoardView = ({
   getComponent,
 }) => {
   const { t } = useTranslation();
-  const { currentUser, users } = useUsers();
+  const { currentUser, localUsers: users } = useUsers();
   const { isMaster } = useC2C("board");
 
   const [showWelcomeModal, setShowWelcomeModal] = React.useState(
@@ -105,7 +105,6 @@ export const BoardView = ({
       <MediaLibraryProvider libraries={mediaLibraries}>
         <NavBar editMode={editMode} />
         <WelcomeModal show={showWelcomeModal} setShow={setShowWelcomeModal} />
-        <SubscribeUserEvents />
         {!editMode && <AutoSaveSession />}
         <BoardContainer>
           <ImageDropNPaste>

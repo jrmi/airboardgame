@@ -1,13 +1,10 @@
 import React from "react";
 import { useParams } from "react-router-dom";
 import { nanoid } from "nanoid";
-import { Provider } from "@scripters/use-socket.io";
 
 import { getComponent } from "../components/boardComponents";
 
 import useC2C, { C2CProvider } from "../hooks/useC2C";
-
-import { SOCKET_URL, SOCKET_OPTIONS } from "../utils/settings";
 
 import BoardView from "../views/BoardView";
 import Waiter from "../ui/Waiter";
@@ -111,11 +108,9 @@ export const GameView = () => {
 const ConnectedGameView = () => {
   const { room = nanoid() } = useParams();
   return (
-    <Provider url={SOCKET_URL} options={SOCKET_OPTIONS}>
-      <C2CProvider room={room} channel="board">
-        <GameView />
-      </C2CProvider>
-    </Provider>
+    <C2CProvider room={room} channel="board">
+      <GameView />
+    </C2CProvider>
   );
 };
 

@@ -7,7 +7,7 @@ import Waiter from "../ui/Waiter";
 
 const contextMap = {};
 
-export const C2CProvider = ({ room, channel, children }) => {
+export const C2CProvider = ({ room, channel = "default", children }) => {
   const { t } = useTranslation();
   const socket = useSocket();
   const [joined, setJoined] = React.useState(false);
@@ -26,7 +26,7 @@ export const C2CProvider = ({ room, channel, children }) => {
 
   React.useEffect(() => {
     const disconnect = () => {
-      console.log("Disconnected…");
+      console.log(`Disconnected from ${channel}…`);
       setJoined(false);
       setIsMaster(false);
     };
@@ -35,7 +35,7 @@ export const C2CProvider = ({ room, channel, children }) => {
     return () => {
       socket.off("disconnect", disconnect);
     };
-  }, [socket]);
+  }, [channel, socket]);
 
   React.useEffect(() => {
     if (!socket) {
@@ -48,26 +48,22 @@ export const C2CProvider = ({ room, channel, children }) => {
       socket,
       room,
       onMaster: () => {
-        console.log("Is now master…");
+        console.log(`Is now master on channel ${channel}…`);
         setIsMaster(true);
       },
       onJoined: (newRoom) => {
-        console.log("Connected…");
+        console.log(`Connected on channel ${channel}…`);
         roomRef.current = newRoom;
 
         setC2c(newRoom);
 
         setJoined(true);
-
-        return () => {
-          socket.disconnect();
-        };
       },
     });
     return () => {
-      socket.disconnect();
+      roomRef.current.leave();
     };
-  }, [room, socket]);
+  }, [channel, room, socket]);
 
   if (!joined || !c2c) {
     return <Waiter message={t("Waiting for connection…")} />;
@@ -80,7 +76,7 @@ export const C2CProvider = ({ room, channel, children }) => {
   );
 };
 
-export const useC2C = (channel) => {
+export const useC2C = (channel = "default") => {
   const Context = contextMap[channel];
   return useContext(Context);
 };

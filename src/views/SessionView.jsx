@@ -1,14 +1,13 @@
 import React from "react";
-import { Provider } from "@scripters/use-socket.io";
 
 import useC2C, { C2CProvider } from "../hooks/useC2C";
 
 import { getComponent } from "../components/boardComponents";
 
-import { SOCKET_URL, SOCKET_OPTIONS } from "../utils/settings";
-
 import BoardView from "../views/BoardView";
 import Waiter from "../ui/Waiter";
+
+import { useUsers } from "../components/users";
 
 import useSession, { SessionProvider } from "../hooks/useSession";
 import { useTranslation } from "react-i18next";
@@ -26,9 +25,15 @@ export const SessionView = () => {
 
   const { c2c, isMaster } = useC2C("board");
 
+  const { setCurrentUser } = useUsers();
+
   const gameLoadingRef = React.useRef(false);
 
   const { t } = useTranslation();
+
+  React.useEffect(() => {
+    setCurrentUser((prev) => ({ ...prev, space: sessionId }));
+  }, [sessionId, setCurrentUser]);
 
   useAsyncEffect(
     async (isMounted) => {
@@ -66,22 +71,22 @@ export const SessionView = () => {
     () =>
       gameId
         ? [
-          {
-            id: "session",
-            name: t("Session"),
-            boxId: "session",
-            resourceId: sessionId,
-          },
-          { id: "game", name: t("Game"), boxId: "game", resourceId: gameId },
-        ]
+            {
+              id: "session",
+              name: t("Session"),
+              boxId: "session",
+              resourceId: sessionId,
+            },
+            { id: "game", name: t("Game"), boxId: "game", resourceId: gameId },
+          ]
         : [
-          {
-            id: "session",
-            name: t("Session"),
-            boxId: "session",
-            resourceId: sessionId,
-          },
-        ],
+            {
+              id: "session",
+              name: t("Session"),
+              boxId: "session",
+              resourceId: sessionId,
+            },
+          ],
     [gameId, sessionId, t]
   );
 
@@ -96,13 +101,11 @@ export const SessionView = () => {
 
 const ConnectedSessionView = ({ sessionId, fromGame }) => {
   return (
-    <Provider url={SOCKET_URL} options={SOCKET_OPTIONS}>
-      <C2CProvider room={sessionId} channel="board">
-        <SessionProvider sessionId={sessionId} fromGameId={fromGame}>
-          <SessionView />
-        </SessionProvider>
-      </C2CProvider>
-    </Provider>
+    <C2CProvider room={sessionId} channel="board">
+      <SessionProvider sessionId={sessionId} fromGameId={fromGame}>
+        <SessionView />
+      </SessionProvider>
+    </C2CProvider>
   );
 };
 

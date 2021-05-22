@@ -9,9 +9,19 @@ import "./react-confirm-alert.css";
 
 import Home from "./views/Home";
 import GameView from "./views/GameView";
-import SessionView from "./views/SessionView";
+import RoomWrapperView from "./views/RoomWrapperView";
 import AuthView from "./views/AuthView";
 import RoomView from "./views/RoomView";
+
+import { Provider as SocketIOProvider } from "@scripters/use-socket.io";
+
+import { SOCKET_URL, SOCKET_OPTIONS } from "./utils/settings";
+
+const WithSocketIO = ({ children }) => (
+  <SocketIOProvider url={SOCKET_URL} options={SOCKET_OPTIONS}>
+    {children}
+  </SocketIOProvider>
+);
 
 const MainRoute = () => {
   return (
@@ -66,29 +76,30 @@ const MainRoute = () => {
           const fromGame = params.get("fromGame");
 
           // Redirect to new session id
-          return <SessionView sessionId={sessionId} fromGame={fromGame} />;
+          return (
+            <WithSocketIO>
+              <RoomWrapperView sessionId={sessionId} fromGame={fromGame} />
+            </WithSocketIO>
+          );
         }}
       </Route>
       {/* Game edition */}
       <Route path="/game/:gameId?">
-        <GameView />
+        <WithSocketIO>
+          <GameView />
+        </WithSocketIO>
       </Route>
       {/* Room routes */}
-      {/*<Route path="/room/:roomId/session/:sessionId">
-        {({
-          match: {
-            params: { sessionId },
-          },
-        }) => {
-          return <SessionView sessionId={sessionId} />;
-        }}
-      </Route>*/}
       <Route path="/room/:roomId">
         {({
           match: {
             params: { roomId },
           },
-        }) => <RoomView roomId={roomId} />}
+        }) => (
+          <WithSocketIO>
+            <RoomView roomId={roomId} />
+          </WithSocketIO>
+        )}
       </Route>
       {/* Auth rout */}
       <Route exact path="/login/:userHash/:token">
