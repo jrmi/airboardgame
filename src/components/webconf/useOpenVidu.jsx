@@ -125,7 +125,17 @@ class LocalStream {
     if (this.video === value) {
       return;
     }
-    this.publisher.publishVideo(value);
+    try {
+      this.publisher.publishVideo(value);
+    } catch (e) {
+      setTimeout(() => {
+        try {
+          this.publisher.publishVideo(value);
+        } catch (e) {
+          console.log("Error while trying to change video publishing:", e);
+        }
+      }, 2000);
+    }
     this.video = value;
   }
   toggleVideo() {
@@ -136,7 +146,17 @@ class LocalStream {
     if (this.audio === value) {
       return;
     }
-    this.publisher.publishAudio(value);
+    try {
+      this.publisher.publishAudio(value);
+    } catch (e) {
+      setTimeout(() => {
+        try {
+          this.publisher.publishVideo(value);
+        } catch (e) {
+          console.log("Error while trying change audio publishing:", e);
+        }
+      }, 2000);
+    }
     this.audio = value;
   }
   toggleAudio() {

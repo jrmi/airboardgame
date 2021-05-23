@@ -77,7 +77,7 @@ export const SessionView = () => {
               boxId: "session",
               resourceId: sessionId,
             },
-            { id: "game", name: t("Game"), boxId: "game", resourceId: gameId },
+          { id: "game", name: t("Game"), boxId: "game", resourceId: gameId },
           ]
         : [
             {
@@ -86,7 +86,7 @@ export const SessionView = () => {
               boxId: "session",
               resourceId: sessionId,
             },
-          ],
+        ],
     [gameId, sessionId, t]
   );
 

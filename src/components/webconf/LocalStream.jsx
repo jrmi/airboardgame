@@ -15,10 +15,12 @@ const LocalStream = ({
       return;
     }
     if (publish) {
-      stream.publish();
+      stream.publish({ publishAudio: audio, publishVideo: video });
     } else {
       stream.unpublish();
     }
+    // No need to react on audio or video value change
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [publish, stream]);
 
   React.useEffect(() => {

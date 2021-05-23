@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 
 import useOpenVidu from "./useOpenVidu";
-import useToggle from "../../hooks/useToggle";
+import useLocalStorage from "../../hooks/useLocalStorage";
 
 import useUsers from "../../components/users/useUsers";
 
@@ -67,8 +67,23 @@ const StyledWebConference = styled.div`
 
 const WebConferenceContent = () => {
   const { remoteStreams = [], localStream } = useOpenVidu();
-  const [showLocalVideo, toggleVideo] = useToggle(true);
-  const [showLocalAudio, toggleAudio] = useToggle(true);
+
+  const [showLocalVideo, setShowLocalVideo] = useLocalStorage(
+    "showLocalVideo",
+    true
+  );
+  const [showLocalAudio, setShowLocalAudio] = useLocalStorage(
+    "showLocalAudio",
+    true
+  );
+
+  const toggleVideo = React.useCallback(() => {
+    setShowLocalVideo((prev) => !prev);
+  }, [setShowLocalVideo]);
+
+  const toggleAudio = React.useCallback(() => {
+    setShowLocalAudio((prev) => !prev);
+  }, [setShowLocalAudio]);
 
   const { localUsers: users } = useUsers();
 

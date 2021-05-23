@@ -3,15 +3,15 @@ import React from "react";
 import styled from "styled-components";
 import { useTranslation } from "react-i18next";
 
-import { UserList } from "../../components/users";
+import { ENABLE_WEBCONFERENCE } from "../../utils/settings";
+import useLocalStorage from "../../hooks/useLocalStorage";
 import useC2C from "../../hooks/useC2C";
+import Touch from "../../ui/Touch";
+import { UserList } from "../../components/users";
 
 import WebConferenceButton from "../../components/webconf/WebConferenceButton";
 
-import { ENABLE_WEBCONFERENCE } from "../../utils/settings";
 import Brand from "../Brand";
-
-import useLocalStorage from "../../hooks/useLocalStorage";
 
 const StyledNavBar = styled.div.attrs(() => ({ className: "nav" }))`
   position: fixed;
@@ -118,8 +118,8 @@ const StyledNavBar = styled.div.attrs(() => ({ className: "nav" }))`
 `;
 
 const RoomNavBar = () => {
-  const { t, i18n } = useTranslation();
-  const { isMaster, room } = useC2C("room");
+  const { t } = useTranslation();
+  const { room } = useC2C("room");
   const [showLink, setShowLink] = React.useState(false);
   const [isBeta] = useLocalStorage("isBeta", false);
 
@@ -134,19 +134,17 @@ const RoomNavBar = () => {
       </div>
 
       <div className="nav-right">
-        <>
-          <UserList />
-          {/*<Touch
-              onClick={() => {
-                setShowLink(true);
-              }}
-              icon="add-user"
-              title={t("Invite more player")}
-            />*/}
-          {ENABLE_WEBCONFERENCE && isBeta && (
-            <WebConferenceButton room={room} />
-          )}
-        </>
+        <UserList />
+        {
+          <Touch
+            onClick={() => {
+              setShowLink(true);
+            }}
+            icon="add-user"
+            title={t("Invite more player")}
+          />
+        }
+        {ENABLE_WEBCONFERENCE && isBeta && <WebConferenceButton room={room} />}
       </div>
     </StyledNavBar>
   );
