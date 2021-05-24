@@ -51,7 +51,7 @@ const useMessage = (onMessage = noop) => {
   );
 
   const setMessages = React.useCallback(
-    (newMessages, sync = false) => {
+    (newMessages) => {
       setMessagesState(newMessages.map((m) => parseMessage(m)));
     },
     [setMessagesState]

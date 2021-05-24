@@ -2,7 +2,7 @@ import React from "react";
 
 import styled from "styled-components";
 import { useTranslation } from "react-i18next";
-import { useHistory, useLocation, useRouteMatch } from "react-router-dom";
+import { useHistory, useRouteMatch } from "react-router-dom";
 
 import InfoModal from "./InfoModal";
 import InfoEditModal from "./InfoEditModal";
@@ -66,7 +66,6 @@ const StyledNavBar = styled.div.attrs(() => ({ className: "nav" }))`
 
   & .nav-left {
     & > div {
-      //flex: 1;
       padding-right: 1em;
     }
     padding-left: 40px;
