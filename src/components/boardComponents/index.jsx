@@ -35,7 +35,7 @@ export const itemMap = {
     component: Rect,
     defaultActions: ["lock", "remove"],
     availableActions: [
-      "stackToTopLeft",
+      "stack",
       "alignAsLine",
       "alignAsSquare",
       "shuffle",
@@ -51,7 +51,7 @@ export const itemMap = {
     component: Cube,
     defaultActions: ["clone", "lock", "remove"],
     availableActions: [
-      "stackToTopLeft",
+      "stack",
       "alignAsLine",
       "alignAsSquare",
       "shuffle",
@@ -67,7 +67,7 @@ export const itemMap = {
     component: Cylinder,
     defaultActions: ["clone", "lock", "remove"],
     availableActions: [
-      "stackToTopLeft",
+      "stack",
       "alignAsLine",
       "alignAsSquare",
       "shuffle",
@@ -83,7 +83,7 @@ export const itemMap = {
     component: Round,
     defaultActions: ["clone", "lock", "remove"],
     availableActions: [
-      "stackToTopLeft",
+      "stack",
       "alignAsLine",
       "alignAsSquare",
       "shuffle",
@@ -99,7 +99,7 @@ export const itemMap = {
     component: Token,
     defaultActions: ["clone", "lock", "remove"],
     availableActions: [
-      "stackToTopLeft",
+      "stack",
       "alignAsLine",
       "alignAsSquare",
       "shuffle",
@@ -115,7 +115,7 @@ export const itemMap = {
     component: Meeple,
     defaultActions: ["clone", "lock", "remove"],
     availableActions: [
-      "stackToTopLeft",
+      "stack",
       "alignAsLine",
       "alignAsSquare",
       "shuffle",
@@ -131,7 +131,7 @@ export const itemMap = {
     component: Pawn,
     defaultActions: ["clone", "lock", "remove"],
     availableActions: [
-      "stackToTopLeft",
+      "stack",
       "alignAsLine",
       "alignAsSquare",
       "shuffle",
@@ -147,7 +147,7 @@ export const itemMap = {
     component: Jewel,
     defaultActions: ["clone", "lock", "remove"],
     availableActions: [
-      "stackToTopLeft",
+      "stack",
       "alignAsLine",
       "alignAsSquare",
       "shuffle",
@@ -175,14 +175,14 @@ export const itemMap = {
           "flip",
           "flipSelf",
           "tap",
-          "stackToTopLeft",
+          "stack",
           "shuffle",
           "clone",
           "lock",
           "remove",
         ];
       } else {
-        return ["tap", "stackToTopLeft", "shuffle", "clone", "lock", "remove"];
+        return ["tap", "stack", "shuffle", "clone", "lock", "remove"];
       }
     },
     availableActions: (item) => {
@@ -196,7 +196,7 @@ export const itemMap = {
           "rotate60",
           "rotate90",
           "rotate180",
-          "stackToTopLeft",
+          "stack",
           "alignAsLine",
           "alignAsSquare",
           "shuffle",
@@ -217,7 +217,7 @@ export const itemMap = {
           "rotate60",
           "rotate90",
           "rotate180",
-          "stackToTopLeft",
+          "stack",
           "alignAsLine",
           "alignAsSquare",
           "shuffle",

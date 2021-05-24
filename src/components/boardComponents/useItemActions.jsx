@@ -418,7 +418,7 @@ const stackToTopLeft = useRecoilCallback(
         multiple: true,
         icon: stackToCenterIcon,
       },
-      stackToTopLeft: {
+      stack: {
         action: stackToTopLeft,
         label: t("Stack To Top Left"),
         shortcut: "",
@@ -535,7 +535,7 @@ const stackToTopLeft = useRecoilCallback(
       toggleFlipSelf,
       toggleTap,
       rotate,
-      stackToTopLeft,
+      stack,
       shuffleSelectedItems,
       cloneItem,
       toggleLock,
@@ -547,7 +547,7 @@ const stackToTopLeft = useRecoilCallback(
   );
 
   return {
-    stackToTopLeft,
+    stack,
     remove: removeSelectedItems,
     toggleFlip,
     toggleFlipSelf,
