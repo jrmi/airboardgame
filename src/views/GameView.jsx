@@ -98,7 +98,7 @@ export const GameView = () => {
     <GameProvider game={game} gameId={realGameId}>
       <BoardView
         edit={true}
-        mediaLibrairies={libraries}
+        mediaLibraries={libraries}
         getComponent={getComponent}
       />
     </GameProvider>
