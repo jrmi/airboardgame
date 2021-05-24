@@ -1,22 +1,26 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
+import styled from "styled-components";
 
 import Modal from "../../ui/Modal";
 import { useQuery } from "react-query";
 import { getGames } from "../../utils/api";
 import useSession from "../../hooks/useSession";
 
-const GameItem = ({ defaultName, id, onLoad, ...rest }) => {
-  const { changeGame } = useSession();
-  const onClick = () => {
-    changeGame(id);
-    onLoad();
-  };
-  return <button onClick={onClick}>{defaultName}</button>;
-};
+import GameListItem from "../GameListItem";
+
+const StyledGameList = styled.ul`
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+`;
 
 const ChangeGameModalContent = ({ onLoad }) => {
   const { t } = useTranslation();
+  const { changeGame } = useSession();
+
   const { isLoading, data: gameList } = useQuery("games", async () =>
     (await getGames())
       .filter((game) => game.published)
@@ -34,20 +38,27 @@ const ChangeGameModalContent = ({ onLoad }) => {
         return 0;
       })
   );
+
+  const onGameClick = React.useCallback(
+    (id) => {
+      changeGame(id);
+      onLoad();
+    },
+    [changeGame, onLoad]
+  );
+
   return (
     <>
       <header>
-        <h3>{t("Game list")}</h3>
+        <h3>{t("Choose a new game")}</h3>
       </header>
       <section>
-        <ul>
+        <StyledGameList>
           {!isLoading &&
             gameList.map((game) => (
-              <li key={game.id}>
-                <GameItem {...game} onLoad={onLoad} />
-              </li>
+              <GameListItem key={game.id} game={game} onClick={onGameClick} />
             ))}
-        </ul>
+        </StyledGameList>
       </section>
     </>
   );

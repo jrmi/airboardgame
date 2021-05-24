@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { deleteGame, getBestTranslationFromConfig } from "../utils/api";
 import { confirmAlert } from "react-confirm-alert";
@@ -55,6 +55,8 @@ const Game = styled.li`
   & .img-wrapper {
     display: block;
     position: relative;
+    margin: 0;
+    padding: 0;
     width: 100%;
     padding-top: 64.5%;
     & > span {
@@ -146,14 +148,24 @@ const GameListItem = ({
   },
   game,
   userId,
+  onClick: propOnClick,
   onDelete,
 }) => {
   const { t, i18n } = useTranslation();
+  const history = useHistory();
 
   const translation = React.useMemo(
     () => getBestTranslationFromConfig(game, i18n.languages),
     [game, i18n.languages]
   );
+
+  const onClick = React.useCallback(() => {
+    if (propOnClick) {
+      return propOnClick(id);
+    } else {
+      history.push(`/playgame/${id}`);
+    }
+  }, [history, id, propOnClick]);
 
   const deleteGameHandler = async () => {
     confirmAlert({
@@ -227,7 +239,7 @@ const GameListItem = ({
 
   return (
     <Game>
-      <Link to={`/playgame/${id}`} className="img-wrapper">
+      <div onClick={onClick} className="img-wrapper button">
         <span>
           {realImageUrl && (
             <>
@@ -239,7 +251,7 @@ const GameListItem = ({
             </>
           )}
         </span>
-      </Link>
+      </div>
       {userId && (userId === owner || !owner) && (
         <span className="extra-actions">
           <button
