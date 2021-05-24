@@ -240,5 +240,12 @@
   "Duration (mins)": "Duration (mins)",
   "Age": "Age",
   "French": "French",
-  "English": "English"
+  "English": "English",
+  "VideoConf": "Video conference",
+  "Web conference": "Video conference",
+  "Choose a new game": "Choose a new game",
+  "Change game": "Change game",
+  "Go back": "Back",
+  "Add new table": "Add a new table",
+  "Session loading...": "Session loading..."
 }

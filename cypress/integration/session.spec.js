@@ -9,11 +9,11 @@ describe("Item interactions", () => {
       // eslint-disable-next-line quotes
       "[]"
     );
-    cy.clock();
+
     cy.visit("/");
+
     cy.contains("0 Test game", { timeout: 10000 }).parent().find("img").click();
 
-    cy.tick(10000);
     // Way board loading
     cy.get(".board-pane", { timeout: 10000 }).should(
       "have.css",
@@ -25,19 +25,9 @@ describe("Item interactions", () => {
       .children()
       .first()
       .should("have.css", "transform", "none");
-
-    // Wait grace time of autosave
-    cy.tick(10000);
   });
 
-  afterEach(() => {
-    // restore the clock
-    cy.clock().then((clock) => {
-      clock.restore();
-    });
-  });
-
-  it("should move item", () => {
+  it("should autosave session", () => {
     cy.get("img[src='/game_assets/JC.jpg']")
       .parents(".item")
       .parent()
@@ -59,6 +49,8 @@ describe("Item interactions", () => {
         req.reply(req.body);
       }
     ).as("postSession");
+
+    cy.wait(1000);
 
     cy.get("img[src='/game_assets/JC.jpg']")
       .parents(".item")
@@ -83,9 +75,6 @@ describe("Item interactions", () => {
         force: true,
         pointerId: 1,
       });
-
-    // advance to autosave time
-    cy.tick(10000);
 
     cy.wait("@postSession");
   });

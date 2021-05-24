@@ -12,6 +12,8 @@ import {
   AllItemsSelector,
 } from "./Board/";
 
+const GRACE_DELAY = import.meta.env.VITE_CI ? 100 : 5000;
+
 export const AutoSaveSession = () => {
   const { isMaster } = useC2C("board");
 
@@ -19,9 +21,11 @@ export const AutoSaveSession = () => {
 
   // Delay the first update to avoid too many session
   const readyRef = React.useRef(false);
+
   useTimeout(() => {
+    console.log("dok");
     readyRef.current = true;
-  }, 5000);
+  }, GRACE_DELAY);
 
   const messages = useRecoilValue(MessagesAtom);
   const itemList = useRecoilValue(AllItemsSelector);

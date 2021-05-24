@@ -238,5 +238,12 @@
   "Duration (mins)": "Durée (mins)",
   "Age": "Age",
   "French": "Français",
-  "English": "Anglais"
+  "English": "Anglais",
+  "VideoConf": "Visioconférence",
+  "Web conference": "Visioconférence",
+  "Choose a new game": "Choisissez un jeu",
+  "Change game": "Changer de jeu",
+  "Go back": "Retour",
+  "Add new table": "Ajouter une table",
+  "Session loading...": "Chargement de la partie..."
 }
