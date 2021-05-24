@@ -2,6 +2,7 @@ import React from "react";
 import { Redirect } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
+import { useQuery } from "react-query";
 
 import { getGames } from "../utils/api";
 import useAuth from "../hooks/useAuth";
@@ -9,6 +10,7 @@ import useAuth from "../hooks/useAuth";
 import { StyledGameList } from "./StyledGameList";
 import NewGameItem from "./NewGameItem";
 import GameListItem from "./GameListItem";
+import Spinner from "../ui/Spinner";
 
 const Filter = styled.div`
   & .incentive {
@@ -32,44 +34,25 @@ const Content = styled.div`
 const GameListView = () => {
   const { t } = useTranslation();
 
-  const [gameList, setGameList] = React.useState([]);
   const { isAuthenticated, userId } = useAuth();
 
-  React.useEffect(() => {
-    let mounted = true;
-
-    const loadGames = async () => {
-      const content = await getGames();
-      if (!mounted) return;
-
-      setGameList(
-        content.sort((a, b) => {
-          const [nameA, nameB] = [
-            a.board.defaultName || a.board.name,
-            b.board.defaultName || b.board.name,
-          ];
-          if (nameA < nameB) {
-            return -1;
-          }
-          if (nameA > nameB) {
-            return 1;
-          }
-          return 0;
-        })
-      );
-    };
-
-    loadGames();
-    return () => {
-      mounted = false;
-    };
-  }, []);
-
-  const onGameDelete = React.useCallback((idToRemove) => {
-    setGameList((prevList) => {
-      return prevList.filter(({ id }) => id !== idToRemove);
-    });
-  }, []);
+  const { isLoading, data: gameList } = useQuery("ownGames", async () =>
+    (await getGames())
+      .filter(({ owner }) => userId && (!owner || owner === userId))
+      .sort((a, b) => {
+        const [nameA, nameB] = [
+          a.board.defaultName || a.board.name,
+          b.board.defaultName || b.board.name,
+        ];
+        if (nameA < nameB) {
+          return -1;
+        }
+        if (nameA > nameB) {
+          return 1;
+        }
+        return 0;
+      })
+  );
 
   if (!isAuthenticated) {
     return <Redirect to="/games/" />;
@@ -82,16 +65,15 @@ const GameListView = () => {
       </Filter>
       <StyledGameList>
         <NewGameItem />
-        {gameList
-          .filter(({ owner }) => userId && (!owner || owner === userId))
-          .map((game) => (
-            <GameListItem
-              key={game.id}
-              game={game}
-              userId={userId}
-              onDelete={onGameDelete}
-            />
+        {!isLoading &&
+          gameList.map((game) => (
+            <GameListItem key={game.id} game={game} userId={userId} />
           ))}
+        {isLoading && (
+          <div style={{ paddingTop: "4em" }}>
+            <Spinner />
+          </div>
+        )}
       </StyledGameList>
     </Content>
   );

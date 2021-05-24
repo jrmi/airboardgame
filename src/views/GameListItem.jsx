@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import { deleteGame, getBestTranslationFromConfig } from "../utils/api";
 import { confirmAlert } from "react-confirm-alert";
 import { toast } from "react-toastify";
+import { useMutation, useQueryClient } from "react-query";
 import { media2Url } from "../components/mediaLibrary";
 
 const Game = styled.li`
@@ -153,6 +154,13 @@ const GameListItem = ({
 }) => {
   const { t, i18n } = useTranslation();
   const history = useHistory();
+  const queryClient = useQueryClient();
+  const deleteMutation = useMutation((gameId) => deleteGame(gameId), {
+    onSuccess: () => {
+      queryClient.invalidateQueries("ownGames");
+      queryClient.invalidateQueries("games");
+    },
+  });
 
   const translation = React.useMemo(
     () => getBestTranslationFromConfig(game, i18n.languages),
@@ -176,8 +184,8 @@ const GameListItem = ({
           label: t("Yes"),
           onClick: async () => {
             try {
-              await deleteGame(id);
-              onDelete(id);
+              deleteMutation.mutate(id);
+              if (onDelete) onDelete(id);
               toast.success(t("Game deleted"), { autoClose: 1500 });
             } catch (e) {
               if (e.message === "Forbidden") {

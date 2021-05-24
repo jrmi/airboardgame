@@ -6,6 +6,7 @@ import { useQuery } from "react-query";
 
 import { getGames } from "../utils/api";
 import SliderRange from "../ui/SliderRange";
+import Spinner from "../ui/Spinner";
 
 import { StyledGameList } from "./StyledGameList";
 
@@ -220,18 +221,14 @@ const GameListView = () => {
       : [];
   }, [gameList, filterCriteria]);
 
-  if (isLoading) {
-    return null;
-  }
-
-  const onChangeNbOfPlayersSlider = function (values) {
+  const onChangeNbOfPlayersSlider = (values) => {
     setFilterCriteria({
       ...filterCriteria,
       nbOfPlayers: values,
     });
   };
 
-  const onChangeDurationSlider = function (values) {
+  const onChangeDurationSlider = (values) => {
     setFilterCriteria({
       ...filterCriteria,
       durations: values,
@@ -345,11 +342,18 @@ const GameListView = () => {
             {t("games-available", { nbOfGames: `${filteredGameList.length}` })}
           </StyledGameResultNumber>
         </Filter>
-        <StyledGameList>
-          {filteredGameList.map((game) => (
-            <GameListItem key={game.id} game={game} />
-          ))}
-        </StyledGameList>
+        {!isLoading && (
+          <StyledGameList>
+            {filteredGameList.map((game) => (
+              <GameListItem key={game.id} game={game} />
+            ))}
+          </StyledGameList>
+        )}
+        {isLoading && (
+          <div style={{ padding: "1em" }}>
+            <Spinner />
+          </div>
+        )}
       </Content>
     </>
   );
