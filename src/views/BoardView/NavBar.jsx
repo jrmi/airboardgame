@@ -2,7 +2,7 @@ import React from "react";
 
 import styled from "styled-components";
 import { useTranslation } from "react-i18next";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation, useRouteMatch } from "react-router-dom";
 
 import InfoModal from "./InfoModal";
 import InfoEditModal from "./InfoEditModal";
@@ -136,6 +136,8 @@ const NavBar = ({ editMode }) => {
   const { isMaster, room } = useC2C("board");
 
   const history = useHistory();
+  const match = useRouteMatch();
+
   const [showLoadGameModal, setShowLoadGameModal] = React.useState(false);
   const [showSaveGameModal, setShowSaveGameModal] = React.useState(false);
   const [showEditInfoModal, setShowEditInfoModal] = React.useState(false);
@@ -151,7 +153,26 @@ const NavBar = ({ editMode }) => {
     [boardConfig, i18n.languages]
   );
 
-  const handleGoBack = React.useCallback(() => {
+  const handleBack = React.useCallback(() => {
+    // If inside session
+    if (match.path === "/session/:sessionId") {
+      if (history.length > 0) {
+        // Go to previous if exists
+        history.goBack();
+      } else {
+        // Otherwise go to /games root
+        history.push("/games");
+      }
+      return;
+    }
+    // If inside room, go back to that room
+    if (match.path === "/room/:roomId/session/:sessionId") {
+      history.push(`/room/${match.params.roomId}`);
+      return;
+    }
+  }, [history, match.params.roomId, match.path]);
+
+  const handleBackWithConfirm = React.useCallback(() => {
     confirmAlert({
       title: t("Confirmation"),
       message: t("Do you really want to quit game edition?"),
@@ -159,7 +180,7 @@ const NavBar = ({ editMode }) => {
         {
           label: t("Yes"),
           onClick: async () => {
-            history.goBack();
+            history.push("/studio");
           },
         },
         {
@@ -177,7 +198,7 @@ const NavBar = ({ editMode }) => {
           {!editMode && (
             <>
               <Touch
-                onClick={history.goBack}
+                onClick={handleBack}
                 alt={t("Go back")}
                 title={t("Go back")}
                 icon={"chevron-left"}
@@ -201,7 +222,7 @@ const NavBar = ({ editMode }) => {
           )}
           {editMode && (
             <Touch
-              onClick={handleGoBack}
+              onClick={handleBackWithConfirm}
               alt={t("Go back to studio")}
               title={t("Go back to studio")}
               icon={"chevron-left"}
