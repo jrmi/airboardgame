@@ -23,7 +23,6 @@ export const AutoSaveSession = () => {
   const readyRef = React.useRef(false);
 
   useTimeout(() => {
-    console.log("dok");
     readyRef.current = true;
   }, GRACE_DELAY);
 
