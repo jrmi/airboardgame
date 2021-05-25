@@ -337,7 +337,7 @@ export const SelectedItemsPane = ({ hideMenu = false }) => {
                 <button
                   className="button clear icon-only"
                   key={action}
-                  onClick={handler}
+                  onClick={() => handler()}
                   title={label}
                 >
                   <img

@@ -1,6 +1,6 @@
 import React from "react";
 
-import { useRecoilValue, useRecoilCallback } from "recoil";
+import { useRecoilState, useRecoilCallback } from "recoil";
 import { useItems } from "../Board/Items";
 import { selectedItemsAtom } from "../Board/Selector";
 
@@ -46,7 +46,7 @@ export const useItemActions = () => {
 
   const { currentUser } = useUsers();
 
-  const selectedItems = useRecoilValue(selectedItemsAtom);
+  const [selectedItems, setSelectItems] = useRecoilState(selectedItemsAtom);
   const [availableActions, setAvailableActions] = React.useState([]);
   const isMountedRef = React.useRef(false);
 
@@ -66,78 +66,85 @@ export const useItemActions = () => {
     };
   }, []);
 
-  const updateAvailableActions = useRecoilCallback(
-    ({ snapshot }) => async () => {
-      const selectedItemList = await getSelectedItemList(snapshot);
-      if (selectedItems.length > 0) {
-        // Prevent set state on unmounted component
-        if (!isMountedRef.current) return;
+  const updateAvailableActions = React.useCallback(async () => {
+    const selectedItemList = await getSelectedItemList();
+    if (selectedItems.length > 0) {
+      // Prevent set state on unmounted component
+      if (!isMountedRef.current) return;
 
-        const allActions = selectedItemList.reduce((acc, item) => {
-          return intersection(acc, getActionsFromItem(item));
-        }, getActionsFromItem(selectedItemList[0]));
+      const allActions = selectedItemList.reduce((acc, item) => {
+        return intersection(acc, getActionsFromItem(item));
+      }, getActionsFromItem(selectedItemList[0]));
 
-        setAvailableActions(allActions);
-      } else {
-        setAvailableActions([]);
-      }
-    },
-    [getSelectedItemList, selectedItems.length]
-  );
+      setAvailableActions(allActions);
+    } else {
+      setAvailableActions([]);
+    }
+  }, [getSelectedItemList, selectedItems.length]);
 
   // Update available actions when selection change
   React.useEffect(() => {
     updateAvailableActions();
   }, [selectedItems, updateAvailableActions]);
 
-
   // Stack selection to Center
-const stackToCenter = useRecoilCallback(
-  ({ snapshot, stackThicknessMin = 0.5, stackThicknessMax = 1, limitCardsNumber = 32 }) => async () => {
-    const selectedItemList = await getSelectedItemList(snapshot);
+  const stackToCenter = React.useCallback(
+    async ({
+      stackThicknessMin = 0.5,
+      stackThicknessMax = 1,
+      limitCardsNumber = 32,
+    } = {}) => {
+      const selectedItemList = await getSelectedItemList();
 
-    // Rule to manage thickness of the stack.
-    let stackThickness = 0;
-    if (selectedItemList.length >= limitCardsNumber) {
+      // Rule to manage thickness of the stack.
+      let stackThickness = stackThicknessMax;
+      if (selectedItemList.length >= limitCardsNumber) {
         stackThickness = stackThicknessMin;
-      } else {
-        stackThickness = stackThicknessMax;
-      };
-
-    // To avoid displacement effects.
-    let isSameGap = true;
-    for (let i = 1; i < selectedItemList.length; i++) {
-      if(Math.abs(selectedItemList[i].x - selectedItemList[i-1].x) != stackThickness) {
-        isSameGap = false;
-        break;
       }
-      if(Math.abs(selectedItemList[i].y - selectedItemList[i-1].y) != stackThickness) {
-        isSameGap = false;
-        break;
-      }
-    }
-    if (isSameGap == true) {
-      return;
-    }
 
-    // Compute middle position
-    const minMax = { min: {}, max: {} };
-    minMax.min.x = Math.min(...selectedItemList.map(({ x }) => x));
-    minMax.min.y = Math.min(...selectedItemList.map(({ y }) => y));
-    minMax.max.x = Math.max(
-      ...selectedItemList.map(
-        ({ x, id }) => x + document.getElementById(id).clientWidth
-      )
-    );
-    minMax.max.y = Math.max(
-      ...selectedItemList.map(
-        ({ y, id }) => y + document.getElementById(id).clientHeight
-      )
-    );
-    const { clientWidth, clientHeight } = document.getElementById(selectedItemList[0].id);
-    let newX = minMax.min.x + (minMax.max.x - minMax.min.x) / 2 - clientWidth / 2;
-    let newY = minMax.min.y + (minMax.max.y - minMax.min.y) / 2 - clientHeight / 2; 
-    
+      // To avoid displacement effects.
+      let isSameGap = true;
+      for (let i = 1; i < selectedItemList.length; i++) {
+        if (
+          Math.abs(selectedItemList[i].x - selectedItemList[i - 1].x) !=
+          stackThickness
+        ) {
+          isSameGap = false;
+          break;
+        }
+        if (
+          Math.abs(selectedItemList[i].y - selectedItemList[i - 1].y) !=
+          stackThickness
+        ) {
+          isSameGap = false;
+          break;
+        }
+      }
+      if (isSameGap == true) {
+        return;
+      }
+
+      // Compute middle position
+      const minMax = { min: {}, max: {} };
+      minMax.min.x = Math.min(...selectedItemList.map(({ x }) => x));
+      minMax.min.y = Math.min(...selectedItemList.map(({ y }) => y));
+      minMax.max.x = Math.max(
+        ...selectedItemList.map(
+          ({ x, id }) => x + document.getElementById(id).clientWidth
+        )
+      );
+      minMax.max.y = Math.max(
+        ...selectedItemList.map(
+          ({ y, id }) => y + document.getElementById(id).clientHeight
+        )
+      );
+      const { clientWidth, clientHeight } = document.getElementById(
+        selectedItemList[0].id
+      );
+      let newX =
+        minMax.min.x + (minMax.max.x - minMax.min.x) / 2 - clientWidth / 2;
+      let newY =
+        minMax.min.y + (minMax.max.y - minMax.min.y) / 2 - clientHeight / 2;
 
       batchUpdateItems(selectedItems, (item) => {
         const newItem = {
@@ -149,53 +156,50 @@ const stackToCenter = useRecoilCallback(
         newY -= stackThickness;
         return newItem;
       });
-  },
-  [getSelectedItemList, batchUpdateItems, selectedItems]
-);
+    },
+    [getSelectedItemList, batchUpdateItems, selectedItems]
+  );
 
-// Stack selection to Top Left
-const stackToTopLeft = useRecoilCallback(
-  ({ snapshot, stackThicknessMin = 0.5, stackThicknessMax = 1, limitCardsNumber = 32 }) => async () => {
-    const selectedItemList = await getSelectedItemList(snapshot);
+  // Stack selection to Top Left
+  const stackToTopLeft = React.useCallback(
+    async ({
+      stackThicknessMin = 0.5,
+      stackThicknessMax = 1,
+      limitCardsNumber = 32,
+    } = {}) => {
+      const selectedItemList = await getSelectedItemList();
 
-    let { x:newX, y:newY} = selectedItemList[0];
+      let { x: newX, y: newY } = selectedItemList[0];
 
-    // Rule to manage thickness of the stack.
-    let stackThickness = 0;
-    if (selectedItemList.length >= limitCardsNumber) {
+      // Rule to manage thickness of the stack.
+      let stackThickness = stackThicknessMax;
+      if (selectedItemList.length >= limitCardsNumber) {
         stackThickness = stackThicknessMin;
-      } else {
-        stackThickness = stackThicknessMax;
-      };
-    
-
-    batchUpdateItems(selectedItems, (item) => {
-      const newItem = {
-        ...item,
-        x: newX,
-        y: newY,
-      };
-      newX += stackThickness;
-      newY -= stackThickness;
-      return newItem;
-    });
-  },
-  [getSelectedItemList, batchUpdateItems, selectedItems]
-);
-
-  // Align selection to a line
-  const alignAsLine = useRecoilCallback(
-    ({ snapshot, gapBetweenItems = 5 }) => async () => { // Negative value is possible for 'gapBetweenItems'.
-      const selectedItemList = await getSelectedItemList(snapshot);
-
-      // Count number of elements
-      const numberOfElements = selectedItemList.length;
-
-      let { x:newX, y:newY} = selectedItemList[0];
-      let index = numberOfElements;
+      }
 
       batchUpdateItems(selectedItems, (item) => {
-        index -= 1;
+        const newItem = {
+          ...item,
+          x: newX,
+          y: newY,
+        };
+        newX += stackThickness;
+        newY -= stackThickness;
+        return newItem;
+      });
+    },
+    [getSelectedItemList, batchUpdateItems, selectedItems]
+  );
+
+  // Align selection to a line
+  const alignAsLine = React.useCallback(
+    async ({ gapBetweenItems = 5 } = {}) => {
+      // Negative value is possible for 'gapBetweenItems'.
+      const selectedItemList = await getSelectedItemList();
+
+      let { x: newX, y: newY } = selectedItemList[0];
+
+      batchUpdateItems(selectedItems, (item) => {
         const { clientWidth } = document.getElementById(item.id);
         const newItem = {
           ...item,
@@ -210,19 +214,18 @@ const stackToTopLeft = useRecoilCallback(
   );
 
   // Align selection to an array
-  const alignAsSquare = useRecoilCallback(
-    ({ snapshot, gapBetweenItems = 5 }) => async () => { // Negative value is possible for 'gapBetweenItems'.
-      
-      const selectedItemList = await getSelectedItemList(snapshot);
+  const alignAsSquare = React.useCallback(
+    async ({ gapBetweenItems = 5 } = {}) => {
+      // Negative value is possible for 'gapBetweenItems'.
+      const selectedItemList = await getSelectedItemList();
 
       // Count number of elements
       const numberOfElements = selectedItemList.length;
       const numberOfColumns = Math.ceil(Math.sqrt(numberOfElements));
 
-      let { x:newX, y:newY} = selectedItemList[0];
+      let { x: newX, y: newY } = selectedItemList[0];
 
       let currentColumn = 1;
-      let isNewRow = false;
 
       batchUpdateItems(selectedItems, (item) => {
         const { clientWidth, clientHeight } = document.getElementById(item.id);
@@ -265,25 +268,22 @@ const stackToTopLeft = useRecoilCallback(
   );
 
   // Tap/Untap elements
-  const toggleTap = useRecoilCallback(
-    ({ snapshot }) => async () => {
-      const selectedItemList = await getSelectedItemList(snapshot);
-      const tappedCount = selectedItemList.filter(
-        ({ rotation }) => rotation === 90
-      ).length;
+  const toggleTap = React.useCallback(async () => {
+    const selectedItemList = await getSelectedItemList();
+    const tappedCount = selectedItemList.filter(
+      ({ rotation }) => rotation === 90
+    ).length;
 
-      let untap = false;
-      if (tappedCount > selectedItems.length / 2) {
-        untap = true;
-      }
+    let untap = false;
+    if (tappedCount > selectedItems.length / 2) {
+      untap = true;
+    }
 
-      batchUpdateItems(selectedItems, (item) => ({
-        ...item,
-        rotation: untap ? 0 : 90,
-      }));
-    },
-    [getSelectedItemList, selectedItems, batchUpdateItems]
-  );
+    batchUpdateItems(selectedItems, (item) => ({
+      ...item,
+      rotation: untap ? 0 : 90,
+    }));
+  }, [getSelectedItemList, selectedItems, batchUpdateItems]);
 
   // Lock / unlock elements
   const toggleLock = React.useCallback(() => {
@@ -300,12 +300,12 @@ const stackToTopLeft = useRecoilCallback(
       );
       setIsFirstLock(false);
     }
-  }, [batchUpdateItems, selectedItems, isFirstLock, t, setIsFirstLock]);
+  }, [t, batchUpdateItems, selectedItems, isFirstLock, setIsFirstLock]);
 
   // Flip / unflip elements
-  const toggleFlip = useRecoilCallback(
-    ({ snapshot }) => async () => {
-      const selectedItemList = await getSelectedItemList(snapshot);
+  const toggleFlip = React.useCallback(
+    async ({ reverseOrder = true } = {}) => {
+      const selectedItemList = await getSelectedItemList();
       const flippedCount = selectedItemList.filter(({ flipped }) => flipped)
         .length;
 
@@ -321,9 +321,22 @@ const stackToTopLeft = useRecoilCallback(
             ? null
             : item.unflippedFor,
       }));
-      reverseItemsOrder(selectedItems);
+      if (reverseOrder) {
+        reverseItemsOrder(selectedItems);
+        setSelectItems((prev) => {
+          const reversed = [...prev];
+          reversed.reverse();
+          return reversed;
+        });
+      }
     },
-    [getSelectedItemList, selectedItems, batchUpdateItems, reverseItemsOrder]
+    [
+      getSelectedItemList,
+      selectedItems,
+      batchUpdateItems,
+      reverseItemsOrder,
+      setSelectItems,
+    ]
   );
 
   // Rotate element
@@ -338,58 +351,52 @@ const stackToTopLeft = useRecoilCallback(
   );
 
   // Reveal for player only
-  const toggleFlipSelf = useRecoilCallback(
-    ({ snapshot }) => async () => {
-      const selectedItemList = await getSelectedItemList(snapshot);
-      const flippedSelfCount = selectedItemList.filter(
-        ({ unflippedFor }) =>
-          Array.isArray(unflippedFor) && unflippedFor.includes(currentUser.uid)
-      ).length;
+  const toggleFlipSelf = React.useCallback(async () => {
+    const selectedItemList = await getSelectedItemList();
+    const flippedSelfCount = selectedItemList.filter(
+      ({ unflippedFor }) =>
+        Array.isArray(unflippedFor) && unflippedFor.includes(currentUser.uid)
+    ).length;
 
-      let flipSelf = true;
-      if (flippedSelfCount > selectedItems.length / 2) {
-        flipSelf = false;
+    let flipSelf = true;
+    if (flippedSelfCount > selectedItems.length / 2) {
+      flipSelf = false;
+    }
+
+    batchUpdateItems(selectedItems, (item) => {
+      let { unflippedFor = [] } = item;
+
+      if (!Array.isArray(item.unflippedFor)) {
+        unflippedFor = [];
       }
 
-      batchUpdateItems(selectedItems, (item) => {
-        let { unflippedFor = [] } = item;
-
-        if (!Array.isArray(item.unflippedFor)) {
-          unflippedFor = [];
-        }
-
-        if (flipSelf && !unflippedFor.includes(currentUser.uid)) {
-          unflippedFor = [...unflippedFor, currentUser.uid];
-        }
-        if (!flipSelf && unflippedFor.includes(currentUser.uid)) {
-          unflippedFor = unflippedFor.filter((id) => id !== currentUser.uid);
-        }
-        return {
-          ...item,
-          flipped: true,
-          unflippedFor,
-        };
-      });
-    },
-    [getSelectedItemList, selectedItems, batchUpdateItems, currentUser.uid]
-  );
+      if (flipSelf && !unflippedFor.includes(currentUser.uid)) {
+        unflippedFor = [...unflippedFor, currentUser.uid];
+      }
+      if (!flipSelf && unflippedFor.includes(currentUser.uid)) {
+        unflippedFor = unflippedFor.filter((id) => id !== currentUser.uid);
+      }
+      return {
+        ...item,
+        flipped: true,
+        unflippedFor,
+      };
+    });
+  }, [getSelectedItemList, selectedItems, batchUpdateItems, currentUser.uid]);
 
   const removeSelectedItems = React.useCallback(
     () => removeItems(selectedItems),
     [removeItems, selectedItems]
   );
 
-  const cloneItem = useRecoilCallback(
-    ({ snapshot }) => async () => {
-      const selectedItemList = await getSelectedItemList(snapshot);
-      selectedItemList.forEach((itemToClone) => {
-        const newItem = JSON.parse(JSON.stringify(itemToClone));
-        newItem.id = nanoid();
-        insertItemBefore(newItem, itemToClone.id);
-      });
-    },
-    [getSelectedItemList, insertItemBefore]
-  );
+  const cloneItem = React.useCallback(async () => {
+    const selectedItemList = await getSelectedItemList();
+    selectedItemList.forEach((itemToClone) => {
+      const newItem = JSON.parse(JSON.stringify(itemToClone));
+      newItem.id = nanoid();
+      insertItemBefore(newItem, itemToClone.id);
+    });
+  }, [getSelectedItemList, insertItemBefore]);
 
   const actionMap = React.useMemo(
     () => ({
@@ -534,20 +541,21 @@ const stackToTopLeft = useRecoilCallback(
       t,
       toggleFlipSelf,
       toggleTap,
-      rotate,
-      stack,
+      stackToCenter,
+      stackToTopLeft,
+      alignAsLine,
+      alignAsSquare,
       shuffleSelectedItems,
+      randomlyRotateSelectedItems,
+      rotate,
       cloneItem,
       toggleLock,
       removeSelectedItems,
-      randomlyRotateSelectedItems,
-      alignAsLine,
-      alignAsSquare,
     ]
   );
 
   return {
-    stack,
+    stack: stackToTopLeft,
     remove: removeSelectedItems,
     toggleFlip,
     toggleFlipSelf,
