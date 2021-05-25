@@ -1,4 +1,4 @@
-describe("Item interactions", () => {
+describe("Session management", () => {
   beforeEach(() => {
     cy.viewport(1000, 600);
     cy.intercept(
@@ -18,7 +18,7 @@ describe("Item interactions", () => {
     cy.get(".board-pane", { timeout: 10000 }).should(
       "have.css",
       "transform",
-      "matrix(1, 0, 0, 1, 0, -200)"
+      "matrix(0.48, 0, 0, 0.48, 260, 60)"
     );
     cy.get(".item")
       .first()

@@ -14,7 +14,7 @@ describe("Board interactions", () => {
     cy.get(".board-pane", { timeout: 10000 }).should(
       "have.css",
       "transform",
-      "matrix(1, 0, 0, 1, 0, -200)"
+      "matrix(0.48, 0, 0, 0.48, 260, 60)"
     );
     cy.get(".item")
       .first()
@@ -52,7 +52,7 @@ describe("Board interactions", () => {
     cy.get(".board-pane").should(
       "have.css",
       "transform",
-      "matrix(1, 0, 0, 1, 100, -100)"
+      "matrix(0.48, 0, 0, 0.48, 360, 160)"
     );
   });
 
@@ -81,7 +81,7 @@ describe("Board interactions", () => {
     cy.get(".board-pane").should(
       "have.css",
       "transform",
-      "matrix(1, 0, 0, 1, 100, -100)"
+      "matrix(0.48, 0, 0, 0.48, 360, 160)"
     );
   });
 
@@ -91,10 +91,10 @@ describe("Board interactions", () => {
     cy.get(".board")
       .trigger("pointerdown", {
         button: 0,
-        x: 300,
-        y: 600,
-        clientX: 300,
-        clientY: 600,
+        x: 150,
+        y: 200,
+        clientX: 150,
+        clientY: 200,
         pointerId: 1,
       })
       .trigger("pointermove", {
@@ -114,7 +114,7 @@ describe("Board interactions", () => {
     cy.get(".board-pane").should(
       "have.css",
       "transform",
-      "matrix(1, 0, 0, 1, 100, -400)"
+      "matrix(0.48, 0, 0, 0.48, 260, 60)"
     );
   });
 });
