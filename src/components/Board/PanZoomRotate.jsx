@@ -25,13 +25,14 @@ const Pane = styled.div.attrs(({ translateX, translateY, scale, rotate }) => ({
 `;
 
 const PanZoomRotate = ({ children, moveFirst }) => {
+  const [scaleBoundaries, setScaleBoundaries] = React.useState([0.1, 8]);
   const [dim, setDim] = useRecoilState(PanZoomRotateAtom);
   const config = useRecoilValue(BoardConfigAtom);
   const setBoardState = useSetRecoilState(BoardStateAtom);
   const prevDim = usePrevious(dim);
 
   const [scale, setScale] = React.useState({
-    scale: config.scale,
+    scale: 1,
     x: 0,
     y: 0,
   });
@@ -60,13 +61,26 @@ const PanZoomRotate = ({ children, moveFirst }) => {
   // Center board on game loading
   React.useEffect(() => {
     const { innerHeight, innerWidth } = window;
+
+    const minSize = Math.min(innerHeight, innerWidth);
+
+    const newScale = (minSize / config.size) * 0.8;
+
+    setScaleBoundaries([newScale * 0.8, Math.max(newScale * 30, 8)]);
+
     setDim((prev) => ({
       ...prev,
-      scale: config.scale,
-      translateX: innerWidth / 2 - (config.size / 2) * config.scale,
-      translateY: innerHeight / 2 - (config.size / 2) * config.scale,
+      scale: newScale,
+      translateX: innerWidth / 2 - (config.size / 2) * newScale,
+      translateY: innerHeight / 2 - (config.size / 2) * newScale,
     }));
-  }, [config.size, config.scale, setDim]);
+
+    setScale((prev) => {
+      return { ...prev, scale: newScale, x: 0, y: 0 };
+    });
+    // We only want to do it at component mount
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [config.size]);
 
   // Keep board inside viewport
   React.useEffect(() => {
@@ -158,44 +172,54 @@ const PanZoomRotate = ({ children, moveFirst }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dim, updateBoardStatePanningDelay, updateBoardStateZoomingDelay]);
 
-  const onZoom = ({ clientX, clientY, scale }) => {
-    setScale((prevScale) => {
-      let newScale = prevScale.scale * (1 - scale / 200);
-      if (newScale > 8) {
-        newScale = 8;
+  const onZoom = React.useCallback(
+    ({ clientX, clientY, scale }) => {
+      setScale((prevScale) => {
+        let newScale = prevScale.scale * (1 - scale / 200);
+        if (newScale > scaleBoundaries[1]) {
+          newScale = scaleBoundaries[1];
+        }
+
+        if (newScale < scaleBoundaries[0]) {
+          newScale = scaleBoundaries[0];
+        }
+
+        return {
+          scale: newScale,
+          x: clientX,
+          y: clientY,
+        };
+      });
+    },
+    [scaleBoundaries]
+  );
+
+  const onPan = React.useCallback(
+    ({ deltaX, deltaY }) => {
+      setDim((prevDim) => {
+        return {
+          ...prevDim,
+          translateX: prevDim.translateX + deltaX,
+          translateY: prevDim.translateY + deltaY,
+        };
+      });
+    },
+    [setDim]
+  );
+
+  const onDrag = React.useCallback(
+    (state) => {
+      const { target } = state;
+
+      const outsideItem =
+        !insideClass(target, "item") || insideClass(target, "locked");
+
+      if (moveFirst && outsideItem) {
+        onPan(state);
       }
-
-      if (newScale < 0.1) {
-        newScale = 0.1;
-      }
-      return {
-        scale: newScale,
-        x: clientX,
-        y: clientY,
-      };
-    });
-  };
-
-  const onPan = ({ deltaX, deltaY }) => {
-    setDim((prevDim) => {
-      return {
-        ...prevDim,
-        translateX: prevDim.translateX + deltaX,
-        translateY: prevDim.translateY + deltaY,
-      };
-    });
-  };
-
-  const onDrag = (state) => {
-    const { target } = state;
-
-    const outsideItem =
-      !insideClass(target, "item") || insideClass(target, "locked");
-
-    if (moveFirst && outsideItem) {
-      onPan(state);
-    }
-  };
+    },
+    [moveFirst, onPan]
+  );
 
   return (
     <Gesture onPan={onPan} onZoom={onZoom} onDrag={onDrag}>

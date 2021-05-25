@@ -36,7 +36,7 @@ describe("Studio", () => {
     cy.get(".board-pane").should(
       "have.css",
       "transform",
-      "matrix(1, 0, 0, 1, -500, -700)"
+      "matrix(0.24, 0, 0, 0.24, 260, 60)"
     );
   });
 
@@ -45,7 +45,7 @@ describe("Studio", () => {
     cy.get(".board-pane").should(
       "have.css",
       "transform",
-      "matrix(1, 0, 0, 1, -500, -700)"
+      "matrix(0.24, 0, 0, 0.24, 260, 60)"
     );
 
     // save
@@ -70,7 +70,7 @@ describe("Studio", () => {
     cy.get(".board-pane").should(
       "have.css",
       "transform",
-      "matrix(1, 0, 0, 1, -500, -700)"
+      "matrix(0.24, 0, 0, 0.24, 260, 60)"
     );
     // Add an item
     cy.get("[title^='Add an item']").click();
@@ -100,12 +100,12 @@ describe("Studio", () => {
     cy.get(".board-pane").should(
       "have.css",
       "transform",
-      "matrix(1, 0, 0, 1, -500, -700)"
+      "matrix(0.24, 0, 0, 0.24, 260, 60)"
     );
 
     // Edit title
     cy.get("[title^='Edit game information']").click();
-    cy.get('input[name="defaultName"]').clear().type("ChangeGameName");
+    cy.get("input[name=\"defaultName\"]").clear().type("ChangeGameName");
     cy.get(".side-panel.open [alt^='Close']").click();
 
     cy.contains("ChangeGameName");
@@ -132,7 +132,7 @@ describe("Studio", () => {
       cy.get(".board-pane").should(
         "have.css",
         "transform",
-        "matrix(1, 0, 0, 1, -500, -700)"
+        "matrix(0.24, 0, 0, 0.24, 260, 60)"
       );
       // Add an item
       cy.get("[title^='Add an item']").click();
@@ -144,9 +144,9 @@ describe("Studio", () => {
       cy.get(".item").click({ force: true });
       cy.get("button img[alt^='Edit']").click({ force: true });
 
-      cy.get('input[name="width"]').clear().type("100");
-      cy.get('input[name="height"]').clear().type("75");
-      cy.get('input[name="text"]').clear().type("myCube");
+      cy.get("input[name=\"width\"]").clear().type("100");
+      cy.get("input[name=\"height\"]").clear().type("75");
+      cy.get("input[name=\"text\"]").clear().type("myCube");
 
       cy.get(".item")
         .children()
@@ -165,7 +165,7 @@ describe("Studio", () => {
       cy.get(".item").click({ force: true });
       cy.get("button img[alt^='Edit']").click({ force: true });
 
-      cy.get('input[name="locked"]').click();
+      cy.get("input[name=\"locked\"]").click();
 
       cy.get(".item").should("have.class", "locked");
 
