@@ -148,9 +148,15 @@ const Gesture = ({
       altKey,
       ctrlKey,
       metaKey,
+      isPrimary,
     }) => {
       // Add pointer to map
       stateRef.current.pointers[pointerId] = { clientX, clientY };
+
+      if (isPrimary) {
+        // Clean mainPoint on primary pointer
+        stateRef.current.mainPointer = undefined;
+      }
 
       if (stateRef.current.mainPointer !== undefined) {
         if (stateRef.current.mainPointer !== pointerId) {
@@ -182,7 +188,6 @@ const Gesture = ({
             });
           } catch (e) {
             console.log("Error while getting other pointer. Ignoring", e);
-            console.log(stateRef.current.pointers, pointerId);
             stateRef.current.mainPointer === undefined;
           }
         }
@@ -229,91 +234,6 @@ const Gesture = ({
     [onLongTap, queue]
   );
 
-  const onPointerUp = React.useCallback(
-    (e) => {
-      const {
-        clientX,
-        clientY,
-        altKey,
-        ctrlKey,
-        metaKey,
-        target,
-        pointerId,
-      } = e;
-
-      // Remove pointer from map
-      delete stateRef.current.pointers[pointerId];
-
-      if (stateRef.current.mainPointer !== pointerId) {
-        // If this is not the main pointer we quit here
-        return;
-      }
-
-      if (Object.keys(stateRef.current.pointers).length > 0) {
-        // If was main pointer but we have another one, this one become main
-        stateRef.current.mainPointer = Number(
-          Object.keys(stateRef.current.pointers)[0]
-        );
-        try {
-          stateRef.current.target.setPointerCapture(
-            stateRef.current.mainPointer
-          );
-        } catch (e) {
-          console.log("Fails to set pointer capture", e);
-        }
-        return;
-      }
-
-      stateRef.current.mainPointer = undefined;
-      stateRef.current.pressed = false;
-
-      // Clear longTap
-      clearTimeout(stateRef.current.longTapTimeout);
-
-      if (stateRef.current.moving) {
-        // If we were moving, send drag end event
-        stateRef.current.moving = false;
-        queue(() =>
-          onDragEnd({
-            deltaX: clientX - stateRef.current.prevX,
-            deltaY: clientY - stateRef.current.prevY,
-            startX: stateRef.current.startX,
-            startY: stateRef.current.startY,
-            distanceX: clientX - stateRef.current.startX,
-            distanceY: clientY - stateRef.current.startY,
-            button: stateRef.current.currentButton,
-            altKey,
-            ctrlKey,
-            metaKey,
-            event: e,
-          })
-        );
-        wrapperRef.current.style.cursor = "auto";
-      } else {
-        const now = Date.now();
-
-        if (stateRef.current.noTap) {
-          stateRef.current.noTap = false;
-        } else {
-          // Send tap event only if time less than 300ms
-          if (stateRef.current.timeStart - now < 300) {
-            queue(() =>
-              onTap({
-                clientX,
-                clientY,
-                altKey,
-                ctrlKey,
-                metaKey,
-                target,
-              })
-            );
-          }
-        }
-      }
-    },
-    [onDragEnd, onTap, queue]
-  );
-
   const onPointerMove = React.useCallback(
     (e) => {
       if (stateRef.current.pressed) {
@@ -325,14 +245,7 @@ const Gesture = ({
           ctrlKey,
           metaKey,
           pointerType,
-          buttons,
         } = e;
-
-        // Guard to prevent missed events
-        if (buttons === 0) {
-          onPointerUp(e);
-          return;
-        }
 
         if (stateRef.current.mainPointer !== pointerId) {
           // Event from other pointer
@@ -480,7 +393,96 @@ const Gesture = ({
         stateRef.current.prevY = clientY;
       }
     },
-    [onDrag, onDragStart, onPan, onPointerUp, onZoom, queue]
+    [onDrag, onDragStart, onPan, onZoom, queue]
+  );
+
+  const onPointerUp = React.useCallback(
+    (e) => {
+      const {
+        clientX,
+        clientY,
+        altKey,
+        ctrlKey,
+        metaKey,
+        target,
+        pointerId,
+      } = e;
+
+      // Remove pointer from map
+      delete stateRef.current.pointers[pointerId];
+
+      if (stateRef.current.mainPointer !== pointerId) {
+        // If this is not the main pointer we quit here
+        return;
+      }
+
+      while (Object.keys(stateRef.current.pointers).length > 0) {
+        // If was main pointer but we have another one, this one become main
+        stateRef.current.mainPointer = Number(
+          Object.keys(stateRef.current.pointers)[0]
+        );
+        try {
+          stateRef.current.target.setPointerCapture(
+            stateRef.current.mainPointer
+          );
+          return;
+        } catch (e) {
+          console.log("Fails to set pointer capture", e);
+          stateRef.current.mainPointer = undefined;
+          delete stateRef.current.pointers[
+            Object.keys(stateRef.current.pointers)[0]
+          ];
+        }
+      }
+
+      stateRef.current.mainPointer = undefined;
+      stateRef.current.pressed = false;
+
+      // Clear longTap
+      clearTimeout(stateRef.current.longTapTimeout);
+
+      if (stateRef.current.moving) {
+        // If we were moving, send drag end event
+        stateRef.current.moving = false;
+        queue(() =>
+          onDragEnd({
+            deltaX: clientX - stateRef.current.prevX,
+            deltaY: clientY - stateRef.current.prevY,
+            startX: stateRef.current.startX,
+            startY: stateRef.current.startY,
+            distanceX: clientX - stateRef.current.startX,
+            distanceY: clientY - stateRef.current.startY,
+            button: stateRef.current.currentButton,
+            altKey,
+            ctrlKey,
+            metaKey,
+            event: e,
+          })
+        );
+        wrapperRef.current.style.cursor = "auto";
+      } else {
+        const now = Date.now();
+
+        if (stateRef.current.noTap) {
+          stateRef.current.noTap = false;
+        } else {
+          // Send tap event only if time less than 300ms
+          if (stateRef.current.timeStart - now < 300) {
+            queue(() =>
+              onTap({
+                clientX,
+                clientY,
+                altKey,
+                ctrlKey,
+                metaKey,
+                target,
+              })
+            );
+          }
+        }
+      }
+    },
+    [onDragEnd, onTap, queue]
   );
 
   const onDoubleTapHandler = React.useCallback(

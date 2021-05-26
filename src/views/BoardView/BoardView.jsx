@@ -43,6 +43,7 @@ const ActionBar = styled.div`
   text-shadow: 1px 1px 2px #222;
   font-size: 0.8em;
   pointer-events: none;
+
   & > *:not(.spacer) {
     padding: 0 1.5em;
     pointer-events: all;
@@ -53,7 +54,7 @@ const ActionBar = styled.div`
   }
 
   @media screen and (max-width: 640px) {
-    & > * {
+    & > *:not(.spacer) {
       padding: 0 0.5em;
     }
     & .spacer {
@@ -62,7 +63,7 @@ const ActionBar = styled.div`
   }
 
   @media screen and (max-width: 420px) {
-    & > * {
+    & > *:not(.spacer) {
       padding: 0 0.2em;
     }
   }
