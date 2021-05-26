@@ -84,6 +84,14 @@ const StyledNavBar = styled.div.attrs(() => ({ className: "nav" }))`
   }
 
   @media screen and (max-width: 640px) {
+    & .nav-left {
+      flex: 1;
+      padding-left: 5px;
+      & > div {
+        padding-right: 2px;
+      }
+    }
+
     & .nav-center h3 {
       position: relative;
       padding: 0;
@@ -123,9 +131,6 @@ const StyledNavBar = styled.div.attrs(() => ({ className: "nav" }))`
     }
     & h3 {
       font-size: 1.2em;
-    }
-    & .nav-left {
-      flex: 0;
     }
   }
 `;
