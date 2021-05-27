@@ -13,7 +13,7 @@ import { insideClass, hasClass } from "../../utils";
 import Gesture from "./Gesture";
 
 const ActionPane = ({ children }) => {
-  const { putItemsOnTop, moveItems, placeItems } = useItems();
+  const { moveItems, placeItems } = useItems();
 
   const setSelectedItems = useSetRecoilState(selectedItemsAtom);
   const setBoardState = useSetRecoilState(BoardStateAtom);
@@ -52,7 +52,6 @@ const ActionPane = ({ children }) => {
 
         Object.assign(actionRef.current, {
           moving: true,
-          onTop: false,
           remainX: 0,
           remainY: 0,
         });
@@ -68,12 +67,6 @@ const ActionPane = ({ children }) => {
         const moveX = actionRef.current.remainX + deltaX / panZoomRotate.scale;
         const moveY = actionRef.current.remainY + deltaY / panZoomRotate.scale;
 
-        // Put items on top of others on first move
-        if (!actionRef.current.onTop) {
-          putItemsOnTop(selectedItemRef.current.items);
-          actionRef.current.onTop = true;
-        }
-
         moveItems(
           selectedItemRef.current.items,
           {
@@ -88,7 +81,7 @@ const ActionPane = ({ children }) => {
         );
       }
     },
-    [moveItems, putItemsOnTop, setBoardState]
+    [moveItems, setBoardState]
   );
 
   const onDragEnd = useRecoilCallback(
