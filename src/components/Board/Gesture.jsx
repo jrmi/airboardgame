@@ -258,7 +258,7 @@ const Gesture = ({
 
         stateRef.current.moving = true;
 
-        // Do we have two finger ?
+        // Do we have two fingers ?
         const twoFingers = Object.keys(stateRef.current.pointers).length === 2;
 
         let clientX, clientY, distance;
@@ -408,6 +408,12 @@ const Gesture = ({
         pointerId,
       } = e;
 
+      if (!stateRef.current.pointers[pointerId]) {
+        // Pointer already gone previously with another event
+        // ignoring it
+        return;
+      }
+
       // Remove pointer from map
       delete stateRef.current.pointers[pointerId];
 
@@ -498,6 +504,8 @@ const Gesture = ({
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}
       onPointerUp={onPointerUp}
+      onPointerOut={onPointerUp}
+      onPointerLeave={onPointerUp}
       onPointerCancel={onPointerUp}
       onDoubleClick={onDoubleTapHandler}
       style={{ touchAction: "none" }}
