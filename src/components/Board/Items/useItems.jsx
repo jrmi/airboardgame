@@ -86,9 +86,27 @@ const useItems = () => {
     [c2c, setItemMap]
   );
 
+  const putItemsOnTop = React.useCallback(
+    (itemIdsToMove) => {
+      setItemList((prevItemList) => {
+        const filtered = prevItemList.filter(
+          (id) => !itemIdsToMove.includes(id)
+        );
+        const toBePutOnTop = prevItemList.filter((id) =>
+          itemIdsToMove.includes(id)
+        );
+        const result = [...filtered, ...toBePutOnTop];
+        c2c.publish("updateItemListOrder", result);
+        return result;
+      });
+    },
+    [setItemList, c2c]
+  );
+
   const placeItems = React.useCallback(
     (itemIds, { type: globalType, size: globalSize } = {}, sync = true) => {
       const updatedItems = {};
+      putItemsOnTop(itemIds);
       setItemMap((prevItemMap) => {
         const result = { ...prevItemMap };
         itemIds.forEach((id) => {
@@ -176,7 +194,7 @@ const useItems = () => {
         c2c.publish("batchItemsUpdate", updatedItems);
       }
     },
-    [c2c, setItemMap]
+    [c2c, putItemsOnTop, setItemMap]
   );
 
   const updateItemOrder = React.useCallback(
@@ -187,23 +205,6 @@ const useItems = () => {
       }
     },
     [c2c, setItemList]
-  );
-
-  const putItemsOnTop = React.useCallback(
-    (itemIdsToMove) => {
-      setItemList((prevItemList) => {
-        const filtered = prevItemList.filter(
-          (id) => !itemIdsToMove.includes(id)
-        );
-        const toBePutOnTop = prevItemList.filter((id) =>
-          itemIdsToMove.includes(id)
-        );
-        const result = [...filtered, ...toBePutOnTop];
-        c2c.publish("updateItemListOrder", result);
-        return result;
-      });
-    },
-    [setItemList, c2c]
   );
 
   const reverseItemsOrder = React.useCallback(
