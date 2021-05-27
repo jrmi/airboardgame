@@ -8,7 +8,7 @@
     "@welldone-software/why-did-you-render": "^4.2.5",
     "body-parser": "^1.19.0",
     "chota": "^0.8.0",
-    "client2client.io": "^2.0.1",
+    "client2client.io": "^2.0.2",
     "color2k": "^1.0.0-rc.5",
     "dayjs": "^1.10.4",
     "diacritic": "0.0.2",

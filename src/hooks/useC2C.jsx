@@ -14,6 +14,14 @@ export const C2CProvider = ({ room, channel = "default", children }) => {
   const [isMaster, setIsMaster] = React.useState(false);
   const [c2c, setC2c] = React.useState(null);
   const roomRef = React.useRef(null);
+  const mountedRef = React.useRef(false);
+
+  React.useEffect(() => {
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
+    };
+  }, []);
 
   if (!contextMap[channel]) {
     contextMap[channel] = React.createContext({
@@ -21,12 +29,12 @@ export const C2CProvider = ({ room, channel = "default", children }) => {
       isMaster: false,
     });
   }
-
   const Context = contextMap[channel];
 
   React.useEffect(() => {
     const disconnect = () => {
       console.log(`Disconnected from ${channel}…`);
+      if (!mountedRef.current) return;
       setJoined(false);
       setIsMaster(false);
     };
@@ -38,6 +46,7 @@ export const C2CProvider = ({ room, channel = "default", children }) => {
   }, [channel, socket]);
 
   React.useEffect(() => {
+    // Connect
     if (!socket) {
       return;
     }
@@ -49,17 +58,19 @@ export const C2CProvider = ({ room, channel = "default", children }) => {
       room,
       onMaster: () => {
         console.log(`Is now master on channel ${channel}…`);
+        if (!mountedRef.current) return;
         setIsMaster(true);
       },
       onJoined: (newRoom) => {
         console.log(`Connected on channel ${channel}…`);
         roomRef.current = newRoom;
 
+        if (!mountedRef.current) return;
         setC2c(newRoom);
-
         setJoined(true);
       },
     });
+
     return () => {
       roomRef.current.leave();
     };
