@@ -223,7 +223,13 @@ const PanZoomRotate = ({ children, moveFirst }) => {
 
   return (
     <Gesture onPan={onPan} onZoom={onZoom} onDrag={onDrag}>
-      <Pane {...dim} ref={wrappedRef}>
+      <Pane
+        {...dim}
+        ref={wrappedRef}
+        onContextMenu={(e) => {
+          e.preventDefault();
+        }}
+      >
         {children}
       </Pane>
     </Gesture>
