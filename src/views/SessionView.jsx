@@ -56,11 +56,12 @@ export const SessionView = () => {
       };
       c2c.call("getSession").then(onReceiveGame, () => {
         setTimeout(
-          c2c
-            .call("getSession")
-            .then(onReceiveGame, (error) =>
-              console.log("Failed to call getSession with error", error)
-            ),
+          () =>
+            c2c
+              .call("getSession")
+              .then(onReceiveGame, (error) =>
+                console.log("Failed to call getSession with error", error)
+              ),
           1000
         );
       });
