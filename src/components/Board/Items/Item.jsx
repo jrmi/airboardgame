@@ -256,7 +256,7 @@ const PositionedItem = ({
       style={{
         transform: `translate(${x}px, ${y}px)`,
         display: "inline-block",
-        zIndex: (layer || 0) + 3,
+        zIndex: ((layer || 0) + 4) * 10 + 100, // Items z-index between 100 and 200
         position: "absolute",
         top: 0,
         left: 0,

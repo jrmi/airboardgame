@@ -32,7 +32,7 @@ const SelectorZone = styled.div.attrs(({ top, left, height, width }) => ({
     width: `${width}px`,
   },
 }))`
-  z-index: 100;
+  z-index: 210;
   position: absolute;
   background-color: hsla(0, 40%, 50%, 10%);
   border: 2px solid hsl(0, 55%, 40%);

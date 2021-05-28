@@ -7,7 +7,7 @@ const StyledNotice = styled.div`
   position: fixed;
   bottom: 1em;
   background-color: var(--color-blueGrey);
-  z-index: 100;
+  z-index: 210;
   right: 1em;
   display: flex;
   flex-direction: column;
