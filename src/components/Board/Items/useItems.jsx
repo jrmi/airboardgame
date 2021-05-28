@@ -71,6 +71,7 @@ const useItems = () => {
             ...item,
             x: item.x + posDelta.x,
             y: item.y + posDelta.y,
+            moving: true,
           };
         });
         return result;
@@ -87,7 +88,7 @@ const useItems = () => {
   );
 
   const putItemsOnTop = React.useCallback(
-    (itemIdsToMove) => {
+    (itemIdsToMove, sync = true) => {
       setItemList((prevItemList) => {
         const filtered = prevItemList.filter(
           (id) => !itemIdsToMove.includes(id)
@@ -96,17 +97,18 @@ const useItems = () => {
           itemIdsToMove.includes(id)
         );
         const result = [...filtered, ...toBePutOnTop];
-        c2c.publish("updateItemListOrder", result);
+        if (sync) {
+          c2c.publish("updateItemListOrder", result);
+        }
         return result;
       });
     },
     [setItemList, c2c]
   );
 
-  const placeItems = React.useCallback(
+  const stickOnGrid = React.useCallback(
     (itemIds, { type: globalType, size: globalSize } = {}, sync = true) => {
       const updatedItems = {};
-      putItemsOnTop(itemIds);
       setItemMap((prevItemMap) => {
         const result = { ...prevItemMap };
         itemIds.forEach((id) => {
@@ -194,7 +196,26 @@ const useItems = () => {
         c2c.publish("batchItemsUpdate", updatedItems);
       }
     },
-    [c2c, putItemsOnTop, setItemMap]
+    [c2c, setItemMap]
+  );
+
+  const placeItems = React.useCallback(
+    (itemIds, gridConfig, sync = true) => {
+      // Put moved items on
+      putItemsOnTop(itemIds, sync);
+      // Remove moving state
+      batchUpdateItems(
+        itemIds,
+        (item) => {
+          const newItem = { ...item };
+          delete newItem["moving"];
+          return newItem;
+        },
+        sync
+      );
+      stickOnGrid(itemIds, gridConfig, sync);
+    },
+    [batchUpdateItems, putItemsOnTop, stickOnGrid]
   );
 
   const updateItemOrder = React.useCallback(
@@ -208,7 +229,7 @@ const useItems = () => {
   );
 
   const reverseItemsOrder = React.useCallback(
-    (itemIdsToReverse) => {
+    (itemIdsToReverse, sync = true) => {
       setItemList((prevItemList) => {
         const toBeReversed = prevItemList.filter((id) =>
           itemIdsToReverse.includes(id)
@@ -219,7 +240,9 @@ const useItems = () => {
           }
           return itemId;
         });
-        c2c.publish("updateItemListOrder", result);
+        if (sync) {
+          c2c.publish("updateItemListOrder", result);
+        }
         return result;
       });
     },
@@ -227,7 +250,7 @@ const useItems = () => {
   );
 
   const swapItems = useRecoilCallback(
-    ({ snapshot }) => async (fromIds, toIds) => {
+    ({ snapshot }) => async (fromIds, toIds, sync = true) => {
       const itemMap = await snapshot.getPromise(ItemMapAtom);
       const fromItems = fromIds.map((id) => itemMap[id]);
       const toItems = toIds.map((id) => itemMap[id]);
@@ -248,7 +271,9 @@ const useItems = () => {
           prev[toItem.id] = newItem;
           return prev;
         }, {});
-        c2c.publish("batchItemsUpdate", updatedItems);
+        if (sync) {
+          c2c.publish("batchItemsUpdate", updatedItems);
+        }
         return { ...prevItemMap, ...updatedItems };
       });
 
@@ -265,7 +290,9 @@ const useItems = () => {
           return itemId;
         });
 
-        c2c.publish("updateItemListOrder", result);
+        if (sync) {
+          c2c.publish("updateItemListOrder", result);
+        }
         return result;
       });
     },
