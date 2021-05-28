@@ -15,7 +15,7 @@ const StyledCursor = styled.div.attrs(({ top, left }) => ({
   display: flex;
   flex-direction: row;
   align-items: center;
-  z-index: 7;
+  z-index: 210;
 `;
 
 const CursorName = styled.div`

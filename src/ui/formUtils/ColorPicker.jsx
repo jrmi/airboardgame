@@ -19,7 +19,7 @@ const ColorPickerWrapper = styled.div`
   background-color: #151515b0;
   right: 0px;
   bottom: 0px;
-  z-index: 10002;
+  z-index: 290;
   display: flex;
   justify-content: center;
   align-items: center;

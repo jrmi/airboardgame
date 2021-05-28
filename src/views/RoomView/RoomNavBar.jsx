@@ -17,7 +17,7 @@ const StyledNavBar = styled.div.attrs(() => ({ className: "nav" }))`
   position: fixed;
   top: 0;
   width: 100%;
-  z-index: 10;
+  z-index: 205;
 
   background-color: #19202ce0;
   box-shadow: 0px 3px 6px #00000029;

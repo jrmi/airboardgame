@@ -17,7 +17,7 @@ const StyledSidePanel = styled.div`
   ${({ position }) => (position === "right" ? "right: 0;" : "left: 0;")}
   top: 0;
   bottom: 0;
-  z-index: ${({ modal }) => (modal ? 32 : 22)};
+  z-index: ${({ modal }) => (modal ? 290 : 280)};
   display: flex;
   flex-direction: column;
   height: 100%;
