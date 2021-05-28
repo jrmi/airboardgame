@@ -105,7 +105,7 @@ describe("Studio", () => {
 
     // Edit title
     cy.get("[title^='Edit game information']").click();
-    cy.get("input[name=\"defaultName\"]").clear().type("ChangeGameName");
+    cy.get('input[name="defaultName"]').clear().type("ChangeGameName");
     cy.get(".side-panel.open [alt^='Close']").click();
 
     cy.contains("ChangeGameName");
@@ -144,9 +144,9 @@ describe("Studio", () => {
       cy.get(".item").click({ force: true });
       cy.get("button img[alt^='Edit']").click({ force: true });
 
-      cy.get("input[name=\"width\"]").clear().type("100");
-      cy.get("input[name=\"height\"]").clear().type("75");
-      cy.get("input[name=\"text\"]").clear().type("myCube");
+      cy.get('input[name="width"]').clear().type("100");
+      cy.get('input[name="height"]').clear().type("75");
+      cy.get('input[name="text"]').clear().type("myCube");
 
       cy.get(".item")
         .children()
@@ -165,7 +165,7 @@ describe("Studio", () => {
       cy.get(".item").click({ force: true });
       cy.get("button img[alt^='Edit']").click({ force: true });
 
-      cy.get("input[name=\"locked\"]").click();
+      cy.get('input[name="locked"]').click();
 
       cy.get(".item").should("have.class", "locked");
 
@@ -192,11 +192,11 @@ describe("Studio", () => {
       cy.get(".item").click({ force: true });
       cy.get("button img[alt^='Edit']").click({ force: true });
 
-      cy.get(".item").parent().should("have.css", "z-index", "3");
+      cy.get(".item").parent().should("have.css", "z-index", "140");
 
       cy.get(".slider-layer .rc-slider-mark-text").contains("-1").click();
 
-      cy.get(".item").parent().should("have.css", "z-index", "2");
+      cy.get(".item").parent().should("have.css", "z-index", "130");
     });
   });
 });
