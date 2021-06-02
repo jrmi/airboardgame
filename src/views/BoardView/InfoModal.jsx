@@ -86,6 +86,11 @@ const InfoModal = ({ show, setShow }) => {
               Switch to edit mode with top button to be able to edit the game.
             </li>
             <li>You can save and reload game by clicking the burger menu.</li>
+            <li>
+              Use <Kbd>Ctrl</Kbd> + <Kbd>1</Kbd>-<Kbd>9</Kbd> to save a position
+              and <Kbd>1</Kbd>-<Kbd>9</Kbd>
+              to restore it.
+            </li>
           </ul>
         </Trans>
       </section>
