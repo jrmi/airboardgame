@@ -394,6 +394,7 @@ export const useItemActions = () => {
     selectedItemList.forEach((itemToClone) => {
       const newItem = JSON.parse(JSON.stringify(itemToClone));
       newItem.id = nanoid();
+      delete newItem.move;
       insertItemBefore(newItem, itemToClone.id);
     });
   }, [getSelectedItemList, insertItemBefore]);
