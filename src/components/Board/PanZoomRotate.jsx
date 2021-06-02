@@ -11,6 +11,7 @@ import styled from "styled-components";
 import debounce from "lodash.debounce";
 
 import Gesture from "./Gesture";
+import usePositionNavigator from "./usePositionNavigator";
 
 const TOLERANCE = 100;
 
@@ -30,6 +31,8 @@ const PanZoomRotate = ({ children, moveFirst }) => {
   const config = useRecoilValue(BoardConfigAtom);
   const setBoardState = useSetRecoilState(BoardStateAtom);
   const prevDim = usePrevious(dim);
+
+  usePositionNavigator();
 
   const [scale, setScale] = React.useState({
     scale: 1,
