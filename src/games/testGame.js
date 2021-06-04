@@ -193,12 +193,89 @@ const genGame = () => {
     items,
     availableItems: [
       {
-        groupId: "Group",
-        label: "Rect",
+        name: "Blue rect",
+        label: "rect",
         type: "rect",
-        color: "#00D022",
+        color: "#0000D2",
         width: 80,
         height: 80,
+      },
+      {
+        name: "First group",
+        items: [
+          {
+            name: "Green rect",
+            label: "rect",
+            type: "rect",
+            color: "#00D022",
+            width: 80,
+            height: 80,
+          },
+          {
+            label: "Red rect",
+            type: "rect",
+            color: "#D00022",
+            width: 80,
+            height: 80,
+          },
+        ],
+      },
+      {
+        name: "Second group",
+        items: [
+          {
+            name: "Green pawn",
+            label: "rect",
+            type: "pawn",
+            color: "#00D022",
+            size: 80,
+          },
+          {
+            name: "Red pawn",
+            type: "pawn",
+            color: "#D00022",
+            size: 80,
+          },
+          {
+            name: "blue pawn",
+            type: "pawn",
+            color: "#2000D2",
+            size: 80,
+          },
+          {
+            name: "Third nested group",
+            items: [
+              {
+                name: "Green rect",
+                label: "rect",
+                type: "rect",
+                color: "#00D022",
+                width: 80,
+                height: 80,
+              },
+              {
+                name: "Red rect",
+                type: "rect",
+                color: "#D00022",
+                width: 80,
+                height: 80,
+              },
+            ],
+          },
+        ],
+      },
+      {
+        name: "Green circle",
+        label: "round",
+        type: "round",
+        color: "#00D022",
+        size: 80,
+      },
+      {
+        name: "Red circle",
+        type: "round",
+        color: "#D00022",
+        size: 80,
       },
     ],
     board: {
