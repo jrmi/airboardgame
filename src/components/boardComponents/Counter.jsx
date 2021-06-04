@@ -12,7 +12,7 @@ const CounterPane = styled.div`
       padding: 1rem;
     }
     input {
-      width: 3em;
+      width: 2em;
     }
     h3 {
       user-select: none;
@@ -73,7 +73,7 @@ const Counter = ({
           <input
             style={{
               textColor,
-              width: "4em",
+              width: "2.5em",
               display: "block",
               textAlign: "center",
               border: "none",

@@ -1,9 +1,10 @@
+import Diacritics from "diacritic";
+
 /**
  * Check if element or parent has className.
  * @param {DOMElement} element
  * @param {string} className
  */
-
 export const hasClass = (element, className) =>
   typeof element.className === "string" &&
   element.className.split(" ").includes(className);
@@ -59,4 +60,17 @@ export const getPointerState = (e) => {
 
 export const randInt = (min, max) => {
   return Math.floor(Math.random() * (max - min + 1)) + min;
+};
+
+const cleanWord = (word) => {
+  return Diacritics.clean(word).toLowerCase();
+};
+
+export const search = (term, string) => {
+  let strings = string;
+  if (typeof string === "string") {
+    strings = [string];
+  }
+  const cleanedTerm = cleanWord(term);
+  return strings.some((s) => cleanWord(s).includes(cleanedTerm));
 };

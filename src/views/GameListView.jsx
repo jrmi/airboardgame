@@ -1,7 +1,6 @@
 import React from "react";
 import { useTranslation, Trans } from "react-i18next";
 import styled from "styled-components";
-import Diacritics from "diacritic";
 import { useQuery } from "react-query";
 
 import { getGames } from "../utils/api";
@@ -15,6 +14,7 @@ import GameListItem from "./GameListItem";
 import playerSVG from "../images/player.svg";
 import languageSVG from "../images/language.svg";
 import clockSVG from "../images/clock.svg";
+import { search } from "../utils";
 
 const Header = styled.header`
   background-color: var(--bg-color);
@@ -151,10 +151,6 @@ const Content = styled.div`
   background-color: var(--bg-secondary-color);
 `;
 
-const cleanWord = (word) => {
-  return Diacritics.clean(word).toLowerCase();
-};
-
 const hasIntervalOverlap = (interval1, interval2) => {
   return interval1[0] <= interval2[1] && interval1[1] >= interval2[0];
 };
@@ -209,14 +205,12 @@ const GameListView = () => {
     return gameList
       ? gameList.filter((game) => {
           return (
-            (filterCriteria.searchTerm === NULL_SEARCH_TERM ||
-              cleanWord(game.defaultName).includes(
-                cleanWord(filterCriteria.searchTerm)
-              )) &&
+          (filterCriteria.searchTerm === NULL_SEARCH_TERM ||
+              search(filterCriteria.searchTerm, game.defaultName)) &&
             hasRequestedValues(filterCriteria.nbOfPlayers, game.playerCount) &&
             hasRequestedValues(filterCriteria.durations, game.duration) &&
             hasAllowedMaterialLanguage(filterCriteria, game)
-          );
+        );
         })
       : [];
   }, [gameList, filterCriteria]);

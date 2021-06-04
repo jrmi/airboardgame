@@ -44,7 +44,7 @@ export const itemMap = {
       "remove",
     ],
     form: RectFormFields,
-    label: i18n.t("Rectangle"),
+    name: i18n.t("Rectangle"),
     template: {},
   },
   cube: {
@@ -60,7 +60,7 @@ export const itemMap = {
       "remove",
     ],
     form: CubeFormFields,
-    label: i18n.t("Cube"),
+    name: i18n.t("Cube"),
     template: {},
   },
   cylinder: {
@@ -76,7 +76,7 @@ export const itemMap = {
       "remove",
     ],
     form: CylinderFormFields,
-    label: i18n.t("Cylinder"),
+    name: i18n.t("Cylinder"),
     template: {},
   },
   round: {
@@ -92,7 +92,7 @@ export const itemMap = {
       "remove",
     ],
     form: RoundFormFields,
-    label: i18n.t("Round"),
+    name: i18n.t("Round"),
     template: {},
   },
   token: {
@@ -108,7 +108,7 @@ export const itemMap = {
       "remove",
     ],
     form: TokenFormFields,
-    label: i18n.t("Token"),
+    name: i18n.t("Token"),
     template: {},
   },
   meeple: {
@@ -124,7 +124,7 @@ export const itemMap = {
       "remove",
     ],
     form: MeepleFormFields,
-    label: i18n.t("Meeple"),
+    name: i18n.t("Meeple"),
     template: {},
   },
   pawn: {
@@ -140,7 +140,7 @@ export const itemMap = {
       "remove",
     ],
     form: PawnFormFields,
-    label: i18n.t("Pawn"),
+    name: i18n.t("Pawn"),
     template: {},
   },
   jewel: {
@@ -156,7 +156,7 @@ export const itemMap = {
       "remove",
     ],
     form: JewelFormFields,
-    label: i18n.t("Jewel"),
+    name: i18n.t("Jewel"),
     template: {},
   },
   checkerboard: {
@@ -164,7 +164,7 @@ export const itemMap = {
     defaultActions: ["clone", "lock", "remove"],
     availableActions: ["clone", "lock", "remove"],
     form: CheckerBoardFormFields,
-    label: i18n.t("Checkerboard"),
+    name: i18n.t("Checkerboard"),
     template: {},
   },
   image: {
@@ -233,7 +233,7 @@ export const itemMap = {
       }
     },
     form: ImageFormFields,
-    label: i18n.t("Image"),
+    name: i18n.t("Image"),
     template: {},
   },
   counter: {
@@ -241,7 +241,7 @@ export const itemMap = {
     defaultActions: ["clone", "lock", "remove"],
     availableActions: ["clone", "lock", "remove"],
     form: CounterFormFields,
-    label: i18n.t("Counter"),
+    name: i18n.t("Counter"),
     template: {},
   },
   dice: {
@@ -255,7 +255,7 @@ export const itemMap = {
       "alignAsSquare",
     ],
     form: DiceFormFields,
-    label: i18n.t("Dice"),
+    name: i18n.t("Dice"),
     template: {},
   },
   note: {
@@ -270,7 +270,7 @@ export const itemMap = {
       "alignAsSquare",
     ],
     form: NoteFormFields,
-    label: i18n.t("Note"),
+    name: i18n.t("Note"),
     template: {},
   },
   zone: {
@@ -284,7 +284,7 @@ export const itemMap = {
       "alignAsSquare",
     ],
     form: ZoneFormFields,
-    label: i18n.t("Zone"),
+    name: i18n.t("Zone"),
     template: {},
   },
 };
