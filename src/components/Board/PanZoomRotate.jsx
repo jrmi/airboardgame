@@ -1,7 +1,17 @@
 import React from "react";
 
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { BoardConfigAtom, BoardStateAtom, PanZoomRotateAtom } from "./";
+import {
+  useRecoilState,
+  useRecoilValue,
+  useSetRecoilState,
+  useRecoilCallback,
+} from "recoil";
+import {
+  BoardConfigAtom,
+  BoardStateAtom,
+  PanZoomRotateAtom,
+  selectedItemsAtom,
+} from "./";
 import { insideClass } from "../../utils/";
 
 import usePrevious from "../../hooks/usePrevious";
@@ -223,6 +233,89 @@ const PanZoomRotate = ({ children, moveFirst }) => {
     },
     [moveFirst, onPan]
   );
+
+  const onKeyDown = useRecoilCallback(
+    ({ snapshot }) => async (e) => {
+      // Block shortcut if we are typing in a textarea or input
+      if (["INPUT", "TEXTAREA"].includes(e.target.tagName)) return;
+
+      const selectedItems = await snapshot.getPromise(selectedItemsAtom);
+
+      if (selectedItems.length) {
+        return;
+      }
+      let moveX = 0;
+      let moveY = 0;
+      let zoom = 1;
+      switch (e.key) {
+        case "ArrowLeft":
+          moveX = 10;
+          break;
+        case "ArrowRight":
+          moveX = -10;
+          break;
+        case "ArrowUp":
+          moveY = 10;
+          break;
+        case "ArrowDown":
+          moveY = -10;
+          break;
+        case "PageUp":
+          zoom = 1.2;
+          break;
+        case "PageDown":
+          zoom = 0.8;
+          break;
+      }
+      if (moveX || moveY || zoom !== 1) {
+        if (e.shiftKey) {
+          moveX = moveX * 5;
+          moveY = moveY * 5;
+        }
+        if (e.ctrlKey || e.altKey || e.metaKey) {
+          moveX = moveX / 5;
+          moveY = moveY / 5;
+        }
+        setDim((prev) => ({
+          ...prev,
+          translateY: prev.translateY + moveY,
+          translateX: prev.translateX + moveX,
+        }));
+
+        const { innerHeight, innerWidth } = window;
+
+        const zoomX = innerWidth / 2;
+        const zoomY = innerHeight / 2;
+
+        setScale((prevScale) => {
+          let newScale = prevScale.scale * zoom;
+          if (newScale > scaleBoundaries[1]) {
+            newScale = scaleBoundaries[1];
+          }
+
+          if (newScale < scaleBoundaries[0]) {
+            newScale = scaleBoundaries[0];
+          }
+
+          return {
+            scale: newScale,
+            x: zoomX,
+            y: zoomY,
+          };
+        });
+
+        e.preventDefault();
+      }
+    },
+    [scaleBoundaries, setDim]
+  );
+
+  React.useEffect(() => {
+    document.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+    };
+  }, [onKeyDown]);
 
   return (
     <Gesture onPan={onPan} onZoom={onZoom} onDrag={onDrag}>
