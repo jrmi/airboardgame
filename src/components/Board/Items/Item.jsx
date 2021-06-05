@@ -115,7 +115,12 @@ const Item = ({
       layer={layer}
       id={id}
     >
-      <div ref={animateRef} onAnimationEnd={removeClass}>
+      <div
+        ref={animateRef}
+        onAnimationEnd={removeClass}
+        onKeyDown={(e) => e.stopPropagation()}
+        onKeyUp={(e) => e.stopPropagation()}
+      >
         <Component {...rest} setState={updateState} />
         <div className="corner top-left"></div>
         <div className="corner top-right"></div>
