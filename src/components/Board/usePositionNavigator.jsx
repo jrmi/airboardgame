@@ -12,8 +12,11 @@ const usePositionNavigator = () => {
   const setDim = useSetRecoilState(PanZoomRotateAtom);
   const [positions, setPositions] = React.useState({});
 
-  const onKeyUp = useRecoilCallback(
+  const onKeyDown = useRecoilCallback(
     ({ snapshot }) => async (e) => {
+      // Block shortcut if we are typing in a textarea or input
+      if (["INPUT", "TEXTAREA"].includes(e.target.tagName)) return;
+
       if (digitCodes.includes(e.code)) {
         const positionKey = e.code;
         const dim = await snapshot.getPromise(PanZoomRotateAtom);
@@ -35,11 +38,11 @@ const usePositionNavigator = () => {
   );
 
   React.useEffect(() => {
-    document.addEventListener("keyup", onKeyUp);
+    document.addEventListener("keydown", onKeyDown);
     return () => {
-      document.removeEventListener("keyup", onKeyUp);
+      document.removeEventListener("keydown", onKeyDown);
     };
-  }, [onKeyUp]);
+  }, [onKeyDown]);
 
   return null;
 };

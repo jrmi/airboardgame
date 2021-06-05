@@ -103,6 +103,74 @@ const ActionPane = ({ children }) => {
     [placeItems, setBoardState]
   );
 
+  const onKeyDown = useRecoilCallback(
+    ({ snapshot }) => async (e) => {
+      // Block shortcut if we are typing in a textarea or input
+      if (["INPUT", "TEXTAREA"].includes(e.target.tagName)) return;
+
+      const selectedItems = await snapshot.getPromise(selectedItemsAtom);
+
+      if (selectedItems.length) {
+        const { gridSize: boardGridSize = 1 } = await snapshot.getPromise(
+          BoardConfigAtom
+        );
+        let moveX = 0;
+        let moveY = 0;
+        switch (e.key) {
+          case "ArrowLeft":
+            // Left pressed
+            moveX = -10;
+            break;
+          case "ArrowRight":
+            moveX = 10;
+            // Right pressed
+            break;
+          case "ArrowUp":
+            // Up pressed
+            moveY = -10;
+            break;
+          case "ArrowDown":
+            // Down pressed
+            moveY = 10;
+            break;
+        }
+        if (moveX || moveY) {
+          if (e.shiftKey) {
+            moveX = moveX * 5;
+            moveY = moveY * 5;
+          }
+          if (e.ctrlKey || e.altKey || e.metaKey) {
+            moveX = moveX / 10;
+            moveY = moveY / 10;
+          }
+          moveItems(
+            selectedItems,
+            {
+              x: moveX,
+              y: moveY,
+            },
+            true
+          );
+          const gridSize = boardGridSize || 1; // avoid 0 grid size
+
+          placeItems(selectedItems, {
+            type: "grid",
+            size: gridSize,
+          });
+          e.preventDefault();
+        }
+      }
+    },
+    [moveItems, placeItems]
+  );
+
+  React.useEffect(() => {
+    document.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+    };
+  }, [onKeyDown]);
+
   return (
     <Gesture onDragStart={onDragStart} onDrag={onDrag} onDragEnd={onDragEnd}>
       <div ref={wrapperRef}>{children}</div>
