@@ -20,7 +20,7 @@
   "Stack To Top Left": "Empiler",
   "Align as line": "Aligner",
   "Align as square": "Arranger en carré",
-  "Hide": "Retourner",
+  "Hide": "Cacher",
   "Reveal": "Révéler",
   "Remove all": "Tout supprimer",
   "Edit item": "Modifier l'élément",
@@ -247,5 +247,9 @@
   "Go back": "Retour",
   "Add new table": "Ajouter une table",
   "Session loading...": "Chargement de la partie...",
-  "Position saved!": "Position enregistrée !"
+  "Position saved!": "Position enregistrée !",
+  "Interactions": "Interactions",
+  "Interaction help": "Vous pouvez définir des actions qui seront automatiquement effectuées sur les éléments posés dans cette zone.",
+  "Hide for me": "Cacher pour moi",
+  "Search...": "Chercher..."
 }

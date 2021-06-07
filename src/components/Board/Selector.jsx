@@ -14,7 +14,7 @@ import {
   ItemMapAtom,
   BoardStateAtom,
 } from "./";
-import { insideClass, isPointInsideRect } from "../../utils";
+import { insideClass, isItemInsideElement } from "../../utils";
 import throttle from "lodash.throttle";
 
 import Gesture from "./Gesture";
@@ -44,8 +44,6 @@ const findSelected = (itemMap) => {
     return [];
   }
 
-  const rect = selector.getBoundingClientRect();
-
   return Array.from(document.getElementsByClassName("item"))
     .filter((elem) => {
       const { id } = elem;
@@ -58,11 +56,7 @@ const findSelected = (itemMap) => {
       if (item.locked) {
         return false;
       }
-      const fourElem = Array.from(elem.querySelectorAll(".corner"));
-      return fourElem.every((corner) => {
-        const { top: y, left: x } = corner.getBoundingClientRect();
-        return isPointInsideRect({ x, y }, rect);
-      });
+      return isItemInsideElement(elem, selector);
     })
     .map((elem) => elem.id);
 };

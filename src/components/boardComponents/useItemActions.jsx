@@ -46,16 +46,21 @@ export const useItemActions = () => {
 
   const { currentUser } = useUsers();
 
-  const [selectedItems, setSelectItems] = useRecoilState(selectedItemsAtom);
+  const [selected, setSelectedItems] = useRecoilState(selectedItemsAtom);
   const [availableActions, setAvailableActions] = React.useState([]);
   const isMountedRef = React.useRef(false);
 
-  const getSelectedItemList = useRecoilCallback(
-    ({ snapshot }) => async () => {
+  const getItemListOrSelected = useRecoilCallback(
+    ({ snapshot }) => async (itemIds) => {
       const itemMap = await snapshot.getPromise(ItemMapAtom);
-      return selectedItems.map((id) => itemMap[id]);
+      if (itemIds) {
+        return [itemIds, itemIds.map((id) => itemMap[id])];
+      } else {
+        const selectedItems = await snapshot.getPromise(selectedItemsAtom);
+        return [selectedItems, selectedItems.map((id) => itemMap[id])];
+      }
     },
-    [selectedItems]
+    []
   );
 
   React.useEffect(() => {
@@ -67,8 +72,8 @@ export const useItemActions = () => {
   }, []);
 
   const updateAvailableActions = React.useCallback(async () => {
-    const selectedItemList = await getSelectedItemList();
-    if (selectedItems.length > 0) {
+    const [selectedItemIds, selectedItemList] = await getItemListOrSelected();
+    if (selectedItemIds.length > 0) {
       // Prevent set state on unmounted component
       if (!isMountedRef.current) return;
 
@@ -80,42 +85,39 @@ export const useItemActions = () => {
     } else {
       setAvailableActions([]);
     }
-  }, [getSelectedItemList, selectedItems.length]);
+  }, [getItemListOrSelected]);
 
   // Update available actions when selection change
   React.useEffect(() => {
     updateAvailableActions();
-  }, [selectedItems, updateAvailableActions]);
+  }, [updateAvailableActions, selected]);
 
   // Stack selection to Center
   const stackToCenter = React.useCallback(
-    async ({
-      stackThicknessMin = 0.5,
-      stackThicknessMax = 1,
-      limitCardsNumber = 32,
-    } = {}) => {
-      const selectedItemList = await getSelectedItemList();
+    async (
+      itemIds,
+      {
+        stackThicknessMin = 0.5,
+        stackThicknessMax = 1,
+        limitCardsNumber = 32,
+      } = {}
+    ) => {
+      const [ids, items] = await getItemListOrSelected(itemIds);
 
       // Rule to manage thickness of the stack.
       let stackThickness = stackThicknessMax;
-      if (selectedItemList.length >= limitCardsNumber) {
+      if (items.length >= limitCardsNumber) {
         stackThickness = stackThicknessMin;
       }
 
       // To avoid displacement effects.
       let isSameGap = true;
-      for (let i = 1; i < selectedItemList.length; i++) {
-        if (
-          Math.abs(selectedItemList[i].x - selectedItemList[i - 1].x) !=
-          stackThickness
-        ) {
+      for (let i = 1; i < items.length; i++) {
+        if (Math.abs(items[i].x - items[i - 1].x) != stackThickness) {
           isSameGap = false;
           break;
         }
-        if (
-          Math.abs(selectedItemList[i].y - selectedItemList[i - 1].y) !=
-          stackThickness
-        ) {
+        if (Math.abs(items[i].y - items[i - 1].y) != stackThickness) {
           isSameGap = false;
           break;
         }
@@ -126,27 +128,25 @@ export const useItemActions = () => {
 
       // Compute middle position
       const minMax = { min: {}, max: {} };
-      minMax.min.x = Math.min(...selectedItemList.map(({ x }) => x));
-      minMax.min.y = Math.min(...selectedItemList.map(({ y }) => y));
+      minMax.min.x = Math.min(...items.map(({ x }) => x));
+      minMax.min.y = Math.min(...items.map(({ y }) => y));
       minMax.max.x = Math.max(
-        ...selectedItemList.map(
-          ({ x, id }) => x + document.getElementById(id).clientWidth
-        )
+        ...items.map(({ x, id }) => x + document.getElementById(id).clientWidth)
       );
       minMax.max.y = Math.max(
-        ...selectedItemList.map(
+        ...items.map(
           ({ y, id }) => y + document.getElementById(id).clientHeight
         )
       );
       const { clientWidth, clientHeight } = document.getElementById(
-        selectedItemList[0].id
+        items[0].id
       );
       let newX =
         minMax.min.x + (minMax.max.x - minMax.min.x) / 2 - clientWidth / 2;
       let newY =
         minMax.min.y + (minMax.max.y - minMax.min.y) / 2 - clientHeight / 2;
 
-      batchUpdateItems(selectedItems, (item) => {
+      batchUpdateItems(ids, (item) => {
         const newItem = {
           ...item,
           x: newX,
@@ -157,27 +157,30 @@ export const useItemActions = () => {
         return newItem;
       });
     },
-    [getSelectedItemList, batchUpdateItems, selectedItems]
+    [batchUpdateItems, getItemListOrSelected]
   );
 
   // Stack selection to Top Left
   const stackToTopLeft = React.useCallback(
-    async ({
-      stackThicknessMin = 0.5,
-      stackThicknessMax = 1,
-      limitCardsNumber = 32,
-    } = {}) => {
-      const selectedItemList = await getSelectedItemList();
+    async (
+      itemIds,
+      {
+        stackThicknessMin = 0.5,
+        stackThicknessMax = 1,
+        limitCardsNumber = 32,
+      } = {}
+    ) => {
+      const [ids, items] = await getItemListOrSelected(itemIds);
 
-      let { x: newX, y: newY } = selectedItemList[0];
+      let { x: newX, y: newY } = items[0];
 
       // Rule to manage thickness of the stack.
       let stackThickness = stackThicknessMax;
-      if (selectedItemList.length >= limitCardsNumber) {
+      if (items.length >= limitCardsNumber) {
         stackThickness = stackThicknessMin;
       }
 
-      batchUpdateItems(selectedItems, (item) => {
+      batchUpdateItems(ids, (item) => {
         const newItem = {
           ...item,
           x: newX,
@@ -188,18 +191,18 @@ export const useItemActions = () => {
         return newItem;
       });
     },
-    [getSelectedItemList, batchUpdateItems, selectedItems]
+    [batchUpdateItems, getItemListOrSelected]
   );
 
   // Align selection to a line
   const alignAsLine = React.useCallback(
-    async ({ gapBetweenItems = 5 } = {}) => {
+    async (itemIds, { gapBetweenItems = 5 } = {}) => {
       // Negative value is possible for 'gapBetweenItems'.
-      const selectedItemList = await getSelectedItemList();
+      const [ids, items] = await getItemListOrSelected(itemIds);
 
-      let { x: newX, y: newY } = selectedItemList[0];
+      let { x: newX, y: newY } = items[0];
 
-      batchUpdateItems(selectedItems, (item) => {
+      batchUpdateItems(ids, (item) => {
         const { clientWidth } = document.getElementById(item.id);
         const newItem = {
           ...item,
@@ -210,24 +213,24 @@ export const useItemActions = () => {
         return newItem;
       });
     },
-    [getSelectedItemList, batchUpdateItems, selectedItems]
+    [getItemListOrSelected, batchUpdateItems]
   );
 
   // Align selection to an array
   const alignAsSquare = React.useCallback(
-    async ({ gapBetweenItems = 5 } = {}) => {
+    async (itemIds, { gapBetweenItems = 5 } = {}) => {
       // Negative value is possible for 'gapBetweenItems'.
-      const selectedItemList = await getSelectedItemList();
+      const [ids, items] = await getItemListOrSelected(itemIds);
 
       // Count number of elements
-      const numberOfElements = selectedItemList.length;
+      const numberOfElements = items.length;
       const numberOfColumns = Math.ceil(Math.sqrt(numberOfElements));
 
-      let { x: newX, y: newY } = selectedItemList[0];
+      let { x: newX, y: newY } = items[0];
 
       let currentColumn = 1;
 
-      batchUpdateItems(selectedItems, (item) => {
+      batchUpdateItems(ids, (item) => {
         const { clientWidth, clientHeight } = document.getElementById(item.id);
         const newItem = {
           ...item,
@@ -238,82 +241,89 @@ export const useItemActions = () => {
         currentColumn += 1;
         if (currentColumn > numberOfColumns) {
           currentColumn = 1;
-          newX = selectedItemList[0].x;
+          newX = items[0].x;
           newY += clientHeight + gapBetweenItems;
         }
         return newItem;
       });
     },
-    [getSelectedItemList, batchUpdateItems, selectedItems]
+    [getItemListOrSelected, batchUpdateItems]
   );
 
-  const shuffleSelectedItems = React.useCallback(() => {
-    selectedItems.forEach((itemId) => {
-      const elem = document.getElementById(itemId);
-      elem.firstChild.className = "hvr-wobble-horizontal";
-    });
-    const shuffledItems = shuffleArray([...selectedItems]);
-    swapItems(selectedItems, shuffledItems);
-  }, [selectedItems, swapItems]);
+  const shuffleItems = React.useCallback(
+    async (itemIds) => {
+      const [ids] = await getItemListOrSelected(itemIds);
+
+      ids.forEach((itemId) => {
+        const elem = document.getElementById(itemId);
+        elem.firstChild.className = "hvr-wobble-horizontal";
+      });
+      const shuffledItems = shuffleArray([...ids]);
+      swapItems(ids, shuffledItems);
+    },
+    [getItemListOrSelected, swapItems]
+  );
 
   const randomlyRotateSelectedItems = React.useCallback(
-    (angle, maxRotateCount) => {
-      batchUpdateItems(selectedItems, (item) => {
+    async (itemIds, { angle, maxRotateCount }) => {
+      const [ids] = await getItemListOrSelected(itemIds);
+
+      batchUpdateItems(ids, (item) => {
         const rotation =
           ((item.rotation || 0) + angle * randInt(0, maxRotateCount)) % 360;
         return { ...item, rotation };
       });
     },
-    [selectedItems, batchUpdateItems]
+    [getItemListOrSelected, batchUpdateItems]
   );
 
   // Tap/Untap elements
-  const toggleTap = React.useCallback(async () => {
-    const selectedItemList = await getSelectedItemList();
-    const tappedCount = selectedItemList.filter(
-      ({ rotation }) => rotation === 90
-    ).length;
+  const toggleTap = React.useCallback(
+    async (itemIds) => {
+      const [ids, items] = await getItemListOrSelected(itemIds);
 
-    let untap = false;
-    if (tappedCount > selectedItems.length / 2) {
-      untap = true;
-    }
-
-    batchUpdateItems(selectedItems, (item) => ({
-      ...item,
-      rotation: untap ? 0 : 90,
-    }));
-  }, [getSelectedItemList, selectedItems, batchUpdateItems]);
-
-  // Lock / unlock elements
-  const toggleLock = React.useCallback(() => {
-    batchUpdateItems(selectedItems, (item) => ({
-      ...item,
-      locked: !item.locked,
-    }));
-
-    // Help user on first lock
-    if (isFirstLock) {
-      toast.info(
-        t("You've locked your first element. Long click to select it again."),
-        { autoClose: false }
-      );
-      setIsFirstLock(false);
-    }
-  }, [t, batchUpdateItems, selectedItems, isFirstLock, setIsFirstLock]);
-
-  // Flip / unflip elements
-  const toggleFlip = React.useCallback(
-    async ({ reverseOrder = true } = {}) => {
-      const selectedItemList = await getSelectedItemList();
-      const flippedCount = selectedItemList.filter(({ flipped }) => flipped)
+      const tappedCount = items.filter(({ rotation }) => rotation === 90)
         .length;
 
-      let flip = true;
-      if (flippedCount > selectedItems.length / 2) {
-        flip = false;
+      let untap = false;
+      if (tappedCount > ids.length / 2) {
+        untap = true;
       }
-      batchUpdateItems(selectedItems, (item) => ({
+
+      batchUpdateItems(ids, (item) => ({
+        ...item,
+        rotation: untap ? 0 : 90,
+      }));
+    },
+    [getItemListOrSelected, batchUpdateItems]
+  );
+
+  // Lock / unlock elements
+  const toggleLock = React.useCallback(
+    async (itemIds) => {
+      const [ids] = await getItemListOrSelected(itemIds);
+
+      batchUpdateItems(ids, (item) => ({
+        ...item,
+        locked: !item.locked,
+      }));
+
+      // Help user on first lock
+      if (isFirstLock) {
+        toast.info(
+          t("You've locked your first element. Long click to select it again."),
+          { autoClose: false }
+        );
+        setIsFirstLock(false);
+      }
+    },
+    [getItemListOrSelected, batchUpdateItems, isFirstLock, t, setIsFirstLock]
+  );
+
+  // Flip or reveal items
+  const setFlip = React.useCallback(
+    async (itemIds, { flip = true, reverseOrder = true } = {}) => {
+      batchUpdateItems(itemIds, (item) => ({
         ...item,
         flipped: flip,
         unflippedFor:
@@ -322,82 +332,111 @@ export const useItemActions = () => {
             : item.unflippedFor,
       }));
       if (reverseOrder) {
-        reverseItemsOrder(selectedItems);
-        setSelectItems((prev) => {
+        reverseItemsOrder(itemIds);
+        setSelectedItems((prev) => {
           const reversed = [...prev];
           reversed.reverse();
           return reversed;
         });
       }
     },
-    [
-      getSelectedItemList,
-      selectedItems,
-      batchUpdateItems,
-      reverseItemsOrder,
-      setSelectItems,
-    ]
+    [batchUpdateItems, reverseItemsOrder, setSelectedItems]
+  );
+
+  // Toggle flip state
+  const toggleFlip = React.useCallback(
+    async (itemIds, { reverseOrder = true } = {}) => {
+      const [ids, items] = await getItemListOrSelected(itemIds);
+
+      const flippedCount = items.filter(({ flipped }) => flipped).length;
+
+      setFlip(ids, {
+        flip: flippedCount < ids.length / 2,
+        reverseOrder,
+      });
+    },
+    [getItemListOrSelected, setFlip]
   );
 
   // Rotate element
   const rotate = React.useCallback(
-    (angle) => {
-      batchUpdateItems(selectedItems, (item) => ({
+    async (itemIds, { angle }) => {
+      const [ids] = await getItemListOrSelected(itemIds);
+
+      batchUpdateItems(ids, (item) => ({
         ...item,
         rotation: (item.rotation || 0) + angle,
       }));
     },
-    [selectedItems, batchUpdateItems]
+    [getItemListOrSelected, batchUpdateItems]
   );
 
   // Reveal for player only
-  const toggleFlipSelf = React.useCallback(async () => {
-    const selectedItemList = await getSelectedItemList();
-    const flippedSelfCount = selectedItemList.filter(
-      ({ unflippedFor }) =>
-        Array.isArray(unflippedFor) && unflippedFor.includes(currentUser.uid)
-    ).length;
+  const setFlipSelf = React.useCallback(
+    async (itemIds, { flipSelf = true } = {}) => {
+      batchUpdateItems(itemIds, (item) => {
+        let { unflippedFor = [] } = item;
 
-    let flipSelf = true;
-    if (flippedSelfCount > selectedItems.length / 2) {
-      flipSelf = false;
-    }
+        if (!Array.isArray(item.unflippedFor)) {
+          unflippedFor = [];
+        }
 
-    batchUpdateItems(selectedItems, (item) => {
-      let { unflippedFor = [] } = item;
-
-      if (!Array.isArray(item.unflippedFor)) {
-        unflippedFor = [];
-      }
-
-      if (flipSelf && !unflippedFor.includes(currentUser.uid)) {
-        unflippedFor = [...unflippedFor, currentUser.uid];
-      }
-      if (!flipSelf && unflippedFor.includes(currentUser.uid)) {
-        unflippedFor = unflippedFor.filter((id) => id !== currentUser.uid);
-      }
-      return {
-        ...item,
-        flipped: true,
-        unflippedFor,
-      };
-    });
-  }, [getSelectedItemList, selectedItems, batchUpdateItems, currentUser.uid]);
-
-  const removeSelectedItems = React.useCallback(
-    () => removeItems(selectedItems),
-    [removeItems, selectedItems]
+        if (flipSelf && !unflippedFor.includes(currentUser.uid)) {
+          unflippedFor = [...unflippedFor, currentUser.uid];
+        }
+        if (!flipSelf && unflippedFor.includes(currentUser.uid)) {
+          unflippedFor = unflippedFor.filter((id) => id !== currentUser.uid);
+        }
+        return {
+          ...item,
+          flipped: true,
+          unflippedFor,
+        };
+      });
+    },
+    [batchUpdateItems, currentUser.uid]
   );
 
-  const cloneItem = React.useCallback(async () => {
-    const selectedItemList = await getSelectedItemList();
-    selectedItemList.forEach((itemToClone) => {
-      const newItem = JSON.parse(JSON.stringify(itemToClone));
-      newItem.id = nanoid();
-      delete newItem.move;
-      insertItemBefore(newItem, itemToClone.id);
-    });
-  }, [getSelectedItemList, insertItemBefore]);
+  // Reveal for player only
+  const toggleFlipSelf = React.useCallback(
+    async (itemIds) => {
+      const [ids, items] = await getItemListOrSelected(itemIds);
+
+      const flippedSelfCount = items.filter(
+        ({ unflippedFor }) =>
+          Array.isArray(unflippedFor) && unflippedFor.includes(currentUser.uid)
+      ).length;
+
+      let flipSelf = true;
+      if (flippedSelfCount > ids.length / 2) {
+        flipSelf = false;
+      }
+
+      setFlipSelf(ids, { flipSelf });
+    },
+    [getItemListOrSelected, setFlipSelf, currentUser.uid]
+  );
+
+  const remove = React.useCallback(
+    async (itemIds) => {
+      const [ids] = await getItemListOrSelected(itemIds);
+      removeItems(ids);
+    },
+    [getItemListOrSelected, removeItems]
+  );
+
+  const cloneItem = React.useCallback(
+    async (itemIds) => {
+      const [, items] = await getItemListOrSelected(itemIds);
+      items.forEach((itemToClone) => {
+        const newItem = JSON.parse(JSON.stringify(itemToClone));
+        newItem.id = nanoid();
+        delete newItem.move;
+        insertItemBefore(newItem, itemToClone.id);
+      });
+    },
+    [getItemListOrSelected, insertItemBefore]
+  );
 
   const actionMap = React.useMemo(
     () => ({
@@ -407,10 +446,30 @@ export const useItemActions = () => {
         shortcut: "f",
         icon: flipIcon,
       },
+      reveal: {
+        action: (itemIds) => setFlip(itemIds, { flip: false }),
+        label: t("Reveal"),
+        icon: flipIcon,
+      },
+      hide: {
+        action: (itemIds) => setFlip(itemIds, { flip: true }),
+        label: t("Hide"),
+        icon: flipIcon,
+      },
       flipSelf: {
         action: toggleFlipSelf,
         label: t("Reveal for me"),
         shortcut: "o",
+        icon: seeIcon,
+      },
+      revealSelf: {
+        action: (itemIds) => setFlipSelf(itemIds, { flipSelf: true }),
+        label: t("Reveal for me"),
+        icon: seeIcon,
+      },
+      hideSelf: {
+        action: (itemIds) => setFlipSelf(itemIds, { flipSelf: false }),
+        label: t("Hide for me"),
         icon: seeIcon,
       },
       tap: {
@@ -429,89 +488,109 @@ export const useItemActions = () => {
       stack: {
         action: stackToTopLeft,
         label: t("Stack To Top Left"),
-        shortcut: "",
         multiple: true,
         icon: stackToTopLeftIcon,
       },
       alignAsLine: {
         action: alignAsLine,
         label: t("Align as line"),
-        shortcut: "",
         multiple: true,
         icon: alignAsLineIcon,
       },
       alignAsSquare: {
         action: alignAsSquare,
         label: t("Align as square"),
-        shortcut: "",
         multiple: true,
         icon: alignAsSquareIcon,
       },
       shuffle: {
-        action: shuffleSelectedItems,
+        action: shuffleItems,
         label: t("Shuffle"),
-        shortcut: "",
         multiple: true,
         icon: shuffleIcon,
       },
       randomlyRotate30: {
-        action: randomlyRotateSelectedItems.bind(null, 30, 11),
+        action: (itemIds) =>
+          randomlyRotateSelectedItems(itemIds, {
+            angle: 30,
+            maxRotateCount: 11,
+          }),
         label: t("Rotate randomly 30"),
-        shortcut: "",
         multiple: false,
         icon: rotateIcon,
       },
       randomlyRotate45: {
-        action: randomlyRotateSelectedItems.bind(null, 45, 7),
+        action: (itemIds) =>
+          randomlyRotateSelectedItems(itemIds, {
+            angle: 45,
+            maxRotateCount: 7,
+          }),
         label: t("Rotate randomly 45"),
         shortcut: "",
         multiple: false,
         icon: rotateIcon,
       },
       randomlyRotate60: {
-        action: randomlyRotateSelectedItems.bind(null, 60, 5),
+        action: (itemIds) =>
+          randomlyRotateSelectedItems(itemIds, {
+            angle: 60,
+            maxRotateCount: 5,
+          }),
         label: t("Rotate randomly 60"),
         shortcut: "",
         multiple: false,
         icon: rotateIcon,
       },
       randomlyRotate90: {
-        action: randomlyRotateSelectedItems.bind(null, 90, 3),
+        action: (itemIds) =>
+          randomlyRotateSelectedItems(itemIds, {
+            angle: 90,
+            maxRotateCount: 3,
+          }),
         label: t("Rotate randomly 90"),
         shortcut: "",
         multiple: false,
         icon: rotateIcon,
       },
       randomlyRotate180: {
-        action: randomlyRotateSelectedItems.bind(null, 180, 1),
+        action: (itemIds) =>
+          randomlyRotateSelectedItems(itemIds, {
+            angle: 180,
+            maxRotateCount: 1,
+          }),
         label: t("Rotate randomly 180"),
         shortcut: "",
         multiple: false,
         icon: rotateIcon,
       },
       rotate30: {
-        action: rotate.bind(null, 30),
+        action: (itemIds) => rotate(itemIds, { angle: 30 }),
         label: t("Rotate 30"),
+        shortcut: "r",
         icon: rotateIcon,
       },
       rotate45: {
-        action: rotate.bind(null, 45),
+        action: (itemIds) => rotate(itemIds, { angle: 45 }),
         label: t("Rotate 45"),
+        shortcut: "r",
         icon: rotateIcon,
       },
       rotate60: {
-        action: rotate.bind(null, 60),
+        action: (itemIds) => rotate(itemIds, { angle: 60 }),
         label: t("Rotate 60"),
+        shortcut: "r",
         icon: rotateIcon,
       },
       rotate90: {
-        action: rotate.bind(null, 90),
+        action: (itemIds) => rotate(itemIds, { angle: 90 }),
         label: t("Rotate 90"),
+        shortcut: "r",
         icon: rotateIcon,
       },
       rotate180: {
-        action: rotate.bind(null, 180),
+        action: (itemIds) => rotate(itemIds, { angle: 180 }),
         label: t("Rotate 180"),
+        shortcut: "r",
         icon: rotateIcon,
       },
       clone: {
@@ -529,7 +608,7 @@ export const useItemActions = () => {
         icon: lockIcon,
       },
       remove: {
-        action: removeSelectedItems,
+        action: remove,
         label: t("Remove all"),
         shortcut: "Delete",
         edit: true,
@@ -546,23 +625,27 @@ export const useItemActions = () => {
       stackToTopLeft,
       alignAsLine,
       alignAsSquare,
-      shuffleSelectedItems,
-      randomlyRotateSelectedItems,
-      rotate,
+      shuffleItems,
       cloneItem,
       toggleLock,
-      removeSelectedItems,
+      remove,
+      setFlip,
+      setFlipSelf,
+      randomlyRotateSelectedItems,
+      rotate,
     ]
   );
 
   return {
     stack: stackToTopLeft,
-    remove: removeSelectedItems,
+    remove,
+    setFlip,
+    setFlipSelf,
     toggleFlip,
     toggleFlipSelf,
     toggleLock,
     toggleTap,
-    shuffle: shuffleSelectedItems,
+    shuffle: shuffleItems,
     rotate,
     actionMap,
     availableActions,

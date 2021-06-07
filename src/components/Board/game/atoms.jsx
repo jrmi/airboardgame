@@ -52,11 +52,17 @@ export const PanZoomRotateAtom = atom({
   },
 });
 
+export const ItemInteractionsAtom = atom({
+  key: "itemInteractions",
+  default: {},
+});
+
 export default {
   ItemListAtom,
   BoardConfigAtom,
   AvailableItemListAtom,
   AllItemsSelector,
   ItemMapAtom,
+  ItemInteractionsAtom,
   PanZoomRotateAtom,
 };

@@ -165,7 +165,7 @@ export const itemMap = {
     availableActions: ["clone", "lock", "remove"],
     form: CheckerBoardFormFields,
     name: i18n.t("Checkerboard"),
-    template: {},
+    template: { layer: -1 },
   },
   image: {
     component: Image,
@@ -285,7 +285,7 @@ export const itemMap = {
     ],
     form: ZoneFormFields,
     name: i18n.t("Zone"),
-    template: {},
+    template: { layer: -1 },
   },
 };
 

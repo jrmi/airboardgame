@@ -28,6 +28,15 @@ export const isPointInsideRect = (point, rect) => {
   );
 };
 
+export const isItemInsideElement = (itemElement, otherElem) => {
+  const rect = otherElem.getBoundingClientRect();
+  const fourElem = Array.from(itemElement.querySelectorAll(".corner"));
+  return fourElem.every((corner) => {
+    const { top: y, left: x } = corner.getBoundingClientRect();
+    return isPointInsideRect({ x, y }, rect);
+  });
+};
+
 /**
  * Shuffles array in place.
  * @param {Array} a items An array containing the items.

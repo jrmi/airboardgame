@@ -249,5 +249,9 @@
   "Go back": "Back",
   "Add new table": "Add a new table",
   "Session loading...": "Session loading...",
-  "Position saved!": "Position saved!"
+  "Position saved!": "Position saved!",
+  "Interactions": "Interactions",
+  "Interaction help": "You can define action automatically executed on items dropped in this zone.",
+  "Hide for me": "Hide for me",
+  "Search...": "Search..."
 }
