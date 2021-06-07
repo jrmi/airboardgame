@@ -145,6 +145,7 @@ const genGame = () => {
     width: 500,
     height: 300,
     locked: true,
+    onItem: ["reveal"],
     x: 200,
     y: 600,
   });

@@ -215,19 +215,23 @@ export const SelectedItemsPane = ({ hideMenu = false }) => {
     const onKeyUp = (e) => {
       // Block shortcut if we are typing in a textarea or input
       if (["INPUT", "TEXTAREA"].includes(e.target.tagName)) return;
-      Object.values(actionMap).forEach(
-        ({ shortcut, action, edit: whileEdit }) => {
-          if (e.key === shortcut && showEdit === !!whileEdit) {
-            action();
-          }
+
+      Object.keys(actionMap).forEach((key) => {
+        const { shortcut, action, edit: whileEdit } = actionMap[key];
+        if (
+          availableActions.includes(key) &&
+          e.key === shortcut &&
+          showEdit === !!whileEdit
+        ) {
+          action();
         }
-      );
+      });
     };
     document.addEventListener("keyup", onKeyUp);
     return () => {
       document.removeEventListener("keyup", onKeyUp);
     };
-  }, [actionMap, showEdit]);
+  }, [actionMap, availableActions, showEdit]);
 
   const onDblClick = React.useCallback(
     (e) => {
@@ -329,6 +333,7 @@ export const SelectedItemsPane = ({ hideMenu = false }) => {
                 action: handler,
                 multiple,
                 edit: onlyEdit,
+                shortcut,
                 icon,
               } = actionMap[action];
               if (multiple && selectedItems.length < 2) return null;
@@ -338,7 +343,7 @@ export const SelectedItemsPane = ({ hideMenu = false }) => {
                   className="button clear icon-only"
                   key={action}
                   onClick={() => handler()}
-                  title={label}
+                  title={label + (shortcut ? ` (${shortcut})` : "")}
                 >
                   <img
                     src={icon}

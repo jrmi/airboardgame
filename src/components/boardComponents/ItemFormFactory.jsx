@@ -33,8 +33,12 @@ const ItemFormFactory = () => {
 
   const item = itemMap[selectedItems[0]];
 
-  const [defaultActions] = React.useState(getDefaultActionsFromItem(item));
-  const [availableActions] = React.useState(getAvailableActionsFromItem(item));
+  const [defaultActions] = React.useState(() =>
+    getDefaultActionsFromItem(item)
+  );
+  const [availableActions] = React.useState(() =>
+    getAvailableActionsFromItem(item)
+  );
 
   let FieldsComponent;
 

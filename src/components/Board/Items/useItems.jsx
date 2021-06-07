@@ -3,9 +3,11 @@ import useC2C from "../../../hooks/useC2C";
 import { useSetRecoilState, useRecoilCallback } from "recoil";
 
 import { ItemListAtom, selectedItemsAtom, ItemMapAtom } from "../";
+import useItemInteraction from "./useItemInteraction";
 
 const useItems = () => {
   const { c2c } = useC2C("board");
+  const { call: callPlaceInteractions } = useItemInteraction("place");
 
   const setItemList = useSetRecoilState(ItemListAtom);
   const setItemMap = useSetRecoilState(ItemMapAtom);
@@ -201,7 +203,7 @@ const useItems = () => {
 
   const placeItems = React.useCallback(
     (itemIds, gridConfig, sync = true) => {
-      // Put moved items on
+      // Put moved items on top
       putItemsOnTop(itemIds, sync);
       // Remove moving state
       batchUpdateItems(
@@ -214,8 +216,9 @@ const useItems = () => {
         sync
       );
       stickOnGrid(itemIds, gridConfig, sync);
+      callPlaceInteractions(itemIds);
     },
-    [batchUpdateItems, putItemsOnTop, stickOnGrid]
+    [batchUpdateItems, callPlaceInteractions, putItemsOnTop, stickOnGrid]
   );
 
   const updateItemOrder = React.useCallback(

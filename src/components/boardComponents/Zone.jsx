@@ -1,6 +1,9 @@
 import React from "react";
 import { memo } from "react";
 import styled, { css } from "styled-components";
+import { isItemInsideElement } from "../../utils";
+import useItemInteraction from "../Board/Items/useItemInteraction";
+import useItemActions from "./useItemActions";
 
 const ZoneWrapper = styled.div`
   ${({ width = 200, height = 200 }) => css`
@@ -27,9 +30,52 @@ const ZoneWrapper = styled.div`
   `}
 `;
 
-const Zone = ({ width, height, label }) => {
+const Zone = ({ width, height, label, onItem }) => {
+  const { register } = useItemInteraction("place");
+  const { setFlip, setFlipSelf, stack } = useItemActions();
+  const zoneRef = React.useRef(null);
+
+  const onInsideItem = React.useCallback(
+    (itemIds) => {
+      const insideItems = itemIds.filter((itemId) =>
+        isItemInsideElement(document.getElementById(itemId), zoneRef.current)
+      );
+      if (!insideItems.length) return;
+      onItem.forEach((action) => {
+        switch (action) {
+          case "reveal":
+            setFlip(insideItems, { flip: false });
+            break;
+          case "hide":
+            setFlip(insideItems, { flip: true });
+            break;
+          case "revealSelf":
+            setFlipSelf(insideItems, { flipSelf: true });
+            break;
+          case "hideSelf":
+            setFlipSelf(insideItems, { flipSelf: false });
+            break;
+          case "stack":
+            stack(insideItems);
+            break;
+        }
+      });
+    },
+    [onItem, setFlip, setFlipSelf, stack]
+  );
+
+  React.useEffect(() => {
+    const unregisterList = [];
+    if (onItem?.length) {
+      unregisterList.push(register(onInsideItem));
+    }
+    return () => {
+      unregisterList.forEach((callback) => callback());
+    };
+  }, [onInsideItem, onItem, register, setFlip]);
+
   return (
-    <ZoneWrapper width={width} height={height}>
+    <ZoneWrapper width={width} height={height} ref={zoneRef}>
       <div>{label}</div>
     </ZoneWrapper>
   );
