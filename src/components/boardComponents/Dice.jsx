@@ -90,6 +90,8 @@ const Dice = ({
             }}
             className="result"
             value={value}
+            onKeyUp={(e) => e.stopPropagation()}
+            onKeyDown={(e) => e.stopPropagation()}
             onChange={setValue}
           />
         </label>

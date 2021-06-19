@@ -82,6 +82,8 @@ const Counter = ({
               fontSize: fontSize + "px",
               userSelect: "none",
             }}
+            onKeyUp={(e) => e.stopPropagation()}
+            onKeyDown={(e) => e.stopPropagation()}
             value={value}
             onChange={setValue}
           />
