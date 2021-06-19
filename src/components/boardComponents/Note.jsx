@@ -65,6 +65,9 @@ const Note = ({
       textColor={textColor}
       width={width}
       height={height}
+      onKeyDown={(e) => e.stopPropagation()}
+      onKeyUp={(e) => e.stopPropagation()}
+      onWheel={(e) => e.stopPropagation()}
     >
       <label style={{ userSelect: "none" }}>
         <h3>{label}</h3>
