@@ -91,6 +91,9 @@ const InfoModal = ({ show, setShow }) => {
               and <Kbd>1</Kbd>-<Kbd>9</Kbd>
               to restore it.
             </li>
+            <li>
+              Use <Kbd>space</Kbd> to zoom temporally to the center of screen.
+            </li>
           </ul>
         </Trans>
       </section>
@@ -100,20 +103,11 @@ const InfoModal = ({ show, setShow }) => {
       <section>
         <Trans i18nKey="helpItem">
           <ul>
-            <li>Double click on any item that can be flipped to flip it.</li>
+            <li>Double click on any item to execute the main action on it.</li>
             <li>
-              <Kbd>t</Kbd> key to tap/untap selected items.
+              Long clic on item to be able to selected previously locked item.
             </li>
-            <li>
-              <Kbd>f</Kbd> key to flip/unflip selected items.
-            </li>
-            <li>
-              <Kbd>o</Kbd> key to reveal front side of selected flipped items
-              ONLY ONLY to you.
-            </li>
-            <li>
-              <Kbd>l</Kbd> key to be able to selected previously locked item.
-            </li>
+            <li>See other shortcuts in action menu.</li>
           </ul>
         </Trans>
       </section>
