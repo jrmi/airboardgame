@@ -596,7 +596,7 @@ export const useItemActions = () => {
       clone: {
         action: cloneItem,
         label: t("Clone"),
-        shortcut: " ",
+        shortcut: "c",
         disableDblclick: true,
         edit: true,
         icon: duplicateIcon,

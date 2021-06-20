@@ -42,6 +42,7 @@ const PanZoomRotate = ({ children, moveFirst }) => {
   const setBoardState = useSetRecoilState(BoardStateAtom);
   const prevDim = usePrevious(dim);
 
+  // Hooks to save/restore position
   usePositionNavigator();
 
   const [scale, setScale] = React.useState({
@@ -142,6 +143,36 @@ const PanZoomRotate = ({ children, moveFirst }) => {
     debouncedUpdateCenter();
   }, [debouncedUpdateCenter, dim.translateX, dim.translateY]);
 
+  const zoomTo = React.useCallback(
+    (factor, zoomCenter) => {
+      let center = zoomCenter;
+      if (!center) {
+        const { innerHeight, innerWidth } = window;
+        center = {
+          x: innerWidth / 2,
+          y: innerHeight / 2,
+        };
+      }
+
+      setScale((prevScale) => {
+        let newScale = prevScale.scale * factor;
+        if (newScale > scaleBoundaries[1]) {
+          newScale = scaleBoundaries[1];
+        }
+
+        if (newScale < scaleBoundaries[0]) {
+          newScale = scaleBoundaries[0];
+        }
+
+        return {
+          scale: newScale,
+          ...center,
+        };
+      });
+    },
+    [scaleBoundaries]
+  );
+
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const updateBoardStateZoomingDelay = React.useCallback(
     debounce((newState) => {
@@ -187,24 +218,9 @@ const PanZoomRotate = ({ children, moveFirst }) => {
 
   const onZoom = React.useCallback(
     ({ clientX, clientY, scale }) => {
-      setScale((prevScale) => {
-        let newScale = prevScale.scale * (1 - scale / 200);
-        if (newScale > scaleBoundaries[1]) {
-          newScale = scaleBoundaries[1];
-        }
-
-        if (newScale < scaleBoundaries[0]) {
-          newScale = scaleBoundaries[0];
-        }
-
-        return {
-          scale: newScale,
-          x: clientX,
-          y: clientY,
-        };
-      });
+      zoomTo(1 - scale / 200, { x: clientX, y: clientY });
     },
-    [scaleBoundaries]
+    [zoomTo]
   );
 
   const onPan = React.useCallback(
@@ -239,11 +255,6 @@ const PanZoomRotate = ({ children, moveFirst }) => {
       // Block shortcut if we are typing in a textarea or input
       if (["INPUT", "TEXTAREA"].includes(e.target.tagName)) return;
 
-      const selectedItems = await snapshot.getPromise(selectedItemsAtom);
-
-      if (selectedItems.length) {
-        return;
-      }
       let moveX = 0;
       let moveY = 0;
       let zoom = 1;
@@ -268,6 +279,11 @@ const PanZoomRotate = ({ children, moveFirst }) => {
           break;
       }
       if (moveX || moveY || zoom !== 1) {
+        // Don't move board if moving item
+        const selectedItems = await snapshot.getPromise(selectedItemsAtom);
+        if (zoom === 1 && selectedItems.length) {
+          return;
+        }
         if (e.shiftKey) {
           moveX = moveX * 5;
           moveY = moveY * 5;
@@ -282,40 +298,36 @@ const PanZoomRotate = ({ children, moveFirst }) => {
           translateX: prev.translateX + moveX,
         }));
 
-        const { innerHeight, innerWidth } = window;
-
-        const zoomX = innerWidth / 2;
-        const zoomY = innerHeight / 2;
-
-        setScale((prevScale) => {
-          let newScale = prevScale.scale * zoom;
-          if (newScale > scaleBoundaries[1]) {
-            newScale = scaleBoundaries[1];
-          }
-
-          if (newScale < scaleBoundaries[0]) {
-            newScale = scaleBoundaries[0];
-          }
-
-          return {
-            scale: newScale,
-            x: zoomX,
-            y: zoomY,
-          };
-        });
+        zoomTo(zoom);
 
         e.preventDefault();
       }
+      // Temporally zoom
+      if (e.key === " " && !e.repeat) {
+        zoomTo(3);
+      }
     },
-    [scaleBoundaries, setDim]
+    [setDim, zoomTo]
+  );
+
+  const onKeyUp = React.useCallback(
+    (e) => {
+      // Zoom out on release
+      if (e.key === " ") {
+        zoomTo(1 / 3);
+      }
+    },
+    [zoomTo]
   );
 
   React.useEffect(() => {
     document.addEventListener("keydown", onKeyDown);
+    document.addEventListener("keyup", onKeyUp);
     return () => {
       document.removeEventListener("keydown", onKeyDown);
+      document.removeEventListener("keyup", onKeyUp);
     };
-  }, [onKeyDown]);
+  }, [onKeyDown, onKeyUp]);
 
   return (
     <Gesture onPan={onPan} onZoom={onZoom} onDrag={onDrag}>
