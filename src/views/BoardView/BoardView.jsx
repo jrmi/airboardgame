@@ -7,6 +7,18 @@ import useC2C from "../../components/hooks/useC2C";
 import WelcomeModal from "./WelcomeModal";
 import NavBar from "./NavBar";
 
+import {
+  uploadResourceImage,
+  listResourceImage,
+  deleteResourceImage,
+} from "../../utils/api";
+
+const mediaHandlers = {
+  uploadMedia: uploadResourceImage,
+  listMedia: listResourceImage,
+  deleteMedia: deleteResourceImage,
+};
+
 export const BoardView = (props) => {
   const { isMaster } = useC2C("board");
 
@@ -18,7 +30,7 @@ export const BoardView = (props) => {
     <>
       <NavBar editMode={props.edit} />
       <WelcomeModal show={showWelcomeModal} setShow={setShowWelcomeModal} />
-      <MainView {...props} />
+      <MainView {...props} mediaHandlers={mediaHandlers} />
     </>
   );
 };
