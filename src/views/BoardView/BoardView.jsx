@@ -74,6 +74,7 @@ export const BoardView = ({
   mediaLibraries,
   itemMap,
   actionMap,
+  ItemFormComponent,
 }) => {
   const { t } = useTranslation();
   const { currentUser, localUsers: users } = useUsers();
@@ -122,6 +123,7 @@ export const BoardView = ({
             hideMenu={hideMenu}
             itemMap={itemMap}
             actionMap={actionMap}
+            ItemFormComponent={ItemFormComponent}
           />
         </BoardContainer>
         <ActionBar>

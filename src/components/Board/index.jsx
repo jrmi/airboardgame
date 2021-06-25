@@ -1,7 +1,7 @@
 export { default as Board } from "./Board";
-export { selectedItemsAtom } from "./Selector";
 export {
   AvailableItemListAtom,
+  SelectedItemsAtom,
   BoardConfigAtom,
   ItemListAtom,
   ItemMapAtom,

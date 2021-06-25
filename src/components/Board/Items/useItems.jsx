@@ -2,7 +2,7 @@ import React from "react";
 import useC2C from "../../../hooks/useC2C";
 import { useSetRecoilState, useRecoilCallback } from "recoil";
 
-import { ItemListAtom, selectedItemsAtom, ItemMapAtom } from "../";
+import { ItemListAtom, SelectedItemsAtom, ItemMapAtom } from "../";
 import useItemInteraction from "./useItemInteraction";
 
 const useItems = () => {
@@ -11,7 +11,7 @@ const useItems = () => {
 
   const setItemList = useSetRecoilState(ItemListAtom);
   const setItemMap = useSetRecoilState(ItemMapAtom);
-  const setSelectItems = useSetRecoilState(selectedItemsAtom);
+  const setSelectItems = useSetRecoilState(SelectedItemsAtom);
 
   const batchUpdateItems = useRecoilCallback(
     ({ snapshot }) => async (itemIds, callbackOrItem, sync = true) => {

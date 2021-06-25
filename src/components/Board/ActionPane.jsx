@@ -2,7 +2,7 @@ import React from "react";
 
 import {
   BoardStateAtom,
-  selectedItemsAtom,
+  SelectedItemsAtom,
   PanZoomRotateAtom,
   BoardConfigAtom,
 } from "./";
@@ -15,7 +15,7 @@ import Gesture from "./Gesture";
 const ActionPane = ({ children }) => {
   const { moveItems, placeItems } = useItems();
 
-  const setSelectedItems = useSetRecoilState(selectedItemsAtom);
+  const setSelectedItems = useSetRecoilState(SelectedItemsAtom);
   const setBoardState = useSetRecoilState(BoardStateAtom);
 
   const wrapperRef = React.useRef(null);
@@ -36,7 +36,7 @@ const ActionPane = ({ children }) => {
       if (foundElement && !hasClass(foundElement, "locked")) {
         event.stopPropagation();
 
-        const selectedItems = await snapshot.getPromise(selectedItemsAtom);
+        const selectedItems = await snapshot.getPromise(SelectedItemsAtom);
 
         selectedItemRef.current.items = selectedItems;
 
@@ -108,7 +108,7 @@ const ActionPane = ({ children }) => {
       // Block shortcut if we are typing in a textarea or input
       if (["INPUT", "TEXTAREA"].includes(e.target.tagName)) return;
 
-      const selectedItems = await snapshot.getPromise(selectedItemsAtom);
+      const selectedItems = await snapshot.getPromise(SelectedItemsAtom);
 
       if (selectedItems.length) {
         const { gridSize: boardGridSize = 1 } = await snapshot.getPromise(

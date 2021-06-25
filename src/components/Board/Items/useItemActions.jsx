@@ -1,7 +1,7 @@
 import React from "react";
 
 import { useRecoilValue, useRecoilCallback } from "recoil";
-import { selectedItemsAtom } from "../Selector";
+import { SelectedItemsAtom } from "../";
 
 import intersection from "lodash.intersection";
 import { ItemMapAtom } from "../";
@@ -39,7 +39,7 @@ export const getActionsFromItem = (item, itemMap) => {
 };
 
 export const useItemActions = (itemMap) => {
-  const selected = useRecoilValue(selectedItemsAtom);
+  const selected = useRecoilValue(SelectedItemsAtom);
   const [availableActions, setAvailableActions] = React.useState([]);
   const isMountedRef = React.useRef(false);
 
@@ -49,7 +49,7 @@ export const useItemActions = (itemMap) => {
       if (itemIds) {
         return [itemIds, itemIds.map((id) => itemMap[id])];
       } else {
-        const selectedItems = await snapshot.getPromise(selectedItemsAtom);
+        const selectedItems = await snapshot.getPromise(SelectedItemsAtom);
         return [selectedItems, selectedItems.map((id) => itemMap[id])];
       }
     },
