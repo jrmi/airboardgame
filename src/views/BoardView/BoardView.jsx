@@ -6,7 +6,7 @@ import { SHOW_WELCOME } from "../../utils/settings";
 import { Board } from "../../components/Board";
 import SelectedItemsPane from "../../components/SelectedItemsPane";
 import { useUsers } from "../../components/users";
-import Touch from "../../ui/Touch";
+import Touch from "../../components/ui/Touch";
 import useC2C from "../../hooks/useC2C";
 
 import WelcomeModal from "./WelcomeModal";

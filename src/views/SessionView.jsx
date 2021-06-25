@@ -5,7 +5,7 @@ import useC2C, { C2CProvider } from "../hooks/useC2C";
 import { itemMap, useGameItemActionMap, ItemForm } from "../gameComponents";
 
 import BoardView from "../views/BoardView";
-import Waiter from "../ui/Waiter";
+import Waiter from "./Waiter";
 
 import { useUsers } from "../components/users";
 
@@ -76,22 +76,22 @@ export const SessionView = () => {
     () =>
       gameId
         ? [
-          {
-            id: "session",
-            name: t("Session"),
-            boxId: "session",
-            resourceId: sessionId,
-          },
-            { id: "game", name: t("Game"), boxId: "game", resourceId: gameId },
-        ]
+            {
+              id: "session",
+              name: t("Session"),
+              boxId: "session",
+              resourceId: sessionId,
+            },
+          { id: "game", name: t("Game"), boxId: "game", resourceId: gameId },
+          ]
         : [
-          {
-            id: "session",
-            name: t("Session"),
-            boxId: "session",
-            resourceId: sessionId,
-          },
-          ],
+            {
+              id: "session",
+              name: t("Session"),
+              boxId: "session",
+              resourceId: sessionId,
+            },
+        ],
     [gameId, sessionId, t]
   );
 

@@ -10,7 +10,7 @@ import useAuth from "../hooks/useAuth";
 import { StyledGameList } from "./StyledGameList";
 import NewGameItem from "./NewGameItem";
 import GameListItem from "./GameListItem";
-import Spinner from "../ui/Spinner";
+import Spinner from "../components/ui/Spinner";
 
 const Filter = styled.div`
   & .incentive {

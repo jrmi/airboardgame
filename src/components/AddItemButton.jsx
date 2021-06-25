@@ -6,8 +6,8 @@ import ItemLibrary from "./ItemLibrary";
 
 import { AvailableItemListAtom } from "./Board/";
 
-import Touch from "../ui/Touch";
-import SidePanel from "../ui/SidePanel";
+import Touch from "./ui/Touch";
+import SidePanel from "./ui/SidePanel";
 
 // Keep compatibility with previous availableItems shape
 const migrateAvailableItemList = (old) => {

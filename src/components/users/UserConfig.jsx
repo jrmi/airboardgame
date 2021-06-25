@@ -3,7 +3,8 @@ import { SketchPicker } from "react-color";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 
-import Modal from "../../ui/Modal";
+import Modal from "../ui/Modal";
+
 import UserCircle from "./UserCircle";
 
 const StyledInputName = styled.input`

@@ -2,9 +2,9 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 
 import useSession from "../../hooks/useSession";
-import DownloadLink from "../../components/DownloadLink";
 
-import Modal from "../../ui/Modal";
+import DownloadLink from "../../components/DownloadLink";
+import Modal from "../../components/ui/Modal";
 
 const ExportModal = ({ show, setShow }) => {
   const { t } = useTranslation();

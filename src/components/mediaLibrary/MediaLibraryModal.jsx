@@ -9,7 +9,7 @@ import backgroundGrid from "../../images/background-grid.png";
 import { confirmAlert } from "react-confirm-alert";
 import { toast } from "react-toastify";
 
-import Modal from "../../ui/Modal";
+import Modal from "../ui/Modal";
 
 import { useMediaLibrary } from ".";
 import { useDropzone } from "react-dropzone";

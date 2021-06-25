@@ -1,26 +1,23 @@
 import React from "react";
 import styled from "styled-components";
 import { toast } from "react-toastify";
-
 import { useRecoilValue, useRecoilCallback } from "recoil";
+import debounce from "lodash.debounce";
+import { useTranslation } from "react-i18next";
+
+import { insideClass, hasClass } from "../utils";
+
+import SidePanel from "./ui/SidePanel";
 import { useItemActions } from "./Board/Items/useItemActions";
 import {
   SelectedItemsAtom,
   PanZoomRotateAtom,
   BoardStateAtom,
   ItemMapAtom,
-} from "../components/Board/";
-
-import debounce from "lodash.debounce";
-
-import { insideClass, hasClass } from "../utils";
-import SidePanel from "../ui/SidePanel";
-
+} from "./Board/";
 import ItemFormFactory from "./Board/Items/ItemFormFactory";
 
 // import { confirmAlert } from "react-confirm-alert";
-
-import { useTranslation } from "react-i18next";
 
 const ActionPane = styled.div.attrs(({ top, left, height }) => {
   if (top < 120) {

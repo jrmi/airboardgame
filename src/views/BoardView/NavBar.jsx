@@ -3,6 +3,17 @@ import React from "react";
 import styled from "styled-components";
 import { useTranslation } from "react-i18next";
 import { useHistory, useRouteMatch } from "react-router-dom";
+import { confirmAlert } from "react-confirm-alert";
+
+import { UserList } from "../../components/users";
+import Touch from "../../components/ui/Touch";
+import useBoardConfig from "../../components/useBoardConfig";
+import WebConferenceButton from "../../components/webconf/WebConferenceButton";
+
+import { getBestTranslationFromConfig } from "../../utils/api";
+import { ENABLE_WEBCONFERENCE } from "../../utils/settings";
+import useC2C from "../../hooks/useC2C";
+import useLocalStorage from "../../hooks/useLocalStorage";
 
 import InfoModal from "./InfoModal";
 import InfoEditModal from "./InfoEditModal";
@@ -11,21 +22,7 @@ import LoadSessionModal from "./LoadSessionModal";
 import ChangeGameModal from "./ChangeGameModal";
 import ExportModal from "./ExportModal";
 import SaveExportModal from "./SaveExportModal";
-import { UserList } from "../../components/users";
-import { getBestTranslationFromConfig } from "../../utils/api";
-import Touch from "../../ui/Touch";
-
-import useBoardConfig from "../../components/useBoardConfig";
-import useC2C from "../../hooks/useC2C";
-
-import { confirmAlert } from "react-confirm-alert";
 import WelcomeModal from "./WelcomeModal";
-
-import WebConferenceButton from "../../components/webconf/WebConferenceButton";
-
-import { ENABLE_WEBCONFERENCE } from "../../utils/settings";
-
-import useLocalStorage from "../../hooks/useLocalStorage";
 
 const StyledNavBar = styled.div.attrs(() => ({ className: "nav" }))`
   position: fixed;

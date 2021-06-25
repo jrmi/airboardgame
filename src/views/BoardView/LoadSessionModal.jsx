@@ -1,12 +1,12 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 
-import LoadData from "./LoadData";
-
 import useC2C from "../../hooks/useC2C";
 import useSession from "../../hooks/useSession";
 
-import Modal from "../../ui/Modal";
+import Modal from "../../components/ui/Modal";
+
+import LoadData from "./LoadData";
 
 const LoadSessionModal = ({ show, setShow }) => {
   const { t } = useTranslation();

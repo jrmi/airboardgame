@@ -1,6 +1,6 @@
 import React from "react";
 
-import Label from "../../ui/formUtils/Label";
+import Label from "../../components/ui/formUtils/Label";
 
 import { Field } from "react-final-form";
 

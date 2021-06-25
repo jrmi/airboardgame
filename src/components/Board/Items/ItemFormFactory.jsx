@@ -6,7 +6,7 @@ import { Form } from "react-final-form";
 import { ItemMapAtom, SelectedItemsAtom } from "../atoms";
 import { useItems } from "./";
 
-import AutoSave from "../../../ui/formUtils/AutoSave";
+import AutoSave from "../../ui/formUtils/AutoSave";
 
 export const getFormFieldComponent = (type, itemMap) => {
   if (type in itemMap) {

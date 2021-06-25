@@ -4,13 +4,13 @@ import styled from "styled-components";
 import { nanoid } from "nanoid";
 import { Form, Field } from "react-final-form";
 
+import AutoSave from "./ui/formUtils/AutoSave";
+import Hint from "./ui/formUtils/Hint";
+import Label from "./ui/formUtils/Label";
+import SliderRange from "./ui/SliderRange";
+
 import useBoardConfig from "./useBoardConfig";
 import { ImageField } from "./mediaLibrary";
-
-import AutoSave from "../ui/formUtils/AutoSave";
-import Hint from "../ui/formUtils/Hint";
-import Label from "../ui/formUtils/Label";
-import SliderRange from "../ui/SliderRange";
 
 const BoardConfigForm = styled.div`
   display: flex;
