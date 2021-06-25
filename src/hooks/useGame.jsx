@@ -3,12 +3,12 @@ import { useSetRecoilState, useRecoilCallback } from "recoil";
 
 import { updateGame } from "../utils/api";
 
-import { useItems } from "../components/Board/Items";
+import { useItems } from "../components/board/Items";
 import {
   AvailableItemListAtom,
   AllItemsSelector,
   BoardConfigAtom,
-} from "../components/Board";
+} from "../components/board";
 import useBoardConfig from "../components/useBoardConfig";
 
 export const GameContext = React.createContext({});

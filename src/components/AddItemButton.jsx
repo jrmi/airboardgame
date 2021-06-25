@@ -4,7 +4,7 @@ import { useRecoilValue } from "recoil";
 import { useTranslation } from "react-i18next";
 import ItemLibrary from "./ItemLibrary";
 
-import { AvailableItemListAtom } from "./Board/";
+import { AvailableItemListAtom } from "./board";
 
 import Touch from "./ui/Touch";
 import SidePanel from "./ui/SidePanel";

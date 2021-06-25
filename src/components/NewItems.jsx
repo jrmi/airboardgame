@@ -3,8 +3,8 @@ import { nanoid } from "nanoid";
 import { useRecoilCallback } from "recoil";
 import styled from "styled-components";
 
-import { useItems } from "./Board/Items";
-import { PanZoomRotateAtom } from "./Board";
+import { useItems } from "./board/Items";
+import { PanZoomRotateAtom } from "./board";
 import { itemMap } from "./boardComponents";
 
 const ItemList = styled.div`

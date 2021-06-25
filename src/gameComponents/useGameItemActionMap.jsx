@@ -4,10 +4,10 @@ import { nanoid } from "nanoid";
 import { toast } from "react-toastify";
 import { useSetRecoilState, useRecoilCallback } from "recoil";
 
-import { useItems } from "../components/Board/Items";
-import { SelectedItemsAtom } from "../components/Board/";
+import { useItems } from "../components/board/Items";
+import { SelectedItemsAtom } from "../components/board";
 import { useUsers } from "../components/users";
-import { ItemMapAtom } from "../components/Board";
+import { ItemMapAtom } from "../components/board";
 
 import { shuffle as shuffleArray, randInt } from "../utils";
 
