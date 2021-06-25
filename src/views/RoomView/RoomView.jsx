@@ -2,7 +2,7 @@ import React from "react";
 import { nanoid } from "nanoid";
 import styled from "styled-components";
 
-import useC2C, { C2CProvider } from "../../hooks/useC2C";
+import useC2C, { C2CProvider } from "../../components/hooks/useC2C";
 
 import { Switch, Route, Link } from "react-router-dom";
 import SessionView from "../SessionView";

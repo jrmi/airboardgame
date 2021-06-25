@@ -14,7 +14,7 @@ import {
 } from "./";
 import { insideClass } from "../../utils/";
 
-import usePrevious from "../../hooks/usePrevious";
+import usePrevious from "../hooks/usePrevious";
 
 import styled from "styled-components";
 

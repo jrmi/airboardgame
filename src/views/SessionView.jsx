@@ -1,6 +1,6 @@
 import React from "react";
 
-import useC2C, { C2CProvider } from "../hooks/useC2C";
+import useC2C, { C2CProvider } from "../components/hooks/useC2C";
 
 import { itemMap, useGameItemActionMap, ItemForm } from "../gameComponents";
 
@@ -76,22 +76,22 @@ export const SessionView = () => {
     () =>
       gameId
         ? [
-            {
-              id: "session",
-              name: t("Session"),
-              boxId: "session",
-              resourceId: sessionId,
-            },
-          { id: "game", name: t("Game"), boxId: "game", resourceId: gameId },
-          ]
+          {
+            id: "session",
+            name: t("Session"),
+            boxId: "session",
+            resourceId: sessionId,
+          },
+            { id: "game", name: t("Game"), boxId: "game", resourceId: gameId },
+        ]
         : [
-            {
-              id: "session",
-              name: t("Session"),
-              boxId: "session",
-              resourceId: sessionId,
-            },
-        ],
+          {
+            id: "session",
+            name: t("Session"),
+            boxId: "session",
+            resourceId: sessionId,
+          },
+          ],
     [gameId, sessionId, t]
   );
 

@@ -1,6 +1,6 @@
 import React from "react";
 import { useRecoilValue } from "recoil";
-import useC2C from "../hooks/useC2C";
+import useC2C from "../components/hooks/useC2C";
 import { MessagesAtom } from "../components/Message/useMessage";
 import useTimeout from "../hooks/useTimeout";
 import useSession from "../hooks/useSession";

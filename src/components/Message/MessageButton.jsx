@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 
 import useMessage from "./useMessage";
-import useNotify from "../../hooks/useNotify";
+import useNotify from "../hooks/useNotify";
 
 import Touch from "../ui/Touch";
 import SidePanel from "../ui/SidePanel";

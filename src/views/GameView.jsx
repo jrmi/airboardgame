@@ -4,7 +4,7 @@ import { nanoid } from "nanoid";
 import { useTranslation } from "react-i18next";
 import useAsyncEffect from "use-async-effect";
 
-import useC2C, { C2CProvider } from "../hooks/useC2C";
+import useC2C, { C2CProvider } from "../components/hooks/useC2C";
 import { GameProvider } from "../hooks/useGame";
 import BoardView from "./BoardView";
 import { getGame } from "../utils/api";
