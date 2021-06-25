@@ -30,7 +30,7 @@ const useUnlock = () => {
   return unlock;
 };
 
-const ItemList = ({ getComponent }) => {
+const ItemList = ({ itemMap: itemMapConfig }) => {
   const { updateItem } = useItems();
   const itemList = useRecoilValue(ItemListAtom);
   const itemMap = useRecoilValue(ItemMapAtom);
@@ -44,7 +44,7 @@ const ItemList = ({ getComponent }) => {
       setState={updateItem}
       isSelected={selectedItems.includes(itemId)}
       unlocked={unlocked}
-      getComponent={getComponent}
+      itemMap={itemMapConfig}
     />
   ));
 };

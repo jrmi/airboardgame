@@ -76,14 +76,14 @@ const Item = ({
   state: { type, rotation = 0, id, locked, layer, ...rest } = {},
   animate = "hvr-pop",
   isSelected,
-  getComponent,
+  itemMap,
   unlocked,
 }) => {
   const itemRef = React.useRef(null);
   const isMountedRef = React.useRef(false);
   const animateRef = React.useRef(null);
 
-  const Component = getComponent(type);
+  const Component = itemMap[type].component || null;
 
   const updateState = React.useCallback(
     (callbackOrItem, sync = true) => setState(id, callbackOrItem, sync),

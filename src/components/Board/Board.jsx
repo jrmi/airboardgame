@@ -49,7 +49,7 @@ const StyledBoard = styled.div.attrs(() => ({ className: "board" }))`
   user-select: none;
 `;
 
-export const Board = ({ user, users, getComponent, moveFirst = true }) => {
+export const Board = ({ user, users, itemMap, moveFirst = true }) => {
   const { t } = useTranslation();
 
   const config = useRecoilValue(BoardConfigAtom);
@@ -66,7 +66,7 @@ export const Board = ({ user, users, getComponent, moveFirst = true }) => {
           <ActionPane>
             <CursorPane user={user} users={users}>
               <StyledBoard size={config.size}>
-                <ItemList getComponent={getComponent} />
+                <ItemList itemMap={itemMap} />
               </StyledBoard>
             </CursorPane>
           </ActionPane>

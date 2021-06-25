@@ -2,9 +2,9 @@ import React from "react";
 import { Field } from "react-final-form";
 import { useTranslation } from "react-i18next";
 
-import Label from "../../../ui/formUtils/Label";
+import Label from "../../ui/formUtils/Label";
 
-import { ImageField } from "../../../components/mediaLibrary";
+import { ImageField } from "../../components/mediaLibrary";
 
 const ImageForm = ({ initialValues }) => {
   const { t } = useTranslation();

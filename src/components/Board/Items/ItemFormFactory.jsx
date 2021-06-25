@@ -6,24 +6,29 @@ import { useRecoilValue } from "recoil";
 
 import { Form, Field } from "react-final-form";
 
-import AutoSave from "../../ui/formUtils/AutoSave";
+import { ItemMapAtom, selectedItemsAtom } from "../";
+import { useItems } from "./";
 
-import { ItemMapAtom, selectedItemsAtom } from "../Board/";
-import { useItems } from "../Board/Items";
-
-import Label from "../../ui/formUtils/Label";
-import Hint from "../../ui/formUtils/Hint";
-import Slider from "../../ui/Slider";
+import AutoSave from "../../../ui/formUtils/AutoSave";
+import Label from "../../../ui/formUtils/Label";
+import Hint from "../../../ui/formUtils/Hint";
+import Slider from "../../../ui/Slider";
 
 import ActionsField from "./ActionsField";
 
 import {
-  getFormFieldComponent,
   getDefaultActionsFromItem,
   getAvailableActionsFromItem,
-} from ".";
+} from "./useItemActions";
 
-const ItemFormFactory = () => {
+export const getFormFieldComponent = (type, itemMap) => {
+  if (type in itemMap) {
+    return itemMap[type].form;
+  }
+  return () => null;
+};
+
+const ItemFormFactory = ({ itemMap: itemMapConfig, actionMap }) => {
   const { t } = useTranslation();
 
   const { batchUpdateItems } = useItems();
@@ -34,20 +39,23 @@ const ItemFormFactory = () => {
   const item = itemMap[selectedItems[0]];
 
   const [defaultActions] = React.useState(() =>
-    getDefaultActionsFromItem(item)
+    getDefaultActionsFromItem(item, itemMapConfig)
   );
   const [availableActions] = React.useState(() =>
-    getAvailableActionsFromItem(item)
+    getAvailableActionsFromItem(item, itemMapConfig)
   );
 
   let FieldsComponent;
 
   if (selectedItems.length === 1) {
-    FieldsComponent = getFormFieldComponent(item.type);
+    FieldsComponent = getFormFieldComponent(item.type, itemMapConfig);
   } else {
     const types = new Set(selectedItems.map((itemId) => itemMap[itemId].type));
     if (types.size === 1) {
-      FieldsComponent = getFormFieldComponent(Array.from(types)[0]);
+      FieldsComponent = getFormFieldComponent(
+        Array.from(types)[0],
+        itemMapConfig
+      );
     } else {
       FieldsComponent = () => null;
     }
@@ -187,6 +195,7 @@ const ItemFormFactory = () => {
                   onChange={onChange}
                   value={value}
                   availableActions={availableActions}
+                  actionMap={actionMap}
                 />
               )}
             </Field>
