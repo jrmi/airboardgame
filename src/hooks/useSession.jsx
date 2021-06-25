@@ -10,7 +10,7 @@ import {
   AllItemsSelector,
   BoardConfigAtom,
 } from "../components/Board";
-import { MessagesAtom, parseMessage } from "../components/Message/useMessage";
+import { MessagesAtom, parseMessage } from "../components/message/useMessage";
 import useBoardConfig from "../components/useBoardConfig";
 import useC2C from "../components/hooks/useC2C";
 

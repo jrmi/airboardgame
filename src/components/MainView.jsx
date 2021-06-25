@@ -10,7 +10,7 @@ import Touch from "./ui/Touch";
 import { MediaLibraryProvider } from "./mediaLibrary";
 import ImageDropNPaste from "./ImageDropNPaste";
 import AddItemButton from "./AddItemButton";
-import { MessageButton } from "./Message";
+import { MessageButton } from "./message";
 import { insideClass } from "../utils";
 
 const StyledBoardView = styled.div`
