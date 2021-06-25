@@ -2,7 +2,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 
-import useMessage from "../../hooks/useMessage";
+import useMessage from "./useMessage";
 import useNotify from "../../hooks/useNotify";
 
 import Touch from "../ui/Touch";

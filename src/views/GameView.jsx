@@ -1,20 +1,17 @@
 import React from "react";
 import { useParams } from "react-router-dom";
 import { nanoid } from "nanoid";
+import { useTranslation } from "react-i18next";
+import useAsyncEffect from "use-async-effect";
+
+import useC2C, { C2CProvider } from "../hooks/useC2C";
+import { GameProvider } from "../hooks/useGame";
+import BoardView from "./BoardView";
+import { getGame } from "../utils/api";
 
 import { itemMap, useGameItemActionMap, ItemForm } from "../gameComponents";
 
-import useC2C, { C2CProvider } from "../hooks/useC2C";
-
-import BoardView from "../views/BoardView";
 import Waiter from "./Waiter";
-
-import { getGame } from "../utils/api";
-
-import { GameProvider } from "../hooks/useGame";
-import { useTranslation } from "react-i18next";
-
-import useAsyncEffect from "use-async-effect";
 
 const newGameData = {
   items: [],
