@@ -1,7 +1,7 @@
 import React from "react";
 import { useSetRecoilState, useRecoilCallback } from "recoil";
 
-import { ItemInteractionsAtom } from "../game/atoms";
+import { ItemInteractionsAtom } from "../atoms";
 
 const useItemInteraction = (interaction) => {
   const setInteractions = useSetRecoilState(ItemInteractionsAtom);

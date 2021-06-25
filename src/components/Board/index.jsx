@@ -8,4 +8,4 @@ export {
   AllItemsSelector,
   BoardStateAtom,
   PanZoomRotateAtom,
-} from "./game/atoms";
+} from "./atoms";

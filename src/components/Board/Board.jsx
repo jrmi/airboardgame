@@ -9,7 +9,7 @@ import PanZoomRotate from "./PanZoomRotate";
 
 import styled from "styled-components";
 import { useRecoilValue } from "recoil";
-import { BoardConfigAtom } from "./game/atoms";
+import { BoardConfigAtom } from "./atoms";
 
 /*
 
