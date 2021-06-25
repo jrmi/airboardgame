@@ -5,7 +5,7 @@ import { userAtom, usersAtom } from "./atoms";
 
 import debounce from "lodash.debounce";
 
-import useC2C from "../../hooks/useC2C";
+import useC2C from "../hooks/useC2C";
 
 const SubscribeUserEvents = () => {
   const usersRef = React.useRef([]);

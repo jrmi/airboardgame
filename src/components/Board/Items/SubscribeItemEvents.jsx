@@ -1,5 +1,5 @@
 import React from "react";
-import useC2C from "../../../hooks/useC2C";
+import useC2C from "../../../components/hooks/useC2C";
 import useItems from "./useItems";
 import { useSetRecoilState } from "recoil";
 

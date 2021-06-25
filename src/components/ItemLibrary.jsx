@@ -6,7 +6,7 @@ import { useRecoilCallback } from "recoil";
 import { debounce } from "lodash";
 
 import { useItems } from "../components/Board/Items";
-import useToggle from "../hooks/useToggle";
+import useToggle from "./hooks/useToggle";
 import { search } from "../utils";
 
 import Chevron from "./ui/Chevron";

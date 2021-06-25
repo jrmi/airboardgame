@@ -1,6 +1,6 @@
 import React from "react";
 import Cursors from "./Cursors";
-import useC2C from "../../../hooks/useC2C";
+import useC2C from "../../hooks/useC2C";
 import { PanZoomRotateAtom } from "../";
 import { useRecoilValue } from "recoil";
 
