@@ -8,7 +8,7 @@ import { confirmAlert } from "react-confirm-alert";
 import { UserList } from "../../components/users";
 import Touch from "../../components/ui/Touch";
 import useBoardConfig from "../../components/useBoardConfig";
-import WebConferenceButton from "../../components/webconf/WebConferenceButton";
+import WebConferenceButton from "../webconf/WebConferenceButton";
 
 import { getBestTranslationFromConfig } from "../../utils/api";
 import { ENABLE_WEBCONFERENCE } from "../../utils/settings";

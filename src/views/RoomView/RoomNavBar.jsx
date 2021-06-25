@@ -9,7 +9,7 @@ import useC2C from "../../components/hooks/useC2C";
 
 import Touch from "../../components/ui/Touch";
 import { UserList } from "../../components/users";
-import WebConferenceButton from "../../components/webconf/WebConferenceButton";
+import WebConferenceButton from "../webconf/WebConferenceButton";
 
 import Brand from "../Brand";
 
