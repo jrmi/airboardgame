@@ -18,6 +18,7 @@ const Form = ({ initialValues }) => {
           initialValue={initialValues.label}
         />
       </Label>
+
       <Label>
         {t("Size")}
         <Field name="size" component="input" initialValue={initialValues.size}>
