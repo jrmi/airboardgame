@@ -4,12 +4,12 @@ import { useSetRecoilState, useRecoilCallback } from "recoil";
 import { updateSession, getSession, getGame } from "../utils/api";
 
 import SubscribeSessionEvents from "../components/SubscribeSessionEvents";
-import { useItems } from "../components/Board/Items";
+import { useItems } from "../components/board/Items";
 import {
   AvailableItemListAtom,
   AllItemsSelector,
   BoardConfigAtom,
-} from "../components/Board";
+} from "../components/board";
 import { MessagesAtom, parseMessage } from "../components/message/useMessage";
 import useBoardConfig from "../components/useBoardConfig";
 import useC2C from "../components/hooks/useC2C";

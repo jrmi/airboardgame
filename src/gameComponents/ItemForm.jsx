@@ -13,7 +13,7 @@ import { itemMap } from "./";
 import {
   getDefaultActionsFromItem,
   getAvailableActionsFromItem,
-} from "../components/Board/Items/useItemActions";
+} from "../components/board/Items/useItemActions";
 import useGameItemActionMap from "./useGameItemActionMap";
 
 export const getFormFieldComponent = (type) => {

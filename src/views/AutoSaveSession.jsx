@@ -10,7 +10,7 @@ import {
   AvailableItemListAtom,
   BoardConfigAtom,
   AllItemsSelector,
-} from "../components/Board/";
+} from "../components/board";
 
 const GRACE_DELAY = import.meta.env.VITE_CI ? 100 : 5000;
 

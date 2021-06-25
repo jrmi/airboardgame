@@ -5,12 +5,12 @@ import styled from "styled-components";
 import { useRecoilCallback } from "recoil";
 import { debounce } from "lodash";
 
-import { useItems } from "../components/Board/Items";
+import { useItems } from "../components/board/Items";
 import useToggle from "./hooks/useToggle";
 import { search } from "../utils";
 
 import Chevron from "./ui/Chevron";
-import { PanZoomRotateAtom } from "./Board";
+import { PanZoomRotateAtom } from "./board";
 
 const StyledItemList = styled.ul`
   display: flex;

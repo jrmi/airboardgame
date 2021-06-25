@@ -5,7 +5,7 @@ import useAsyncEffect from "use-async-effect";
 import styled from "styled-components";
 
 import Modal from "../../components/ui/Modal";
-import { BoardConfigAtom } from "../../components/Board/";
+import { BoardConfigAtom } from "../../components/board";
 
 import { getBestTranslationFromConfig } from "../../utils/api";
 

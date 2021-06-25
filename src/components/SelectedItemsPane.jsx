@@ -8,14 +8,14 @@ import { useTranslation } from "react-i18next";
 import { insideClass, hasClass } from "../utils";
 
 import SidePanel from "./ui/SidePanel";
-import { useItemActions } from "./Board/Items/useItemActions";
+import { useItemActions } from "./board/Items/useItemActions";
 import {
   SelectedItemsAtom,
   PanZoomRotateAtom,
   BoardStateAtom,
   ItemMapAtom,
-} from "./Board/";
-import ItemFormFactory from "./Board/Items/ItemFormFactory";
+} from "./board";
+import ItemFormFactory from "./board/Items/ItemFormFactory";
 
 // import { confirmAlert } from "react-confirm-alert";
 

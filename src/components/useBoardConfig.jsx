@@ -3,7 +3,7 @@ import { useRecoilState } from "recoil";
 import debounce from "lodash.debounce";
 
 import useC2C from "./hooks/useC2C";
-import { BoardConfigAtom } from "./Board/atoms";
+import { BoardConfigAtom } from "./board/atoms";
 
 export const useBoardConfig = () => {
   const { c2c } = useC2C("board");

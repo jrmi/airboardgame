@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { useTranslation } from "react-i18next";
 
-import { Board } from "./Board";
+import { Board } from "./board";
 import SelectedItemsPane from "./SelectedItemsPane";
 import { useUsers } from "./users";
 import Touch from "./ui/Touch";
