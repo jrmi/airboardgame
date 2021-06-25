@@ -1,11 +1,11 @@
 import React from "react";
 import UserConfig from "./UserConfig";
 import useUsers from "./useUsers";
-import Touch from "../../ui/Touch";
+import Touch from "../ui/Touch";
 import { useTranslation } from "react-i18next";
 
 import styled from "styled-components";
-import DropDown from "../../ui/DropDown";
+import DropDown from "../ui/DropDown";
 
 const InlineUserList = styled.ul.attrs(() => ({ className: "uk-card" }))`
   list-style: none;

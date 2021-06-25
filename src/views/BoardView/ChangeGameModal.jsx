@@ -1,9 +1,9 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
-
-import Modal from "../../ui/Modal";
 import { useQuery } from "react-query";
+
+import Modal from "../../components/ui/Modal";
 import { getGames } from "../../utils/api";
 import useSession from "../../hooks/useSession";
 

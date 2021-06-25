@@ -1,10 +1,12 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import Modal from "../ui/Modal";
+import { toast } from "react-toastify";
+
+import Modal from "../components/ui/Modal";
 import { sendAuthToken } from "../utils/api";
 import useAuth from "../hooks/useAuth";
-import { toast } from "react-toastify";
-import Waiter from "../ui/Waiter";
+
+import Waiter from "./Waiter";
 
 const Account = ({ disabled, ...props }) => {
   const { t } = useTranslation();

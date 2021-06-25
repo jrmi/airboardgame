@@ -3,14 +3,13 @@ import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 
 import useMessage from "../../hooks/useMessage";
+import useNotify from "../../hooks/useNotify";
 
-import Touch from "../../ui/Touch";
-import SidePanel from "../../ui/SidePanel";
+import Touch from "../ui/Touch";
+import SidePanel from "../ui/SidePanel";
 
 import Composer from "./Composer";
 import MessageList from "./MessageList";
-
-import useNotify from "../../hooks/useNotify";
 
 const StyledChat = styled.div`
   height: 100%;

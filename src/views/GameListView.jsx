@@ -3,18 +3,18 @@ import { useTranslation, Trans } from "react-i18next";
 import styled from "styled-components";
 import { useQuery } from "react-query";
 
-import { getGames } from "../utils/api";
-import SliderRange from "../ui/SliderRange";
-import Spinner from "../ui/Spinner";
-
-import { StyledGameList } from "./StyledGameList";
-
-import GameListItem from "./GameListItem";
+import SliderRange from "../components/ui/SliderRange";
+import Spinner from "../components/ui/Spinner";
 
 import playerSVG from "../images/player.svg";
 import languageSVG from "../images/language.svg";
 import clockSVG from "../images/clock.svg";
+
+import { getGames } from "../utils/api";
 import { search } from "../utils";
+
+import GameListItem from "./GameListItem";
+import { StyledGameList } from "./StyledGameList";
 
 const Header = styled.header`
   background-color: var(--bg-color);

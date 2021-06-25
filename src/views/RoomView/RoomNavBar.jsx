@@ -6,9 +6,9 @@ import { useTranslation } from "react-i18next";
 import { ENABLE_WEBCONFERENCE } from "../../utils/settings";
 import useLocalStorage from "../../hooks/useLocalStorage";
 import useC2C from "../../hooks/useC2C";
-import Touch from "../../ui/Touch";
-import { UserList } from "../../components/users";
 
+import Touch from "../../components/ui/Touch";
+import { UserList } from "../../components/users";
 import WebConferenceButton from "../../components/webconf/WebConferenceButton";
 
 import Brand from "../Brand";

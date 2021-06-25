@@ -1,7 +1,7 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 
-import Touch from "../../ui/Touch";
+import Touch from "../ui/Touch";
 import useLocalStorage from "../../hooks/useLocalStorage";
 
 import WebConference from "./WebConference";

@@ -7,10 +7,10 @@ import { debounce } from "lodash";
 
 import { useItems } from "../components/Board/Items";
 import useToggle from "../hooks/useToggle";
-import Chevron from "../ui/Chevron";
-import { PanZoomRotateAtom } from "./Board";
-
 import { search } from "../utils";
+
+import Chevron from "./ui/Chevron";
+import { PanZoomRotateAtom } from "./Board";
 
 const StyledItemList = styled.ul`
   display: flex;

@@ -7,7 +7,7 @@ import { useTranslation } from "react-i18next";
 import { PanZoomRotateAtom } from "./Board";
 import { useItems } from "../components/Board/Items";
 import { useMediaLibrary } from "../components/mediaLibrary";
-import Waiter from "../ui/Waiter";
+import Waiter from "./ui/Waiter";
 
 const ImageDropNPaste = ({ children }) => {
   const { t } = useTranslation();

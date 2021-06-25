@@ -1,10 +1,11 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 
-import LoadData from "./LoadData";
-
-import Modal from "../../ui/Modal";
 import useGame from "../../hooks/useGame";
+
+import Modal from "../../components/ui/Modal";
+
+import LoadData from "./LoadData";
 
 const LoadGameModal = ({ show, setShow }) => {
   const { t } = useTranslation();

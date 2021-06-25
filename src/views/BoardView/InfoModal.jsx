@@ -1,14 +1,13 @@
 import React from "react";
 import { useTranslation, Trans } from "react-i18next";
-
 import { useRecoilValue } from "recoil";
-
-import Modal from "../../ui/Modal";
-import { getBestTranslationFromConfig } from "../../utils/api";
-
-import { BoardConfigAtom } from "../../components/Board/";
-import styled from "styled-components";
 import useAsyncEffect from "use-async-effect";
+import styled from "styled-components";
+
+import Modal from "../../components/ui/Modal";
+import { BoardConfigAtom } from "../../components/Board/";
+
+import { getBestTranslationFromConfig } from "../../utils/api";
 
 const Kbd = styled.kbd`
   background-color: #eee;
