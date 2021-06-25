@@ -3,7 +3,7 @@ import { NavLink } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 
-import Account from "../components/Account";
+import Account from "./Account";
 import useAuth from "../hooks/useAuth";
 
 import Brand from "./Brand";

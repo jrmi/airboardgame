@@ -10,6 +10,8 @@ import Waiter from "../ui/Waiter";
 import { useUsers } from "../components/users";
 
 import useSession, { SessionProvider } from "../hooks/useSession";
+
+import AutoSaveSession from "./AutoSaveSession";
 import { useTranslation } from "react-i18next";
 
 import useAsyncEffect from "use-async-effect";
@@ -74,22 +76,22 @@ export const SessionView = () => {
     () =>
       gameId
         ? [
-            {
-              id: "session",
-              name: t("Session"),
-              boxId: "session",
-              resourceId: sessionId,
-            },
-          { id: "game", name: t("Game"), boxId: "game", resourceId: gameId },
-          ]
+          {
+            id: "session",
+            name: t("Session"),
+            boxId: "session",
+            resourceId: sessionId,
+          },
+            { id: "game", name: t("Game"), boxId: "game", resourceId: gameId },
+        ]
         : [
-            {
-              id: "session",
-              name: t("Session"),
-              boxId: "session",
-              resourceId: sessionId,
-            },
-        ],
+          {
+            id: "session",
+            name: t("Session"),
+            boxId: "session",
+            resourceId: sessionId,
+          },
+          ],
     [gameId, sessionId, t]
   );
 
@@ -98,12 +100,15 @@ export const SessionView = () => {
   }
 
   return (
-    <BoardView
-      mediaLibraries={mediaLibraries}
-      itemMap={itemMap}
-      actionMap={actionMap}
-      ItemFormComponent={ItemForm}
-    />
+    <>
+      <AutoSaveSession />
+      <BoardView
+        mediaLibraries={mediaLibraries}
+        itemMap={itemMap}
+        actionMap={actionMap}
+        ItemFormComponent={ItemForm}
+      />
+    </>
   );
 };
 
