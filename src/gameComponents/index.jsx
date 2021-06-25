@@ -290,3 +290,5 @@ export const itemMap = {
 };
 
 export { default as useGameItemActionMap } from "./useGameItemActionMap";
+
+export { default as ItemForm } from "./ItemForm";

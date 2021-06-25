@@ -1,11 +1,6 @@
 import React from "react";
 
-import {
-  atom,
-  useRecoilValue,
-  useSetRecoilState,
-  useRecoilCallback,
-} from "recoil";
+import { useRecoilValue, useSetRecoilState, useRecoilCallback } from "recoil";
 import styled from "styled-components";
 
 import {
@@ -13,16 +8,12 @@ import {
   BoardConfigAtom,
   ItemMapAtom,
   BoardStateAtom,
+  SelectedItemsAtom,
 } from "./";
 import { insideClass, isItemInsideElement } from "../../utils";
 import throttle from "lodash.throttle";
 
 import Gesture from "./Gesture";
-
-export const selectedItemsAtom = atom({
-  key: "selectedItems",
-  default: [],
-});
 
 const SelectorZone = styled.div.attrs(({ top, left, height, width }) => ({
   className: "selector",
@@ -62,7 +53,7 @@ const findSelected = (itemMap) => {
 };
 
 const Selector = ({ children, moveFirst }) => {
-  const setSelected = useSetRecoilState(selectedItemsAtom);
+  const setSelected = useSetRecoilState(SelectedItemsAtom);
   const setBoardState = useSetRecoilState(BoardStateAtom);
 
   const [selector, setSelector] = React.useState({});
@@ -188,7 +179,7 @@ const Selector = ({ children, moveFirst }) => {
       ) {
         setSelected(emptySelection);
       } else {
-        const selectedItems = await snapshot.getPromise(selectedItemsAtom);
+        const selectedItems = await snapshot.getPromise(SelectedItemsAtom);
         if (foundItem && !selectedItems.includes(foundItem.id)) {
           if (ctrlKey || metaKey) {
             setSelected((prev) => [...prev, foundItem.id]);

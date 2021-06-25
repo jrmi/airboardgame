@@ -2,7 +2,7 @@ import React from "react";
 import { useParams } from "react-router-dom";
 import { nanoid } from "nanoid";
 
-import { itemMap, useGameItemActionMap } from "../gameComponents";
+import { itemMap, useGameItemActionMap, ItemForm } from "../gameComponents";
 
 import useC2C, { C2CProvider } from "../hooks/useC2C";
 
@@ -102,6 +102,7 @@ export const GameView = () => {
         mediaLibraries={libraries}
         itemMap={itemMap}
         actionMap={actionMap}
+        ItemFormComponent={ItemForm}
       />
     </GameProvider>
   );

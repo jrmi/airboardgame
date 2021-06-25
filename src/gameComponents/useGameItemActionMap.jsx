@@ -2,7 +2,7 @@ import React from "react";
 
 import { useSetRecoilState, useRecoilCallback } from "recoil";
 import { useItems } from "../components/Board/Items";
-import { selectedItemsAtom } from "../components/Board/Selector";
+import { SelectedItemsAtom } from "../components/Board/";
 
 import { useUsers } from "../components/users";
 
@@ -44,7 +44,7 @@ export const useGameItemActionMap = () => {
 
   const { currentUser } = useUsers();
 
-  const setSelectedItems = useSetRecoilState(selectedItemsAtom);
+  const setSelectedItems = useSetRecoilState(SelectedItemsAtom);
   const isMountedRef = React.useRef(false);
 
   const getItemListOrSelected = useRecoilCallback(
@@ -53,7 +53,7 @@ export const useGameItemActionMap = () => {
       if (itemIds) {
         return [itemIds, itemIds.map((id) => itemMap[id])];
       } else {
-        const selectedItems = await snapshot.getPromise(selectedItemsAtom);
+        const selectedItems = await snapshot.getPromise(SelectedItemsAtom);
         return [selectedItems, selectedItems.map((id) => itemMap[id])];
       }
     },

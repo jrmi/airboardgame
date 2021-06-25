@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import { useRecoilValue, useRecoilCallback } from "recoil";
 import { useItemActions } from "./Board/Items/useItemActions";
 import {
-  selectedItemsAtom,
+  SelectedItemsAtom,
   PanZoomRotateAtom,
   BoardStateAtom,
   ItemMapAtom,
@@ -115,7 +115,7 @@ const BoundingBox = ({
   // Update selection bounding box
   const updateBox = useRecoilCallback(
     ({ snapshot }) => async () => {
-      const selectedItems = await snapshot.getPromise(selectedItemsAtom);
+      const selectedItems = await snapshot.getPromise(SelectedItemsAtom);
 
       if (selectedItems.length === 0) {
         setBoundingBoxLast(null);
@@ -201,13 +201,18 @@ const BoundingBox = ({
   return <BoundingBoxZone {...boundingBoxLast} />;
 };
 
-export const SelectedItemsPane = ({ hideMenu = false, actionMap, itemMap }) => {
+export const SelectedItemsPane = ({
+  hideMenu = false,
+  actionMap,
+  itemMap,
+  ItemFormComponent,
+}) => {
   const { availableActions } = useItemActions(itemMap);
   const [showEdit, setShowEdit] = React.useState(false);
 
   const { t } = useTranslation();
 
-  const selectedItems = useRecoilValue(selectedItemsAtom);
+  const selectedItems = useRecoilValue(SelectedItemsAtom);
   const boardState = useRecoilValue(BoardStateAtom);
   const [boundingBoxLast, setBoundingBoxLast] = React.useState(null);
 
@@ -310,7 +315,7 @@ export const SelectedItemsPane = ({ hideMenu = false, actionMap, itemMap }) => {
         width="25%"
       >
         <CardContent>
-          <ItemFormFactory itemMap={itemMap} actionMap={actionMap} />
+          <ItemFormFactory ItemFormComponent={ItemFormComponent} />
         </CardContent>
       </SidePanel>
       {selectedItems.length && !hideMenu && (

@@ -1,7 +1,7 @@
 import React from "react";
 import Item from "./Item";
 import useItems from "./useItems";
-import { ItemListAtom, ItemMapAtom, selectedItemsAtom } from "../";
+import { ItemListAtom, ItemMapAtom, SelectedItemsAtom } from "../";
 import { useRecoilValue } from "recoil";
 
 /** Allow to operate on locked items while u or l key is pressed  */
@@ -34,7 +34,7 @@ const ItemList = ({ itemMap: itemMapConfig }) => {
   const { updateItem } = useItems();
   const itemList = useRecoilValue(ItemListAtom);
   const itemMap = useRecoilValue(ItemMapAtom);
-  const selectedItems = useRecoilValue(selectedItemsAtom);
+  const selectedItems = useRecoilValue(SelectedItemsAtom);
   const unlocked = useUnlock();
 
   return itemList.map((itemId) => (

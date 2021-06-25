@@ -4,7 +4,7 @@ import { Field } from "react-final-form";
 import Label from "../../ui/formUtils/Label";
 import Hint from "../../ui/formUtils/Hint";
 
-import ActionsField from "../../components/Board/Items/ActionsField";
+import ActionsField from "./ActionsField";
 import useGameItemActionMap from "../useGameItemActionMap";
 
 const interactions = ["reveal", "hide", "revealSelf", "stack"];

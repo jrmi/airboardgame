@@ -57,6 +57,11 @@ export const ItemInteractionsAtom = atom({
   default: {},
 });
 
+export const SelectedItemsAtom = atom({
+  key: "selectedItems",
+  default: [],
+});
+
 export default {
   ItemListAtom,
   BoardConfigAtom,
@@ -65,4 +70,5 @@ export default {
   ItemMapAtom,
   ItemInteractionsAtom,
   PanZoomRotateAtom,
+  SelectedItemsAtom,
 };

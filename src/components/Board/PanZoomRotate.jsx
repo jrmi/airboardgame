@@ -10,7 +10,7 @@ import {
   BoardConfigAtom,
   BoardStateAtom,
   PanZoomRotateAtom,
-  selectedItemsAtom,
+  SelectedItemsAtom,
 } from "./";
 import { insideClass } from "../../utils/";
 
@@ -280,7 +280,7 @@ const PanZoomRotate = ({ children, moveFirst }) => {
       }
       if (moveX || moveY || zoom !== 1) {
         // Don't move board if moving item
-        const selectedItems = await snapshot.getPromise(selectedItemsAtom);
+        const selectedItems = await snapshot.getPromise(SelectedItemsAtom);
         if (zoom === 1 && selectedItems.length) {
           return;
         }

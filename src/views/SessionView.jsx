@@ -2,7 +2,7 @@ import React from "react";
 
 import useC2C, { C2CProvider } from "../hooks/useC2C";
 
-import { itemMap, useGameItemActionMap } from "../gameComponents";
+import { itemMap, useGameItemActionMap, ItemForm } from "../gameComponents";
 
 import BoardView from "../views/BoardView";
 import Waiter from "../ui/Waiter";
@@ -74,22 +74,22 @@ export const SessionView = () => {
     () =>
       gameId
         ? [
-          {
-            id: "session",
-            name: t("Session"),
-            boxId: "session",
-            resourceId: sessionId,
-          },
-            { id: "game", name: t("Game"), boxId: "game", resourceId: gameId },
-        ]
+            {
+              id: "session",
+              name: t("Session"),
+              boxId: "session",
+              resourceId: sessionId,
+            },
+          { id: "game", name: t("Game"), boxId: "game", resourceId: gameId },
+          ]
         : [
-          {
-            id: "session",
-            name: t("Session"),
-            boxId: "session",
-            resourceId: sessionId,
-          },
-          ],
+            {
+              id: "session",
+              name: t("Session"),
+              boxId: "session",
+              resourceId: sessionId,
+            },
+        ],
     [gameId, sessionId, t]
   );
 
@@ -102,6 +102,7 @@ export const SessionView = () => {
       mediaLibraries={mediaLibraries}
       itemMap={itemMap}
       actionMap={actionMap}
+      ItemFormComponent={ItemForm}
     />
   );
 };
