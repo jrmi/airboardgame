@@ -4,7 +4,7 @@ import useC2C, { C2CProvider } from "../hooks/useC2C";
 
 import { itemMap, useGameItemActionMap, ItemForm } from "../gameComponents";
 
-import BoardView from "../views/BoardView";
+import BoardView from "./BoardView";
 import Waiter from "./Waiter";
 
 import { useUsers } from "../components/users";
