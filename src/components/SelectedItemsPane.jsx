@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { toast } from "react-toastify";
 
 import { useRecoilValue, useRecoilCallback } from "recoil";
-import { useItemActions } from "./boardComponents/useItemActions";
+import { useItemActions } from "./Board/Items/useItemActions";
 import {
   selectedItemsAtom,
   PanZoomRotateAtom,
@@ -16,7 +16,7 @@ import debounce from "lodash.debounce";
 import { insideClass, hasClass } from "../utils";
 import SidePanel from "../ui/SidePanel";
 
-import ItemFormFactory from "./boardComponents/ItemFormFactory";
+import ItemFormFactory from "./Board/Items/ItemFormFactory";
 
 // import { confirmAlert } from "react-confirm-alert";
 
@@ -201,8 +201,8 @@ const BoundingBox = ({
   return <BoundingBoxZone {...boundingBoxLast} />;
 };
 
-export const SelectedItemsPane = ({ hideMenu = false }) => {
-  const { availableActions, actionMap } = useItemActions();
+export const SelectedItemsPane = ({ hideMenu = false, actionMap, itemMap }) => {
+  const { availableActions } = useItemActions(itemMap);
   const [showEdit, setShowEdit] = React.useState(false);
 
   const { t } = useTranslation();
@@ -310,7 +310,7 @@ export const SelectedItemsPane = ({ hideMenu = false }) => {
         width="25%"
       >
         <CardContent>
-          <ItemFormFactory />
+          <ItemFormFactory itemMap={itemMap} actionMap={actionMap} />
         </CardContent>
       </SidePanel>
       {selectedItems.length && !hideMenu && (

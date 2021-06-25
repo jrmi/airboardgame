@@ -1,9 +1,9 @@
 import React from "react";
 import { memo } from "react";
 import styled, { css } from "styled-components";
-import { isItemInsideElement } from "../../utils";
-import useItemInteraction from "../Board/Items/useItemInteraction";
-import useItemActions from "./useItemActions";
+import { isItemInsideElement } from "../utils";
+import useItemInteraction from "../components/Board/Items/useItemInteraction";
+import useGameItemActionMap from "./useGameItemActionMap";
 
 const ZoneWrapper = styled.div`
   ${({ width = 200, height = 200 }) => css`
@@ -32,7 +32,7 @@ const ZoneWrapper = styled.div`
 
 const Zone = ({ width, height, label, onItem }) => {
   const { register } = useItemInteraction("place");
-  const { setFlip, setFlipSelf, stack } = useItemActions();
+  const { setFlip, setFlipSelf, stack } = useGameItemActionMap();
   const zoneRef = React.useRef(null);
 
   const onInsideItem = React.useCallback(

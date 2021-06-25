@@ -1,9 +1,9 @@
 import React, { memo } from "react";
-import { useUsers } from "../users";
+import { useUsers } from "../components/users";
 import styled from "styled-components";
-import { media2Url } from "../../components/mediaLibrary";
+import { media2Url } from "../components/mediaLibrary";
 
-import eye from "../../images/eye.svg";
+import eye from "../images/eye.svg";
 
 const UnflippedFor = styled.div`
   position: absolute;

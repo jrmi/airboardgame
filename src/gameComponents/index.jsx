@@ -1,4 +1,4 @@
-import i18n from "../../i18n";
+import i18n from "../i18n";
 
 import Rect from "./Rect";
 import Cube from "./Cube";
@@ -289,48 +289,4 @@ export const itemMap = {
   },
 };
 
-export const getFormFieldComponent = (type) => {
-  if (type in itemMap) {
-    return itemMap[type].form;
-  }
-  return () => null;
-};
-
-export const getComponent = (type) => {
-  if (type in itemMap) {
-    return itemMap[type].component;
-  }
-  return () => null;
-};
-
-export const getDefaultActionsFromItem = (item) => {
-  if (item.type in itemMap) {
-    const actions = itemMap[item.type].defaultActions;
-    if (typeof actions === "function") {
-      return actions(item);
-    }
-    return actions;
-  }
-
-  return [];
-};
-
-export const getAvailableActionsFromItem = (item) => {
-  if (item.type in itemMap) {
-    const actions = itemMap[item.type].availableActions;
-    if (typeof actions === "function") {
-      return actions(item);
-    }
-    return actions;
-  }
-
-  return [];
-};
-
-export const getActionsFromItem = (item) => {
-  const { actions = getDefaultActionsFromItem(item) } = item;
-  // Filter availableActions to keep same order
-  return getAvailableActionsFromItem(item).filter((action) =>
-    actions.includes(action)
-  );
-};
+export { default as useGameItemActionMap } from "./useGameItemActionMap";

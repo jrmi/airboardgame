@@ -9,8 +9,6 @@ import { AvailableItemListAtom } from "./Board/";
 import Touch from "../ui/Touch";
 import SidePanel from "../ui/SidePanel";
 
-import { itemMap } from "./boardComponents";
-
 // Keep compatibility with previous availableItems shape
 const migrateAvailableItemList = (old) => {
   const groupMap = old.reduce((acc, { groupId, ...item }) => {
@@ -26,7 +24,7 @@ const migrateAvailableItemList = (old) => {
   }));
 };
 
-const adaptItem = (item) => ({
+const adaptItem = (item, itemMap) => ({
   type: item.type,
   template: item,
   component: itemMap[item.type].component,
@@ -34,17 +32,17 @@ const adaptItem = (item) => ({
   uid: nanoid(),
 });
 
-const adaptAvailableItems = (nodes) => {
+const adaptAvailableItems = (nodes, itemMap) => {
   return nodes.map((node) => {
     if (node.type) {
-      return adaptItem(node);
+      return adaptItem(node, itemMap);
     } else {
-      return { ...node, items: adaptAvailableItems(node.items) };
+      return { ...node, items: adaptAvailableItems(node.items, itemMap) };
     }
   });
 };
 
-const AddItemButton = () => {
+const AddItemButton = ({ itemMap }) => {
   const { t } = useTranslation();
 
   const availableItemList = useRecoilValue(AvailableItemListAtom);
@@ -58,7 +56,7 @@ const AddItemButton = () => {
         ...itemMap[key],
         uid: nanoid(),
       })),
-    []
+    [itemMap]
   );
 
   const availableItemLibrary = React.useMemo(() => {
@@ -66,8 +64,8 @@ const AddItemButton = () => {
     if (itemList.length && itemList[0].groupId) {
       itemList = migrateAvailableItemList(itemList);
     }
-    return adaptAvailableItems(itemList);
-  }, [availableItemList]);
+    return adaptAvailableItems(itemList, itemMap);
+  }, [availableItemList, itemMap]);
 
   return (
     <>

@@ -72,7 +72,8 @@ const ActionBar = styled.div`
 export const BoardView = ({
   edit: editMode = false,
   mediaLibraries,
-  getComponent,
+  itemMap,
+  actionMap,
 }) => {
   const { t } = useTranslation();
   const { currentUser, localUsers: users } = useUsers();
@@ -112,12 +113,16 @@ export const BoardView = ({
             <Board
               user={currentUser}
               users={users}
-              getComponent={getComponent}
+              itemMap={itemMap}
               moveFirst={moveFirst}
               hideMenu={hideMenu}
             />
           </ImageDropNPaste>
-          <SelectedItemsPane hideMenu={hideMenu} />
+          <SelectedItemsPane
+            hideMenu={hideMenu}
+            itemMap={itemMap}
+            actionMap={actionMap}
+          />
         </BoardContainer>
         <ActionBar>
           {!editMode && <MessageButton />}
@@ -146,7 +151,7 @@ export const BoardView = ({
             icon={hideMenu ? "eye-with-line" : "eye"}
           />
           <div className="spacer" />
-          <AddItemButton />
+          <AddItemButton itemMap={itemMap} />
         </ActionBar>
       </MediaLibraryProvider>
     </StyledBoardView>

@@ -1,37 +1,35 @@
 import React from "react";
 
-import { useRecoilState, useRecoilCallback } from "recoil";
-import { useItems } from "../Board/Items";
-import { selectedItemsAtom } from "../Board/Selector";
+import { useSetRecoilState, useRecoilCallback } from "recoil";
+import { useItems } from "../components/Board/Items";
+import { selectedItemsAtom } from "../components/Board/Selector";
 
-import { useUsers } from "../users";
+import { useUsers } from "../components/users";
 
-import intersection from "lodash.intersection";
-import { ItemMapAtom } from "../Board";
-import { getActionsFromItem } from "./";
+import { ItemMapAtom } from "../components/Board";
 
 import { useTranslation } from "react-i18next";
 import { nanoid } from "nanoid";
 import { toast } from "react-toastify";
 
-import { shuffle as shuffleArray, randInt } from "../../utils";
+import { shuffle as shuffleArray, randInt } from "../utils";
 
-import deleteIcon from "../../images/delete.svg";
-import stackToCenterIcon from "../../images/stackToCenter.svg";
-import stackToTopLeftIcon from "../../images/stackToTopLeft.svg";
-import alignAsLineIcon from "../../images/alignAsLine.svg";
-import alignAsSquareIcon from "../../images/alignAsSquare.svg";
-import duplicateIcon from "../../images/duplicate.svg";
-import seeIcon from "../../images/see.svg";
-import flipIcon from "../../images/flip.svg";
-import lockIcon from "../../images/lock.svg";
-import rotateIcon from "../../images/rotate.svg";
-import shuffleIcon from "../../images/shuffle.svg";
-import tapIcon from "../../images/tap.svg";
+import deleteIcon from "../images/delete.svg";
+import stackToCenterIcon from "../images/stackToCenter.svg";
+import stackToTopLeftIcon from "../images/stackToTopLeft.svg";
+import alignAsLineIcon from "../images/alignAsLine.svg";
+import alignAsSquareIcon from "../images/alignAsSquare.svg";
+import duplicateIcon from "../images/duplicate.svg";
+import seeIcon from "../images/see.svg";
+import flipIcon from "../images/flip.svg";
+import lockIcon from "../images/lock.svg";
+import rotateIcon from "../images/rotate.svg";
+import shuffleIcon from "../images/shuffle.svg";
+import tapIcon from "../images/tap.svg";
 
-import useLocalStorage from "../../hooks/useLocalStorage";
+import useLocalStorage from "../hooks/useLocalStorage";
 
-export const useItemActions = () => {
+export const useGameItemActionMap = () => {
   const {
     batchUpdateItems,
     removeItems,
@@ -46,8 +44,7 @@ export const useItemActions = () => {
 
   const { currentUser } = useUsers();
 
-  const [selected, setSelectedItems] = useRecoilState(selectedItemsAtom);
-  const [availableActions, setAvailableActions] = React.useState([]);
+  const setSelectedItems = useSetRecoilState(selectedItemsAtom);
   const isMountedRef = React.useRef(false);
 
   const getItemListOrSelected = useRecoilCallback(
@@ -70,27 +67,6 @@ export const useItemActions = () => {
       isMountedRef.current = false;
     };
   }, []);
-
-  const updateAvailableActions = React.useCallback(async () => {
-    const [selectedItemIds, selectedItemList] = await getItemListOrSelected();
-    if (selectedItemIds.length > 0) {
-      // Prevent set state on unmounted component
-      if (!isMountedRef.current) return;
-
-      const allActions = selectedItemList.reduce((acc, item) => {
-        return intersection(acc, getActionsFromItem(item));
-      }, getActionsFromItem(selectedItemList[0]));
-
-      setAvailableActions(allActions);
-    } else {
-      setAvailableActions([]);
-    }
-  }, [getItemListOrSelected]);
-
-  // Update available actions when selection change
-  React.useEffect(() => {
-    updateAvailableActions();
-  }, [updateAvailableActions, selected]);
 
   // Stack selection to Center
   const stackToCenter = React.useCallback(
@@ -636,21 +612,6 @@ export const useItemActions = () => {
     ]
   );
 
-  return {
-    stack: stackToTopLeft,
-    remove,
-    setFlip,
-    setFlipSelf,
-    toggleFlip,
-    toggleFlipSelf,
-    toggleLock,
-    toggleTap,
-    shuffle: shuffleItems,
-    rotate,
-    actionMap,
-    availableActions,
-    randomlyRotate: randomlyRotateSelectedItems,
-  };
+  return { actionMap, setFlip, setFlipSelf, stack: stackToTopLeft };
 };
-
-export default useItemActions;
+export default useGameItemActionMap;

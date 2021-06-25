@@ -2,7 +2,7 @@ import React from "react";
 
 import useC2C, { C2CProvider } from "../hooks/useC2C";
 
-import { getComponent } from "../components/boardComponents";
+import { itemMap, useGameItemActionMap } from "../gameComponents";
 
 import BoardView from "../views/BoardView";
 import Waiter from "../ui/Waiter";
@@ -24,6 +24,8 @@ export const SessionView = () => {
   } = useSession();
 
   const { c2c, isMaster } = useC2C("board");
+
+  const { actionMap } = useGameItemActionMap();
 
   const { setCurrentUser } = useUsers();
 
@@ -72,22 +74,22 @@ export const SessionView = () => {
     () =>
       gameId
         ? [
-            {
-              id: "session",
-              name: t("Session"),
-              boxId: "session",
-              resourceId: sessionId,
-            },
-          { id: "game", name: t("Game"), boxId: "game", resourceId: gameId },
-          ]
+          {
+            id: "session",
+            name: t("Session"),
+            boxId: "session",
+            resourceId: sessionId,
+          },
+            { id: "game", name: t("Game"), boxId: "game", resourceId: gameId },
+        ]
         : [
-            {
-              id: "session",
-              name: t("Session"),
-              boxId: "session",
-              resourceId: sessionId,
-            },
-        ],
+          {
+            id: "session",
+            name: t("Session"),
+            boxId: "session",
+            resourceId: sessionId,
+          },
+          ],
     [gameId, sessionId, t]
   );
 
@@ -96,7 +98,11 @@ export const SessionView = () => {
   }
 
   return (
-    <BoardView mediaLibraries={mediaLibraries} getComponent={getComponent} />
+    <BoardView
+      mediaLibraries={mediaLibraries}
+      itemMap={itemMap}
+      actionMap={actionMap}
+    />
   );
 };
 

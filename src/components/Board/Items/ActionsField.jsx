@@ -1,16 +1,15 @@
 import React from "react";
 
-import Label from "../../ui/formUtils/Label";
+import Label from "../../../ui/formUtils/Label";
 
-import useItemActions from "./useItemActions";
 import { Field } from "react-final-form";
 
 const ActionsField = ({
   value: globalValue,
   onChange: globalOnChange,
   availableActions,
+  actionMap,
 }) => {
-  const { actionMap } = useItemActions();
   return (
     <div>
       {availableActions.map((action) => {

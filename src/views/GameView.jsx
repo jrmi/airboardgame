@@ -2,7 +2,7 @@ import React from "react";
 import { useParams } from "react-router-dom";
 import { nanoid } from "nanoid";
 
-import { getComponent } from "../components/boardComponents";
+import { itemMap, useGameItemActionMap } from "../gameComponents";
 
 import useC2C, { C2CProvider } from "../hooks/useC2C";
 
@@ -25,6 +25,7 @@ const newGameData = {
 export const GameView = () => {
   const { c2c, isMaster } = useC2C("board");
   const { gameId } = useParams();
+  const { actionMap } = useGameItemActionMap();
   const [realGameId, setRealGameId] = React.useState();
   const [gameLoaded, setGameLoaded] = React.useState(false);
   const [game, setGame] = React.useState(null);
@@ -99,7 +100,8 @@ export const GameView = () => {
       <BoardView
         edit={true}
         mediaLibraries={libraries}
-        getComponent={getComponent}
+        itemMap={itemMap}
+        actionMap={actionMap}
       />
     </GameProvider>
   );
