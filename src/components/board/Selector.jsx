@@ -1,7 +1,9 @@
 import React from "react";
-
-import { useRecoilValue, useSetRecoilState, useRecoilCallback } from "recoil";
+import throttle from "lodash.throttle";
 import styled from "styled-components";
+import { useRecoilValue, useSetRecoilState, useRecoilCallback } from "recoil";
+
+import { insideClass, isItemInsideElement } from "../utils";
 
 import {
   PanZoomRotateAtom,
@@ -10,8 +12,6 @@ import {
   BoardStateAtom,
   SelectedItemsAtom,
 } from "./";
-import { insideClass, isItemInsideElement } from "../../utils";
-import throttle from "lodash.throttle";
 
 import Gesture from "./Gesture";
 

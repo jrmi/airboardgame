@@ -11,7 +11,7 @@ import { MediaLibraryProvider } from "./mediaLibrary";
 import ImageDropNPaste from "./ImageDropNPaste";
 import AddItemButton from "./AddItemButton";
 import { MessageButton } from "./message";
-import { insideClass } from "../utils";
+import { insideClass } from "./utils";
 
 const StyledBoardView = styled.div`
   width: 100vw;

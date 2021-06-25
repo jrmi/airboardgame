@@ -5,8 +5,7 @@ import { useRecoilValue, useRecoilCallback } from "recoil";
 import debounce from "lodash.debounce";
 import { useTranslation } from "react-i18next";
 
-import { insideClass, hasClass } from "../utils";
-
+import { insideClass, hasClass } from "./utils";
 import SidePanel from "./ui/SidePanel";
 import { useItemActions } from "./board/Items/useItemActions";
 import {

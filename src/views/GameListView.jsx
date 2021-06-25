@@ -11,7 +11,7 @@ import languageSVG from "../images/language.svg";
 import clockSVG from "../images/clock.svg";
 
 import { getGames } from "../utils/api";
-import { search } from "../utils";
+import { search } from "../components/utils";
 
 import GameListItem from "./GameListItem";
 import { StyledGameList } from "./StyledGameList";
@@ -204,14 +204,14 @@ const GameListView = () => {
   const filteredGameList = React.useMemo(() => {
     return gameList
       ? gameList.filter((game) => {
-          return (
-          (filterCriteria.searchTerm === NULL_SEARCH_TERM ||
+        return (
+            (filterCriteria.searchTerm === NULL_SEARCH_TERM ||
               search(filterCriteria.searchTerm, game.defaultName)) &&
             hasRequestedValues(filterCriteria.nbOfPlayers, game.playerCount) &&
             hasRequestedValues(filterCriteria.durations, game.duration) &&
             hasAllowedMaterialLanguage(filterCriteria, game)
-        );
-        })
+          );
+      })
       : [];
   }, [gameList, filterCriteria]);
 

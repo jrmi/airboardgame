@@ -12,7 +12,7 @@ import {
   PanZoomRotateAtom,
   SelectedItemsAtom,
 } from "./";
-import { insideClass } from "../../utils/";
+import { insideClass } from "../utils";
 
 import usePrevious from "../hooks/usePrevious";
 

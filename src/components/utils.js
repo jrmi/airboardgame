@@ -49,24 +49,6 @@ export const shuffle = (a) => {
   return a;
 };
 
-/**
- * Extract coordinates from mouse/touch event.
- * @param {event} e the event.
- */
-export const getPointerState = (e) => {
-  if (e.touches) {
-    return {
-      clientX: e.touches[0].clientX,
-      clientY: e.touches[0].clientY,
-    };
-  } else {
-    return {
-      clientX: e.clientX,
-      clientY: e.clientY,
-    };
-  }
-};
-
 export const randInt = (min, max) => {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };
