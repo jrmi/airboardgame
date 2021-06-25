@@ -4,8 +4,8 @@ import { atom, useRecoilState, useRecoilCallback } from "recoil";
 
 import dayjs from "dayjs";
 
-import { useUsers } from "../components/users";
-import useC2C from "./useC2C";
+import { useUsers } from "../users";
+import useC2C from "../../hooks/useC2C";
 
 export const MessagesAtom = atom({
   key: "messages",

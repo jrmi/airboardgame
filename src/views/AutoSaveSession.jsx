@@ -1,7 +1,7 @@
 import React from "react";
 import { useRecoilValue } from "recoil";
 import useC2C from "../hooks/useC2C";
-import { MessagesAtom } from "../hooks/useMessage";
+import { MessagesAtom } from "../components/Message/useMessage";
 import useTimeout from "../hooks/useTimeout";
 import useSession from "../hooks/useSession";
 import debounce from "lodash.debounce";
