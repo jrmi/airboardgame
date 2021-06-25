@@ -16,7 +16,6 @@ import useC2C from "../../components/hooks/useC2C";
 import useLocalStorage from "../../hooks/useLocalStorage";
 
 import InfoModal from "./InfoModal";
-import InfoEditModal from "./InfoEditModal";
 import LoadGameModal from "./LoadGameModal";
 import LoadSessionModal from "./LoadSessionModal";
 import ChangeGameModal from "./ChangeGameModal";
@@ -141,7 +140,6 @@ const NavBar = ({ editMode }) => {
 
   const [showLoadGameModal, setShowLoadGameModal] = React.useState(false);
   const [showSaveGameModal, setShowSaveGameModal] = React.useState(false);
-  const [showEditInfoModal, setShowEditInfoModal] = React.useState(false);
   const [showChangeGameModal, setShowChangeGameModal] = React.useState(false);
   const [showInfoModal, setShowInfoModal] = React.useState(false);
   const [showLink, setShowLink] = React.useState(false);
@@ -268,14 +266,6 @@ const NavBar = ({ editMode }) => {
             icon={editMode ? "save" : "download"}
           />
           <div className="spacer" />
-          {editMode && (
-            <Touch
-              onClick={() => setShowEditInfoModal((prev) => !prev)}
-              alt={t("Edit game info")}
-              title={t("Edit game info")}
-              icon={"new-message"}
-            />
-          )}
           <Touch
             onClick={() => setShowInfoModal((prev) => !prev)}
             alt={t("Help & info")}
@@ -288,12 +278,6 @@ const NavBar = ({ editMode }) => {
 
       {!editMode && (
         <WelcomeModal show={showLink} setShow={setShowLink} welcome={false} />
-      )}
-      {editMode && (
-        <InfoEditModal
-          show={showEditInfoModal}
-          setShow={setShowEditInfoModal}
-        />
       )}
       {!editMode && (
         <LoadSessionModal

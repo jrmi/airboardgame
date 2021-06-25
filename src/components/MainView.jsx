@@ -12,6 +12,7 @@ import ImageDropNPaste from "./ImageDropNPaste";
 import AddItemButton from "./AddItemButton";
 import { MessageButton } from "./message";
 import { insideClass } from "./utils";
+import EditInfoButton from "./EditInfoButton";
 
 const StyledBoardView = styled.div`
   width: 100vw;
@@ -66,6 +67,7 @@ const ActionBar = styled.div`
 export const MainView = ({
   edit: editMode = false,
   mediaLibraries,
+  mediaHandlers,
   itemMap,
   actionMap,
   ItemFormComponent,
@@ -94,7 +96,7 @@ export const MainView = ({
 
   return (
     <StyledBoardView>
-      <MediaLibraryProvider libraries={mediaLibraries}>
+      <MediaLibraryProvider libraries={mediaLibraries} {...mediaHandlers}>
         <BoardContainer>
           <ImageDropNPaste>
             <Board
@@ -114,6 +116,7 @@ export const MainView = ({
         </BoardContainer>
         <ActionBar>
           {!editMode && <MessageButton />}
+          {editMode && <EditInfoButton />}
           <div className="spacer" />
           <Touch
             onClick={() => setMoveFirst(false)}

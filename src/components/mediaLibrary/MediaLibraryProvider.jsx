@@ -1,28 +1,37 @@
 import React, { useContext } from "react";
-import {
-  uploadResourceImage,
-  listResourceImage,
-  deleteResourceImage,
-} from "../../utils/api";
 
 export const MediaLibraryContext = React.createContext({});
 
-export const MediaLibraryProvider = ({ children, libraries = [] }) => {
-  const addMedia = React.useCallback(async ({ boxId, resourceId }, file) => {
-    const filePath = await uploadResourceImage(boxId, resourceId, file);
-    return {
-      type: "local",
-      content: filePath,
-    };
-  }, []);
+const noop = () => {};
 
-  const removeMedia = React.useCallback(async (key) => {
-    return await deleteResourceImage(key);
-  }, []);
+export const MediaLibraryProvider = ({
+  children,
+  libraries = [],
+  uploadMedia = noop,
+  listMedia = noop,
+  deleteMedia = noop,
+}) => {
+  const addMedia = React.useCallback(
+    async ({ boxId, resourceId }, file) => {
+      const filePath = await uploadMedia(boxId, resourceId, file);
+      return {
+        type: "local",
+        content: filePath,
+      };
+    },
+    [uploadMedia]
+  );
+
+  const removeMedia = React.useCallback(
+    async (key) => {
+      return await deleteMedia(key);
+    },
+    [deleteMedia]
+  );
 
   const getLibraryMedia = React.useCallback(
-    async ({ boxId, resourceId }) => listResourceImage(boxId, resourceId),
-    []
+    async ({ boxId, resourceId }) => listMedia(boxId, resourceId),
+    [listMedia]
   );
 
   return (
