@@ -71,6 +71,7 @@ export const MainView = ({
   itemMap,
   actionMap,
   ItemFormComponent,
+  BoardFormComponent,
 }) => {
   const { t } = useTranslation();
   const { currentUser, localUsers: users } = useUsers();
@@ -116,7 +117,9 @@ export const MainView = ({
         </BoardContainer>
         <ActionBar>
           {!editMode && <MessageButton />}
-          {editMode && <EditInfoButton />}
+          {editMode && (
+            <EditInfoButton BoardFormComponent={BoardFormComponent} />
+          )}
           <div className="spacer" />
           <Touch
             onClick={() => setMoveFirst(false)}
