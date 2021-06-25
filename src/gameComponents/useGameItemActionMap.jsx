@@ -9,7 +9,7 @@ import { SelectedItemsAtom } from "../components/board";
 import { useUsers } from "../components/users";
 import { ItemMapAtom } from "../components/board";
 
-import { shuffle as shuffleArray, randInt } from "../utils";
+import { shuffle as shuffleArray, randInt } from "../components/utils";
 
 import deleteIcon from "../images/delete.svg";
 import stackToCenterIcon from "../images/stackToCenter.svg";

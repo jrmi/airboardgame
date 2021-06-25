@@ -8,7 +8,7 @@ import {
 } from "./";
 import { useItems } from "./Items";
 import { useSetRecoilState, useRecoilCallback } from "recoil";
-import { insideClass, hasClass } from "../../utils";
+import { insideClass, hasClass } from "../utils";
 
 import Gesture from "./Gesture";
 

@@ -7,7 +7,7 @@ import { debounce } from "lodash";
 
 import { useItems } from "../components/board/Items";
 import useToggle from "./hooks/useToggle";
-import { search } from "../utils";
+import { search } from "./utils";
 
 import Chevron from "./ui/Chevron";
 import { PanZoomRotateAtom } from "./board";

@@ -1,6 +1,9 @@
 import React from "react";
+import platform from "platform";
 
-import { isMacOS } from "../../utils/deviceInfos";
+export const isMacOS = () => {
+  return platform.os.family === "OS X";
+};
 
 // From https://stackoverflow.com/questions/20110224/what-is-the-height-of-a-line-in-a-wheel-event-deltamode-dom-delta-line
 const getScrollLineHeight = () => {

@@ -1,7 +1,7 @@
 import React from "react";
 import { memo } from "react";
 import styled, { css } from "styled-components";
-import { isItemInsideElement } from "../utils";
+import { isItemInsideElement } from "../components/utils";
 import useItemInteraction from "../components/board/Items/useItemInteraction";
 import useGameItemActionMap from "./useGameItemActionMap";
 
