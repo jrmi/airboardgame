@@ -6,6 +6,7 @@ import useC2C from "../../components/hooks/useC2C";
 
 import WelcomeModal from "./WelcomeModal";
 import NavBar from "./NavBar";
+import BoardForm from "./BoardForm";
 
 import {
   uploadResourceImage,
@@ -30,7 +31,11 @@ export const BoardView = (props) => {
     <>
       <NavBar editMode={props.edit} />
       <WelcomeModal show={showWelcomeModal} setShow={setShowWelcomeModal} />
-      <MainView {...props} mediaHandlers={mediaHandlers} />
+      <MainView
+        {...props}
+        mediaHandlers={mediaHandlers}
+        BoardFormComponent={BoardForm}
+      />
     </>
   );
 };
