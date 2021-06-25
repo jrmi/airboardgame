@@ -11,7 +11,6 @@ import useC2C from "../../hooks/useC2C";
 
 import WelcomeModal from "./WelcomeModal";
 import { MediaLibraryProvider } from "../../components/mediaLibrary";
-import AutoSaveSession from "../../components/AutoSaveSession";
 import ImageDropNPaste from "../../components/ImageDropNPaste";
 import AddItemButton from "../../components/AddItemButton";
 import { MessageButton } from "../../components/Message";
@@ -108,7 +107,6 @@ export const BoardView = ({
       <MediaLibraryProvider libraries={mediaLibraries}>
         <NavBar editMode={editMode} />
         <WelcomeModal show={showWelcomeModal} setShow={setShowWelcomeModal} />
-        {!editMode && <AutoSaveSession />}
         <BoardContainer>
           <ImageDropNPaste>
             <Board

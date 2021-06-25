@@ -1,16 +1,16 @@
 import React, { memo } from "react";
+import { useTranslation } from "react-i18next";
 import { nanoid } from "nanoid";
+import styled from "styled-components";
 import { useRecoilCallback } from "recoil";
+import { debounce } from "lodash";
 
 import { useItems } from "../components/Board/Items";
 import useToggle from "../hooks/useToggle";
 import Chevron from "../ui/Chevron";
 import { PanZoomRotateAtom } from "./Board";
 
-import styled from "styled-components";
 import { search } from "../utils";
-import { useTranslation } from "react-i18next";
-import { debounce } from "lodash";
 
 const StyledItemList = styled.ul`
   display: flex;

@@ -1,13 +1,11 @@
 import React, { memo } from "react";
 import { nanoid } from "nanoid";
 import { useRecoilCallback } from "recoil";
-
-import { useItems } from "../components/Board/Items";
-import { PanZoomRotateAtom } from "./Board";
-
-import { itemMap } from "./boardComponents";
-
 import styled from "styled-components";
+
+import { useItems } from "./Board/Items";
+import { PanZoomRotateAtom } from "./Board";
+import { itemMap } from "./boardComponents";
 
 const ItemList = styled.div`
   display: flex;

@@ -1,14 +1,13 @@
 import React from "react";
-
-import Waiter from "../ui/Waiter";
 import { useDropzone } from "react-dropzone";
+import { nanoid } from "nanoid";
+import { useRecoilCallback } from "recoil";
+import { useTranslation } from "react-i18next";
+
 import { PanZoomRotateAtom } from "./Board";
 import { useItems } from "../components/Board/Items";
 import { useMediaLibrary } from "../components/mediaLibrary";
-import { nanoid } from "nanoid";
-
-import { useRecoilCallback } from "recoil";
-import { useTranslation } from "react-i18next";
+import Waiter from "../ui/Waiter";
 
 const ImageDropNPaste = ({ children }) => {
   const { t } = useTranslation();
