@@ -48,7 +48,7 @@ export const SessionView = () => {
         setSession(sessionData, true);
       }
     },
-    [c2c, sessionLoaded, isMaster]
+    [sessionLoaded, isMaster]
   );
 
   // Load game from master if any
@@ -76,22 +76,22 @@ export const SessionView = () => {
     () =>
       gameId
         ? [
-          {
-            id: "session",
-            name: t("Session"),
-            boxId: "session",
-            resourceId: sessionId,
-          },
-            { id: "game", name: t("Game"), boxId: "game", resourceId: gameId },
-        ]
+            {
+              id: "session",
+              name: t("Session"),
+              boxId: "session",
+              resourceId: sessionId,
+            },
+          { id: "game", name: t("Game"), boxId: "game", resourceId: gameId },
+          ]
         : [
-          {
-            id: "session",
-            name: t("Session"),
-            boxId: "session",
-            resourceId: sessionId,
-          },
-          ],
+            {
+              id: "session",
+              name: t("Session"),
+              boxId: "session",
+              resourceId: sessionId,
+            },
+        ],
     [gameId, sessionId, t]
   );
 
