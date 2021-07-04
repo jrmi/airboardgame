@@ -1,7 +1,7 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 
-import useC2C from "../../components/hooks/useC2C";
+import { useC2C } from "react-sync-board";
 import useSession from "../../hooks/useSession";
 
 import Modal from "../../components/ui/Modal";

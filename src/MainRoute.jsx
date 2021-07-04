@@ -8,10 +8,10 @@ import "react-toastify/dist/ReactToastify.css";
 import "./react-confirm-alert.css";
 
 import Home from "./views/Home";
-import GameView from "./views/GameView";
-import RoomWrapperView from "./views/RoomWrapperView";
+// import GameView from "./views/GameView";
+// import RoomWrapperView from "./views/RoomWrapperView";
 import AuthView from "./views/AuthView";
-import RoomView from "./views/RoomView";
+// import RoomView from "./views/RoomView";
 
 import { Provider as SocketIOProvider } from "@scripters/use-socket.io";
 
@@ -65,7 +65,7 @@ const MainRoute = () => {
           );
         }}
       </Route>
-      <Route path="/session/:sessionId">
+      {/*<Route path="/session/:sessionId">
         {({
           location: { search },
           match: {
@@ -82,14 +82,14 @@ const MainRoute = () => {
             </WithSocketIO>
           );
         }}
-      </Route>
-      {/* Game edition */}
+      </Route>*/}
+      {/* Game edition/}
       <Route path="/game/:gameId?">
         <WithSocketIO>
           <GameView />
         </WithSocketIO>
       </Route>
-      {/* Room routes */}
+      {/* Room routes}
       <Route path="/room/:roomId">
         {({
           match: {
