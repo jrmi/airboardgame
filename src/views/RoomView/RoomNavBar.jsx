@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 
 import { ENABLE_WEBCONFERENCE } from "../../utils/settings";
 import useLocalStorage from "../../hooks/useLocalStorage";
-import useC2C from "../../components/hooks/useC2C";
+import { useC2C } from "react-sync-board";
 
 import Touch from "../../components/ui/Touch";
 import { UserList } from "../../components/users";

@@ -12,7 +12,7 @@ import {
 } from "../components/board";
 import { MessagesAtom, parseMessage } from "../components/message/useMessage";
 import useBoardConfig from "../components/useBoardConfig";
-import useC2C from "../components/hooks/useC2C";
+import { useC2C } from "react-sync-board";
 
 export const SessionContext = React.createContext({});
 

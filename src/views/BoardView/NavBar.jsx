@@ -12,7 +12,7 @@ import WebConferenceButton from "../webconf/WebConferenceButton";
 
 import { getBestTranslationFromConfig } from "../../utils/api";
 import { ENABLE_WEBCONFERENCE } from "../../utils/settings";
-import useC2C from "../../components/hooks/useC2C";
+import { useC2C } from "react-sync-board";
 import useLocalStorage from "../../hooks/useLocalStorage";
 
 import InfoModal from "./InfoModal";
