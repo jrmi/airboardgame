@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 
 import Modal from "../../components/ui/Modal";
 
-import { useC2C } from "react-sync-board";
+import useSession from "../../hooks/useSession";
 
 const StyledUrl = styled.div`
   background-color: var(--color-midGrey);
@@ -34,7 +34,7 @@ const WelcomeModal = ({ show, setShow, welcome = true }) => {
   const currentUrl = window.location.href;
   const inputRef = React.useRef();
 
-  const { room } = useC2C("board");
+  const { sessionId: room } = useSession();
 
   const handleCopy = () => {
     inputRef.current.style.display = "block";

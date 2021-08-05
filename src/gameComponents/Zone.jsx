@@ -1,9 +1,10 @@
 import React from "react";
 import { memo } from "react";
 import styled, { css } from "styled-components";
-import { isItemInsideElement } from "../components/utils";
-import useItemInteraction from "../components/board/Items/useItemInteraction";
-import useGameItemActionMap from "./useGameItemActionMap";
+import { useItemInteraction } from "react-sync-board";
+
+import { isItemInsideElement } from "../views/utils";
+import { useItemActions } from "react-sync-board";
 
 const ZoneWrapper = styled.div`
   ${({ width = 200, height = 200 }) => css`
@@ -32,8 +33,8 @@ const ZoneWrapper = styled.div`
 
 const Zone = ({ width, height, label, onItem }) => {
   const { register } = useItemInteraction("place");
-  const { setFlip, setFlipSelf, stack } = useGameItemActionMap();
   const zoneRef = React.useRef(null);
+  const actionMap = useItemActions();
 
   const onInsideItem = React.useCallback(
     (itemIds) => {
@@ -44,24 +45,24 @@ const Zone = ({ width, height, label, onItem }) => {
       onItem.forEach((action) => {
         switch (action) {
           case "reveal":
-            setFlip(insideItems, { flip: false });
+            actionMap["reveal"].action(insideItems);
             break;
           case "hide":
-            setFlip(insideItems, { flip: true });
+            actionMap["hide"].action(insideItems);
             break;
           case "revealSelf":
-            setFlipSelf(insideItems, { flipSelf: true });
+            actionMap["revealSelf"].action(insideItems);
             break;
           case "hideSelf":
-            setFlipSelf(insideItems, { flipSelf: false });
+            actionMap["sideSelf"].action(insideItems);
             break;
           case "stack":
-            stack(insideItems);
+            actionMap["stack"].action(insideItems);
             break;
         }
       });
     },
-    [onItem, setFlip, setFlipSelf, stack]
+    [actionMap, onItem]
   );
 
   React.useEffect(() => {
@@ -72,7 +73,7 @@ const Zone = ({ width, height, label, onItem }) => {
     return () => {
       unregisterList.forEach((callback) => callback());
     };
-  }, [onInsideItem, onItem, register, setFlip]);
+  }, [onInsideItem, onItem, register]);
 
   return (
     <ZoneWrapper width={width} height={height} ref={zoneRef}>

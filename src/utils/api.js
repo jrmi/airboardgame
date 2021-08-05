@@ -66,7 +66,7 @@ export const getBestTranslationFromConfig = (
     defaultDescription,
     name,
     info,
-  },
+  } = {},
   langs
 ) => {
   const translationsMap = {

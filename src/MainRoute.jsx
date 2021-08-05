@@ -9,7 +9,7 @@ import "./react-confirm-alert.css";
 
 import Home from "./views/Home";
 // import GameView from "./views/GameView";
-// import RoomWrapperView from "./views/RoomWrapperView";
+import Session from "./views/Session";
 import AuthView from "./views/AuthView";
 // import RoomView from "./views/RoomView";
 
@@ -65,7 +65,7 @@ const MainRoute = () => {
           );
         }}
       </Route>
-      {/*<Route path="/session/:sessionId">
+      <Route path="/session/:sessionId">
         {({
           location: { search },
           match: {
@@ -78,12 +78,12 @@ const MainRoute = () => {
           // Redirect to new session id
           return (
             <WithSocketIO>
-              <RoomWrapperView sessionId={sessionId} fromGame={fromGame} />
+              <Session sessionId={sessionId} fromGame={fromGame} />
             </WithSocketIO>
           );
         }}
-      </Route>*/}
-      {/* Game edition/}
+      </Route>
+      {/* Game edition }
       <Route path="/game/:gameId?">
         <WithSocketIO>
           <GameView />

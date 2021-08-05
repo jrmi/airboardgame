@@ -1,0 +1,91 @@
+import React from "react";
+
+import MessageButton from "../../components/messages/MessageButton";
+import EditInfoButton from "../../components/EditInfoButton";
+import AddItemButton from "../../components/AddItemButton";
+
+import styled from "styled-components";
+import { useTranslation } from "react-i18next";
+
+import Touch from "../../components/ui/Touch";
+
+const StyledActionBar = styled.div`
+  position: absolute;
+  bottom: 1em;
+  right: 0em;
+  display: flex;
+  width: 100%;
+  text-shadow: 1px 1px 2px #222;
+  font-size: 0.8em;
+  pointer-events: none;
+
+  & > *:not(.spacer) {
+    padding: 0 1.5em;
+    pointer-events: all;
+  }
+
+  & .spacer {
+    flex: 1;
+  }
+
+  @media screen and (max-width: 640px) {
+    & > *:not(.spacer) {
+      padding: 0 0.5em;
+    }
+    & .spacer {
+      padding: 0;
+    }
+  }
+
+  @media screen and (max-width: 420px) {
+    & > *:not(.spacer) {
+      padding: 0 0.2em;
+    }
+  }
+`;
+
+const ActionBar = ({
+  editMode,
+  BoardFormComponent,
+  itemLibraries,
+  moveFirst,
+  setMoveFirst,
+  hideMenu,
+  setHideMenu,
+}) => {
+  const { t } = useTranslation();
+  return (
+    <StyledActionBar>
+      {!editMode && <MessageButton />}
+      {editMode && <EditInfoButton BoardFormComponent={BoardFormComponent} />}
+      <div className="spacer" />
+      <Touch
+        onClick={() => setMoveFirst(false)}
+        alt={t("Select mode")}
+        label={t("Select")}
+        title={t("Switch to select mode")}
+        icon={"mouse-pointer"}
+        active={!moveFirst}
+      />
+      <Touch
+        onClick={() => setMoveFirst(true)}
+        alt={t("Move mode")}
+        label={t("Move")}
+        title={t("Switch to move mode")}
+        icon={"hand"}
+        active={moveFirst}
+      />
+      <Touch
+        onClick={() => setHideMenu((prev) => !prev)}
+        alt={hideMenu ? t("Show menu") : t("Hide menu")}
+        label={hideMenu ? t("Show menu") : t("Hide menu")}
+        title={hideMenu ? t("Show action menu") : t("Hide action menu")}
+        icon={hideMenu ? "eye-with-line" : "eye"}
+      />
+      <div className="spacer" />
+      <AddItemButton itemLibraries={itemLibraries} />
+    </StyledActionBar>
+  );
+};
+
+export default ActionBar;

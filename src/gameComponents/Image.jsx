@@ -1,5 +1,5 @@
 import React, { memo } from "react";
-import { useUsers } from "../components/users";
+import { useUsers } from "react-sync-board";
 import styled from "styled-components";
 import { media2Url } from "../components/mediaLibrary";
 

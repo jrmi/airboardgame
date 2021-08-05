@@ -4,8 +4,6 @@ import styled from "styled-components";
 import useOpenVidu from "./useOpenVidu";
 import useLocalStorage from "../../hooks/useLocalStorage";
 
-import useUsers from "../../components/users/useUsers";
-
 import LocalStream from "./LocalStream";
 import RemoteStream from "./RemoteStream";
 
@@ -65,7 +63,7 @@ const StyledWebConference = styled.div`
   }
 `;
 
-const WebConferenceContent = () => {
+const WebConferenceContent = ({ users }) => {
   const { remoteStreams = [], localStream } = useOpenVidu();
 
   const [showLocalVideo, setShowLocalVideo] = useLocalStorage(
@@ -85,7 +83,7 @@ const WebConferenceContent = () => {
     setShowLocalAudio((prev) => !prev);
   }, [setShowLocalAudio]);
 
-  const { localUsers: users } = useUsers();
+  // const { localUsers: users } = useUsers();
 
   const streamMap = React.useMemo(
     () =>

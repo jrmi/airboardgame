@@ -10,6 +10,8 @@ import "./i18n"; // load translation system
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 
+import styled from "styled-components";
+
 ReactDOM.render(
   <React.StrictMode>
     <App />
@@ -21,3 +23,7 @@ ReactDOM.render(
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: https://bit.ly/CRA-PWA
 serviceWorker.unregister();
+
+window.Styled2 = styled;
+
+console.log(window.Styled2 === window.Styled1);

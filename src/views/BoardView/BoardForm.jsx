@@ -6,12 +6,10 @@ import { Field } from "react-final-form";
 import Hint from "../../components/ui/formUtils/Hint";
 import Label from "../../components/ui/formUtils/Label";
 import SliderRange from "../../components/ui/SliderRange";
-import useBoardConfig from "../../components/useBoardConfig";
 import { ImageField } from "../../components/mediaLibrary";
 
-const BoardConfigForm = () => {
+const BoardConfigForm = ({ boardConfig, setBoardConfig }) => {
   const { t } = useTranslation();
-  const [boardConfig, setBoardConfig] = useBoardConfig();
 
   const [defaultPlayerCount] = React.useState([]);
 
