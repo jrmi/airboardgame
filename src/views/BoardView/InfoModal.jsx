@@ -5,7 +5,7 @@ import useAsyncEffect from "use-async-effect";
 import styled from "styled-components";
 
 import Modal from "../../components/ui/Modal";
-import { BoardConfigAtom } from "../../components/board";
+// import { BoardConfigAtom } from "../../components/board";
 
 import { getBestTranslationFromConfig } from "../../utils/api";
 
@@ -30,11 +30,12 @@ const InfoModal = ({ show, setShow }) => {
 
   const [info, setInfo] = React.useState("");
 
-  const boardConfig = useRecoilValue(BoardConfigAtom);
+  // const boardConfig = useRecoilValue(BoardConfigAtom);
 
   const translation = React.useMemo(
-    () => getBestTranslationFromConfig(boardConfig, i18n.languages),
-    [boardConfig, i18n.languages]
+    // () => getBestTranslationFromConfig(boardConfig, i18n.languages),
+    () => getBestTranslationFromConfig({}, i18n.languages),
+    [i18n.languages]
   );
 
   useAsyncEffect(

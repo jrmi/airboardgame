@@ -105,7 +105,7 @@ describe("Studio", () => {
 
     // Edit title
     cy.get("[title^='Configuration']").click();
-    cy.get("input[name=\"defaultName\"]").clear().type("ChangeGameName");
+    cy.get('input[name="defaultName"]').clear().type("ChangeGameName");
     cy.get(".side-panel.open [alt^='Close']").click();
 
     cy.contains("ChangeGameName");
@@ -144,15 +144,14 @@ describe("Studio", () => {
       cy.get(".item").click({ force: true });
       cy.get("button img[alt^='Edit']").click({ force: true });
 
-      cy.get("input[name=\"width\"]").clear().type("100");
-      cy.get("input[name=\"height\"]").clear().type("75");
-      cy.get("input[name=\"text\"]").clear().type("myCube");
+      cy.get('input[name="width"]').clear().type("100");
+      cy.get('input[name="height"]').clear().type("75");
+      cy.get('input[name="text"]').clear().type("myCube");
 
       cy.get(".item")
         .children()
         .first()
         .should((elt) => {
-          console.log(elt[0]);
           const { clientWidth, clientHeight } = elt[0];
           expect(clientWidth).to.equal(100);
           expect(clientHeight).to.equal(75);
@@ -165,7 +164,7 @@ describe("Studio", () => {
       cy.get(".item").click({ force: true });
       cy.get("button img[alt^='Edit']").click({ force: true });
 
-      cy.get("input[name=\"locked\"]").click();
+      cy.get('input[name="locked"]').click();
 
       cy.get(".item").should("have.class", "locked");
 

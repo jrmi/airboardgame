@@ -5,14 +5,12 @@ import { useTranslation } from "react-i18next";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import { confirmAlert } from "react-confirm-alert";
 
-import { UserList } from "../../components/users";
+import UserList from "../../components/users/UserList";
 import Touch from "../../components/ui/Touch";
-import useBoardConfig from "../../components/useBoardConfig";
 import WebConferenceButton from "../webconf/WebConferenceButton";
 
 import { getBestTranslationFromConfig } from "../../utils/api";
 import { ENABLE_WEBCONFERENCE } from "../../utils/settings";
-import { useC2C } from "react-sync-board";
 import useLocalStorage from "../../hooks/useLocalStorage";
 
 import InfoModal from "./InfoModal";
@@ -22,6 +20,8 @@ import ChangeGameModal from "./ChangeGameModal";
 import ExportModal from "./ExportModal";
 import SaveExportModal from "./SaveExportModal";
 import WelcomeModal from "./WelcomeModal";
+
+import useSession from "../../hooks/useSession";
 
 const StyledNavBar = styled.div.attrs(() => ({ className: "nav" }))`
   position: fixed;
@@ -133,7 +133,7 @@ const StyledNavBar = styled.div.attrs(() => ({ className: "nav" }))`
 
 const NavBar = ({ editMode }) => {
   const { t, i18n } = useTranslation();
-  const { isMaster, room } = useC2C("board");
+  const { sessionId: room, isMaster, boardConfig } = useSession();
 
   const history = useHistory();
   const match = useRouteMatch();
@@ -144,8 +144,6 @@ const NavBar = ({ editMode }) => {
   const [showInfoModal, setShowInfoModal] = React.useState(false);
   const [showLink, setShowLink] = React.useState(false);
   const [isBeta] = useLocalStorage("isBeta", false);
-
-  const [boardConfig] = useBoardConfig();
 
   const translation = React.useMemo(
     () => getBestTranslationFromConfig(boardConfig, i18n.languages),

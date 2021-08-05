@@ -4,7 +4,7 @@ import { nanoid } from "nanoid";
 import { toast } from "react-toastify";
 import { useSetRecoilState, useRecoilCallback } from "recoil";
 
-import { useItems } from "../components/board/Items";
+import { useItemBaseActions } from "../components/board/Items";
 import { SelectedItemsAtom } from "../components/board";
 import { useUsers } from "../components/users";
 import { ItemMapAtom } from "../components/board";
@@ -33,7 +33,7 @@ export const useGameItemActionMap = () => {
     insertItemBefore,
     reverseItemsOrder,
     swapItems,
-  } = useItems();
+  } = useItemBaseActions();
 
   const { t } = useTranslation();
 

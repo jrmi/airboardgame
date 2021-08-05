@@ -8,31 +8,47 @@ import Slider from "../components/ui/Slider";
 
 import ActionsField from "./forms/ActionsField";
 
-import { itemMap } from "./";
-
-import {
-  getDefaultActionsFromItem,
-  getAvailableActionsFromItem,
-} from "../components/board/Items/useItemActions";
-import useGameItemActionMap from "./useGameItemActionMap";
+import { itemTemplates, actionMap } from "./";
 
 export const getFormFieldComponent = (type) => {
-  if (type in itemMap) {
-    return itemMap[type].form;
+  if (type in itemTemplates) {
+    return itemTemplates[type].form;
   }
   return () => null;
+};
+
+const getDefaultActionsFromItem = (item) => {
+  if (item.type in itemTemplates) {
+    const actions = itemTemplates[item.type].defaultActions;
+    if (typeof actions === "function") {
+      return actions(item);
+    }
+    return actions;
+  }
+
+  return [];
+};
+
+const getAvailableActionsFromItem = (item) => {
+  if (item.type in itemTemplates) {
+    const actions = itemTemplates[item.type].availableActions;
+    if (typeof actions === "function") {
+      return actions(item);
+    }
+    return actions;
+  }
+
+  return [];
 };
 
 const ItemForm = ({ items }) => {
   const { t } = useTranslation();
 
-  const { actionMap } = useGameItemActionMap();
-
   const [defaultActions] = React.useState(() =>
-    getDefaultActionsFromItem(items[0], itemMap)
+    getDefaultActionsFromItem(items[0])
   );
   const [availableActions] = React.useState(() =>
-    getAvailableActionsFromItem(items[0], itemMap)
+    getAvailableActionsFromItem(items[0])
   );
 
   let FieldsComponent;

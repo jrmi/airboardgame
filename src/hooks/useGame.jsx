@@ -1,52 +1,37 @@
 import React, { useContext } from "react";
-import { useSetRecoilState, useRecoilCallback } from "recoil";
 
 import { updateGame } from "../utils/api";
 
-import { useItems } from "../components/board/Items";
-import {
-  AvailableItemListAtom,
-  AllItemsSelector,
-  BoardConfigAtom,
-} from "../components/board";
-import useBoardConfig from "../components/useBoardConfig";
+import { useBoardConfig } from "react-sync-board";
 
 export const GameContext = React.createContext({});
 
 export const GameProvider = ({ gameId, game, children }) => {
-  const { setItemList } = useItems();
-  const setAvailableItemList = useSetRecoilState(AvailableItemListAtom);
-  const [, setBoardConfig] = useBoardConfig();
+  const [items, setItems] = React.useState([]);
+  const [availableItems, setAvailableItems] = React.useState([]);
+  const [boardConfig, setBoardConfig] = useBoardConfig();
 
   const [gameLoaded, setGameLoaded] = React.useState(false);
 
   const setGame = React.useCallback(
     async (newGame) => {
-      setAvailableItemList(newGame.availableItems);
+      setAvailableItems(newGame.availableItems);
       // The filter prevent the empty item bug on reload
-      setItemList(newGame.items.filter((item) => item));
+      setItems(newGame.items.filter((item) => item));
       setBoardConfig(newGame.board, false);
       setGameLoaded(true);
     },
-    [setAvailableItemList, setBoardConfig, setItemList]
+    [setBoardConfig]
   );
 
-  const getCurrentGame = useRecoilCallback(
-    ({ snapshot }) => async () => {
-      const availableItemList = await snapshot.getPromise(
-        AvailableItemListAtom
-      );
-      const boardConfig = await snapshot.getPromise(BoardConfigAtom);
-      const itemList = await snapshot.getPromise(AllItemsSelector);
-      const currentGame = {
-        items: itemList,
-        board: boardConfig,
-        availableItems: availableItemList,
-      };
-      return currentGame;
-    },
-    []
-  );
+  const getCurrentGame = React.useCallback(async () => {
+    const currentGame = {
+      items,
+      board: boardConfig,
+      availableItems,
+    };
+    return currentGame;
+  }, [availableItems, boardConfig, items]);
 
   const saveGame = React.useCallback(async () => {
     const currentGame = await getCurrentGame();
