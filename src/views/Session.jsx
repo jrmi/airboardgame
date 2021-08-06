@@ -10,6 +10,7 @@ import BoardView from "./BoardView";
 import Waiter from "./Waiter";
 
 import useSession, { SessionProvider } from "../hooks/useSession";
+import AutoSaveSession from "./AutoSaveSession";
 
 // Keep compatibility with previous availableItems shape
 const migrateAvailableItemList = (old) => {
@@ -143,7 +144,13 @@ export const Session = () => {
   }
 
   return (
-    <BoardView mediaLibraries={mediaLibraries} itemLibraries={itemLibraries} />
+    <>
+      <BoardView
+        mediaLibraries={mediaLibraries}
+        itemLibraries={itemLibraries}
+      />
+      {isMaster && <AutoSaveSession />}
+    </>
   );
 };
 
