@@ -2,14 +2,17 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { nanoid } from "nanoid";
 import { Field } from "react-final-form";
+import { useBoardConfig } from "react-sync-board";
 
 import Hint from "../../components/ui/formUtils/Hint";
 import Label from "../../components/ui/formUtils/Label";
 import SliderRange from "../../components/ui/SliderRange";
 import { ImageField } from "../../components/mediaLibrary";
 
-const BoardConfigForm = ({ boardConfig, setBoardConfig }) => {
+const BoardConfigForm = () => {
   const { t } = useTranslation();
+
+  const [boardConfig, setBoardConfig] = useBoardConfig();
 
   const [defaultPlayerCount] = React.useState([]);
 

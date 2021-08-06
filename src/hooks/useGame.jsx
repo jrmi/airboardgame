@@ -2,12 +2,12 @@ import React, { useContext } from "react";
 
 import { updateGame } from "../utils/api";
 
-import { useBoardConfig } from "react-sync-board";
+import { useBoardConfig, useItemBaseActions } from "react-sync-board";
 
 export const GameContext = React.createContext({});
 
 export const GameProvider = ({ gameId, game, children }) => {
-  const [items, setItems] = React.useState([]);
+  const { setItemList, getItemList } = useItemBaseActions();
   const [availableItems, setAvailableItems] = React.useState([]);
   const [boardConfig, setBoardConfig] = useBoardConfig();
 
@@ -15,23 +15,24 @@ export const GameProvider = ({ gameId, game, children }) => {
 
   const setGame = React.useCallback(
     async (newGame) => {
-      setAvailableItems(newGame.availableItems);
+      const { availableItems, items, board } = newGame;
+      setAvailableItems(availableItems);
       // The filter prevent the empty item bug on reload
-      setItems(newGame.items.filter((item) => item));
-      setBoardConfig(newGame.board, false);
+      setItemList(items.filter((item) => item));
+      setBoardConfig(board, false);
       setGameLoaded(true);
     },
-    [setBoardConfig]
+    [setBoardConfig, setItemList]
   );
 
   const getCurrentGame = React.useCallback(async () => {
     const currentGame = {
-      items,
+      items: await getItemList(),
       board: boardConfig,
       availableItems,
     };
     return currentGame;
-  }, [availableItems, boardConfig, items]);
+  }, [availableItems, boardConfig, getItemList]);
 
   const saveGame = React.useCallback(async () => {
     const currentGame = await getCurrentGame();
@@ -46,9 +47,16 @@ export const GameProvider = ({ gameId, game, children }) => {
 
   return (
     <GameContext.Provider
-      value={{ setGame, getGame: getCurrentGame, saveGame, gameLoaded, gameId }}
+      value={{
+        setGame,
+        getGame: getCurrentGame,
+        saveGame,
+        gameLoaded,
+        gameId,
+        availableItems,
+      }}
     >
-      {gameLoaded && children}
+      {children}
     </GameContext.Provider>
   );
 };
