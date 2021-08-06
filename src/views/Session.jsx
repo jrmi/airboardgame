@@ -1,14 +1,10 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import useAsyncEffect from "use-async-effect";
+import { BoardWrapper, useC2C } from "react-sync-board";
 import { nanoid } from "nanoid";
 
-import {
-  itemTemplates,
-  itemLibrary,
-  actionMap,
-  ItemForm,
-} from "../gameComponents";
+import { itemTemplates, itemLibrary, actionMap } from "../gameComponents";
 
 import BoardView from "./BoardView";
 import Waiter from "./Waiter";
@@ -55,21 +51,18 @@ export const Session = () => {
     sessionLoaded,
     gameId,
     sessionId,
-    initialItems,
     availableItems,
-    setCurrentItems,
-    setIsMaster,
-    boardConfig,
-    initialMessages,
   } = useSession();
 
   const gameLoadingRef = React.useRef(false);
+
+  const { c2c, isMaster } = useC2C("board");
 
   const { t } = useTranslation();
 
   useAsyncEffect(
     async (isMounted) => {
-      if (!sessionLoaded && !gameLoadingRef.current) {
+      if (isMaster && !sessionLoaded && !gameLoadingRef.current) {
         gameLoadingRef.current = true;
         const sessionData = await loadSession();
 
@@ -77,8 +70,30 @@ export const Session = () => {
         setSession(sessionData, true);
       }
     },
-    [sessionLoaded]
+    [sessionLoaded, isMaster]
   );
+
+  // Load game from master if any
+  React.useEffect(() => {
+    if (!isMaster && !sessionLoaded && !gameLoadingRef.current) {
+      gameLoadingRef.current = true;
+      const onReceiveGame = (receivedSession) => {
+        console.log("game received", receivedSession);
+        setSession(receivedSession);
+      };
+      c2c.call("getSession").then(onReceiveGame, () => {
+        setTimeout(
+          () =>
+            c2c
+              .call("getSession")
+              .then(onReceiveGame, (error) =>
+                console.log("Failed to call getSession with error", error)
+              ),
+          1000
+        );
+      });
+    }
+  }, [c2c, isMaster, sessionLoaded, setSession]);
 
   const availableItemLibrary = React.useMemo(() => {
     let itemList = availableItems;
@@ -128,28 +143,28 @@ export const Session = () => {
   }
 
   return (
-    <BoardView
-      room={`room_${sessionId}`}
-      initialBoardConfig={boardConfig}
-      session={sessionId}
-      itemTemplates={itemTemplates}
-      mediaLibraries={mediaLibraries}
-      actions={actionMap}
-      itemLibraries={itemLibraries}
-      ItemFormComponent={ItemForm}
-      initialItems={initialItems}
-      initialMessages={initialMessages}
-      onItemsChange={setCurrentItems}
-      onMasterChange={setIsMaster}
-    />
+    <BoardView mediaLibraries={mediaLibraries} itemLibraries={itemLibraries} />
   );
 };
 
 const ConnectedSessionView = ({ sessionId, fromGame }) => {
   return (
-    <SessionProvider sessionId={sessionId} fromGameId={fromGame}>
-      <Session />
-    </SessionProvider>
+    <BoardWrapper
+      room={`room_${sessionId}`}
+      session={sessionId}
+      itemTemplates={itemTemplates}
+      actions={actionMap}
+      style={{
+        position: "relative",
+        width: "100vw",
+        height: "100vh",
+        overflow: "hidden",
+      }}
+    >
+      <SessionProvider sessionId={sessionId} fromGameId={fromGame}>
+        <Session />
+      </SessionProvider>
+    </BoardWrapper>
   );
 };
 

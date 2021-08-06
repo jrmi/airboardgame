@@ -2,15 +2,11 @@ import React from "react";
 import { nanoid } from "nanoid";
 import styled from "styled-components";
 
-import useC2C, { C2CProvider } from "../../components/hooks/useC2C";
+import { RoomWrapper, useC2C, useUsers } from "react-sync-board";
 
 import { Switch, Route, Link } from "react-router-dom";
-import SessionView from "../SessionView";
-import {
-  useUsers,
-  SubscribeUserEvents,
-  UserCircle,
-} from "../../components/users";
+import Session from "../Session";
+import UserCircle from "../../components/users/UserCircle";
 
 import RoomNavBar from "./RoomNavBar";
 
@@ -184,7 +180,7 @@ const SubscribeRoomEvents = ({ room, setRoom }) => {
   React.useEffect(() => {
     const unsub = [];
     // Master register getRoom for peers
-    if (isMasterRef.current) {
+    if (isMaster) {
       c2c
         .register("getRoom", () => {
           return roomRef.current;
@@ -203,11 +199,11 @@ const SubscribeRoomEvents = ({ room, setRoom }) => {
     return () => {
       unsub.forEach((u) => u());
     };
-  }, [c2c, setRoom]);
+  }, [c2c, isMaster, setRoom]);
 
   // Get Room from master at connection
   React.useEffect(() => {
-    if (!isMasterRef.current) {
+    if (!isMaster) {
       const onGetRoom = (roomData) => {
         setRoom(roomData);
       };
@@ -219,14 +215,14 @@ const SubscribeRoomEvents = ({ room, setRoom }) => {
         }, 2000);
       });
     }
-  }, [c2c, setRoom]);
+  }, [c2c, isMaster, setRoom]);
 
   // Send room update on change if master
   React.useEffect(() => {
-    if (isMasterRef.current) {
+    if (isMaster) {
       c2c.publish("roomUpdate", room);
     }
-  }, [c2c, room]);
+  }, [c2c, isMaster, room]);
 
   return null;
 };
@@ -248,20 +244,19 @@ const RoomView = ({ roomId }) => {
               params: { sessionId },
             },
           }) => {
-            return <SessionView sessionId={sessionId} />;
+            return <Session sessionId={sessionId} />;
           }}
         </Route>
       </Switch>
       <SubscribeRoomEvents room={room} setRoom={setRoom} />
-      <SubscribeUserEvents />
     </>
   );
 };
 
 const ConnectedRoomView = (props) => (
-  <C2CProvider room={props.roomId} channel="room">
+  <RoomWrapper room={props.roomId}>
     <RoomView {...props} />
-  </C2CProvider>
+  </RoomWrapper>
 );
 
 export default ConnectedRoomView;

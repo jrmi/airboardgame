@@ -11,7 +11,7 @@ import Home from "./views/Home";
 // import GameView from "./views/GameView";
 import Session from "./views/Session";
 import AuthView from "./views/AuthView";
-// import RoomView from "./views/RoomView";
+import RoomView from "./views/RoomView";
 
 import { Provider as SocketIOProvider } from "@scripters/use-socket.io";
 
@@ -89,7 +89,7 @@ const MainRoute = () => {
           <GameView />
         </WithSocketIO>
       </Route>
-      {/* Room routes}
+      {/*Room routes*/}
       <Route path="/room/:roomId">
         {({
           match: {

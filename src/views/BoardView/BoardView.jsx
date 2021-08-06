@@ -1,8 +1,8 @@
 import React from "react";
 
-import { SHOW_WELCOME } from "../../utils/settings";
-import { BoardWrapper, Board } from "react-sync-board";
+import { Board, useC2C } from "react-sync-board";
 
+import { SHOW_WELCOME } from "../../utils/settings";
 import WelcomeModal from "./WelcomeModal";
 import NavBar from "./NavBar";
 import BoardForm from "./BoardForm";
@@ -10,24 +10,12 @@ import SelectedItemPane from "./SelectedItemsPane";
 
 import { ItemForm } from "../../gameComponents";
 
-import {
-  uploadResourceImage,
-  listResourceImage,
-  deleteResourceImage,
-} from "../../utils/api";
 import ActionBar from "./ActionBar";
 
 import {
   MediaLibraryProvider,
   ImageDropNPaste,
 } from "../../components/mediaLibrary";
-import AutoSaveSession from "../AutoSaveSession";
-
-const mediaHandlers = {
-  uploadMedia: uploadResourceImage,
-  listMedia: listResourceImage,
-  deleteMedia: deleteResourceImage,
-};
 
 const style = {
   background:
@@ -37,47 +25,32 @@ const style = {
   boxShadow: "0px 3px 6px #00000029",
 };
 
-export const BoardView = (props) => {
-  // TODO open only for master
+export const BoardView = ({ mediaLibraries, edit, itemLibraries }) => {
+  const { isMaster } = useC2C("board");
   const [showWelcomeModal, setShowWelcomeModal] = React.useState(
-    SHOW_WELCOME && !props.editMode
+    SHOW_WELCOME && !edit && isMaster
   );
 
   const [moveFirst, setMoveFirst] = React.useState(false);
   const [hideMenu, setHideMenu] = React.useState(false);
 
   return (
-    <MediaLibraryProvider libraries={props.mediaLibraries} {...mediaHandlers}>
-      <BoardWrapper
-        {...props}
-        mediaHandlers={mediaHandlers}
-        BoardFormComponent={BoardForm}
-        hideMenu={hideMenu}
-        style={{
-          position: "relative",
-          width: "100vw",
-          height: "100vh",
-          overflow: "hidden",
-        }}
-      >
-        <ImageDropNPaste>
-          <Board moveFirst={moveFirst} style={style} />
-          <NavBar editMode={props.edit} />
-          <ActionBar
-            editMode={props.edit}
-            BoardFormComponent={BoardForm}
-            itemLibraries={props.itemLibraries}
-            moveFirst={moveFirst}
-            setMoveFirst={setMoveFirst}
-            hideMenu={hideMenu}
-            setHideMenu={setHideMenu}
-          />
-          <WelcomeModal show={showWelcomeModal} setShow={setShowWelcomeModal} />
-        </ImageDropNPaste>
-
-        <AutoSaveSession />
-        <SelectedItemPane ItemFormComponent={ItemForm} />
-      </BoardWrapper>
+    <MediaLibraryProvider libraries={mediaLibraries}>
+      <ImageDropNPaste>
+        <Board moveFirst={moveFirst} style={style} />
+        <NavBar editMode={edit} />
+        <ActionBar
+          editMode={edit}
+          BoardFormComponent={BoardForm}
+          itemLibraries={itemLibraries}
+          moveFirst={moveFirst}
+          setMoveFirst={setMoveFirst}
+          hideMenu={hideMenu}
+          setHideMenu={setHideMenu}
+        />
+        <WelcomeModal show={showWelcomeModal} setShow={setShowWelcomeModal} />
+      </ImageDropNPaste>
+      <SelectedItemPane ItemFormComponent={ItemForm} hideMenu={hideMenu} />
     </MediaLibraryProvider>
   );
 };
