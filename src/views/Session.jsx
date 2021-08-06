@@ -79,7 +79,6 @@ export const Session = () => {
     if (!isMaster && !sessionLoaded && !gameLoadingRef.current) {
       gameLoadingRef.current = true;
       const onReceiveGame = (receivedSession) => {
-        console.log("game received", receivedSession);
         setSession(receivedSession);
       };
       c2c.call("getSession").then(onReceiveGame, () => {

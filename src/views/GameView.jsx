@@ -1,116 +1,128 @@
 import React from "react";
-import { useParams } from "react-router-dom";
-import { nanoid } from "nanoid";
 import { useTranslation } from "react-i18next";
 import useAsyncEffect from "use-async-effect";
+import { BoardWrapper, useC2C } from "react-sync-board";
+import { nanoid } from "nanoid";
 
-import useC2C, { C2CProvider } from "../components/hooks/useC2C";
-import { GameProvider } from "../hooks/useGame";
+import { itemTemplates, itemLibrary, actionMap } from "../gameComponents";
+
 import BoardView from "./BoardView";
+import Waiter from "./Waiter";
 import { getGame } from "../utils/api";
 
-import { itemMap, useGameItemActionMap, ItemForm } from "../gameComponents";
+import useGame, { GameProvider } from "../hooks/useGame";
 
-import Waiter from "./Waiter";
+// Keep compatibility with previous availableItems shape
+const migrateAvailableItemList = (old) => {
+  const groupMap = old.reduce((acc, { groupId, ...item }) => {
+    if (!acc[groupId]) {
+      acc[groupId] = [];
+    }
+    acc[groupId].push(item);
+    return acc;
+  }, {});
+  return Object.keys(groupMap).map((name) => ({
+    name,
+    items: groupMap[name],
+  }));
+};
 
-const newGameData = {
-  items: [],
-  availableItems: [],
-  board: { size: 2000, scale: 1 },
+const adaptItem = (item) => ({
+  type: item.type,
+  template: item,
+  component: itemTemplates[item.type].component,
+  name: item.name || item.label || item.text || itemTemplates[item.type].name,
+  uid: nanoid(),
+});
+
+const adaptAvailableItems = (nodes) => {
+  return nodes.map((node) => {
+    if (node.type) {
+      return adaptItem(node);
+    } else {
+      return { ...node, items: adaptAvailableItems(node.items) };
+    }
+  });
 };
 
 export const GameView = () => {
-  const { c2c, isMaster } = useC2C("board");
-  const { gameId } = useParams();
-  const { actionMap } = useGameItemActionMap();
-  const [realGameId, setRealGameId] = React.useState();
-  const [gameLoaded, setGameLoaded] = React.useState(false);
-  const [game, setGame] = React.useState(null);
+  const { setGame, gameLoaded, gameId, availableItems } = useGame();
+
   const gameLoadingRef = React.useRef(false);
 
   const { t } = useTranslation();
 
   useAsyncEffect(
     async (isMounted) => {
-      if (isMaster && !gameLoaded && !gameLoadingRef.current) {
+      if (!gameLoaded && !gameLoadingRef.current) {
         gameLoadingRef.current = true;
-        try {
-          let gameData;
-          let newRealGameId = gameId;
+        const gameData = await getGame(gameId);
 
-          if (!gameId) {
-            // Create new game
-            newGameData.board.defaultName = t("New game");
-            gameData = JSON.parse(JSON.stringify(newGameData));
-            newRealGameId = nanoid();
-          } else {
-            // Load game from server
-            gameData = await getGame(gameId);
-          }
-          if (!isMounted) return;
-
-          setRealGameId(newRealGameId);
-          setGame(gameData);
-          setGameLoaded(true);
-        } catch (e) {
-          console.log(e);
-        }
+        if (!isMounted) return;
+        setGame(gameData);
       }
     },
-    [c2c, gameId, gameLoaded, isMaster, t]
+    [gameLoaded]
   );
 
-  // Load game from master if any
-  React.useEffect(() => {
-    if (!isMaster && !gameLoaded && !gameLoadingRef.current) {
-      gameLoadingRef.current = true;
-      const onReceiveGame = (receivedGame) => {
-        setGame(receivedGame);
-        setGameLoaded(true);
-      };
-      c2c.call("getGame").then(onReceiveGame, () => {
-        setTimeout(
-          c2c
-            .call("getGame")
-            .then(onReceiveGame, (error) =>
-              console.log("Failed to call getGame with error", error)
-            ),
-          1000
-        );
-      });
+  const availableItemLibrary = React.useMemo(() => {
+    let itemList = availableItems;
+    if (itemList?.length && itemList[0].groupId) {
+      itemList = migrateAvailableItemList(itemList);
     }
-  }, [c2c, isMaster, gameLoaded]);
+    return adaptAvailableItems(itemList);
+  }, [availableItems]);
 
-  const libraries = React.useMemo(
-    () => [
-      { id: "game", name: t("Game"), boxId: "game", resourceId: realGameId },
-    ],
-    [realGameId, t]
-  );
+  const itemLibraries = [
+    {
+      name: "Standard",
+      key: "standard",
+      items: itemLibrary,
+    },
+    {
+      name: "Box",
+      key: "box",
+      items: availableItemLibrary,
+    },
+  ];
+
+  const mediaLibraries = React.useMemo(() => {
+    return [{ id: "game", name: t("Game"), boxId: "game", resourceId: gameId }];
+  }, [gameId, t]);
 
   if (!gameLoaded) {
-    return <Waiter message={t("Game loading...")} />;
+    return <Waiter message={t("Session loading...")} />;
   }
 
   return (
-    <GameProvider game={game} gameId={realGameId}>
-      <BoardView
-        edit={true}
-        mediaLibraries={libraries}
-        itemMap={itemMap}
-        actionMap={actionMap}
-        ItemFormComponent={ItemForm}
-      />
-    </GameProvider>
+    <BoardView
+      mediaLibraries={mediaLibraries}
+      itemLibraries={itemLibraries}
+      edit={true}
+    />
   );
 };
 
-const ConnectedGameView = () => {
-  const { room = nanoid() } = useParams();
+const ConnectedGameView = ({ gameId }) => {
+  const [sessionId] = React.useState(nanoid());
+
   return (
-    <C2CProvider room={room} channel="board">
-      <GameView />
-    </C2CProvider>
+    <BoardWrapper
+      room={`room_${sessionId}`}
+      session={sessionId}
+      itemTemplates={itemTemplates}
+      actions={actionMap}
+      style={{
+        position: "relative",
+        width: "100vw",
+        height: "100vh",
+        overflow: "hidden",
+      }}
+    >
+      <GameProvider gameId={gameId}>
+        <GameView />
+      </GameProvider>
+    </BoardWrapper>
   );
 };
 

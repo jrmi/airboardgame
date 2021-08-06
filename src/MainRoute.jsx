@@ -8,7 +8,7 @@ import "react-toastify/dist/ReactToastify.css";
 import "./react-confirm-alert.css";
 
 import Home from "./views/Home";
-// import GameView from "./views/GameView";
+import GameView from "./views/GameView";
 import Session from "./views/Session";
 import AuthView from "./views/AuthView";
 import RoomView from "./views/RoomView";
@@ -83,11 +83,19 @@ const MainRoute = () => {
           );
         }}
       </Route>
-      {/* Game edition }
+      {/* Game edition */}
       <Route path="/game/:gameId?">
-        <WithSocketIO>
-          <GameView />
-        </WithSocketIO>
+        {({
+          match: {
+            params: { gameId },
+          },
+        }) => {
+          return (
+            <WithSocketIO>
+              <GameView gameId={gameId} />
+            </WithSocketIO>
+          );
+        }}
       </Route>
       {/*Room routes*/}
       <Route path="/room/:roomId">

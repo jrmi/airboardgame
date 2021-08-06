@@ -10,7 +10,7 @@ import useQueryParam from "../hooks/useQueryParam";
 import HomeNav from "./HomeNav";
 import AboutModal from "./AboutModal";
 import GameListView from "./GameListView";
-// import GameStudio from "./GameStudio";
+import GameStudio from "./GameStudio";
 
 const StyledHome = styled.div`
   min-height: 100vh;
@@ -54,9 +54,9 @@ const Home = () => {
           <Route exact path="/games">
             <GameListView />
           </Route>
-          {/*<Route path="/studio">
+          <Route path="/studio">
             <GameStudio />
-  </Route>*/}
+          </Route>
         </Switch>
         <footer>
           <button
