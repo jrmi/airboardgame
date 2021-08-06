@@ -1,5 +1,12 @@
-import { debounce } from "lodash";
 import React, { useContext } from "react";
+import {
+  useItemBaseActions,
+  useMessage,
+  useBoardConfig,
+  useC2C,
+} from "react-sync-board";
+
+import SubscribeSessionEvents from "./SubscribeSessionEvents";
 
 import { updateSession, getSession, getGame } from "../utils/api";
 
@@ -26,15 +33,15 @@ const emtpyBoard = {
 };
 
 export const SessionProvider = ({ sessionId, fromGameId, children }) => {
-  const [initialItems, setInitialItems] = React.useState([]);
+  const { setItemList, getItemList } = useItemBaseActions();
+  const { messages, setMessages } = useMessage();
   const [availableItems, setAvailableItems] = React.useState([]);
-  const [messages, setMessages] = React.useState([]);
-  const [boardConfig, setBoardConfig] = React.useState({});
-  const [currentItems, setCurrentItems] = React.useState([]);
-  const [isMaster, setIsMaster] = React.useState(null);
+  const [boardConfig, setBoardConfig] = useBoardConfig();
 
   const [sessionLoaded, setSessionLoaded] = React.useState(false);
   const [currentGameId, setCurrentGameId] = React.useState(fromGameId);
+
+  const { c2c } = useC2C("board");
 
   const loadSession = React.useCallback(async () => {
     let sessionData;
@@ -64,22 +71,28 @@ export const SessionProvider = ({ sessionId, fromGameId, children }) => {
   }, [fromGameId, sessionId]);
 
   const setSession = React.useCallback(
-    async (newData) => {
+    async (newData, sync = false) => {
       const { availableItems, items, board, messages = [] } = newData;
-
       setAvailableItems(availableItems);
       // The filter prevent the empty item bug on reload
-      setInitialItems(items.filter((item) => item));
-      setBoardConfig(board);
+      setItemList(items.filter((item) => item));
+      setBoardConfig(board, false);
       setMessages(messages);
+
+      if (sync) {
+        // Send loadSession event for other user
+        c2c.publish("loadSession", newData);
+      }
+
       setSessionLoaded(true);
     },
-    [setMessages]
+    [c2c, setBoardConfig, setItemList, setMessages]
   );
 
-  /*const getCurrentSession = React.useCallback(() => {
+  const getCurrentSession = React.useCallback(async () => {
+    console.log("getBoard", boardConfig);
     const currentSession = {
-      items: currentItems,
+      items: await getItemList(),
       board: boardConfig,
       availableItems: availableItems,
       messages: messages.slice(-50),
@@ -88,40 +101,29 @@ export const SessionProvider = ({ sessionId, fromGameId, children }) => {
     };
 
     return currentSession;
-  }, [availableItems, boardConfig, currentItems, fromGameId, messages]);*/
+  }, [availableItems, boardConfig, fromGameId, getItemList, messages]);
 
-  const changeGame = React.useCallback(async (newGameId) => {
-    const newGame = await getGame(newGameId);
+  const changeGame = React.useCallback(
+    async (newGameId) => {
+      const newGame = await getGame(newGameId);
+      const currentSession = getCurrentSession();
 
-    setAvailableItems(newGame.availableItems);
-    // The filter prevent the empty item bug on reload
-    setInitialItems(newGame.items.filter((item) => item));
-    setBoardConfig(newGame.board);
-    //const currentSession = getCurrentSession();
-
-    //setSession({ ...currentSession, ...newGame });
-  }, []);
-
-  const saveSession = React.useCallback(
-    async (currentSession) => {
-      //const currentSession = await getCurrentSession();
-
-      if (currentSession.items.length) {
-        try {
-          return await updateSession(sessionId, currentSession);
-        } catch (e) {
-          console.log(e);
-        }
-      }
+      setSession({ ...currentSession, ...newGame }, true);
     },
-    [sessionId]
+    [getCurrentSession, setSession]
   );
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const debouncedSetCurrentItems = React.useCallback(
-    debounce(setCurrentItems, 500),
-    []
-  );
+  const saveSession = React.useCallback(async () => {
+    const currentSession = await getCurrentSession();
+
+    if (currentSession.items.length) {
+      try {
+        return await updateSession(sessionId, currentSession);
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  }, [getCurrentSession, sessionId]);
 
   return (
     <SessionContext.Provider
@@ -129,27 +131,21 @@ export const SessionProvider = ({ sessionId, fromGameId, children }) => {
         loadSession,
         changeGame,
         setSession,
-        // getSession: getCurrentSession,
+        getSession: getCurrentSession,
         saveSession,
         sessionLoaded,
         sessionId,
         gameId: currentGameId,
-        initialItems,
         availableItems,
         boardConfig,
         messages,
-        setCurrentItems: debouncedSetCurrentItems,
-        currentItems,
-        isMaster,
-        initialMessages: messages,
-        setIsMaster,
       }}
     >
       {children}
-      {/*<SubscribeSessionEvents
+      <SubscribeSessionEvents
         getSession={getCurrentSession}
         setSession={setSession}
-      />*/}
+      />
     </SessionContext.Provider>
   );
 };

@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { useTranslation } from "react-i18next";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import { confirmAlert } from "react-confirm-alert";
+import { useC2C } from "react-sync-board";
 
 import UserList from "../../components/users/UserList";
 import Touch from "../../components/ui/Touch";
@@ -133,7 +134,9 @@ const StyledNavBar = styled.div.attrs(() => ({ className: "nav" }))`
 
 const NavBar = ({ editMode }) => {
   const { t, i18n } = useTranslation();
-  const { sessionId: room, isMaster, boardConfig } = useSession();
+  const { sessionId: room, boardConfig } = useSession();
+
+  const { isMaster } = useC2C("board");
 
   const history = useHistory();
   const match = useRouteMatch();

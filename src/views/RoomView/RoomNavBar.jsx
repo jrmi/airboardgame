@@ -8,7 +8,7 @@ import useLocalStorage from "../../hooks/useLocalStorage";
 import { useC2C } from "react-sync-board";
 
 import Touch from "../../components/ui/Touch";
-import { UserList } from "../../components/users";
+import UserList from "../../components/users/UserList";
 import WebConferenceButton from "../webconf/WebConferenceButton";
 
 import Brand from "../Brand";
@@ -130,7 +130,7 @@ const RoomNavBar = () => {
       </div>
 
       <div className="nav-center">
-        <h3>{"Air Board Game"}</h3>
+        <h3>Air Board Game</h3>
       </div>
 
       <div className="nav-right">
