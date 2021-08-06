@@ -90,7 +90,6 @@ export const SessionProvider = ({ sessionId, fromGameId, children }) => {
   );
 
   const getCurrentSession = React.useCallback(async () => {
-    console.log("getBoard", boardConfig);
     const currentSession = {
       items: await getItemList(),
       board: boardConfig,

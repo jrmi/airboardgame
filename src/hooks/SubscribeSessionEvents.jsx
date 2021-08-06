@@ -18,7 +18,6 @@ export const SubscribeSessionEvents = ({ getSession, setSession }) => {
     if (isMaster) {
       c2c
         .register("getSession", async () => {
-          console.log("getsessionCalled");
           return await getSessionRef.current();
         })
         .then((unregister) => {

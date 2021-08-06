@@ -6,11 +6,11 @@ import useSession from "../hooks/useSession";
 const GRACE_DELAY = import.meta.env.VITE_CI === "1" ? 100 : 5000;
 
 export const AutoSaveSession = () => {
-  const { saveSession, isMaster, availableItems, gameId } = useSession();
+  const { saveSession, getSession } = useSession();
+  const timeoutRef = React.useRef(null);
   const items = useItems();
   const [boardConfig] = useBoardConfig();
   const { messages } = useMessage();
-  const timeoutRef = React.useRef(null);
 
   // Delay the first update to avoid too many session
   const readyRef = React.useRef(false);
@@ -19,24 +19,17 @@ export const AutoSaveSession = () => {
     readyRef.current = true;
   }, GRACE_DELAY);
 
-  const autoSave = React.useCallback(() => {
-    const currentSession = {
-      items: items,
-      board: boardConfig,
-      availableItems: availableItems,
-      messages: messages.slice(-50),
-      timestamp: Date.now(),
-      gameId: gameId,
-    };
+  const autoSave = React.useCallback(async () => {
+    const currentSession = await getSession();
     saveSession(currentSession);
-  }, [availableItems, boardConfig, gameId, items, messages, saveSession]);
+  }, [getSession, saveSession]);
 
   React.useEffect(() => {
-    if (readyRef.current && isMaster) {
+    if (readyRef.current) {
       clearTimeout(timeoutRef.current);
       timeoutRef.current = setTimeout(autoSave, GRACE_DELAY);
     }
-  }, [autoSave, isMaster, items, messages, boardConfig]);
+  }, [autoSave, items, boardConfig, messages]);
 
   return null;
 };
