@@ -33,6 +33,8 @@ describe("Session management", () => {
       .parent()
       .should("have.css", "transform", "matrix(1, 0, 0, 1, 420, 400)");
 
+    cy.wait(300);
+
     // Select card
     cy.get("img[src='/game_assets/JC.jpg']")
       .parents(".item")
@@ -50,7 +52,7 @@ describe("Session management", () => {
       }
     ).as("postSession");
 
-    cy.wait(1000);
+    cy.wait(300);
 
     cy.get("img[src='/game_assets/JC.jpg']")
       .parents(".item")

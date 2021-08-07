@@ -161,9 +161,10 @@ const ConnectedSessionView = ({ sessionId, fromGame }) => {
       itemTemplates={itemTemplates}
       actions={actionMap}
       style={{
-        position: "relative",
-        width: "100vw",
-        height: "100vh",
+        position: "fixed",
+        inset: "0",
+        //width: "100vw",
+        //height: "100vh",
         overflow: "hidden",
       }}
     >

@@ -56,8 +56,8 @@
     "prettier": "prettier --write src/",
     "server": "echo 'This command is deprecated. Please, see Readme for more information.'",
     "i18n:scanner": "i18next-scanner --config i18next-scanner.config.js 'src/**/*.{js,jsx}'",
-    "cypress:open": "LANGUAGE=en cypress open",
-    "cypress:run": "LANGUAGE=en cypress run"
+    "cypress:open": "VITE_CI=1 LANGUAGE=en cypress open",
+    "cypress:run": "VITE_CI=1 LANGUAGE=en cypress run"
   },
   "browserslist": {
     "production": [

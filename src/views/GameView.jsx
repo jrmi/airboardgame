@@ -45,8 +45,15 @@ const adaptAvailableItems = (nodes) => {
   });
 };
 
-export const GameView = () => {
-  const { setGame, gameLoaded, gameId, availableItems } = useGame();
+const newGameData = {
+  items: [],
+  availableItems: [],
+  board: { size: 2000, scale: 1 },
+};
+
+export const GameView = ({ create = false }) => {
+  const [gameLoaded, setGameLoaded] = React.useState(false);
+  const { setGame, gameId, availableItems } = useGame();
 
   const gameLoadingRef = React.useRef(false);
 
@@ -56,10 +63,24 @@ export const GameView = () => {
     async (isMounted) => {
       if (!gameLoaded && !gameLoadingRef.current) {
         gameLoadingRef.current = true;
-        const gameData = await getGame(gameId);
+        try {
+          let gameData;
 
-        if (!isMounted) return;
-        setGame(gameData);
+          if (create) {
+            // Create new game
+            newGameData.board.defaultName = t("New game");
+            gameData = JSON.parse(JSON.stringify(newGameData));
+          } else {
+            // Load game from server
+            gameData = await getGame(gameId);
+          }
+          if (!isMounted) return;
+
+          setGame(gameData);
+          setGameLoaded(true);
+        } catch (e) {
+          console.log(e);
+        }
       }
     },
     [gameLoaded]
@@ -106,6 +127,8 @@ export const GameView = () => {
 const ConnectedGameView = ({ gameId }) => {
   const [sessionId] = React.useState(nanoid());
 
+  const [realGameId] = React.useState(() => gameId || nanoid());
+
   return (
     <BoardWrapper
       room={`room_${sessionId}`}
@@ -113,14 +136,13 @@ const ConnectedGameView = ({ gameId }) => {
       itemTemplates={itemTemplates}
       actions={actionMap}
       style={{
-        position: "relative",
-        width: "100vw",
-        height: "100vh",
+        position: "fixed",
+        inset: 0,
         overflow: "hidden",
       }}
     >
-      <GameProvider gameId={gameId}>
-        <GameView />
+      <GameProvider gameId={realGameId} create={!gameId}>
+        <GameView create={!gameId} />
       </GameProvider>
     </BoardWrapper>
   );
