@@ -48,7 +48,7 @@ describe("Selection action", () => {
     cy.get(".selector").should(
       "have.css",
       "transform",
-      "matrix(1, 0, 0, 1, 291.667, 312.5)"
+      "matrix(1, 0, 0, 1, 291.667, 187.5)"
     );
 
     cy.get(".board").trigger("pointermove", {
