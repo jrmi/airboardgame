@@ -3,7 +3,7 @@ import { Form } from "react-final-form";
 
 import AutoSave from "../../components/ui/formUtils/AutoSave";
 import {
-  useItemBaseActions,
+  useItemActions,
   useSelectedItems,
   useItems,
 } from "react-sync-board";
@@ -16,7 +16,7 @@ export const getFormFieldComponent = (type, itemMap) => {
 };
 
 const ItemFormFactory = ({ ItemFormComponent }) => {
-  const { batchUpdateItems } = useItemBaseActions();
+  const { batchUpdateItems } = useItemActions();
   const items = useItems();
   const selectedItems = useSelectedItems();
 

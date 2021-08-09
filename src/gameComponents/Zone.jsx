@@ -4,7 +4,7 @@ import styled, { css } from "styled-components";
 import { useItemInteraction } from "react-sync-board";
 
 import { isItemInsideElement } from "../views/utils";
-import { useItemActions } from "react-sync-board";
+import useGameItemActions from "./useGameItemActions";
 
 const ZoneWrapper = styled.div`
   ${({ width = 200, height = 200 }) => css`
@@ -34,7 +34,7 @@ const ZoneWrapper = styled.div`
 const Zone = ({ width, height, label, onItem }) => {
   const { register } = useItemInteraction("place");
   const zoneRef = React.useRef(null);
-  const actionMap = useItemActions();
+  const { actionMap } = useGameItemActions();
 
   const onInsideItem = React.useCallback(
     (itemIds) => {

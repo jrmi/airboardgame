@@ -10,8 +10,6 @@ import "./i18n"; // load translation system
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 
-import styled from "styled-components";
-
 ReactDOM.render(
   <React.StrictMode>
     <App />

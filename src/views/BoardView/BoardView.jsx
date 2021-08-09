@@ -8,7 +8,7 @@ import NavBar from "./NavBar";
 import BoardForm from "./BoardForm";
 import SelectedItemPane from "./SelectedItemsPane";
 
-import { ItemForm } from "../../gameComponents";
+import { ItemForm, itemTemplates } from "../../gameComponents";
 
 import ActionBar from "./ActionBar";
 
@@ -37,7 +37,11 @@ export const BoardView = ({ mediaLibraries, edit, itemLibraries }) => {
   return (
     <MediaLibraryProvider libraries={mediaLibraries}>
       <ImageDropNPaste>
-        <Board moveFirst={moveFirst} style={style} />
+        <Board
+          moveFirst={moveFirst}
+          style={style}
+          itemTemplates={itemTemplates}
+        />
         <NavBar editMode={edit} />
         <ActionBar
           editMode={edit}

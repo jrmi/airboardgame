@@ -5,7 +5,7 @@ import styled from "styled-components";
 import { useRecoilCallback } from "recoil";
 import debounce from "lodash.debounce";
 
-import { useItemBaseActions } from "react-sync-board";
+import { useItemActions } from "react-sync-board";
 
 import { search } from "../views/utils";
 
@@ -63,7 +63,7 @@ const StyledItem = styled.li`
 const size = 60;
 
 const NewItem = memo(({ type, template, component: Component, name }) => {
-  const { pushItem } = useItemBaseActions();
+  const { pushItem } = useItemActions();
 
   const addItem = React.useCallback(async () => {
     pushItem({
@@ -88,7 +88,7 @@ NewItem.displayName = "NewItem";
 const SubItemList = ({ name, items }) => {
   const { t } = useTranslation();
   const [open, setOpen] = React.useState(false);
-  const { pushItems } = useItemBaseActions();
+  const { pushItems } = useItemActions();
 
   const addItems = useRecoilCallback(
     async (itemsToAdd) => {
