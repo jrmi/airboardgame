@@ -6,12 +6,13 @@ import Label from "../../components/ui/formUtils/Label";
 import Hint from "../../components/ui/formUtils/Hint";
 
 import ActionsField from "./ActionsField";
-import actionMap from "../actionMap";
+import useGameItemActions from "../useGameItemActions";
 
 const interactions = ["reveal", "hide", "revealSelf", "stack"];
 
 const Form = ({ initialValues }) => {
   const { t } = useTranslation();
+  const { actionMap } = useGameItemActions();
   return (
     <>
       <Label>

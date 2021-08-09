@@ -1,10 +1,10 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import useAsyncEffect from "use-async-effect";
-import { BoardWrapper, useC2C } from "react-sync-board";
+import { BoardWrapper } from "react-sync-board";
 import { nanoid } from "nanoid";
 
-import { itemTemplates, itemLibrary, actionMap } from "../gameComponents";
+import { itemTemplates, itemLibrary } from "../gameComponents";
 
 import BoardView from "./BoardView";
 import Waiter from "./Waiter";
@@ -135,8 +135,6 @@ const ConnectedGameView = ({ gameId }) => {
     <BoardWrapper
       room={`room_${sessionId}`}
       session={sessionId}
-      itemTemplates={itemTemplates}
-      actions={actionMap}
       style={{
         position: "fixed",
         inset: 0,
