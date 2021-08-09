@@ -12,6 +12,7 @@ import RoomNavBar from "./RoomNavBar";
 
 import table from "../../images/table.png";
 import { useTranslation } from "react-i18next";
+import { useSocket } from "@scripters/use-socket.io";
 
 const StyledPlayer = styled.li`
   position: absolute;
@@ -253,10 +254,13 @@ const RoomView = ({ roomId }) => {
   );
 };
 
-const ConnectedRoomView = (props) => (
-  <RoomWrapper room={props.roomId}>
-    <RoomView {...props} />
-  </RoomWrapper>
-);
+const ConnectedRoomView = (props) => {
+  const socket = useSocket();
+  return (
+    <RoomWrapper room={props.roomId} socket={socket}>
+      <RoomView {...props} />
+    </RoomWrapper>
+  );
+};
 
 export default ConnectedRoomView;

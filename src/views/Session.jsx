@@ -11,6 +11,7 @@ import Waiter from "./Waiter";
 
 import useSession, { SessionProvider } from "../hooks/useSession";
 import AutoSaveSession from "./AutoSaveSession";
+import { useSocket } from "@scripters/use-socket.io";
 
 // Keep compatibility with previous availableItems shape
 const migrateAvailableItemList = (old) => {
@@ -154,6 +155,7 @@ export const Session = () => {
 };
 
 const ConnectedSessionView = ({ sessionId, fromGame }) => {
+  const socket = useSocket();
   return (
     <BoardWrapper
       room={`room_${sessionId}`}
@@ -167,6 +169,7 @@ const ConnectedSessionView = ({ sessionId, fromGame }) => {
         //height: "100vh",
         overflow: "hidden",
       }}
+      socket={socket}
     >
       <SessionProvider sessionId={sessionId} fromGameId={fromGame}>
         <Session />
