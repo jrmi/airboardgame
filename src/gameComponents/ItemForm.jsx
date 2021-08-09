@@ -8,7 +8,8 @@ import Slider from "../components/ui/Slider";
 
 import ActionsField from "./forms/ActionsField";
 
-import { itemTemplates, actionMap } from "./";
+import { itemTemplates } from "./";
+import useGameItemActions from "./useGameItemActions";
 
 export const getFormFieldComponent = (type) => {
   if (type in itemTemplates) {
@@ -43,6 +44,7 @@ const getAvailableActionsFromItem = (item) => {
 
 const ItemForm = ({ items }) => {
   const { t } = useTranslation();
+  const { actionMap } = useGameItemActions();
 
   const [defaultActions] = React.useState(() =>
     getDefaultActionsFromItem(items[0])
