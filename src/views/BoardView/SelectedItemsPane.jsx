@@ -8,11 +8,11 @@ import SidePanel from "../../components/ui/SidePanel";
 import ItemFormFactory from "./ItemFormFactory";
 import {
   useAvailableActions,
-  useItemActions,
   useSelectionBox,
   useSelectedItems,
   useBoardState,
 } from "react-sync-board";
+import useGameItemActions from "../../gameComponents/useGameItemActions";
 
 const ActionPane = styled.div.attrs(({ top, left, height }) => {
   if (top < 120) {
@@ -80,7 +80,7 @@ const CardContent = styled.div.attrs(() => ({ className: "content" }))`
 `;
 
 const SelectedItemsPane = ({ hideMenu = false, ItemFormComponent }) => {
-  const actionMap = useItemActions();
+  const { actionMap } = useGameItemActions();
 
   const { availableActions } = useAvailableActions();
   const [showEdit, setShowEdit] = React.useState(false);

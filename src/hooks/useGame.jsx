@@ -2,12 +2,12 @@ import React, { useContext } from "react";
 
 import { updateGame } from "../utils/api";
 
-import { useBoardConfig, useItemBaseActions } from "react-sync-board";
+import { useBoardConfig, useItemActions } from "react-sync-board";
 
 export const GameContext = React.createContext({});
 
 export const GameProvider = ({ gameId, game, children }) => {
-  const { setItemList, getItemList } = useItemBaseActions();
+  const { setItemList, getItemList } = useItemActions();
   const [availableItems, setAvailableItems] = React.useState([]);
   const [boardConfig, setBoardConfig] = useBoardConfig();
 

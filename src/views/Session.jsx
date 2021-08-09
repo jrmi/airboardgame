@@ -4,7 +4,7 @@ import useAsyncEffect from "use-async-effect";
 import { BoardWrapper, useC2C } from "react-sync-board";
 import { nanoid } from "nanoid";
 
-import { itemTemplates, itemLibrary, actionMap } from "../gameComponents";
+import { itemTemplates, itemLibrary } from "../gameComponents";
 
 import BoardView from "./BoardView";
 import Waiter from "./Waiter";
@@ -160,13 +160,9 @@ const ConnectedSessionView = ({ sessionId, fromGame }) => {
     <BoardWrapper
       room={`room_${sessionId}`}
       session={sessionId}
-      itemTemplates={itemTemplates}
-      actions={actionMap}
       style={{
         position: "fixed",
         inset: "0",
-        //width: "100vw",
-        //height: "100vh",
         overflow: "hidden",
       }}
       socket={socket}

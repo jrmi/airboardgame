@@ -1,15 +1,11 @@
 import React from "react";
+
 import { useTranslation } from "react-i18next";
 import { nanoid } from "nanoid";
 import { toast } from "react-toastify";
-import { useSetRecoilState, useRecoilCallback } from "recoil";
+import { useItemActions, useUsers, useSelectedItems } from "react-sync-board";
 
-import { useItemActions } from "../components/board/Items";
-import { SelectedItemsAtom } from "../components/board";
-import { useUsers } from "../components/users";
-import { ItemMapAtom } from "../components/board";
-
-import { shuffle as shuffleArray, randInt } from "../components/utils";
+import { shuffle as shuffleArray, randInt } from "../views/utils";
 
 import deleteIcon from "../images/delete.svg";
 import stackToCenterIcon from "../images/stackToCenter.svg";
@@ -26,13 +22,14 @@ import tapIcon from "../images/tap.svg";
 
 import useLocalStorage from "../hooks/useLocalStorage";
 
-export const useGameItemActionMap = () => {
+export const useGameItemActions = () => {
   const {
     batchUpdateItems,
     removeItems,
     insertItemBefore,
     reverseItemsOrder,
     swapItems,
+    getItems,
   } = useItemActions();
 
   const { t } = useTranslation();
@@ -41,21 +38,20 @@ export const useGameItemActionMap = () => {
 
   const { currentUser } = useUsers();
 
-  const setSelectedItems = useSetRecoilState(SelectedItemsAtom);
-  const isMountedRef = React.useRef(false);
+  const selectedItems = useSelectedItems();
 
-  const getItemListOrSelected = useRecoilCallback(
-    ({ snapshot }) => async (itemIds) => {
-      const itemMap = await snapshot.getPromise(ItemMapAtom);
+  const getItemListOrSelected = React.useCallback(
+    async (itemIds) => {
       if (itemIds) {
-        return [itemIds, itemIds.map((id) => itemMap[id])];
+        return [itemIds, await getItems(itemIds)];
       } else {
-        const selectedItems = await snapshot.getPromise(SelectedItemsAtom);
-        return [selectedItems, selectedItems.map((id) => itemMap[id])];
+        return [selectedItems, await getItems(selectedItems)];
       }
     },
-    []
+    [getItems, selectedItems]
   );
+
+  const isMountedRef = React.useRef(false);
 
   React.useEffect(() => {
     // Mounted guard
@@ -306,14 +302,9 @@ export const useGameItemActionMap = () => {
       }));
       if (reverseOrder) {
         reverseItemsOrder(itemIds);
-        setSelectedItems((prev) => {
-          const reversed = [...prev];
-          reversed.reverse();
-          return reversed;
-        });
       }
     },
-    [batchUpdateItems, reverseItemsOrder, setSelectedItems]
+    [batchUpdateItems, reverseItemsOrder]
   );
 
   // Toggle flip state
@@ -609,6 +600,20 @@ export const useGameItemActionMap = () => {
     ]
   );
 
-  return { actionMap, setFlip, setFlipSelf, stack: stackToTopLeft };
+  return {
+    stack: stackToTopLeft,
+    remove,
+    setFlip,
+    setFlipSelf,
+    toggleFlip,
+    toggleFlipSelf,
+    toggleLock,
+    toggleTap,
+    shuffle: shuffleItems,
+    rotate,
+    actionMap,
+    randomlyRotate: randomlyRotateSelectedItems,
+  };
 };
-export default useGameItemActionMap;
+
+export default useGameItemActions;

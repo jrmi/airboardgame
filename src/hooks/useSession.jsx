@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import {
-  useItemBaseActions,
+  useItemActions,
   useMessage,
   useBoardConfig,
   useC2C,
@@ -33,7 +33,7 @@ const emtpyBoard = {
 };
 
 export const SessionProvider = ({ sessionId, fromGameId, children }) => {
-  const { setItemList, getItemList } = useItemBaseActions();
+  const { setItemList, getItemList } = useItemActions();
   const { messages, setMessages } = useMessage();
   const [availableItems, setAvailableItems] = React.useState([]);
   const [boardConfig, setBoardConfig] = useBoardConfig();

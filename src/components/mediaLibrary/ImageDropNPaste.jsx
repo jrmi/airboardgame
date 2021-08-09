@@ -2,7 +2,7 @@ import React from "react";
 import { nanoid } from "nanoid";
 import { useDropzone } from "react-dropzone";
 import { useTranslation } from "react-i18next";
-import { useItemBaseActions } from "react-sync-board";
+import { useItemActions } from "react-sync-board";
 
 import { useMediaLibrary } from "./MediaLibraryProvider";
 import Waiter from "../ui/Waiter";
@@ -10,7 +10,7 @@ import Waiter from "../ui/Waiter";
 const ImageDropNPaste = ({ children }) => {
   const { t } = useTranslation();
   const [uploading, setUploading] = React.useState(false);
-  const { pushItem } = useItemBaseActions();
+  const { pushItem } = useItemActions();
 
   const { addMedia, libraries } = useMediaLibrary();
 
