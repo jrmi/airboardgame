@@ -11,6 +11,7 @@ import Waiter from "./Waiter";
 import { getGame } from "../utils/api";
 
 import useGame, { GameProvider } from "../hooks/useGame";
+import { useSocket } from "@scripters/use-socket.io";
 
 // Keep compatibility with previous availableItems shape
 const migrateAvailableItemList = (old) => {
@@ -125,6 +126,7 @@ export const GameView = ({ create = false }) => {
 };
 
 const ConnectedGameView = ({ gameId }) => {
+  const socket = useSocket();
   const [sessionId] = React.useState(nanoid());
 
   const [realGameId] = React.useState(() => gameId || nanoid());
@@ -140,6 +142,7 @@ const ConnectedGameView = ({ gameId }) => {
         inset: 0,
         overflow: "hidden",
       }}
+      socket={socket}
     >
       <GameProvider gameId={realGameId} create={!gameId}>
         <GameView create={!gameId} />
