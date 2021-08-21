@@ -70,13 +70,7 @@ const ImageDropNPaste = ({ children }) => {
   }, [onPaste]);
 
   return (
-    <div
-      {...getRootProps()}
-      style={{
-        position: "fixed",
-        inset: 0,
-      }}
-    >
+    <div {...getRootProps()}>
       {children}
       {uploading && <Waiter message={t("Uploading image(s)...")} />}
     </div>
