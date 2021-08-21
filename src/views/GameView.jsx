@@ -5,9 +5,9 @@ import { BoardWrapper } from "react-sync-board";
 import { nanoid } from "nanoid";
 
 import { itemTemplates, itemLibrary } from "../gameComponents";
+import Waiter from "../ui/Waiter";
 
 import BoardView from "./BoardView";
-import Waiter from "./Waiter";
 import { getGame } from "../utils/api";
 
 import useGame, { GameProvider } from "../hooks/useGame";

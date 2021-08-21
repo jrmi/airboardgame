@@ -7,7 +7,7 @@ import { nanoid } from "nanoid";
 import { itemTemplates, itemLibrary } from "../gameComponents";
 
 import BoardView from "./BoardView";
-import Waiter from "./Waiter";
+import Waiter from "../ui/Waiter";
 
 import useSession, { SessionProvider } from "../hooks/useSession";
 import AutoSaveSession from "./AutoSaveSession";

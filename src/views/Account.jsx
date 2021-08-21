@@ -6,7 +6,7 @@ import Modal from "../ui/Modal";
 import { sendAuthToken } from "../utils/api";
 import useAuth from "../hooks/useAuth";
 
-import Waiter from "./Waiter";
+import Waiter from "../ui/Waiter";
 
 const Account = ({ disabled, ...props }) => {
   const { t } = useTranslation();

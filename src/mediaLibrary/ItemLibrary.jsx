@@ -9,7 +9,7 @@ import { useItemActions } from "react-sync-board";
 
 import { search } from "../utils";
 
-import Chevron from "../../ui/Chevron";
+import Chevron from "../ui/Chevron";
 
 const StyledItemList = styled.ul`
   display: flex;

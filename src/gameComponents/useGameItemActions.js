@@ -5,7 +5,7 @@ import { nanoid } from "nanoid";
 import { toast } from "react-toastify";
 import { useItemActions, useUsers, useSelectedItems } from "react-sync-board";
 
-import { shuffle as shuffleArray, randInt } from "../views/utils";
+import { shuffle as shuffleArray, randInt } from "..//utils";
 
 import deleteIcon from "../images/delete.svg";
 import stackToCenterIcon from "../images/stackToCenter.svg";

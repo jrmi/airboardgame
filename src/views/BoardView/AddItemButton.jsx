@@ -1,6 +1,6 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import ItemLibrary from "./ItemLibrary";
+import ItemLibrary from "../../mediaLibrary/ItemLibrary";
 
 import Touch from "../../ui/Touch";
 import SidePanel from "../../ui/SidePanel";
