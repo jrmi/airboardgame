@@ -6,7 +6,7 @@ import { RoomWrapper, useC2C, useUsers } from "react-sync-board";
 
 import { Switch, Route, Link } from "react-router-dom";
 import Session from "../Session";
-import UserCircle from "../../components/users/UserCircle";
+import UserCircle from "../../users/UserCircle";
 
 import RoomNavBar from "./RoomNavBar";
 

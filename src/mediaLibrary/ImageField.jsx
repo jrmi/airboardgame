@@ -2,7 +2,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import { MediaLibraryButton, media2Url } from "./";
-import backgroundGrid from "../../images/background-grid.png";
+import backgroundGrid from "../images/background-grid.png";
 
 const StyledImageField = styled.div`
   & .typeSelect {

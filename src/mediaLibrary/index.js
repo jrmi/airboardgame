@@ -1,4 +1,4 @@
-import { API_BASE } from "../../utils/settings";
+import { API_BASE } from "../utils/settings";
 
 export { default as MediaLibraryProvider } from "./MediaLibraryProvider";
 export { useMediaLibrary } from "./MediaLibraryProvider";

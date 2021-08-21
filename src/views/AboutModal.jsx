@@ -2,7 +2,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { Trans } from "react-i18next";
 
-import Modal from "../components/ui/Modal";
+import Modal from "../ui/Modal";
 
 const AboutModal = ({ show, setShow }) => {
   const { t } = useTranslation();

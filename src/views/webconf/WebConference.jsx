@@ -1,6 +1,6 @@
 import React from "react";
 
-// import useUsers from "../../components/users/useUsers";
+// import useUsers from "../../users/useUsers";
 import { getConfToken } from "../../utils/api";
 
 import { OpenViduProvider } from "./useOpenVidu";

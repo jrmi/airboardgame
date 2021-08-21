@@ -2,8 +2,8 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 
-import DownloadLink from "../../components/DownloadLink";
-import Modal from "../../components/ui/Modal";
+import DownloadLink from "./DownloadLink";
+import Modal from "../../ui/Modal";
 import useGame from "../../hooks/useGame";
 
 const SaveExportGameModal = ({ show, setShow }) => {

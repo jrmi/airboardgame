@@ -4,7 +4,7 @@ import { useC2C } from "react-sync-board";
 
 import useSession from "../../hooks/useSession";
 
-import Modal from "../../components/ui/Modal";
+import Modal from "../../ui/Modal";
 
 import LoadData from "./LoadData";
 

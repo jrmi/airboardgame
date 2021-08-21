@@ -3,7 +3,7 @@ import {
   uploadResourceImage as uploadMedia,
   deleteResourceImage as deleteMedia,
   listResourceImage as listMedia,
-} from "../../utils/api";
+} from "../utils/api";
 
 export const MediaLibraryContext = React.createContext({});
 

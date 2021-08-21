@@ -7,9 +7,9 @@ import debounce from "lodash.debounce";
 
 import { useItemActions } from "react-sync-board";
 
-import { search } from "../views/utils";
+import { search } from "../utils";
 
-import Chevron from "./ui/Chevron";
+import Chevron from "../../ui/Chevron";
 
 const StyledItemList = styled.ul`
   display: flex;

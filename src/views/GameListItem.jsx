@@ -6,7 +6,7 @@ import { deleteGame, getBestTranslationFromConfig } from "../utils/api";
 import { confirmAlert } from "react-confirm-alert";
 import { toast } from "react-toastify";
 import { useMutation, useQueryClient } from "react-query";
-import { media2Url } from "../components/mediaLibrary";
+import { media2Url } from "../mediaLibrary";
 
 const Game = styled.li`
   position: relative;

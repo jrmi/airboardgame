@@ -12,10 +12,7 @@ import { ItemForm, itemTemplates } from "../../gameComponents";
 
 import ActionBar from "./ActionBar";
 
-import {
-  MediaLibraryProvider,
-  ImageDropNPaste,
-} from "../../components/mediaLibrary";
+import { MediaLibraryProvider, ImageDropNPaste } from "../../mediaLibrary";
 
 const style = {
   background:
