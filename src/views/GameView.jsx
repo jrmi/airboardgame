@@ -97,16 +97,19 @@ export const GameView = ({ create = false }) => {
 
   const itemLibraries = [
     {
-      name: "Standard",
+      name: t("Standard"),
       key: "standard",
       items: itemLibrary,
     },
-    {
-      name: "Box",
+  ];
+
+  if (availableItems.length) {
+    itemLibraries.push({
+      name: t("Box"),
       key: "box",
       items: availableItemLibrary,
-    },
-  ];
+    });
+  }
 
   const mediaLibraries = React.useMemo(() => {
     return [{ id: "game", name: t("Game"), boxId: "game", resourceId: gameId }];
