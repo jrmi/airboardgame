@@ -4,14 +4,14 @@ import styled from "styled-components";
 import { useQuery } from "react-query";
 
 import SliderRange from "../ui/SliderRange";
-import Spinner from "./Spinner";
+import Spinner from "../ui/Spinner";
 
 import playerSVG from "../images/player.svg";
 import languageSVG from "../images/language.svg";
 import clockSVG from "../images/clock.svg";
 
 import { getGames } from "../utils/api";
-import { search } from "./utils";
+import { search } from "../utils";
 
 import GameListItem from "./GameListItem";
 import { StyledGameList } from "./StyledGameList";

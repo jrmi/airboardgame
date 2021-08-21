@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 
 import useOpenVidu from "./useOpenVidu";
-import useLocalStorage from "../../hooks/useLocalStorage";
+import useLocalStorage from "../hooks/useLocalStorage";
 
 import LocalStream from "./LocalStream";
 import RemoteStream from "./RemoteStream";

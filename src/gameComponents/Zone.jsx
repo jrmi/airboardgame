@@ -3,7 +3,7 @@ import { memo } from "react";
 import styled, { css } from "styled-components";
 import { useItemInteraction } from "react-sync-board";
 
-import { isItemInsideElement } from "../views/utils";
+import { isItemInsideElement } from "..//utils";
 import useGameItemActions from "./useGameItemActions";
 
 const ZoneWrapper = styled.div`

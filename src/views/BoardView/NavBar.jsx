@@ -8,7 +8,7 @@ import { useC2C, useBoardConfig } from "react-sync-board";
 
 import UserList from "../../users/UserList";
 import Touch from "../../ui/Touch";
-import WebConferenceButton from "../webconf/WebConferenceButton";
+import WebConferenceButton from "../../webconf/WebConferenceButton";
 
 import { getBestTranslationFromConfig } from "../../utils/api";
 import { ENABLE_WEBCONFERENCE } from "../../utils/settings";

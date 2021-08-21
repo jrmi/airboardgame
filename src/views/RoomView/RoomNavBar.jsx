@@ -9,7 +9,7 @@ import { useC2C } from "react-sync-board";
 
 import Touch from "../../ui/Touch";
 import UserList from "../../users/UserList";
-import WebConferenceButton from "../webconf/WebConferenceButton";
+import WebConferenceButton from "../../webconf/WebConferenceButton";
 
 import Brand from "../Brand";
 

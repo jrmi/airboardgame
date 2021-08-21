@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
 
-import { insideClass, hasClass } from "../utils";
+import { insideClass, hasClass } from "../../utils";
 import SidePanel from "../../ui/SidePanel";
 import ItemFormFactory from "./ItemFormFactory";
 import {

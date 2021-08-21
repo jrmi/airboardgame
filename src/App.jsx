@@ -9,7 +9,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./react-confirm-alert.css";
 
-import Waiter from "./views/Waiter";
+import Waiter from "./ui/Waiter";
 
 import MainRoute from "./MainRoute";
 

@@ -3,8 +3,8 @@ import { useTranslation } from "react-i18next";
 
 import { useUsers } from "react-sync-board";
 
-import Touch from "../../ui/Touch";
-import useLocalStorage from "../../hooks/useLocalStorage";
+import Touch from "../ui/Touch";
+import useLocalStorage from "../hooks/useLocalStorage";
 
 import WebConference from "./WebConference";
 

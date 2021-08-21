@@ -6,11 +6,11 @@ import { useQuery } from "react-query";
 
 import { getGames } from "../utils/api";
 import useAuth from "../hooks/useAuth";
+import Spinner from "../ui/Spinner";
 
 import { StyledGameList } from "./StyledGameList";
 import NewGameItem from "./NewGameItem";
 import GameListItem from "./GameListItem";
-import Spinner from "./Spinner";
 
 const Filter = styled.div`
   & .incentive {
