@@ -4,12 +4,12 @@ import { nanoid } from "nanoid";
 import { toast } from "react-toastify";
 import { useSetRecoilState, useRecoilCallback } from "recoil";
 
-import { useItemActions } from "../components/board/Items";
-import { SelectedItemsAtom } from "../components/board";
-import { useUsers } from "../components/users";
-import { ItemMapAtom } from "../components/board";
+import { useItemActions } from "../board/Items";
+import { SelectedItemsAtom } from "../board";
+import { useUsers } from "../users";
+import { ItemMapAtom } from "../board";
 
-import { shuffle as shuffleArray, randInt } from "../components/utils";
+import { shuffle as shuffleArray, randInt } from "../utils";
 
 import deleteIcon from "../images/delete.svg";
 import stackToCenterIcon from "../images/stackToCenter.svg";

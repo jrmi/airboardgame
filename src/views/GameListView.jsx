@@ -3,7 +3,7 @@ import { useTranslation, Trans } from "react-i18next";
 import styled from "styled-components";
 import { useQuery } from "react-query";
 
-import SliderRange from "../components/ui/SliderRange";
+import SliderRange from "../ui/SliderRange";
 import Spinner from "./Spinner";
 
 import playerSVG from "../images/player.svg";

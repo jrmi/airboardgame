@@ -3,9 +3,9 @@ import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import { Form } from "react-final-form";
 
-import Touch from "./ui/Touch";
-import Modal from "./ui/Modal";
-import AutoSave from "./ui/formUtils/AutoSave";
+import Touch from "../../ui/Touch";
+import Modal from "../../ui/Modal";
+import AutoSave from "../../ui/formUtils/AutoSave";
 
 import { useBoardConfig } from "react-sync-board";
 

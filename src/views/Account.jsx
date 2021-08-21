@@ -2,7 +2,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 
-import Modal from "../components/ui/Modal";
+import Modal from "../ui/Modal";
 import { sendAuthToken } from "../utils/api";
 import useAuth from "../hooks/useAuth";
 

@@ -2,8 +2,8 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import ItemLibrary from "./ItemLibrary";
 
-import Touch from "./ui/Touch";
-import SidePanel from "./ui/SidePanel";
+import Touch from "../../ui/Touch";
+import SidePanel from "../../ui/SidePanel";
 
 const AddItemPanel = ({ itemLibraries, open, onClose }) => {
   const [tab, setTab] = React.useState(itemLibraries[0]?.key || "standard");

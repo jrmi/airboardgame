@@ -2,8 +2,8 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { Field } from "react-final-form";
 
-import Label from "../../components/ui/formUtils/Label";
-import Hint from "../../components/ui/formUtils/Hint";
+import Label from "../../ui/formUtils/Label";
+import Hint from "../../ui/formUtils/Hint";
 
 import ActionsField from "./ActionsField";
 import useGameItemActions from "../useGameItemActions";

@@ -1,7 +1,7 @@
 import React, { memo } from "react";
 import { useUsers } from "react-sync-board";
 import styled from "styled-components";
-import { media2Url } from "../components/mediaLibrary";
+import { media2Url } from "../mediaLibrary";
 
 import eye from "../images/eye.svg";
 

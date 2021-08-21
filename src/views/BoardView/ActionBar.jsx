@@ -1,13 +1,13 @@
 import React from "react";
 
-import MessageButton from "../../components/messages/MessageButton";
-import EditInfoButton from "../../components/EditInfoButton";
-import AddItemButton from "../../components/AddItemButton";
+import MessageButton from "../../messages/MessageButton";
+import EditInfoButton from "./EditInfoButton";
+import AddItemButton from "./AddItemButton";
 
 import styled from "styled-components";
 import { useTranslation } from "react-i18next";
 
-import Touch from "../../components/ui/Touch";
+import Touch from "../../ui/Touch";
 
 const StyledActionBar = styled.div`
   position: absolute;

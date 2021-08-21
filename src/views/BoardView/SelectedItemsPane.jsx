@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
 
 import { insideClass, hasClass } from "../utils";
-import SidePanel from "../../components/ui/SidePanel";
+import SidePanel from "../../ui/SidePanel";
 import ItemFormFactory from "./ItemFormFactory";
 import {
   useAvailableActions,

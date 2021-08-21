@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 
 import useGame from "../../hooks/useGame";
 
-import Modal from "../../components/ui/Modal";
+import Modal from "../../ui/Modal";
 
 import LoadData from "./LoadData";
 

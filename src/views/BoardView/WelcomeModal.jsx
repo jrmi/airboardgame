@@ -4,7 +4,7 @@ import { Trans } from "react-i18next";
 import styled from "styled-components";
 import { toast } from "react-toastify";
 
-import Modal from "../../components/ui/Modal";
+import Modal from "../../ui/Modal";
 
 import useSession from "../../hooks/useSession";
 

@@ -4,10 +4,10 @@ import { nanoid } from "nanoid";
 import { Field } from "react-final-form";
 import { useBoardConfig } from "react-sync-board";
 
-import Hint from "../../components/ui/formUtils/Hint";
-import Label from "../../components/ui/formUtils/Label";
-import SliderRange from "../../components/ui/SliderRange";
-import { ImageField } from "../../components/mediaLibrary";
+import Hint from "../../ui/formUtils/Hint";
+import Label from "../../ui/formUtils/Label";
+import SliderRange from "../../ui/SliderRange";
+import { ImageField } from "../../mediaLibrary";
 
 const BoardConfigForm = () => {
   const { t } = useTranslation();

@@ -5,7 +5,7 @@ import useSession from "../../hooks/useSession";
 import { useItems, useBoardConfig, useMessage } from "react-sync-board";
 
 import DownloadLink from "./DownloadLink";
-import Modal from "../../components/ui/Modal";
+import Modal from "../../ui/Modal";
 
 const ExportModal = ({ show, setShow }) => {
   const { t } = useTranslation();

@@ -1,7 +1,7 @@
 import React from "react";
 import { Form } from "react-final-form";
 
-import AutoSave from "../../components/ui/formUtils/AutoSave";
+import AutoSave from "../../ui/formUtils/AutoSave";
 import {
   useItemActions,
   useSelectedItems,
