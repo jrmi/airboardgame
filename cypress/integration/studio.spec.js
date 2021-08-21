@@ -73,7 +73,7 @@ describe("Studio", () => {
       "matrix(0.24, 0, 0, 0.24, 260, 60)"
     );
     // Add an item
-    cy.get("[title^='Add an item']").click();
+    cy.get("[title^='Add an item']").click({ force: true });
     cy.contains("Rectangle").parent().parent().click();
     cy.get(".side-panel.open [alt^='Close']").click();
 
@@ -96,7 +96,7 @@ describe("Studio", () => {
   });
 
   it("Can edit game properties", () => {
-    cy.get("[title^='Add a game']").click();
+    cy.get("[title^='Add a game']").click({ force: true });
     cy.get(".board-pane").should(
       "have.css",
       "transform",
@@ -104,7 +104,7 @@ describe("Studio", () => {
     );
 
     // Edit title
-    cy.get("[title^='Configuration']").click();
+    cy.get("[title^='Configuration']").click({ force: true });
     cy.get('input[name="defaultName"]').clear().type("ChangeGameName");
     cy.get(".side-panel.open [alt^='Close']").click();
 
@@ -128,14 +128,14 @@ describe("Studio", () => {
 
   describe("Item edition", () => {
     beforeEach(() => {
-      cy.get("[title^='Add a game']").click();
+      cy.get("[title^='Add a game']").click({ force: true });
       cy.get(".board-pane").should(
         "have.css",
         "transform",
         "matrix(0.24, 0, 0, 0.24, 260, 60)"
       );
       // Add an item
-      cy.get("[title^='Add an item']").click();
+      cy.get("[title^='Add an item']").click({ force: true });
       cy.contains("Rectangle").parent().parent().click();
       cy.get(".side-panel.open [alt^='Close']").click();
     });
