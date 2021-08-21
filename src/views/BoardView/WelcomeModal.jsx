@@ -41,7 +41,7 @@ const WelcomeModal = ({ show, setShow, welcome = true }) => {
     inputRef.current.select();
     document.execCommand("copy");
     inputRef.current.style.display = "none";
-    toast.info(t("Url copied to clipboard!"), { autoClose: 1000 });
+    toast.info(t("Url copied to clipboard!"), { autoClose: 100000 });
   };
 
   const meetUrl = `https://meet.jit.si/airboardgame__${room}`;
