@@ -202,17 +202,17 @@ const GameListView = () => {
   );
 
   const filteredGameList = React.useMemo(() => {
-    return gameList
-      ? gameList.filter((game) => {
-        return (
-            (filterCriteria.searchTerm === NULL_SEARCH_TERM ||
-              search(filterCriteria.searchTerm, game.defaultName)) &&
-            hasRequestedValues(filterCriteria.nbOfPlayers, game.playerCount) &&
-            hasRequestedValues(filterCriteria.durations, game.duration) &&
-            hasAllowedMaterialLanguage(filterCriteria, game)
-          );
-      })
-      : [];
+    if (gameList) {
+      return gameList.filter(
+        (game) =>
+          (filterCriteria.searchTerm === NULL_SEARCH_TERM ||
+            search(filterCriteria.searchTerm, game.defaultName)) &&
+          hasRequestedValues(filterCriteria.nbOfPlayers, game.playerCount) &&
+          hasRequestedValues(filterCriteria.durations, game.duration) &&
+          hasAllowedMaterialLanguage(filterCriteria, game)
+      );
+    }
+    return [];
   }, [gameList, filterCriteria]);
 
   const onChangeNbOfPlayersSlider = (values) => {

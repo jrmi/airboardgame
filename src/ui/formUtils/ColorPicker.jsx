@@ -5,9 +5,9 @@ import styled from "styled-components";
 
 const Color = styled.div`
   background-color: ${({ color }) => color};
-  border: 1px solid #00000022;
-  width: 20px;
-  height: 20px;
+  border: 2px solid #ffffff66;
+  width: 32px;
+  height: 32px;
   margin: 5px;
   cursor: pointer;
 `;

@@ -74,8 +74,8 @@ export const SessionProvider = ({ sessionId, fromGameId, children }) => {
     async (newData, sync = false) => {
       const { availableItems, items, board, messages = [] } = newData;
       setAvailableItems(availableItems);
-      // The filter prevent the empty item bug on reload
-      setItemList(items.filter((item) => item));
+      // The filter prevents the empty item bug or missing type on reload
+      setItemList(items.filter((item) => item && item.type));
       setBoardConfig(board, false);
       setMessages(messages);
 
