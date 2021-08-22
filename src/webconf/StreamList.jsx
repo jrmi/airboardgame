@@ -83,8 +83,6 @@ const WebConferenceContent = ({ users }) => {
     setShowLocalAudio((prev) => !prev);
   }, [setShowLocalAudio]);
 
-  // const { localUsers: users } = useUsers();
-
   const streamMap = React.useMemo(
     () =>
       remoteStreams.reduce((acc, stream) => {

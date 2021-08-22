@@ -104,7 +104,6 @@ const SelectedItemsPane = ({ hideMenu = false, ItemFormComponent }) => {
           e.key === shortcut &&
           showEdit === !!whileEdit
         ) {
-          // here
           action();
         }
       });
@@ -133,10 +132,8 @@ const SelectedItemsPane = ({ hideMenu = false, ItemFormComponent }) => {
 
       if (e.ctrlKey && filteredActions.length > 1) {
         // Use second action
-        // here
         actionMap[filteredActions[1]].action();
       } else if (filteredActions.length > 0) {
-        // here
         actionMap[filteredActions[0]].action();
       }
     },
@@ -206,7 +203,6 @@ const SelectedItemsPane = ({ hideMenu = false, ItemFormComponent }) => {
                 <button
                   className="button clear icon-only"
                   key={action}
-                  // here
                   onClick={() => handler()}
                   title={label + (shortcut ? ` (${shortcut})` : "")}
                 >

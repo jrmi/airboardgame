@@ -26,7 +26,7 @@ export const useGameItemActions = () => {
   const {
     batchUpdateItems,
     removeItems,
-    insertItemBefore,
+    pushItem,
     reverseItemsOrder,
     swapItems,
     getItems,
@@ -396,10 +396,10 @@ export const useGameItemActions = () => {
         const newItem = JSON.parse(JSON.stringify(itemToClone));
         newItem.id = nanoid();
         delete newItem.move;
-        insertItemBefore(newItem, itemToClone.id);
+        pushItem(newItem, itemToClone.id);
       });
     },
-    [getItemListOrSelected, insertItemBefore]
+    [getItemListOrSelected, pushItem]
   );
 
   const actionMap = React.useMemo(

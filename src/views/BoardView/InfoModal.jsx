@@ -1,11 +1,10 @@
 import React from "react";
 import { useTranslation, Trans } from "react-i18next";
-import { useRecoilValue } from "recoil";
 import useAsyncEffect from "use-async-effect";
 import styled from "styled-components";
+import { useBoardConfig } from "react-sync-board";
 
 import Modal from "../../ui/Modal";
-// import { BoardConfigAtom } from "../../board";
 
 import { getBestTranslationFromConfig } from "../../utils/api";
 
@@ -30,12 +29,11 @@ const InfoModal = ({ show, setShow }) => {
 
   const [info, setInfo] = React.useState("");
 
-  // const boardConfig = useRecoilValue(BoardConfigAtom);
+  const [boardConfig] = useBoardConfig();
 
   const translation = React.useMemo(
-    // () => getBestTranslationFromConfig(boardConfig, i18n.languages),
-    () => getBestTranslationFromConfig({}, i18n.languages),
-    [i18n.languages]
+    () => getBestTranslationFromConfig(boardConfig, i18n.languages),
+    [boardConfig, i18n.languages]
   );
 
   useAsyncEffect(
