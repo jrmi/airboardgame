@@ -167,13 +167,18 @@ const GameListItem = ({
     [game, i18n.languages]
   );
 
-  const onClick = React.useCallback(() => {
-    if (propOnClick) {
-      return propOnClick(id);
-    } else {
-      history.push(`/playgame/${id}`);
-    }
-  }, [history, id, propOnClick]);
+  const onClick = React.useCallback(
+    (e) => {
+      e.stopPropagation();
+      e.preventDefault();
+      if (propOnClick) {
+        return propOnClick(id);
+      } else {
+        history.push(`/playgame/${id}`);
+      }
+    },
+    [history, id, propOnClick]
+  );
 
   const deleteGameHandler = async () => {
     confirmAlert({
@@ -247,8 +252,8 @@ const GameListItem = ({
 
   return (
     <Game>
-      <div onClick={onClick} className="img-wrapper button">
-        <span>
+      <a href={`/playgame/${id}`} className="img-wrapper button">
+        <span onClick={onClick}>
           {realImageUrl && (
             <>
               <span
@@ -259,7 +264,7 @@ const GameListItem = ({
             </>
           )}
         </span>
-      </div>
+      </a>
       {userId && (userId === owner || !owner) && (
         <span className="extra-actions">
           <button
