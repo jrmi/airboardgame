@@ -107,8 +107,14 @@ const SidePanel = ({
   width,
 }) => {
   const { t } = useTranslation();
+
+  const [bindTo] = React.useState(() =>
+    document.getElementById(modal ? "modal-container" : "panel-container")
+  );
+
   const { ref, Portal, openPortal, closePortal, isOpen } = usePortal({
     closeOnOutsideClick: modal,
+    bindTo,
   });
 
   const onAnimationEnd = React.useCallback(() => {

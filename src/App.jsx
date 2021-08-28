@@ -36,6 +36,8 @@ const App = () => {
         draggable
         pauseOnHover
       />
+      <div id="panel-container" />
+      <div id="modal-container" />
     </Suspense>
   );
 };

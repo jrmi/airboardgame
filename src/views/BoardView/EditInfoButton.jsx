@@ -34,7 +34,7 @@ const BoardConfigPanel = ({ BoardFormComponent, show, setShow }) => {
   return (
     <SidePanel
       title={t("Edit game information")}
-      setShow={setShow}
+      onClose={() => setShow(false)}
       show={show}
       position="left"
     >

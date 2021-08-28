@@ -28,7 +28,8 @@ body {
   --font-family-mono: monaco, "Consolas", "Lucida Console", monospace;
 }
 
-.blurry .sync-board {
+.blurry .sync-board,
+.blurry #panel-container {
   filter: blur(3px);
 }
 
