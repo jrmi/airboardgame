@@ -4,8 +4,7 @@ import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
 
 import { insideClass, hasClass } from "../../utils";
-import SidePanel from "../../ui/SidePanel";
-import ItemFormFactory from "./ItemFormFactory";
+import EditItemButton from "./EditItemButton";
 import {
   useAvailableActions,
   useSelectionBox,
@@ -71,12 +70,6 @@ const ActionPane = styled.div.attrs(({ top, left, height }) => {
     font-size: 1.5em;
     line-height: 1em;
   }
-`;
-
-const CardContent = styled.div.attrs(() => ({ className: "content" }))`
-  display: flex;
-  flex-direction: column;
-  padding: 0.5em;
 `;
 
 const SelectedItemsPane = ({ hideMenu = false, ItemFormComponent }) => {
@@ -151,93 +144,53 @@ const SelectedItemsPane = ({ hideMenu = false, ItemFormComponent }) => {
     return null;
   }
 
-  let title = "";
-  if (selectedItems.length === 1) {
-    title = t("Edit item");
-  }
-  if (selectedItems.length > 1) {
-    title = t("Edit all items");
-  }
-
   return (
-    <>
-      <SidePanel
-        key={selectedItems[0]}
-        open={showEdit && !boardState.selecting}
-        onClose={() => {
-          setShowEdit(false);
-        }}
-        title={title}
-        width="25%"
-      >
-        <CardContent>
-          <ItemFormFactory ItemFormComponent={ItemFormComponent} />
-        </CardContent>
-      </SidePanel>
-      {selectedItems.length && !hideMenu && (
-        <ActionPane
-          {...selectionBox}
-          hide={
-            boardState.zooming || boardState.panning || boardState.movingItems
-          }
-        >
-          {(selectedItems.length > 1 || boardState.selecting) && (
-            <div className="count">
-              <span className="number">{selectedItems.length}</span>
-              <span>{t("Items")}</span>
-            </div>
-          )}
-          {!boardState.selecting &&
-            availableActions.map((action) => {
-              const {
-                label,
-                action: handler,
-                multiple,
-                edit: onlyEdit,
-                shortcut,
-                icon,
-              } = actionMap[action];
-              if (multiple && selectedItems.length < 2) return null;
-              if (onlyEdit && !showEdit) return null;
-              return (
-                <button
-                  className="button clear icon-only"
-                  key={action}
-                  onClick={() => handler()}
-                  title={label + (shortcut ? ` (${shortcut})` : "")}
-                >
-                  <img
-                    src={icon}
-                    style={{ width: "32px", height: "32px" }}
-                    alt={label}
-                  />
-                </button>
-              );
-            })}
-
-          {!boardState.selecting && (
+    <ActionPane
+      {...selectionBox}
+      hide={boardState.zooming || boardState.panning || boardState.movingItems}
+    >
+      {(selectedItems.length > 1 || boardState.selecting) && (
+        <div className="count">
+          <span className="number">{selectedItems.length}</span>
+          <span>{t("Items")}</span>
+        </div>
+      )}
+      {!boardState.selecting &&
+        availableActions.map((action) => {
+          const {
+            label,
+            action: handler,
+            multiple,
+            edit: onlyEdit,
+            shortcut,
+            icon,
+          } = actionMap[action];
+          if (multiple && selectedItems.length < 2) return null;
+          if (onlyEdit && !showEdit) return null;
+          return (
             <button
               className="button clear icon-only"
-              onClick={() => setShowEdit((prev) => !prev)}
-              title={t("Edit")}
+              key={action}
+              onClick={() => handler()}
+              title={label + (shortcut ? ` (${shortcut})` : "")}
             >
-              {!showEdit && (
-                <img
-                  src="https://icongr.am/feather/edit.svg?size=32&color=ffffff"
-                  alt={t("Edit")}
-                />
-              )}
-              {showEdit && (
-                <img
-                  src="https://icongr.am/feather/edit.svg?size=32&color=db5034"
-                  alt={t("Edit")}
-                />
-              )}
+              <img
+                src={icon}
+                style={{ width: "32px", height: "32px" }}
+                alt={label}
+              />
             </button>
-          )}
-        </ActionPane>
+          );
+        })}
+
+      {!boardState.selecting && (
+        <EditItemButton
+          ItemFormComponent={ItemFormComponent}
+          showEdit={showEdit}
+          setShowEdit={setShowEdit}
+        />
       )}
-    </>
+    </ActionPane>
   );
 };
 
