@@ -183,13 +183,18 @@ const SelectedItemsPane = ({ hideMenu = false, ItemFormComponent }) => {
           );
         })}
 
-      {!boardState.selecting && (
-        <EditItemButton
-          ItemFormComponent={ItemFormComponent}
-          showEdit={showEdit}
-          setShowEdit={setShowEdit}
-        />
-      )}
+      {!boardState.selecting &&
+        !(
+          boardState.zooming ||
+          boardState.panning ||
+          boardState.movingItems
+        ) && (
+          <EditItemButton
+            ItemFormComponent={ItemFormComponent}
+            showEdit={showEdit}
+            setShowEdit={setShowEdit}
+          />
+        )}
     </ActionPane>
   );
 };
