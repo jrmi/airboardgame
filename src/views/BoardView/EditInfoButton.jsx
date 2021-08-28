@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { Form } from "react-final-form";
 
 import Touch from "../../ui/Touch";
-import Modal from "../../ui/Modal";
+import SidePanel from "../../ui/SidePanel";
 import AutoSave from "../../ui/formUtils/AutoSave";
 
 import { useBoardConfig } from "react-sync-board";
@@ -17,7 +17,7 @@ const BoardConfigForm = styled.div`
   }
 `;
 
-const BoardConfigModal = ({ BoardFormComponent, show, setShow }) => {
+const BoardConfigPanel = ({ BoardFormComponent, show, setShow }) => {
   const { t } = useTranslation();
   const [, setBoardConfig] = useBoardConfig();
 
@@ -32,7 +32,7 @@ const BoardConfigModal = ({ BoardFormComponent, show, setShow }) => {
   );
 
   return (
-    <Modal
+    <SidePanel
       title={t("Edit game information")}
       setShow={setShow}
       show={show}
@@ -49,7 +49,7 @@ const BoardConfigModal = ({ BoardFormComponent, show, setShow }) => {
           )}
         />
       </section>
-    </Modal>
+    </SidePanel>
   );
 };
 
@@ -67,7 +67,7 @@ const EditInfoButton = ({ BoardFormComponent }) => {
         label={t("Edit game info")}
         icon={"cog"}
       />
-      <BoardConfigModal
+      <BoardConfigPanel
         BoardFormComponent={BoardFormComponent}
         show={show}
         setShow={setShow}
