@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 
 import SidePanel from "../../ui/SidePanel";
 import ItemFormFactory from "./ItemFormFactory";
-import { useSelectedItems, useBoardState } from "react-sync-board";
+import { useSelectedItems } from "react-sync-board";
 
 const CardContent = styled.div.attrs(() => ({ className: "content" }))`
   display: flex;
@@ -13,7 +13,6 @@ const CardContent = styled.div.attrs(() => ({ className: "content" }))`
 `;
 
 const EditItemButton = ({ ItemFormComponent, showEdit, setShowEdit }) => {
-  const boardState = useBoardState();
   const selectedItems = useSelectedItems();
   const { t } = useTranslation();
 
@@ -46,7 +45,7 @@ const EditItemButton = ({ ItemFormComponent, showEdit, setShowEdit }) => {
       </button>
       <SidePanel
         key={selectedItems[0]}
-        open={showEdit && !boardState.selecting}
+        open={showEdit}
         onClose={() => {
           setShowEdit(false);
         }}

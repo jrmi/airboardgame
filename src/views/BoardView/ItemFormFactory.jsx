@@ -2,11 +2,7 @@ import React from "react";
 import { Form } from "react-final-form";
 
 import AutoSave from "../../ui/formUtils/AutoSave";
-import {
-  useItemActions,
-  useSelectedItems,
-  useItems,
-} from "react-sync-board";
+import { useItemActions, useSelectedItems, useItems } from "react-sync-board";
 
 export const getFormFieldComponent = (type, itemMap) => {
   if (type in itemMap) {
@@ -30,6 +26,11 @@ const ItemFormFactory = ({ ItemFormComponent }) => {
     [batchUpdateItems, selectedItems]
   );
 
+  const currentItems = React.useMemo(
+    () => items.filter(({ id }) => selectedItems.includes(id)),
+    [items, selectedItems]
+  );
+
   return (
     <Form
       onSubmit={onSubmitHandler}
@@ -41,13 +42,11 @@ const ItemFormFactory = ({ ItemFormComponent }) => {
           }}
         >
           <AutoSave save={onSubmitHandler} />
-          <ItemFormComponent
-            items={items.filter(({ id }) => selectedItems.includes(id))}
-          />
+          <ItemFormComponent items={currentItems} />
         </div>
       )}
     />
   );
 };
 
-export default React.memo(ItemFormFactory);
+export default ItemFormFactory;
