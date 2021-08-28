@@ -127,7 +127,7 @@ const BoardConfigForm = () => {
           name="materialLanguage"
           component="select"
           initialValue={boardConfig.materialLanguage}
-          style={{ width: "20em" }}
+          style={{ width: "10em" }}
         >
           <option />
           <option value="Multi-lang">🌍 {t("Multi-lang")}</option>

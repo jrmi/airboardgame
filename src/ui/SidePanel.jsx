@@ -84,7 +84,7 @@ const StyledSidePanel = styled.div`
 
     & section {
       border-radius: 0em 0em 0.5em 0.5em;
-      padding: 2em;
+      padding: 1em;
       background-color: var(--color-darkBlueGrey);
     }
   }
