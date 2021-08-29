@@ -54,7 +54,7 @@ const Zone = ({ width, height, label, onItem }) => {
             actionMap["revealSelf"].action(insideItems);
             break;
           case "hideSelf":
-            actionMap["sideSelf"].action(insideItems);
+            actionMap["hideSelf"].action(insideItems);
             break;
           case "stack":
             actionMap["stack"].action(insideItems);
