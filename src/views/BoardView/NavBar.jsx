@@ -156,14 +156,11 @@ const NavBar = ({ editMode }) => {
 
   const handleBack = React.useCallback(() => {
     // If inside session
-    if (match.path === "/session/:sessionId") {
-      if (history.length > 0) {
-        // Go to previous if exists
-        history.goBack();
-      } else {
-        // Otherwise go to /games root
-        history.push("/games");
-      }
+    if (match.path === "/session/:sessionId" && history.length > 2) {
+      // Go to previous if exists
+      // Previous can be home or studio
+      // Yes history should be greater than 2 for any reason...
+      history.goBack();
       return;
     }
     // If inside room, go back to that room
@@ -171,6 +168,8 @@ const NavBar = ({ editMode }) => {
       history.push(`/room/${match.params.roomId}`);
       return;
     }
+    // Otherwise, go back to home
+    history.push("/games");
   }, [history, match.params.roomId, match.path]);
 
   const handleBackWithConfirm = React.useCallback(() => {
