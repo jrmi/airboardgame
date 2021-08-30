@@ -43,10 +43,11 @@ const StyledNavBar = styled.div.attrs(() => ({ className: "nav" }))`
       margin: 0;
       padding: 0 2em;
 
-      background-color: var(--color-blueGrey);
+      background-color: ${({ edit }) =>
+        edit ? "var(--color-primary)" : "var(--color-blueGrey)"};
       box-shadow: 0px 3px 6px #00000029;
 
-      line-height: 90px;
+      line-height: 80px;
       letter-spacing: 0px;
       font-size: 24px;
       text-transform: uppercase;
@@ -193,7 +194,7 @@ const NavBar = ({ editMode }) => {
 
   return (
     <>
-      <StyledNavBar>
+      <StyledNavBar edit={editMode}>
         <div className="nav-left">
           {!editMode && (
             <>
