@@ -30,13 +30,15 @@ const genGame = () => {
         {
           language: "fr",
           name: "1 Jeu test de performances et des extrèmes",
-          description: "Un jeu pour tester",
+          baseline:
+            "Un jeu pour tester les performances mais également les limites des différentes saisies. Le texte est tellement long qu'il doit être caché au final.",
         },
       ],
       playerCount: [1, 9],
       defaultName: "1 Performance game to test strange things and other",
       defaultLanguage: "en",
-      defaultDescription: "A classic",
+      defaultBaseline:
+        "A very long baseline to show how it can going is someone wants to write a book.",
       materialLanguage: "Multi-lang",
       minAge: "10",
       duration: [30, 90],

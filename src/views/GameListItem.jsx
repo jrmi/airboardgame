@@ -12,14 +12,18 @@ const Game = styled.li`
   position: relative;
   padding: 0em;
   margin: 0px;
+  min-width: 0; /* Fix for elipsis */
 
   & .game-name {
     max-width: 80%;
-    line-height: 1.2em;
+    line-height: 1.1em;
     overflow: hidden;
     margin-bottom: 3px;
     margin: 0.2em 0 0.5em 0;
-    font-size: 2.3vw;
+    font-size: 2.2vw;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   & .unpublished {
@@ -46,6 +50,11 @@ const Game = styled.li`
     right: 0.5em;
     display: none;
     z-index: 2;
+  }
+
+  & .baseline {
+    max-height: 3em;
+    overflow: hidden;
   }
 
   &:hover .extra-actions,
