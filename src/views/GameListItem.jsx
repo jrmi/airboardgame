@@ -79,6 +79,8 @@ const Game = styled.li`
       overflow: hidden;
       display: block;
       display: flex;
+      justify-content: center;
+      align-items: center;
       border-radius: 5px;
       & > .back {
         filter: blur(5px);
@@ -88,6 +90,15 @@ const Game = styled.li`
         left: 0;
         bottom: 0;
         right: 0;
+      }
+      & > h2 {
+        text-align: center;
+        display: inline;
+        font-size: 3em;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin: 0 0.5em;
       }
     }
   }
@@ -170,6 +181,10 @@ const GameListItem = ({
       queryClient.invalidateQueries("games");
     },
   });
+
+  const realImageUrl = media2Url(imageUrl);
+
+  const [showImage, setShowImage] = React.useState(Boolean(realImageUrl));
 
   const translation = React.useMemo(
     () => getBestTranslationFromConfig(game, i18n.languages),
@@ -257,21 +272,25 @@ const GameListItem = ({
 
   let materialLanguageDisplay = t(materialLanguage);
 
-  const realImageUrl = media2Url(imageUrl);
-
   return (
     <Game>
       <a href={`/playgame/${id}`} className="img-wrapper button">
         <span onClick={onClick}>
-          {realImageUrl && (
+          {showImage && (
             <>
               <span
                 className="back"
                 style={{ backgroundImage: `url(${realImageUrl})` }}
               />
-              <img className="img" src={realImageUrl} />
+              <img
+                className="img"
+                src={realImageUrl}
+                alt={translation.name}
+                onError={() => setShowImage(false)}
+              />
             </>
           )}
+          {!showImage && <h2>{translation.name}</h2>}
         </span>
       </a>
       {userId && (userId === owner || !owner) && (
