@@ -224,5 +224,9 @@
   "{{min}} - {{max}} players": "{{min}} - {{max}} players",
   "{{min}}~{{max}} min": "{{min}}~{{max}} min",
   "~{{count}} min": "~{{count}} minute",
-  "~{{count}} min_plural": "{{count}} minutes"
+  "~{{count}} min_plural": "{{count}} minutes",
+  "Double click to roll": "Double click to roll",
+  "Check it to activate roll on double click instead of moving.": "check it to activate roll on double click instead of moving.",
+  "Dice image {{index}}": "Side #{{index}}",
+  "Image dice": "Image dice"
 }

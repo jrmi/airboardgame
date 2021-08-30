@@ -224,5 +224,9 @@
   "{{min}} - {{max}} players": "{{min}} - {{max}} joueurs",
   "{{min}}~{{max}} min": "{{min}}~{{max}} minutes",
   "~{{count}} min": "~{{count}} minute",
-  "~{{count}} min_plural": "~{{count}} minutes"
+  "~{{count}} min_plural": "~{{count}} minutes",
+  "Double click to roll": "Double clic pour lancer",
+  "Check it to activate roll on double click instead of moving.": "Cocher pour activer le lancé au double clic à la place du déplacement.",
+  "Dice image {{index}}": "Face n° {{index}}",
+  "Image dice": "Dé avec image"
 }
