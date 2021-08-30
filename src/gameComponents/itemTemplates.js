@@ -9,6 +9,7 @@ import Token from "./Token";
 import Image from "./Image";
 import Counter from "./Counter";
 import Dice from "./Dice";
+import DiceImage from "./DiceImage";
 import Note from "./Note";
 import Zone from "./Zone";
 import Meeple from "./Meeple";
@@ -23,6 +24,7 @@ import RectFormFields from "./forms/RectFormFields";
 import CubeFormFields from "./forms/CubeFormFields";
 import RoundFormFields from "./forms/RoundFormFields";
 import DiceFormFields from "./forms/DiceFormFields";
+import DiceImageFormFields from "./forms/DiceImageFormFields";
 import NoteFormFields from "./forms/NoteFormFields";
 import ZoneFormFields from "./forms/ZoneFormFields";
 import TokenFormFields from "./forms/TokenFormFields";
@@ -31,6 +33,39 @@ import JewelFormFields from "./forms/JewelFormFields";
 import PawnFormFields from "./forms/PawnFormFields";
 import CheckerBoardFormFields from "./forms/CheckerBoardFormFields";
 import CylinderFormFields from "./forms/CylinderFormFields";
+
+const defaultDiceImages = () => [
+  {
+    id: nanoid(),
+    type: "external",
+    content: "/game_assets/dice/one.svg",
+  },
+  {
+    id: nanoid(),
+    type: "external",
+    content: "/game_assets/dice/two.svg",
+  },
+  {
+    id: nanoid(),
+    type: "external",
+    content: "/game_assets/dice/three.svg",
+  },
+  {
+    id: nanoid(),
+    type: "external",
+    content: "/game_assets/dice/four.svg",
+  },
+  {
+    id: nanoid(),
+    type: "external",
+    content: "/game_assets/dice/five.svg",
+  },
+  {
+    id: nanoid(),
+    type: "external",
+    content: "/game_assets/dice/six.svg",
+  },
+];
 
 const itemTemplates = {
   rect: {
@@ -167,7 +202,9 @@ const itemTemplates = {
     availableActions: ["clone", "lock", "remove"],
     form: CheckerBoardFormFields,
     name: i18n.t("Checkerboard"),
-    template: { layer: -1 },
+    template: {
+      layer: -1,
+    },
   },
   image: {
     component: Image,
@@ -260,6 +297,23 @@ const itemTemplates = {
     name: i18n.t("Dice"),
     template: {},
   },
+  diceImage: {
+    component: DiceImage,
+    defaultActions: ["clone", "lock", "remove"],
+    availableActions: [
+      "clone",
+      "lock",
+      "remove",
+      "alignAsLine",
+      "alignAsSquare",
+    ],
+    form: DiceImageFormFields,
+    name: i18n.t("Image dice"),
+    template: () => ({
+      images: defaultDiceImages(),
+      side: 6,
+    }),
+  },
   note: {
     component: Note,
     defaultActions: ["shuffle", "clone", "lock", "remove"],
@@ -287,7 +341,9 @@ const itemTemplates = {
     ],
     form: ZoneFormFields,
     name: i18n.t("Zone"),
-    template: { layer: -1 },
+    template: {
+      layer: -1,
+    },
   },
 };
 

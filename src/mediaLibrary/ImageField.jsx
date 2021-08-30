@@ -44,15 +44,15 @@ const ImageField = ({ value, onChange }) => {
   }
 
   const handleInputChange = (e) => {
-    onChange({ type, content: e.target.value });
+    onChange({ ...value, type, content: e.target.value });
   };
 
   const handleTypeChange = (e) => {
-    onChange({ type: e.target.value, content: "" });
+    onChange({ ...value, type: e.target.value, content: "" });
   };
 
   const handleMediaSelect = (key) => {
-    onChange({ type: "local", content: key });
+    onChange({ ...value, type: "local", content: key });
   };
 
   const url = media2Url(value);

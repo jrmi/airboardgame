@@ -67,7 +67,7 @@ const NewItem = memo(({ type, template, component: Component, name }) => {
 
   const addItem = React.useCallback(async () => {
     pushItem({
-      ...template,
+      ...(typeof template === "function" ? template() : template),
       id: nanoid(),
       type,
     });
@@ -76,7 +76,12 @@ const NewItem = memo(({ type, template, component: Component, name }) => {
   return (
     <StyledItem onClick={addItem}>
       <div>
-        <Component {...template} width={size} height={size} size={size} />
+        <Component
+          {...(typeof template === "function" ? template() : template)}
+          width={size}
+          height={size}
+          size={size}
+        />
         <span>{name}</span>
       </div>
     </StyledItem>
@@ -93,7 +98,10 @@ const SubItemList = ({ name, items }) => {
   const addItems = useRecoilCallback(
     async (itemsToAdd) => {
       pushItems(
-        itemsToAdd.map(({ template }) => ({ ...template, id: nanoid() }))
+        itemsToAdd.map(({ template }) => ({
+          ...(typeof template === "function" ? template() : template),
+          id: nanoid(),
+        }))
       );
     },
     [pushItems]
