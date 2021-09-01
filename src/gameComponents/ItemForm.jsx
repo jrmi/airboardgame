@@ -156,7 +156,7 @@ const ItemForm = ({ items }) => {
           initialValue={initialValues.grid?.type}
           component="select"
         >
-          <option value="">{t("None")}</option>
+          <option value="none">{t("None")}</option>
           <option value="grid">{t("Grid")}</option>
           <option value="hexH">{t("Horizontal hexagons")}</option>
           <option value="hexV">{t("Vertical hexagons")}</option>
