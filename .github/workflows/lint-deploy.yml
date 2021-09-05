@@ -32,7 +32,7 @@ jobs:
           VITE_SOCKET_PATH: /wamp/socket.io
           VITE_RICOCHET_SITEID: airboardgame
           VITE_USE_PROXY: 0
-          VITE_ENABLE_WEBCONFERENCE: 1
+          VITE_WEBCONFERENCE: audio
           CYPRESS_INSTALL_BINARY: 0
       - run: |
           cat <<EOF > ./dist/_redirects

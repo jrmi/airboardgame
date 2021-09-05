@@ -1,9 +1,10 @@
 import React from "react";
 
-import Stream from "./Stream";
+import UserStream from "./UserStream";
 
 const RemoteStream = ({
   stream,
+  user,
   subscribe = true,
   audio = true,
   video = true,
@@ -44,7 +45,15 @@ const RemoteStream = ({
     return null;
   }
 
-  return <Stream stream={stream} />;
+  return (
+    <UserStream
+      stream={stream}
+      name={user.name}
+      color={user.color}
+      audio={stream.stream.audioActive}
+      video={stream.stream.videoActive}
+    />
+  );
 };
 
 export default RemoteStream;

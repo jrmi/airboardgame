@@ -35,5 +35,8 @@ export const SOCKET_OPTIONS = {
   transports: ["websocket"],
 };
 
-export const ENABLE_WEBCONFERENCE =
-  import.meta.env.VITE_ENABLE_WEBCONFERENCE === "1";
+export const WEBCONFERENCE = ["audio", "video"].includes(
+  import.meta.env.VITE_WEBCONFERENCE
+)
+  ? import.meta.env.VITE_WEBCONFERENCE
+  : false;

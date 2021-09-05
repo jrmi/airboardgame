@@ -183,7 +183,7 @@ export const OpenViduProvider = ({
 }) => {
   const OVRef = React.useRef(new OpenVidu());
   const instanceRef = React.useRef({});
-  const [connected, setconnected] = React.useState(false);
+  const [connected, setConnected] = React.useState(false);
   const [remoteStreams, setRemoteStreams] = React.useState([]);
   const [localStream, setLocalStream] = React.useState(null);
 
@@ -215,6 +215,11 @@ export const OpenViduProvider = ({
         );
       });
 
+      newSession.on("streamPropertyChanged", () => {
+        // Just update the map to trigger the render
+        setRemoteStreams((prev) => prev.slice());
+      });
+
       const token = await getToken(room);
       await newSession.connect(token, getUserData());
 
@@ -222,7 +227,7 @@ export const OpenViduProvider = ({
         new LocalStream({ session: newSession, OV: OVRef.current })
       );
 
-      setconnected(true);
+      setConnected(true);
 
       instanceRef.current.session = newSession;
     },

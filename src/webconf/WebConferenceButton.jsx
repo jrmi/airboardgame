@@ -5,6 +5,7 @@ import { useUsers } from "react-sync-board";
 
 import Touch from "../ui/Touch";
 import useLocalStorage from "../hooks/useLocalStorage";
+import { WEBCONFERENCE } from "../utils/settings";
 
 import WebConference from "./WebConference";
 
@@ -16,13 +17,22 @@ export const WeConferenceButton = ({ room }) => {
     false
   );
 
+  if (!WEBCONFERENCE) {
+    return null;
+  }
+
+  const icon =
+    WEBCONFERENCE === "video"
+      ? "https://icongr.am/material/webcam.svg?size=24&color=f9fbfa"
+      : "https://icongr.am/material/microphone.svg?size=24&color=f9fbfa";
+
   return (
     <>
       <Touch
         onClick={() => setWebConference((prev) => !prev)}
         alt={t("Web conference")}
         title={t("Web conference")}
-        icon="https://icongr.am/material/message-video.svg?size=24&color=f9fbfa"
+        icon={icon}
         active={webConference}
       />
       {webConference && (
@@ -30,6 +40,7 @@ export const WeConferenceButton = ({ room }) => {
           room={room}
           currentUser={currentUser}
           users={localUsers}
+          enableVideo={WEBCONFERENCE === "video"}
         />
       )}
     </>

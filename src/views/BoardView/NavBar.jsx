@@ -11,7 +11,6 @@ import Touch from "../../ui/Touch";
 import WebConferenceButton from "../../webconf/WebConferenceButton";
 
 import { getBestTranslationFromConfig } from "../../utils/api";
-import { ENABLE_WEBCONFERENCE } from "../../utils/settings";
 import useLocalStorage from "../../hooks/useLocalStorage";
 
 import InfoModal from "./InfoModal";
@@ -247,9 +246,7 @@ const NavBar = ({ editMode }) => {
                 icon="add-user"
                 title={t("Invite more player")}
               />
-              {ENABLE_WEBCONFERENCE && isBeta && (
-                <WebConferenceButton room={room} />
-              )}
+              <WebConferenceButton room={room} />
             </>
           )}
           <div className="spacer" />
