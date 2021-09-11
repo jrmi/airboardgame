@@ -27,8 +27,9 @@ jobs:
           RICOCHET_SECRET_KEY: ${{ secrets.RICOCHET_SECRET_KEY }}
       - run: npm run build
         env:
-          VITE_SOCKET_URL: https://ricochetjs.herokuapp.com/
           VITE_API_ENDPOINT: /api
+          VITE_SOCKET_URL: https://public.jeremiez.net/
+          VITE_SOCKET_PATH: /wamp/socket.io
           VITE_RICOCHET_SITEID: airboardgame
           VITE_USE_PROXY: 0
           VITE_ENABLE_WEBCONFERENCE: 1
