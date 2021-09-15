@@ -1,6 +1,6 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { useC2C } from "react-sync-board";
+import { useWire } from "react-sync-board";
 
 import useSession from "../../hooks/useSession";
 
@@ -10,16 +10,16 @@ import LoadData from "./LoadData";
 
 const LoadSessionModal = ({ show, setShow }) => {
   const { t } = useTranslation();
-  const { c2c } = useC2C("board");
+  const { wire } = useWire("board");
   const { setSession } = useSession();
 
   const loadSession = React.useCallback(
     (sessionData) => {
       setSession(sessionData);
-      c2c.publish("loadSession", sessionData);
+      wire.publish("loadSession", sessionData);
       setShow(false);
     },
-    [c2c, setSession, setShow]
+    [wire, setSession, setShow]
   );
 
   return (

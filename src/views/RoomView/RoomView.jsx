@@ -2,7 +2,7 @@ import React from "react";
 import { nanoid } from "nanoid";
 import styled from "styled-components";
 
-import { RoomWrapper, useC2C, useUsers } from "react-sync-board";
+import { RoomWrapper, useWire, useUsers } from "react-sync-board";
 
 import { Switch, Route, Link } from "react-router-dom";
 import Session from "../Session";
@@ -98,7 +98,7 @@ const Room = ({ roomId, room, setRoom }) => {
   const { t } = useTranslation();
   const { users, setCurrentUser } = useUsers();
 
-  const { isMaster } = useC2C("room");
+  const { isMaster } = useWire("room");
 
   const onAdd = () => {
     setRoom((prev) => ({
@@ -171,7 +171,7 @@ const Room = ({ roomId, room, setRoom }) => {
 };
 
 const SubscribeRoomEvents = ({ room, setRoom }) => {
-  const { c2c, isMaster } = useC2C("room");
+  const { wire, isMaster } = useWire("room");
   const isMasterRef = React.useRef(isMaster);
   isMasterRef.current = isMaster;
   const roomRef = React.useRef(room);
@@ -182,7 +182,7 @@ const SubscribeRoomEvents = ({ room, setRoom }) => {
     const unsub = [];
     // Master register getRoom for peers
     if (isMaster) {
-      c2c
+      wire
         .register("getRoom", () => {
           return roomRef.current;
         })
@@ -192,7 +192,7 @@ const SubscribeRoomEvents = ({ room, setRoom }) => {
     } else {
       // Others register roomUpdate
       unsub.push(
-        c2c.subscribe("roomUpdate", (newRoom) => {
+        wire.subscribe("roomUpdate", (newRoom) => {
           setRoom(newRoom);
         })
       );
@@ -200,7 +200,7 @@ const SubscribeRoomEvents = ({ room, setRoom }) => {
     return () => {
       unsub.forEach((u) => u());
     };
-  }, [c2c, isMaster, setRoom]);
+  }, [wire, isMaster, setRoom]);
 
   // Get Room from master at connection
   React.useEffect(() => {
@@ -209,21 +209,21 @@ const SubscribeRoomEvents = ({ room, setRoom }) => {
         setRoom(roomData);
       };
 
-      c2c.call("getRoom").then(onGetRoom, () => {
+      wire.call("getRoom").then(onGetRoom, () => {
         // retry later
         setTimeout(() => {
-          c2c.call("getRoom").then(onGetRoom, (error) => console.log(error));
+          wire.call("getRoom").then(onGetRoom, (error) => console.log(error));
         }, 2000);
       });
     }
-  }, [c2c, isMaster, setRoom]);
+  }, [wire, isMaster, setRoom]);
 
   // Send room update on change if master
   React.useEffect(() => {
     if (isMaster) {
-      c2c.publish("roomUpdate", room);
+      wire.publish("roomUpdate", room);
     }
-  }, [c2c, isMaster, room]);
+  }, [wire, isMaster, room]);
 
   return null;
 };

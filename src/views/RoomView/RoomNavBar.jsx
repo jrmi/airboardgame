@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 
 import { ENABLE_WEBCONFERENCE } from "../../utils/settings";
 import useLocalStorage from "../../hooks/useLocalStorage";
-import { useC2C } from "react-sync-board";
+import { useWire } from "react-sync-board";
 
 import Touch from "../../ui/Touch";
 import UserList from "../../users/UserList";
@@ -119,7 +119,7 @@ const StyledNavBar = styled.div.attrs(() => ({ className: "nav" }))`
 
 const RoomNavBar = () => {
   const { t } = useTranslation();
-  const { room } = useC2C("room");
+  const { room } = useWire("room");
   const [showLink, setShowLink] = React.useState(false);
   const [isBeta] = useLocalStorage("isBeta", false);
 
