@@ -1,10 +1,10 @@
 import debounce from "lodash.debounce";
 import React from "react";
 
-import { useC2C, useBoardConfig } from "react-sync-board";
+import { useWire, useBoardConfig } from "react-sync-board";
 
 export const SubscribeSessionEvents = ({ getSession, setSession }) => {
-  const { c2c, isMaster } = useC2C("board");
+  const { wire, isMaster } = useWire("board");
 
   const [, setBoardConfig] = useBoardConfig();
 
@@ -16,7 +16,7 @@ export const SubscribeSessionEvents = ({ getSession, setSession }) => {
   React.useEffect(() => {
     const unsub = [];
     if (isMaster) {
-      c2c
+      wire
         .register("getSession", async () => {
           return await getSessionRef.current();
         })
@@ -27,20 +27,20 @@ export const SubscribeSessionEvents = ({ getSession, setSession }) => {
     return () => {
       unsub.forEach((u) => u());
     };
-  }, [c2c, isMaster]);
+  }, [wire, isMaster]);
 
   // Subscribe loadSession and updateBoardConfig events
   React.useEffect(() => {
     const unsub = [];
     unsub.push(
-      c2c.subscribe("loadSession", (session) => {
+      wire.subscribe("loadSession", (session) => {
         setSession(session);
       })
     );
     return () => {
       unsub.forEach((u) => u());
     };
-  }, [c2c, setBoardConfig, setSession]);
+  }, [wire, setBoardConfig, setSession]);
 
   return null;
 };

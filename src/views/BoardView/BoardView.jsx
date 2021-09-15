@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Board, useC2C } from "react-sync-board";
+import { Board, useWire } from "react-sync-board";
 
 import { SHOW_WELCOME } from "../../utils/settings";
 import WelcomeModal from "./WelcomeModal";
@@ -23,7 +23,7 @@ const style = {
 };
 
 export const BoardView = ({ mediaLibraries, edit, itemLibraries }) => {
-  const { isMaster } = useC2C("board");
+  const { isMaster } = useWire("board");
   const [showWelcomeModal, setShowWelcomeModal] = React.useState(
     SHOW_WELCOME && !edit && isMaster
   );

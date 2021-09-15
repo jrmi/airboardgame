@@ -3,7 +3,7 @@ import {
   useItemActions,
   useMessage,
   useBoardConfig,
-  useC2C,
+  useWire,
 } from "react-sync-board";
 
 import SubscribeSessionEvents from "./SubscribeSessionEvents";
@@ -41,7 +41,7 @@ export const SessionProvider = ({ sessionId, fromGameId, children }) => {
   const [sessionLoaded, setSessionLoaded] = React.useState(false);
   const [currentGameId, setCurrentGameId] = React.useState(fromGameId);
 
-  const { c2c } = useC2C("board");
+  const { wire } = useWire("board");
 
   const loadSession = React.useCallback(async () => {
     let sessionData;
@@ -81,12 +81,12 @@ export const SessionProvider = ({ sessionId, fromGameId, children }) => {
 
       if (sync) {
         // Send loadSession event for other user
-        c2c.publish("loadSession", newData);
+        wire.publish("loadSession", newData);
       }
 
       setSessionLoaded(true);
     },
-    [c2c, setBoardConfig, setItemList, setMessages]
+    [wire, setBoardConfig, setItemList, setMessages]
   );
 
   const getCurrentSession = React.useCallback(async () => {

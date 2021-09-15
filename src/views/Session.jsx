@@ -1,7 +1,7 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import useAsyncEffect from "use-async-effect";
-import { BoardWrapper, useC2C } from "react-sync-board";
+import { BoardWrapper, useWire } from "react-sync-board";
 import { nanoid } from "nanoid";
 
 import { itemTemplates, itemLibrary } from "../gameComponents";
@@ -58,7 +58,7 @@ export const Session = () => {
 
   const gameLoadingRef = React.useRef(false);
 
-  const { c2c, isMaster } = useC2C("board");
+  const { wire, isMaster } = useWire("board");
 
   const { t } = useTranslation();
 
@@ -82,10 +82,10 @@ export const Session = () => {
       const onReceiveGame = (receivedSession) => {
         setSession(receivedSession);
       };
-      c2c.call("getSession").then(onReceiveGame, () => {
+      wire.call("getSession").then(onReceiveGame, () => {
         setTimeout(
           () =>
-            c2c
+            wire
               .call("getSession")
               .then(onReceiveGame, (error) =>
                 console.log("Failed to call getSession with error", error)
@@ -94,7 +94,7 @@ export const Session = () => {
         );
       });
     }
-  }, [c2c, isMaster, sessionLoaded, setSession]);
+  }, [wire, isMaster, sessionLoaded, setSession]);
 
   const availableItemLibrary = React.useMemo(() => {
     let itemList = availableItems;
