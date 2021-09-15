@@ -113,7 +113,7 @@ cp site.dist.json site.json
 cp .env.dist .env
 ```
 
-Generate an encrytion key:
+Generate an encryption key:
 
 ```sh
 npx ricochet --generate-key
@@ -143,9 +143,19 @@ code executed by ricochetjs in another terminal:
 npm run watch
 ```
 
+you also need an instance of `wire.io` so in another terminal, execute:
+
+```sh
+# Need npm >= v7
+PORT=4051 npx wire.io
+```
+
+See [wire.io](https://github.com/jrmi/wire.io) documentation for more information
+on how to configure it.
+
 ### Client
 
-in another terminal, go back to project root and execute:
+In another terminal, go back to project root and execute:
 
 ```sh
 cd <project_root>/
@@ -162,8 +172,9 @@ Then you can start the client:
 npm start
 ```
 
-Now you should have three terminals:
+Now you should have four terminals:
 
 * the one with ricochetjs server instance. Backend logs can be found here
 * one terminal with auto build on change for backend files
-* one with React frontend server
+* another with `wire.io` server running
+* and a last one with React frontend server
