@@ -4,7 +4,7 @@ import useAsyncEffect from "use-async-effect";
 import { BoardWrapper } from "react-sync-board";
 import { nanoid } from "nanoid";
 
-import { itemTemplates, itemLibrary } from "../gameComponents";
+import { itemTemplates, itemLibrary, premadeItems } from "../gameComponents";
 import Waiter from "../ui/Waiter";
 
 import BoardView from "./BoardView";
@@ -36,12 +36,12 @@ const adaptItem = (item) => ({
   uid: nanoid(),
 });
 
-const adaptAvailableItems = (nodes) => {
+const adaptItems = (nodes) => {
   return nodes.map((node) => {
     if (node.type) {
       return adaptItem(node);
     } else {
-      return { ...node, items: adaptAvailableItems(node.items) };
+      return { ...node, items: adaptItems(node.items) };
     }
   });
 };
@@ -92,14 +92,21 @@ export const GameView = ({ create = false }) => {
     if (itemList?.length && itemList[0].groupId) {
       itemList = migrateAvailableItemList(itemList);
     }
-    return adaptAvailableItems(itemList);
+    return adaptItems(itemList);
   }, [availableItems]);
+
+  const premadeLibrary = React.useMemo(() => adaptItems(premadeItems), []);
 
   const itemLibraries = [
     {
       name: t("Standard"),
       key: "standard",
       items: itemLibrary,
+    },
+    {
+      name: t("Premade"),
+      key: "premade",
+      items: premadeLibrary,
     },
   ];
 

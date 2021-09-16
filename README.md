@@ -146,7 +146,7 @@ npm run watch
 you also need an instance of `wire.io` so in another terminal, execute:
 
 ```sh
-# Need npm >= v7
+# /!\ Need npm >= v7
 PORT=4051 npx wire.io
 ```
 
