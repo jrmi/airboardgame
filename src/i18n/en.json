@@ -228,5 +228,22 @@
   "Double click to roll": "Double click to roll",
   "Check it to activate roll on double click instead of moving.": "check it to activate roll on double click instead of moving.",
   "Dice image {{index}}": "Side #{{index}}",
-  "Image dice": "Image dice"
+  "Image dice": "Image dice",
+  "Black": "Black",
+  "White": "White",
+  "Red": "Red",
+  "Orange": "Orange",
+  "Yellow": "Yellow",
+  "Green": "Green",
+  "Blue": "Blue",
+  "Purple": "Purple",
+  "{{color}} pawn": "{{color}} pawn",
+  "{{color}} token": "{{color}} token",
+  "{{color}} cube": "{{color}} cube",
+  "{{color}} cylinder": "{{color}} cylinder",
+  "{{color}} meeple": "{{color}} meeple",
+  "{{color}} jewel": "{{color}} jewel",
+  "Board": "Board",
+  "8x8 board": "8x8 board",
+  "Premade": "Premade"
 }
