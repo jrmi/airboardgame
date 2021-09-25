@@ -13,6 +13,7 @@ const genGame = () => {
       "flip",
       "flipSelf",
       "tap",
+      { name: "rotate", args: { angle: 25 } },
       "rotate45",
       "rotate90",
       "stack",

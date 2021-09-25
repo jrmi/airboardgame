@@ -245,5 +245,15 @@
   "{{color}} jewel": "{{color}} jewel",
   "Board": "Board",
   "8x8 board": "8x8 board",
-  "Premade": "Premade"
+  "Premade": "Premade",
+  "Edit action": "Edit action",
+  "Move up": "Move up",
+  "Move down": "Move down",
+  "Select an action to add...": "Select an action to add...",
+  "Angle": "Angle",
+  "Item actions": "Item actions",
+  "Rotate {{angle}}°": "Rotate {{angle}}°",
+  "Rotate": "Rotate",
+  "Rotate randomly {{angle}}°": "Rotate randomly {{angle}}°",
+  "Rotate randomly": "Rotate randomly"
 }

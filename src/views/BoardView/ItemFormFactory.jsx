@@ -1,5 +1,6 @@
 import React from "react";
 import { Form } from "react-final-form";
+import arrayMutators from "final-form-arrays";
 
 import AutoSave from "../../ui/formUtils/AutoSave";
 import { useItemActions, useSelectedItems, useItems } from "react-sync-board";
@@ -34,6 +35,9 @@ const ItemFormFactory = ({ ItemFormComponent }) => {
   return (
     <Form
       onSubmit={onSubmitHandler}
+      mutators={{
+        ...arrayMutators,
+      }}
       render={() => (
         <div
           style={{

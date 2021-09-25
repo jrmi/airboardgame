@@ -6,10 +6,9 @@ import Label from "../ui/formUtils/Label";
 import Hint from "../ui/formUtils/Hint";
 import Slider from "../ui/Slider";
 
-import ActionsField from "./forms/ActionsField";
+import ActionList from "./ActionList";
 
 import { itemTemplates } from "./";
-import useGameItemActions from "./useGameItemActions";
 
 export const getFormFieldComponent = (type) => {
   if (type in itemTemplates) {
@@ -44,7 +43,6 @@ const getAvailableActionsFromItem = (item) => {
 
 const ItemForm = ({ items }) => {
   const { t } = useTranslation();
-  const { actionMap } = useGameItemActions();
 
   const [defaultActions] = React.useState(() =>
     getDefaultActionsFromItem(items[0])
@@ -73,8 +71,14 @@ const ItemForm = ({ items }) => {
   if (items.length === 1) {
     initialValues = { ...items[0] };
     initialValues.actions = initialValues.actions || defaultActions;
+    initialValues.actions = initialValues.actions.map((action) => {
+      if (typeof action === "string") {
+        return { name: action };
+      }
+      return action;
+    });
   } else {
-    initialValues = {};
+    initialValues = { actions: [] };
   }
 
   return (
@@ -173,19 +177,13 @@ const ItemForm = ({ items }) => {
         </Field>
       </Label>
 
-      <h3>{t("Available actions")}</h3>
-      <Label>
-        <Field name="actions" initialValue={initialValues.actions}>
-          {({ input: { onChange, value } }) => (
-            <ActionsField
-              onChange={onChange}
-              value={value}
-              availableActions={availableActions}
-              actionMap={actionMap}
-            />
-          )}
-        </Field>
-      </Label>
+      <h3>{t("Item actions")}</h3>
+
+      <ActionList
+        name="actions"
+        initialValue={initialValues.actions || defaultActions}
+        availableActions={availableActions}
+      />
     </>
   );
 };
