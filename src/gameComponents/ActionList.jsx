@@ -97,7 +97,7 @@ const Action = ({ name, onUp, onDown, onRemove }) => {
   );
 };
 
-const ActionList = ({ name, initialValue, availableActions }) => {
+const ActionList = ({ name, initialValue, availableActions = [] }) => {
   const { t } = useTranslation();
   const { actionMap } = useGameItemActions();
 
