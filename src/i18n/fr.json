@@ -142,7 +142,7 @@
   "Ready to play ?": "Prêt à jouer ?",
   "Rectangle": "Rectangle",
   "Refuse": "Refuser",
-  "Remove all": "Tout supprimer",
+  "Remove all": "Supprimer",
   "Remove": "Supprimer",
   "Reveal for me": "Retourner pour moi",
   "Reveal": "Révéler",
@@ -245,5 +245,15 @@
   "{{color}} jewel": "Ressource {{color}}",
   "Board": "Plateau",
   "8x8 board": "Échiquier",
-  "Premade": "Prêt à jouer"
+  "Premade": "Prêt à jouer",
+  "Edit action": "Éditer l'action",
+  "Move up": "Monter",
+  "Move down": "Descendre",
+  "Select an action to add...": "Ajoutez une action...",
+  "Angle": "Angle",
+  "Item actions": "Actions",
+  "Rotate {{angle}}°": "Rotation de {{angle}}°",
+  "Rotate": "Rotation",
+  "Rotate randomly {{angle}}°": "Rotation aléatoire de {{angle}}°",
+  "Rotate randomly": "Rotation aléatoire"
 }

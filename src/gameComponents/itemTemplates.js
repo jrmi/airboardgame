@@ -1,6 +1,6 @@
 import i18n from "../i18n";
 
-import { nanoid } from "nanoid";
+import { uid } from "../utils";
 
 import Rect from "./Rect";
 import Cube from "./Cube";
@@ -36,32 +36,32 @@ import CylinderFormFields from "./forms/CylinderFormFields";
 
 const defaultDiceImages = () => [
   {
-    id: nanoid(),
+    id: uid(),
     type: "external",
     content: "/game_assets/dice/one.svg",
   },
   {
-    id: nanoid(),
+    id: uid(),
     type: "external",
     content: "/game_assets/dice/two.svg",
   },
   {
-    id: nanoid(),
+    id: uid(),
     type: "external",
     content: "/game_assets/dice/three.svg",
   },
   {
-    id: nanoid(),
+    id: uid(),
     type: "external",
     content: "/game_assets/dice/four.svg",
   },
   {
-    id: nanoid(),
+    id: uid(),
     type: "external",
     content: "/game_assets/dice/five.svg",
   },
   {
-    id: nanoid(),
+    id: uid(),
     type: "external",
     content: "/game_assets/dice/six.svg",
   },
@@ -230,20 +230,12 @@ const itemTemplates = {
           "flip",
           "flipSelf",
           "tap",
-          "rotate30",
-          "rotate45",
-          "rotate60",
-          "rotate90",
-          "rotate180",
+          "rotate",
+          "randomlyRotate",
           "stack",
           "alignAsLine",
           "alignAsSquare",
           "shuffle",
-          "randomlyRotate30",
-          "randomlyRotate45",
-          "randomlyRotate60",
-          "randomlyRotate90",
-          "randomlyRotate180",
           "clone",
           "lock",
           "remove",
@@ -251,20 +243,12 @@ const itemTemplates = {
       } else {
         return [
           "tap",
-          "rotate30",
-          "rotate45",
-          "rotate60",
-          "rotate90",
-          "rotate180",
+          "rotate",
+          "randomlyRotate",
           "stack",
           "alignAsLine",
           "alignAsSquare",
           "shuffle",
-          "randomlyRotate30",
-          "randomlyRotate45",
-          "randomlyRotate60",
-          "randomlyRotate90",
-          "randomlyRotate180",
           "clone",
           "lock",
           "remove",
@@ -350,7 +334,7 @@ const itemTemplates = {
 export const itemLibrary = Object.keys(itemTemplates).map((key) => ({
   type: key,
   ...itemTemplates[key],
-  uid: nanoid(),
+  uid: uid(),
 }));
 
 export default itemTemplates;

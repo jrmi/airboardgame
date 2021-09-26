@@ -1,11 +1,13 @@
 import React from "react";
 
 import { useTranslation } from "react-i18next";
-import { nanoid } from "nanoid";
 import { toast } from "react-toastify";
 import { useItemActions, useUsers, useSelectedItems } from "react-sync-board";
 
-import { shuffle as shuffleArray, randInt } from "..//utils";
+import { shuffle as shuffleArray, randInt, uid } from "../utils";
+
+import RotateActionForm from "./forms/RotateActionForm";
+import RandomlyRotateActionForm from "./forms/RandomlyRotateActionForm";
 
 import deleteIcon from "../images/delete.svg";
 import stackToCenterIcon from "../images/stackToCenter.svg";
@@ -234,12 +236,14 @@ export const useGameItemActions = () => {
   );
 
   const randomlyRotateSelectedItems = React.useCallback(
-    async (itemIds, { angle, maxRotateCount }) => {
+    async (itemIds, { angle, maxRotateCount = 0 }) => {
       const [ids] = await getItemListOrSelected(itemIds);
+
+      const maxRotate = maxRotateCount || Math.round(360 / angle);
 
       batchUpdateItems(ids, (item) => {
         const rotation =
-          ((item.rotation || 0) + angle * randInt(0, maxRotateCount)) % 360;
+          ((item.rotation || 0) + angle * randInt(0, maxRotate)) % 360;
         return { ...item, rotation };
       });
     },
@@ -394,7 +398,7 @@ export const useGameItemActions = () => {
       const [, items] = await getItemListOrSelected(itemIds);
       items.forEach((itemToClone) => {
         const newItem = JSON.parse(JSON.stringify(itemToClone));
-        newItem.id = nanoid();
+        newItem.id = uid();
         delete newItem.move;
         pushItem(newItem, itemToClone.id);
       });
@@ -402,79 +406,94 @@ export const useGameItemActions = () => {
     [getItemListOrSelected, pushItem]
   );
 
-  const actionMap = React.useMemo(
-    () => ({
+  const actionMap = React.useMemo(() => {
+    const actions = {
       flip: {
-        action: toggleFlip,
+        action: () => toggleFlip,
         label: t("Reveal") + "/" + t("Hide"),
         shortcut: "f",
         icon: flipIcon,
       },
       reveal: {
-        action: (itemIds) => setFlip(itemIds, { flip: false }),
+        action: () => (itemIds) => setFlip(itemIds, { flip: false }),
         label: t("Reveal"),
         icon: flipIcon,
       },
       hide: {
-        action: (itemIds) => setFlip(itemIds, { flip: true }),
+        action: () => (itemIds) => setFlip(itemIds, { flip: true }),
         label: t("Hide"),
         icon: flipIcon,
       },
       flipSelf: {
-        action: toggleFlipSelf,
+        action: () => toggleFlipSelf,
         label: t("Reveal for me"),
         shortcut: "o",
         icon: seeIcon,
       },
       revealSelf: {
-        action: (itemIds) => setFlipSelf(itemIds, { flipSelf: true }),
+        action: () => (itemIds) => setFlipSelf(itemIds, { flipSelf: true }),
         label: t("Reveal for me"),
         icon: seeIcon,
       },
       hideSelf: {
-        action: (itemIds) => setFlipSelf(itemIds, { flipSelf: false }),
+        action: () => (itemIds) => setFlipSelf(itemIds, { flipSelf: false }),
         label: t("Hide for me"),
         icon: seeIcon,
       },
       tap: {
-        action: toggleTap,
+        action: () => toggleTap,
         label: t("Tap") + "/" + t("Untap"),
         shortcut: "t",
         icon: tapIcon,
       },
       stackToCenter: {
-        action: stackToCenter,
+        action: () => stackToCenter,
         label: t("Stack To Center"),
-        shortcut: "",
+        shortcut: "c",
         multiple: true,
         icon: stackToCenterIcon,
       },
       stack: {
-        action: stackToTopLeft,
+        action: () => stackToTopLeft,
         label: t("Stack To Top Left"),
+        shortcut: "p",
         multiple: true,
         icon: stackToTopLeftIcon,
       },
       alignAsLine: {
-        action: alignAsLine,
+        action: () => alignAsLine,
         label: t("Align as line"),
         multiple: true,
         icon: alignAsLineIcon,
       },
       alignAsSquare: {
-        action: alignAsSquare,
+        action: () => alignAsSquare,
         label: t("Align as square"),
         multiple: true,
         icon: alignAsSquareIcon,
       },
       shuffle: {
-        action: shuffleItems,
+        action: () => shuffleItems,
         label: t("Shuffle"),
+        shortcut: "s",
         multiple: true,
         icon: shuffleIcon,
       },
+      randomlyRotate: {
+        action: ({ angle = 25, maxRotateCount = 0 } = {}) => (itemIds) =>
+          randomlyRotateSelectedItems(itemIds, {
+            angle,
+            maxRotateCount,
+          }),
+        label: ({ angle = 25 } = {}) =>
+          t("Rotate randomly {{angle}}°", { angle }),
+        genericLabel: t("Rotate randomly"),
+        multiple: false,
+        icon: rotateIcon,
+        form: RandomlyRotateActionForm,
+      },
       randomlyRotate30: {
-        action: (itemIds) =>
+        action: () => (itemIds) =>
           randomlyRotateSelectedItems(itemIds, {
             angle: 30,
             maxRotateCount: 11,
@@ -484,7 +503,7 @@ export const useGameItemActions = () => {
         icon: rotateIcon,
       },
       randomlyRotate45: {
-        action: (itemIds) =>
+        action: () => (itemIds) =>
           randomlyRotateSelectedItems(itemIds, {
             angle: 45,
             maxRotateCount: 7,
@@ -495,7 +514,7 @@ export const useGameItemActions = () => {
         icon: rotateIcon,
       },
       randomlyRotate60: {
-        action: (itemIds) =>
+        action: () => (itemIds) =>
           randomlyRotateSelectedItems(itemIds, {
             angle: 60,
             maxRotateCount: 5,
@@ -506,7 +525,7 @@ export const useGameItemActions = () => {
         icon: rotateIcon,
       },
       randomlyRotate90: {
-        action: (itemIds) =>
+        action: () => (itemIds) =>
           randomlyRotateSelectedItems(itemIds, {
             angle: 90,
             maxRotateCount: 3,
@@ -517,7 +536,7 @@ export const useGameItemActions = () => {
         icon: rotateIcon,
       },
       randomlyRotate180: {
-        action: (itemIds) =>
+        action: () => (itemIds) =>
           randomlyRotateSelectedItems(itemIds, {
             angle: 180,
             maxRotateCount: 1,
@@ -527,38 +546,47 @@ export const useGameItemActions = () => {
         multiple: false,
         icon: rotateIcon,
       },
+      rotate: {
+        action: ({ angle = 25 } = {}) => (itemIds) =>
+          rotate(itemIds, { angle }),
+        label: ({ angle = 25 } = {}) => t("Rotate {{angle}}°", { angle }),
+        genericLabel: t("Rotate"),
+        shortcut: "r",
+        icon: rotateIcon,
+        form: RotateActionForm,
+      },
       rotate30: {
-        action: (itemIds) => rotate(itemIds, { angle: 30 }),
+        action: () => (itemIds) => rotate(itemIds, { angle: 30 }),
         label: t("Rotate 30"),
         shortcut: "r",
         icon: rotateIcon,
       },
       rotate45: {
-        action: (itemIds) => rotate(itemIds, { angle: 45 }),
+        action: () => (itemIds) => rotate(itemIds, { angle: 45 }),
         label: t("Rotate 45"),
         shortcut: "r",
         icon: rotateIcon,
       },
       rotate60: {
-        action: (itemIds) => rotate(itemIds, { angle: 60 }),
+        action: () => (itemIds) => rotate(itemIds, { angle: 60 }),
         label: t("Rotate 60"),
         shortcut: "r",
         icon: rotateIcon,
       },
       rotate90: {
-        action: (itemIds) => rotate(itemIds, { angle: 90 }),
+        action: () => (itemIds) => rotate(itemIds, { angle: 90 }),
         label: t("Rotate 90"),
         shortcut: "r",
         icon: rotateIcon,
       },
       rotate180: {
-        action: (itemIds) => rotate(itemIds, { angle: 180 }),
+        action: () => (itemIds) => rotate(itemIds, { angle: 180 }),
         label: t("Rotate 180"),
         shortcut: "r",
         icon: rotateIcon,
       },
       clone: {
-        action: cloneItem,
+        action: () => cloneItem,
         label: t("Clone"),
         shortcut: "c",
         disableDblclick: true,
@@ -566,39 +594,48 @@ export const useGameItemActions = () => {
         icon: duplicateIcon,
       },
       lock: {
-        action: toggleLock,
+        action: () => toggleLock,
         label: t("Unlock") + "/" + t("Lock"),
         disableDblclick: true,
         icon: lockIcon,
       },
       remove: {
-        action: remove,
+        action: () => remove,
         label: t("Remove all"),
         shortcut: "Delete",
         edit: true,
         disableDblclick: true,
         icon: deleteIcon,
       },
-    }),
-    [
-      toggleFlip,
-      t,
-      toggleFlipSelf,
-      toggleTap,
-      stackToCenter,
-      stackToTopLeft,
-      alignAsLine,
-      alignAsSquare,
-      shuffleItems,
-      cloneItem,
-      toggleLock,
-      remove,
-      setFlip,
-      setFlipSelf,
-      randomlyRotateSelectedItems,
-      rotate,
-    ]
-  );
+    };
+
+    return Object.fromEntries(
+      Object.entries(actions).map(([key, value]) => {
+        const { label } = value;
+        if (typeof label === "string") {
+          value.label = () => label;
+        }
+        return [key, value];
+      })
+    );
+  }, [
+    alignAsLine,
+    alignAsSquare,
+    cloneItem,
+    randomlyRotateSelectedItems,
+    remove,
+    rotate,
+    setFlip,
+    setFlipSelf,
+    shuffleItems,
+    stackToCenter,
+    stackToTopLeft,
+    t,
+    toggleFlip,
+    toggleFlipSelf,
+    toggleLock,
+    toggleTap,
+  ]);
 
   return {
     stack: stackToTopLeft,
@@ -610,9 +647,9 @@ export const useGameItemActions = () => {
     toggleLock,
     toggleTap,
     shuffle: shuffleItems,
+    randomlyRotate: randomlyRotateSelectedItems,
     rotate,
     actionMap,
-    randomlyRotate: randomlyRotateSelectedItems,
   };
 };
 

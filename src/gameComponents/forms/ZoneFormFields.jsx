@@ -5,14 +5,24 @@ import { Field } from "react-final-form";
 import Label from "../../ui/formUtils/Label";
 import Hint from "../../ui/formUtils/Hint";
 
-import ActionsField from "./ActionsField";
-import useGameItemActions from "../useGameItemActions";
+import ActionList from "../ActionList";
 
 const interactions = ["reveal", "hide", "revealSelf", "stack"];
 
 const Form = ({ initialValues }) => {
   const { t } = useTranslation();
-  const { actionMap } = useGameItemActions();
+
+  const initOnItem = React.useMemo(
+    () =>
+      (initialValues.onItem || []).map((action) => {
+        if (typeof action === "string") {
+          return { name: action };
+        }
+        return action;
+      }),
+    [initialValues.onItem]
+  );
+
   return (
     <>
       <Label>
@@ -46,16 +56,11 @@ const Form = ({ initialValues }) => {
       <h3>{t("Interactions")}</h3>
       <Hint>{t("Interaction help")}</Hint>
       <Label>
-        <Field name="onItem" initialValue={initialValues.onItem}>
-          {({ input: { onChange, value } }) => (
-            <ActionsField
-              onChange={onChange}
-              value={value}
-              availableActions={interactions}
-              actionMap={actionMap}
-            />
-          )}
-        </Field>
+        <ActionList
+          name="onItem"
+          initialValue={initOnItem}
+          availableActions={interactions}
+        />
       </Label>
     </>
   );

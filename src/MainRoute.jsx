@@ -2,11 +2,10 @@ import React from "react";
 
 import { Route, Switch, Redirect } from "react-router-dom";
 
-import { nanoid } from "nanoid";
-
 import "react-toastify/dist/ReactToastify.css";
 import "./react-confirm-alert.css";
 
+import { uid } from "./utils";
 import Home from "./views/Home";
 import GameView from "./views/GameView";
 import Session from "./views/Session";
@@ -34,7 +33,7 @@ const MainRoute = () => {
           },
         }) => {
           // Redirect to new session id
-          return <Redirect to={`/session/${nanoid()}/?fromGame=${gameId}`} />;
+          return <Redirect to={`/session/${uid()}/?fromGame=${gameId}`} />;
         }}
       </Route>
       {/* for compat with old url scheme */}
@@ -58,7 +57,7 @@ const MainRoute = () => {
           return (
             <Redirect
               to={{
-                pathname: `/session/${nanoid()}/`,
+                pathname: `/session/${uid()}/`,
                 search: `?fromGame=${gameId}`,
               }}
             />

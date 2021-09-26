@@ -42,22 +42,30 @@ const Zone = ({ width, height, label, onItem }) => {
         isItemInsideElement(document.getElementById(itemId), zoneRef.current)
       );
       if (!insideItems.length) return;
-      onItem.forEach((action) => {
-        switch (action) {
+
+      const onItemActions = onItem.map((action) => {
+        if (typeof action === "string") {
+          return { name: action };
+        }
+        return action;
+      });
+
+      onItemActions.forEach(({ name, args }) => {
+        switch (name) {
           case "reveal":
-            actionMap["reveal"].action(insideItems);
+            actionMap["reveal"].action(args)(insideItems);
             break;
           case "hide":
-            actionMap["hide"].action(insideItems);
+            actionMap["hide"].action(args)(insideItems);
             break;
           case "revealSelf":
-            actionMap["revealSelf"].action(insideItems);
+            actionMap["revealSelf"].action(args)(insideItems);
             break;
           case "hideSelf":
-            actionMap["hideSelf"].action(insideItems);
+            actionMap["hideSelf"].action(args)(insideItems);
             break;
           case "stack":
-            actionMap["stack"].action(insideItems);
+            actionMap["stack"].action(args)(insideItems);
             break;
         }
       });
