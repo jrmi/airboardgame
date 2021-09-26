@@ -238,7 +238,6 @@ export const useGameItemActions = () => {
 
   const randomlyRotateSelectedItems = React.useCallback(
     async (itemIds, { angle, maxRotateCount = 0 }) => {
-      console.log("here", angle, maxRotateCount);
       const [ids] = await getItemListOrSelected(itemIds);
 
       const maxRotate = maxRotateCount || Math.round(360 / angle);
@@ -483,7 +482,6 @@ export const useGameItemActions = () => {
       },
       randomlyRotate: {
         action: ({ angle = 25, maxRotateCount = 0 } = {}) => (itemIds) =>
-          console.log("called", angle, maxRotateCount) ||
           randomlyRotateSelectedItems(itemIds, {
             angle,
             maxRotateCount,
