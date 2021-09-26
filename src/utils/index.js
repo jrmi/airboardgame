@@ -1,5 +1,5 @@
 import Diacritics from "diacritic";
-import { nanoid, customAlphabet } from "nanoid";
+import { customAlphabet } from "nanoid";
 
 const cleanWord = (word) => Diacritics.clean(word).toLowerCase();
 
@@ -27,7 +27,7 @@ export const insideClass = (element, className) => {
 
 /**
  * Shuffles array in place.
- * @param {Array} a items An array containing the items.
+ * @param {Array} a An array containing the items.
  */
 export const shuffle = (a) => {
   // eslint-disable-next-line no-plusplus
@@ -59,6 +59,8 @@ export const isItemInsideElement = (itemElement, otherElem) => {
 
 const alpha = "23456789ABCDEFGHJKMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz";
 
+// Custom uid generator
 export const uid = customAlphabet(alpha, 10);
 
+// Custom small uid generator
 export const smallUid = customAlphabet(alpha, 5);

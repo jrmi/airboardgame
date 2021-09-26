@@ -3,7 +3,7 @@ import { API_ENDPOINT, IS_PRODUCTION, API_BASE } from "./settings";
 import testGame from "../games/testGame";
 import perfGame from "../games/perfGame";
 import unpublishedGame from "../games/unpublishedGame";
-import { nanoid } from "nanoid";
+import { uid } from "./";
 
 const oldUploadURI = `${API_ENDPOINT}/file`;
 const gameURI = `${API_ENDPOINT}/store/game`;
@@ -174,12 +174,12 @@ export const getGame = async (gameId) => {
 
   // Add id if missing
   game.items = game.items.map((item) => ({
-    id: nanoid(),
+    id: uid(),
     ...item,
   }));
 
   game.availableItems = game.availableItems.map((item) => ({
-    id: nanoid(),
+    id: uid(),
     ...item,
   }));
 
@@ -187,7 +187,7 @@ export const getGame = async (gameId) => {
 };
 
 export const createGame = async (data) => {
-  const newGameId = nanoid();
+  const newGameId = uid();
   const result = await updateGame(newGameId, data);
   return result;
 };
