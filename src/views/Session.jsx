@@ -2,12 +2,12 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import useAsyncEffect from "use-async-effect";
 import { BoardWrapper, useWire } from "react-sync-board";
-import { nanoid } from "nanoid";
 
 import { itemTemplates, itemLibrary, premadeItems } from "../gameComponents";
 
 import BoardView from "./BoardView";
 import Waiter from "../ui/Waiter";
+import { uid } from "../utils";
 
 import useSession, { SessionProvider } from "../hooks/useSession";
 import AutoSaveSession from "./AutoSaveSession";
@@ -33,7 +33,7 @@ const adaptItem = (item) => ({
   template: item,
   component: itemTemplates[item.type].component,
   name: item.name || item.label || item.text || itemTemplates[item.type].name,
-  uid: nanoid(),
+  uid: uid(),
 });
 
 const adaptItems = (nodes) => {

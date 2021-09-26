@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
 
-import { insideClass, hasClass } from "../../utils";
+import { insideClass, hasClass, smallUid } from "../../utils";
 import EditItemButton from "./EditItemButton";
 import {
   useAvailableActions,
@@ -91,6 +91,7 @@ const SelectedItemsPane = ({ hideMenu = false, ItemFormComponent }) => {
         const action = { ...actionMap[name] };
         action.action = action.action(args);
         action.label = action.label(args);
+        action.uid = smallUid();
         return action;
       }),
     [actionMap, availableActions]
@@ -170,13 +171,21 @@ const SelectedItemsPane = ({ hideMenu = false, ItemFormComponent }) => {
       )}
       {!boardState.selecting &&
         parsedAvailableActions.map(
-          ({ label, action, multiple, edit: onlyEdit, shortcut, icon }) => {
+          ({
+            label,
+            action,
+            multiple,
+            edit: onlyEdit,
+            shortcut,
+            icon,
+            uid,
+          }) => {
             if (multiple && selectedItems.length < 2) return null;
             if (onlyEdit && !showEdit) return null;
             return (
               <button
                 className="button clear icon-only"
-                key={label}
+                key={uid}
                 onClick={() => action()}
                 title={label + (shortcut ? ` (${shortcut})` : "")}
               >

@@ -1,4 +1,5 @@
 import Diacritics from "diacritic";
+import { nanoid, customAlphabet } from "nanoid";
 
 const cleanWord = (word) => Diacritics.clean(word).toLowerCase();
 
@@ -55,3 +56,9 @@ export const isItemInsideElement = (itemElement, otherElem) => {
     return isPointInsideRect({ x, y }, rect);
   });
 };
+
+const alpha = "23456789ABCDEFGHJKMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz";
+
+export const uid = customAlphabet(alpha, 10);
+
+export const smallUid = customAlphabet(alpha, 5);

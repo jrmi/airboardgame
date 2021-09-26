@@ -1,11 +1,10 @@
 import React from "react";
 
 import { useTranslation } from "react-i18next";
-import { nanoid } from "nanoid";
 import { toast } from "react-toastify";
 import { useItemActions, useUsers, useSelectedItems } from "react-sync-board";
 
-import { shuffle as shuffleArray, randInt } from "..//utils";
+import { shuffle as shuffleArray, randInt, uid } from "../utils";
 
 import RotateActionForm from "./forms/RotateActionForm";
 import RandomlyRotateActionForm from "./forms/RandomlyRotateActionForm";
@@ -399,7 +398,7 @@ export const useGameItemActions = () => {
       const [, items] = await getItemListOrSelected(itemIds);
       items.forEach((itemToClone) => {
         const newItem = JSON.parse(JSON.stringify(itemToClone));
-        newItem.id = nanoid();
+        newItem.id = uid();
         delete newItem.move;
         pushItem(newItem, itemToClone.id);
       });

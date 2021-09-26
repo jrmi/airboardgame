@@ -1,13 +1,12 @@
 import React, { memo } from "react";
 import { useTranslation } from "react-i18next";
-import { nanoid } from "nanoid";
 import styled from "styled-components";
 import { useRecoilCallback } from "recoil";
 import debounce from "lodash.debounce";
 
 import { useItemActions } from "react-sync-board";
 
-import { search } from "../utils";
+import { search, uid } from "../utils";
 
 import Chevron from "../ui/Chevron";
 
@@ -68,7 +67,7 @@ const NewItem = memo(({ type, template, component: Component, name }) => {
   const addItem = React.useCallback(async () => {
     pushItem({
       ...(typeof template === "function" ? template() : template),
-      id: nanoid(),
+      id: uid(),
       type,
     });
   }, [pushItem, template, type]);
@@ -100,7 +99,7 @@ const SubItemList = ({ name, items }) => {
       pushItems(
         itemsToAdd.map(({ template }) => ({
           ...(typeof template === "function" ? template() : template),
-          id: nanoid(),
+          id: uid(),
         }))
       );
     },

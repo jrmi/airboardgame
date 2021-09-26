@@ -41,28 +41,35 @@ const getAvailableActionsFromItem = (item) => {
   return [];
 };
 
-const ItemForm = ({ items }) => {
+const ItemForm = ({ items, types }) => {
   const { t } = useTranslation();
 
-  const [defaultActions] = React.useState(() =>
-    getDefaultActionsFromItem(items[0])
-  );
-  const [availableActions] = React.useState(() =>
-    getAvailableActionsFromItem(items[0])
-  );
-
   let FieldsComponent;
+  const oneType = types.size === 1;
 
   if (items.length === 1) {
     FieldsComponent = getFormFieldComponent(items[0].type);
   } else {
-    const types = new Set(items.map(({ type }) => type));
-    if (types.size === 1) {
+    if (oneType) {
       FieldsComponent = getFormFieldComponent(Array.from(types)[0]);
     } else {
       FieldsComponent = () => null;
     }
   }
+
+  const defaultActions = React.useMemo(() => {
+    if (oneType) {
+      return getDefaultActionsFromItem(items[0]);
+    }
+    return undefined;
+  }, [items, oneType]);
+
+  const availableActions = React.useMemo(() => {
+    if (oneType) {
+      return getAvailableActionsFromItem(items[0]);
+    }
+    return [];
+  }, [items, oneType]);
 
   let initialValues;
 
@@ -70,15 +77,18 @@ const ItemForm = ({ items }) => {
   // Empty object otherwise
   if (items.length === 1) {
     initialValues = { ...items[0] };
-    initialValues.actions = initialValues.actions || defaultActions;
-    initialValues.actions = initialValues.actions.map((action) => {
-      if (typeof action === "string") {
-        return { name: action };
-      }
-      return action;
-    });
+    if (items.length === 1) {
+      initialValues.actions = (initialValues.actions || defaultActions).map(
+        (action) => {
+          if (typeof action === "string") {
+            return { name: action };
+          }
+          return action;
+        }
+      );
+    }
   } else {
-    initialValues = { actions: [] };
+    initialValues = {};
   }
 
   return (
@@ -177,13 +187,17 @@ const ItemForm = ({ items }) => {
         </Field>
       </Label>
 
-      <h3>{t("Item actions")}</h3>
+      {oneType && (
+        <>
+          <h3>{t("Item actions")}</h3>
 
-      <ActionList
-        name="actions"
-        initialValue={initialValues.actions || defaultActions}
-        availableActions={availableActions}
-      />
+          <ActionList
+            name="actions"
+            initialValue={initialValues.actions}
+            availableActions={availableActions}
+          />
+        </>
+      )}
     </>
   );
 };

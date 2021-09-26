@@ -1,9 +1,9 @@
 import React from "react";
 import { darken } from "color2k";
-import { nanoid } from "nanoid";
+import { uid } from "../utils";
 
 function Pawn({ size = 50, color = "#b3b3b3" }) {
-  const ind = nanoid();
+  const ind = uid();
   const realSize = size * 1.1;
   const colorDarken1 = darken(color, 0.2);
   return (

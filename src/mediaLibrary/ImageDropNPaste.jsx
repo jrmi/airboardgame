@@ -1,9 +1,9 @@
 import React from "react";
-import { nanoid } from "nanoid";
 import { useDropzone } from "react-dropzone";
 import { useTranslation } from "react-i18next";
 import { useItemActions } from "react-sync-board";
 
+import { uid } from "../utils";
 import { useMediaLibrary } from "./MediaLibraryProvider";
 import Waiter from "../ui/Waiter";
 
@@ -18,7 +18,7 @@ const ImageDropNPaste = ({ children }) => {
     async (media) => {
       pushItem({
         type: "image",
-        id: nanoid(),
+        id: uid(),
         content: media,
       });
     },

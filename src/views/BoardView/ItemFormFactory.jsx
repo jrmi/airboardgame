@@ -5,31 +5,31 @@ import arrayMutators from "final-form-arrays";
 import AutoSave from "../../ui/formUtils/AutoSave";
 import { useItemActions, useSelectedItems, useItems } from "react-sync-board";
 
-export const getFormFieldComponent = (type, itemMap) => {
-  if (type in itemMap) {
-    return itemMap[type].form;
-  }
-  return () => null;
-};
-
 const ItemFormFactory = ({ ItemFormComponent }) => {
   const { batchUpdateItems } = useItemActions();
   const items = useItems();
   const selectedItems = useSelectedItems();
 
-  const onSubmitHandler = React.useCallback(
-    (formValues) => {
-      batchUpdateItems(selectedItems, (item) => ({
-        ...item,
-        ...formValues,
-      }));
-    },
-    [batchUpdateItems, selectedItems]
-  );
-
   const currentItems = React.useMemo(
     () => items.filter(({ id }) => selectedItems.includes(id)),
     [items, selectedItems]
+  );
+
+  const types = React.useMemo(
+    () => new Set(currentItems.map(({ type }) => type)),
+    [currentItems]
+  );
+
+  const onSubmitHandler = React.useCallback(
+    (formValues) => {
+      batchUpdateItems(selectedItems, (item) => {
+        return {
+          ...item,
+          ...formValues,
+        };
+      });
+    },
+    [batchUpdateItems, selectedItems]
   );
 
   return (
@@ -46,7 +46,7 @@ const ItemFormFactory = ({ ItemFormComponent }) => {
           }}
         >
           <AutoSave save={onSubmitHandler} />
-          <ItemFormComponent items={currentItems} />
+          <ItemFormComponent items={currentItems} types={types} />
         </div>
       )}
     />

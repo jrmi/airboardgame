@@ -4,6 +4,7 @@ import { useField } from "react-final-form";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 
+import { smallUid } from "../utils";
 import useGameItemActions from "./useGameItemActions";
 
 const StyledActionList = styled.div`
@@ -104,7 +105,7 @@ const ActionList = ({ name, initialValue, availableActions = [] }) => {
   const onAdd = (fields) => (e) => {
     const name = e.target.value;
     if (name) {
-      fields.push({ name });
+      fields.push({ name, uid: smallUid() });
     }
     e.target.value = "";
   };
@@ -114,9 +115,9 @@ const ActionList = ({ name, initialValue, availableActions = [] }) => {
       {({ fields }) => (
         <StyledActionList>
           <ul className="action-list">
-            {fields.map((name, index) => (
+            {fields.map((name, index, uid) => (
               <Action
-                key={name}
+                key={`${name}-${uid}`}
                 name={name}
                 onRemove={() => fields.remove(index)}
                 onUp={index > 0 ? () => fields.swap(index, index - 1) : null}
