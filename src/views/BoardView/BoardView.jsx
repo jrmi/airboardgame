@@ -8,7 +8,7 @@ import NavBar from "./NavBar";
 import BoardForm from "./BoardForm";
 import SelectedItemPane from "./SelectedItemsPane";
 
-import { ItemForm, itemTemplates } from "../../gameComponents";
+import { itemTemplates } from "../../gameComponents";
 
 import ActionBar from "./ActionBar";
 
@@ -51,7 +51,7 @@ export const BoardView = ({ mediaLibraries, edit, itemLibraries }) => {
         />
         <WelcomeModal show={showWelcomeModal} setShow={setShowWelcomeModal} />
       </ImageDropNPaste>
-      <SelectedItemPane ItemFormComponent={ItemForm} hideMenu={hideMenu} />
+      <SelectedItemPane hideMenu={hideMenu} />
     </MediaLibraryProvider>
   );
 };

@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 
 import SidePanel from "../../ui/SidePanel";
 import ItemFormFactory from "./ItemFormFactory";
-import { useSelectedItems } from "react-sync-board";
+import { useItemActions, useSelectedItems, useItems } from "react-sync-board";
 
 const CardContent = styled.div.attrs(() => ({ className: "content" }))`
   display: flex;
@@ -12,9 +12,29 @@ const CardContent = styled.div.attrs(() => ({ className: "content" }))`
   padding: 0.5em;
 `;
 
-const EditItemButton = ({ ItemFormComponent, showEdit, setShowEdit }) => {
-  const selectedItems = useSelectedItems();
+const EditItemButton = ({ showEdit, setShowEdit }) => {
   const { t } = useTranslation();
+
+  const items = useItems();
+  const selectedItems = useSelectedItems();
+  const { batchUpdateItems } = useItemActions();
+
+  const currentItems = React.useMemo(
+    () => items.filter(({ id }) => selectedItems.includes(id)),
+    [items, selectedItems]
+  );
+
+  const onSubmitHandler = React.useCallback(
+    (formValues) => {
+      batchUpdateItems(selectedItems, (item) => {
+        return {
+          ...item,
+          ...formValues,
+        };
+      });
+    },
+    [batchUpdateItems, selectedItems]
+  );
 
   let title = "";
   if (selectedItems.length === 1) {
@@ -53,7 +73,7 @@ const EditItemButton = ({ ItemFormComponent, showEdit, setShowEdit }) => {
         width="25%"
       >
         <CardContent>
-          <ItemFormFactory ItemFormComponent={ItemFormComponent} />
+          <ItemFormFactory onUpdate={onSubmitHandler} items={currentItems} />
         </CardContent>
       </SidePanel>
     </>

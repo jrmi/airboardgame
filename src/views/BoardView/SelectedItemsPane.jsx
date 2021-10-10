@@ -72,7 +72,7 @@ const ActionPane = styled.div.attrs(({ top, left, height }) => {
   }
 `;
 
-const SelectedItemsPane = ({ hideMenu = false, ItemFormComponent }) => {
+const SelectedItemsPane = ({ hideMenu = false }) => {
   const { actionMap } = useGameItemActions();
 
   const { availableActions } = useAvailableActions();
@@ -200,11 +200,7 @@ const SelectedItemsPane = ({ hideMenu = false, ItemFormComponent }) => {
         )}
 
       {showEditButton && (
-        <EditItemButton
-          ItemFormComponent={ItemFormComponent}
-          showEdit={showEdit}
-          setShowEdit={setShowEdit}
-        />
+        <EditItemButton showEdit={showEdit} setShowEdit={setShowEdit} />
       )}
     </ActionPane>
   );
