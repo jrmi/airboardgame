@@ -191,6 +191,20 @@ const genGame = () => {
     y: 600,
   });
 
+  items.push({
+    label: "Generator",
+    type: "generator",
+    layer: -1,
+    x: 500,
+    y: 700,
+    item: {
+      label: "My jewel",
+      type: "jewel",
+      size: 70,
+      color: "#ff0000",
+    },
+  });
+
   return {
     items,
     availableItems: [
