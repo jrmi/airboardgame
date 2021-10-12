@@ -1,25 +1,76 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { Field, useField } from "react-final-form";
+import { useItemActions } from "react-sync-board";
+import styled from "styled-components";
 
 import Label from "../../ui/formUtils/Label";
+import SidePanel from "../../ui/SidePanel";
+import ItemFormFactory from "../../views/BoardView/ItemFormFactory";
 import itemTemplates from "../itemTemplates";
-import ItemForm from "../ItemForm";
+
+const CardContent = styled.div.attrs(() => ({ className: "content" }))`
+  display: flex;
+  flex-direction: column;
+  padding: 0.5em;
+`;
+
+const EditSubItemButton = ({ showEdit, setShowEdit, subItem, onUpdate }) => {
+  const { t } = useTranslation();
+
+  return (
+    <>
+      <button onClick={() => setShowEdit((prev) => !prev)}>
+        {t("Edit generated item")}
+      </button>
+      <SidePanel
+        layer={1}
+        open={showEdit}
+        onClose={() => {
+          setShowEdit(false);
+        }}
+        title={t("Generated item")}
+        width="25%"
+      >
+        <CardContent>
+          <ItemFormFactory onUpdate={onUpdate} items={[subItem]} />
+        </CardContent>
+      </SidePanel>
+    </>
+  );
+};
 
 const Form = ({ initialValues }) => {
   const { t } = useTranslation();
   const {
     input: { value: itemType },
   } = useField("item.type", { initialValue: initialValues.item?.type });
-  const {
-    input: { value: item },
-  } = useField("item", { initialValue: initialValues.item });
 
-  console.log(itemType, item, initialValues);
-  /*let ItemForm = () => null;
-  if (itemType) {
-    ItemForm = itemTemplates[itemType].form;
-  }*/
+  const [showEdit, setShowEdit] = React.useState(false);
+
+  const { batchUpdateItems } = useItemActions();
+
+  const onSubmitHandler = React.useCallback(
+    (formValues) => {
+      batchUpdateItems(initialValues.id, (item) => {
+        return {
+          ...item,
+          item: {
+            ...item.item,
+            ...formValues,
+          },
+        };
+      });
+      batchUpdateItems(initialValues.currentItemId, (item) => {
+        return {
+          ...item,
+          ...formValues,
+        };
+      });
+    },
+    [batchUpdateItems, initialValues.currentItemId, initialValues.id]
+  );
+
   return (
     <>
       <Label>
@@ -49,9 +100,14 @@ const Form = ({ initialValues }) => {
         </Field>
       </Label>
 
-      {/*itemType && (
-        <ItemForm items={[item]} types={new Set([itemType])} prefix="item." />
-      )*/}
+      {itemType && (
+        <EditSubItemButton
+          showEdit={showEdit}
+          setShowEdit={setShowEdit}
+          subItem={initialValues.item}
+          onUpdate={onSubmitHandler}
+        />
+      )}
     </>
   );
 };

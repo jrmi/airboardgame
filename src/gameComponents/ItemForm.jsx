@@ -73,7 +73,7 @@ const ItemForm = ({ items, types }) => {
 
   let initialValues;
 
-  // Set initial values to item values if only one element selected
+  // Set initial values to item values only if one element selected
   // Empty object otherwise
   if (items.length === 1) {
     initialValues = { ...items[0] };
