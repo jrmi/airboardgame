@@ -45,6 +45,8 @@ const Generator = ({ color = "#ccc", item, id, currentItemId, setState }) => {
         ...item,
         x: thisItem.x + 3,
         y: thisItem.y + 3,
+        layer: thisItem.layer + 1,
+        editable: false,
         id: newItemId,
       });
     }
@@ -54,19 +56,33 @@ const Generator = ({ color = "#ccc", item, id, currentItemId, setState }) => {
     async (itemIds) => {
       const placeSelf = itemIds.includes(id);
       if (itemIds.includes(currentItemId) && !placeSelf) {
+        // We have removed generated item so we create a new one.
+        const [thisItem] = await getItems([id]);
+        batchUpdateItems([currentItemId], (item) => {
+          return {
+            ...item,
+            layer: thisItem.layer,
+          };
+        });
         addItem();
       }
       if (placeSelf) {
         if (!currentItemId) {
+          // Missing item for any reason
           addItem();
         } else {
+          // We are moving generator so we must
+          // update generated item position
           const [thisItem] = await getItems([id]);
           batchUpdateItems([currentItemId], (item) => {
-            return {
+            const result = {
               ...item,
               x: thisItem.x + 3,
               y: thisItem.y + 3,
+              layer: thisItem.layer + 1,
             };
+            delete result.editable;
+            return result;
           });
         }
       }
@@ -121,7 +137,9 @@ const Generator = ({ color = "#ccc", item, id, currentItemId, setState }) => {
         <img src="https://icongr.am/clarity/cursor-move.svg?size=20&color=ffffff" />
       </div>
       <div className="wrapper">
-        <Item {...item} />
+        <div style={{ transform: `rotate(${item.rotation || 0}deg)` }}>
+          <Item {...item} />
+        </div>
       </div>
     </StyledShape>
   );

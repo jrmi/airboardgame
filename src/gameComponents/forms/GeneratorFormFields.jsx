@@ -33,7 +33,11 @@ const EditSubItemButton = ({ showEdit, setShowEdit, subItem, onUpdate }) => {
         width="25%"
       >
         <CardContent>
-          <ItemFormFactory onUpdate={onUpdate} items={[subItem]} />
+          <ItemFormFactory
+            onUpdate={onUpdate}
+            items={[subItem]}
+            extraExcludeFields={{ locked: true, layer: true }}
+          />
         </CardContent>
       </SidePanel>
     </>
@@ -91,6 +95,9 @@ const Form = ({ initialValues }) => {
         >
           <option />
           {Object.keys(itemTemplates).map((key) => {
+            if (key === "generator") {
+              return null;
+            }
             return (
               <option key={key} value={key}>
                 {itemTemplates[key].name}
