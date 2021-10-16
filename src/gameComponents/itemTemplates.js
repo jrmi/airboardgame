@@ -338,9 +338,7 @@ const itemTemplates = {
     form: GeneratorFormFields,
     excludeFields: { rotation: true },
     name: i18n.t("Generator"),
-    template: {
-      layer: -1,
-    },
+    template: { layer: 0 },
   },
 };
 

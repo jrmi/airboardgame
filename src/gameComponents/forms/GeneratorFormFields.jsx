@@ -65,14 +65,8 @@ const Form = ({ initialValues }) => {
           },
         };
       });
-      batchUpdateItems(initialValues.currentItemId, (item) => {
-        return {
-          ...item,
-          ...formValues,
-        };
-      });
     },
-    [batchUpdateItems, initialValues.currentItemId, initialValues.id]
+    [batchUpdateItems, initialValues.id]
   );
 
   return (
