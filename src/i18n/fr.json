@@ -255,5 +255,10 @@
   "Rotate {{angle}}°": "Rotation de {{angle}}°",
   "Rotate": "Rotation",
   "Rotate randomly {{angle}}°": "Rotation aléatoire de {{angle}}°",
-  "Rotate randomly": "Rotation aléatoire"
+  "Rotate randomly": "Rotation aléatoire",
+  "Edit generated item": "Modifier l'élément généré",
+  "Generated item": "Élément généré",
+  "Item type": "Type de l'élément généré",
+  "No item type defined": "Aucun type sélectionné",
+  "Generator": "Générateur"
 }

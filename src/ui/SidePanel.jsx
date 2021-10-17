@@ -17,7 +17,7 @@ const StyledSidePanel = styled.div`
   ${({ position }) => (position === "right" ? "right: 0;" : "left: 0;")}
   top: 0;
   bottom: 0;
-  z-index: ${({ modal }) => (modal ? 290 : 280)};
+  z-index: ${({ modal, layer }) => (modal ? 290 : 280) + layer};
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -105,6 +105,7 @@ const SidePanel = ({
   open = show,
   modal = false,
   width,
+  layer = 0,
 }) => {
   const { t } = useTranslation();
 
@@ -151,6 +152,7 @@ const SidePanel = ({
         width={width}
         modal={modal}
         className={isOpen ? "side-panel open" : "side-panel"}
+        layer={layer}
       >
         <header>
           {title && <h2 className="title">{title}</h2>}

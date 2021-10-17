@@ -1,4 +1,3 @@
-import debounce from "lodash.debounce";
 import React from "react";
 
 import { useWire, useBoardConfig } from "react-sync-board";

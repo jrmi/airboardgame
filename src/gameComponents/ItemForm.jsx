@@ -41,17 +41,23 @@ const getAvailableActionsFromItem = (item) => {
   return [];
 };
 
-const ItemForm = ({ items, types }) => {
+const getExcludedFields = (types) => {
+  return types.reduce((excluded, type) => {
+    return Object.assign(excluded, itemTemplates[type].excludeFields || {});
+  }, {});
+};
+
+const ItemForm = ({ items, types, extraExcludeFields = {} }) => {
   const { t } = useTranslation();
 
   let FieldsComponent;
-  const oneType = types.size === 1;
+  const oneType = types.length === 1;
 
   if (items.length === 1) {
     FieldsComponent = getFormFieldComponent(items[0].type);
   } else {
     if (oneType) {
-      FieldsComponent = getFormFieldComponent(Array.from(types)[0]);
+      FieldsComponent = getFormFieldComponent(types[0]);
     } else {
       FieldsComponent = () => null;
     }
@@ -71,9 +77,12 @@ const ItemForm = ({ items, types }) => {
     return [];
   }, [items, oneType]);
 
+  // Merge extra excluded fields and all item excluded fields
+  const excludeFields = { ...getExcludedFields(types), ...extraExcludeFields };
+
   let initialValues;
 
-  // Set initial values to item values if only one element selected
+  // Set initial values to item values only if one element selected
   // Empty object otherwise
   if (items.length === 1) {
     initialValues = { ...items[0] };
@@ -93,74 +102,80 @@ const ItemForm = ({ items, types }) => {
 
   return (
     <>
-      <Label>
-        <Field
-          name="locked"
-          component="input"
-          type="checkbox"
-          initialValue={initialValues.locked}
-        />
-        <span className="checkable">{t("Locked?")}</span>
-        <Hint>{t("Lock action help")}</Hint>
-      </Label>
-      <Label>
-        {t("Rotation")}
-        <Field name="rotation" initialValue={initialValues.rotation}>
-          {({ input: { onChange, value } }) => {
-            return (
-              <Slider
-                defaultValue={0}
-                value={value}
-                min={-180}
-                max={180}
-                step={5}
-                included={false}
-                marks={{
-                  "-180": -180,
-                  "-90": -90,
-                  "-45": -45,
-                  "-30": -30,
-                  0: 0,
-                  30: 30,
-                  45: 45,
-                  90: 90,
-                  180: 180,
-                }}
-                onChange={onChange}
-                className={"slider-rotation"}
-              />
-            );
-          }}
-        </Field>
-      </Label>
-      <Label>
-        {t("Layer")}
-        <Field name="layer" initialValue={initialValues.layer}>
-          {({ input: { onChange, value } }) => {
-            return (
-              <Slider
-                defaultValue={0}
-                value={value}
-                min={-3}
-                max={3}
-                step={1}
-                included={false}
-                marks={{
-                  "-3": -3,
-                  "-2": -2,
-                  "-1": -1,
-                  0: 0,
-                  "1": 1,
-                  "2": 2,
-                  "3": 3,
-                }}
-                onChange={onChange}
-                className={"slider-layer"}
-              />
-            );
-          }}
-        </Field>
-      </Label>
+      {!excludeFields.locked && (
+        <Label>
+          <Field
+            name="locked"
+            component="input"
+            type="checkbox"
+            initialValue={initialValues.locked}
+          />
+          <span className="checkable">{t("Locked?")}</span>
+          <Hint>{t("Lock action help")}</Hint>
+        </Label>
+      )}
+      {!excludeFields.rotation && (
+        <Label>
+          {t("Rotation")}
+          <Field name="rotation" initialValue={initialValues.rotation}>
+            {({ input: { onChange, value } }) => {
+              return (
+                <Slider
+                  defaultValue={0}
+                  value={value}
+                  min={-180}
+                  max={180}
+                  step={5}
+                  included={false}
+                  marks={{
+                    "-180": -180,
+                    "-90": -90,
+                    "-45": -45,
+                    "-30": -30,
+                    0: 0,
+                    30: 30,
+                    45: 45,
+                    90: 90,
+                    180: 180,
+                  }}
+                  onChange={onChange}
+                  className={"slider-rotation"}
+                />
+              );
+            }}
+          </Field>
+        </Label>
+      )}
+      {!excludeFields.layer && (
+        <Label>
+          {t("Layer")}
+          <Field name="layer" initialValue={initialValues.layer}>
+            {({ input: { onChange, value } }) => {
+              return (
+                <Slider
+                  defaultValue={0}
+                  value={value}
+                  min={-3}
+                  max={3}
+                  step={1}
+                  included={false}
+                  marks={{
+                    "-3": -3,
+                    "-2": -2,
+                    "-1": -1,
+                    0: 0,
+                    "1": 1,
+                    "2": 2,
+                    "3": 3,
+                  }}
+                  onChange={onChange}
+                  className={"slider-layer"}
+                />
+              );
+            }}
+          </Field>
+        </Label>
+      )}
       <FieldsComponent initialValues={initialValues} />
       <h3>{t("Snap to grid")}</h3>
       <Label>

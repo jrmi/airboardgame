@@ -17,6 +17,7 @@ import Jewel from "./Jewel";
 import Pawn from "./Pawn";
 import CheckerBoard from "./CheckerBoard";
 import Cylinder from "./Cylinder";
+import Generator from "./Generator";
 
 import ImageFormFields from "./forms/ImageFormFields";
 import CounterFormFields from "./forms/CounterFormFields";
@@ -33,6 +34,7 @@ import JewelFormFields from "./forms/JewelFormFields";
 import PawnFormFields from "./forms/PawnFormFields";
 import CheckerBoardFormFields from "./forms/CheckerBoardFormFields";
 import CylinderFormFields from "./forms/CylinderFormFields";
+import GeneratorFormFields from "./forms/GeneratorFormFields";
 
 const defaultDiceImages = () => [
   {
@@ -328,6 +330,15 @@ const itemTemplates = {
     template: {
       layer: -1,
     },
+  },
+  generator: {
+    component: Generator,
+    defaultActions: ["clone", "lock", "remove"],
+    availableActions: ["clone", "lock", "remove"],
+    form: GeneratorFormFields,
+    excludeFields: { rotation: true },
+    name: i18n.t("Generator"),
+    template: { layer: 0 },
   },
 };
 
