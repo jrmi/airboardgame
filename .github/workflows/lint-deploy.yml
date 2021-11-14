@@ -24,7 +24,7 @@ jobs:
       - run: cat backend/.env
       - run: cd backend && npm ci && npm run build
         env:      
-          RICOCHET_SECRET_KEY: ${{ secrets.RICOCHET_SECRET_KEY }}
+          RICOCHET_SITE_KEY: ${{ secrets.RICOCHET_SECRET_KEY }}
       - run: npm run build
         env:
           VITE_API_ENDPOINT: /api
@@ -36,7 +36,7 @@ jobs:
           CYPRESS_INSTALL_BINARY: 0
       - run: |
           cat <<EOF > ./dist/_redirects
-          /api/*  https://ricochetjs.herokuapp.com/:splat  200
+          /api/*  https://ricochetjs2.herokuapp.com/:splat  200
           /*    /index.html   200
           EOF
 
