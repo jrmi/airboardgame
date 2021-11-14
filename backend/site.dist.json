@@ -1,7 +1,0 @@
-{
-  "airboardgame": {
-    "name": "Air Board Game",
-    "key": "<--Put generated private key here-->",
-    "emailFrom": "\"Fake mail\" <fake@example.com>"
-  }
-}

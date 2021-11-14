@@ -93,7 +93,7 @@ You can drag'n'drop image from your desktop to the board to use them in Airboard
   
 ## Installation instructions
 
-This is the procedure to install Airboargame application from scratch for
+This is the procedure to install AirBoarGame application from scratch for
 development purpose.
 You need a recent node version. You can (and should) use [nvm](https://github.com/nvm-sh/nvm)
 to initialize your environment.
@@ -101,7 +101,7 @@ to initialize your environment.
 ### Backend
 
 First you need to install and start the server part of the application.
-The server code use [ricochetjs](https://github.com/jrmi/ricochetjs). A local
+The server code use [Ricochet.js](https://github.com/jrmi/ricochet.js). A local
 instance is installed and can be started but you can use your own instance.
 
 To proceed, execute:
@@ -109,35 +109,37 @@ To proceed, execute:
 ```sh
 cd backend
 npm ci
-cp site.dist.json site.json
 cp .env.dist .env
 ```
 
-Generate an encryption key:
-
-```sh
-npx ricochet --generate-key
-Key: <your key displayed here>
-```
-
-From here you need to customize `.env` and `site.json` file using this generated
-key.
-Modify the `RICOCHET_SECRET_KEY` in `.env` file and `key` in `site.json`. Both
-must be the same previously generated value.
-
-Default values should be fine for test but remember that data are only kept in
+You have the opportunity to modify Ricochet.js configuration now by editing this
+file. Default values should be fine for test but remember that data are only kept in
 memory so you loose all your changes each time you restart the ricochet server
-with this default. See [ricochetjs](https://github.com/jrmi/ricochetjs)
-documentation for more options.
+with this default. You also must to register again your site.
+See [Ricochet.js](https://github.com/jrmi/ricochet.js) documentation for more
+options and how to make data to persist.
 
 Now you can start the ricochet server:
 
 ```sh
-npm run start
+npm run ricochet
 ```
 
-And you should also watch for backend code modification to generate
-code executed by ricochetjs in another terminal:
+Then you must create the Airboardgame ricochet site by visiting your ricochet
+server URL with a browser and fill the site creation form. Default Ricochet
+server URL if you didn't modify configuration should be `http://localhost:4050/`.
+
+The only important value here is `site Id` that should have the `airboardgame`
+value.
+
+Since the form is submitted, save the key from the server response and customize
+`.env` file using this key to set the `RICOCHET_SITE_KEY`.
+
+Remember to confirm the site creation by clicking the link displayed in Ricochet.js
+sever logs if you use the default configuration for SMTP.
+
+Now, you should start backend code modifications monitoring to generate
+code executed by Ricochet.js in another terminal:
 
 ```sh
 npm run watch
@@ -174,7 +176,7 @@ npm start
 
 Now you should have four terminals:
 
-* the one with ricochetjs server instance. Backend logs can be found here
+* the one with Ricochet.js server instance. Backend logs can be found here
 * one terminal with auto build on change for backend files
 * another with `wire.io` server running
 * and a last one with React frontend server
