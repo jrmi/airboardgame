@@ -34,4 +34,4 @@ yarn-error.log*
 cypress/videos
 archives/
 
-site.json
+ricochet.json
