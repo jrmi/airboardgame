@@ -1,5 +1,7 @@
 # Air board game - the free online tabletop simulator
 
+Join us on Discord - [![Discord](https://img.shields.io/discord/899259310620696616)](https://discord.gg/EsZGJ5h6UA)
+
 If you just want to play, go [here](https://airboardgame.net).
 
 * **Choose** a game
