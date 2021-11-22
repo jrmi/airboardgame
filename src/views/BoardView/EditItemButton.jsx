@@ -5,7 +5,6 @@ import { useTranslation } from "react-i18next";
 import SidePanel from "../../ui/SidePanel";
 import ItemFormFactory from "./ItemFormFactory";
 import { useItemActions, useSelectedItems, useItems } from "react-sync-board";
-import merge from "lodash.merge";
 
 const CardContent = styled.div.attrs(() => ({ className: "content" }))`
   display: flex;
@@ -28,7 +27,17 @@ const EditItemButton = ({ showEdit, setShowEdit }) => {
   const onSubmitHandler = React.useCallback(
     (formValues) => {
       batchUpdateItems(selectedItems, (item) => {
-        return merge(JSON.parse(JSON.stringify(item)), formValues);
+        console.log(JSON.parse(JSON.stringify(item)), formValues);
+        if (formValues.item) {
+          // Merge subitem for generator
+          return {
+            ...item,
+            ...formValues,
+            item: { ...item.item, ...formValues.item },
+          };
+        } else {
+          return { ...item, ...formValues };
+        }
       });
     },
     [batchUpdateItems, selectedItems]
