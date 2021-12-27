@@ -24,14 +24,20 @@ dist
 .env.development.local
 .env.test.local
 .env.production.local
+.cache
+.prettierrc
+.gitignore
 
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-.cache
 
-cypress/videos
 archives/
-
 site.json
+Run_build.bat
+Start_the_client.bat
+Update_code_to_the_last_version.bat
+src/games/testGame2.js
+backend/Run_Ricochet_server.bat
+backend/Run_Watch_for_backend_code_modification.bat
