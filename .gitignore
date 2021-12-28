@@ -34,15 +34,5 @@ yarn-error.log*
 
 
 archives/
-<<<<<<< HEAD
-site.json
-Run_build.bat
-Start_the_client.bat
-Update_code_to_the_last_version.bat
-src/games/testGame2.js
-backend/Run_Ricochet_server.bat
-backend/Run_Watch_for_backend_code_modification.bat
-=======
 
 ricochet.json
->>>>>>> 9a386d4a80d87959c4d6a478e7cbaca4e5716ad6
