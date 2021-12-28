@@ -15,7 +15,7 @@ describe("Item interactions", () => {
     cy.get(".board-pane", { timeout: 10000 }).should(
       "have.css",
       "transform",
-      "matrix(1, 0, 0, 1, 0, -200)"
+      "matrix(0.48, 0, 0, 0.48, 260, 60)"
     );
     cy.get(".item")
       .first()
@@ -58,10 +58,11 @@ describe("Item interactions", () => {
         force: true,
         pointerId: 1,
       });
+
     cy.get("img[src='/game_assets/JC.jpg']")
       .parents(".item")
       .parent()
-      .should("have.css", "transform", "matrix(1, 0, 0, 1, 520, 500.5)");
+      .should("have.css", "transform", "matrix(1, 0, 0, 1, 628, 608.5)");
   });
 
   it("should flip item", () => {
@@ -76,7 +77,7 @@ describe("Item interactions", () => {
       .parents(".item")
       .click(500, 500, { force: true });
 
-    cy.get('[title = "Reveal/Hide"]').click({ force: true });
+    cy.get('[title = "Reveal/Hide (f)"]').click({ force: true });
 
     // Check after
     cy.get("img[src='/game_assets/JC.jpg']").should("have.css", "opacity", "0");
@@ -96,7 +97,7 @@ describe("Item interactions", () => {
       .parents(".item")
       .click(500, 500, { force: true });
 
-    cy.get('[title = "Tap/Untap"]').click({ force: true });
+    cy.get('[title = "Tap/Untap (t)"]').click({ force: true });
 
     // Check after
     cy.get("img[src='/game_assets/JC.jpg']")

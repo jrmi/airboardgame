@@ -7,7 +7,12 @@ on:
 jobs:
   cypress-run:
     runs-on: ubuntu-latest
-    steps:
+    steps:      
+      - name: Setup Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14
+
       - name: Checkout
         uses: actions/checkout@v2
 
@@ -22,7 +27,8 @@ jobs:
         env:
           VITE_NO_WELCOME: 1
           VITE_CI: 1
-          VITE_SOCKET_URL: https://ricochetjs.herokuapp.com/
+          VITE_SOCKET_URL: https://public.jeremiez.net/
+          VITE_SOCKET_PATH: /wamp/socket.io
           VITE_API_ENDPOINT: https://ricochetjs.herokuapp.com/
           VITE_RICOCHET_SITEID: airboardgame
           ACTIONS_ALLOW_UNSECURE_COMMANDS: true

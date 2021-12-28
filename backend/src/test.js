@@ -1,5 +1,5 @@
 const callAnother = () => {
-  console.log("titi");
+  console.log("Foo");
 };
 
 const main = async ({ query, body, test, store }) => {

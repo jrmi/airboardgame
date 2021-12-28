@@ -3,12 +3,13 @@ import { API_ENDPOINT, IS_PRODUCTION, API_BASE } from "./settings";
 import testGame from "../games/testGame";
 import perfGame from "../games/perfGame";
 import unpublishedGame from "../games/unpublishedGame";
-import { nanoid } from "nanoid";
+import { uid } from "./";
 
 const oldUploadURI = `${API_ENDPOINT}/file`;
 const gameURI = `${API_ENDPOINT}/store/game`;
 const sessionURI = `${API_ENDPOINT}/store/session`;
-//const execURI = `${API_ENDPOINT}/execute`;
+const roomURI = `${API_ENDPOINT}/store/room`;
+const execURI = `${API_ENDPOINT}/execute`;
 const authURI = `${API_ENDPOINT}/auth`;
 
 export const uploadImage = async (namespace, file) => {
@@ -65,7 +66,7 @@ export const getBestTranslationFromConfig = (
     defaultDescription,
     name,
     info,
-  },
+  } = {},
   langs
 ) => {
   const translationsMap = {
@@ -173,12 +174,12 @@ export const getGame = async (gameId) => {
 
   // Add id if missing
   game.items = game.items.map((item) => ({
-    id: nanoid(),
+    id: uid(),
     ...item,
   }));
 
   game.availableItems = game.availableItems.map((item) => ({
-    id: nanoid(),
+    id: uid(),
     ...item,
   }));
 
@@ -186,7 +187,7 @@ export const getGame = async (gameId) => {
 };
 
 export const createGame = async (data) => {
-  const newGameId = nanoid();
+  const newGameId = uid();
   const result = await updateGame(newGameId, data);
   return result;
 };
@@ -277,6 +278,49 @@ export const updateSession = async (id, data) => {
   return await result.json();
 };
 
+export const getRoom = async (id) => {
+  const result = await fetch(`${roomURI}/${id}`, {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+  });
+  if (result.status === 404) {
+    throw new Error("Resource not found");
+  }
+  if (result.status === 403) {
+    throw new Error("Forbidden");
+  }
+  if (result.status >= 300) {
+    throw new Error("Server error");
+  }
+  return await result.json();
+};
+
+export const updateRoom = async (id, data) => {
+  const result = await fetch(`${roomURI}/${id}`, {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+    credentials: "include",
+  });
+  if (result.status === 404) {
+    throw new Error("Resource not found");
+  }
+  if (result.status === 403) {
+    throw new Error("Forbidden");
+  }
+  if (result.status >= 300) {
+    throw new Error("Server error");
+  }
+  return await result.json();
+};
+
 export const sendAuthToken = async (email) => {
   const result = await fetch(`${authURI}/`, {
     method: "POST",
@@ -322,4 +366,25 @@ export const logout = async () => {
   if (result.status !== 200) {
     throw new Error("Logout failed");
   }
+};
+
+export const getConfToken = async (session) => {
+  const result = await fetch(`${execURI}/getConfToken?session=${session}`, {
+    credentials: "include",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (result.status === 404) {
+    throw new Error("Webconference not enabled");
+  }
+  if (result.status === 403) {
+    throw new Error("Forbidden");
+  }
+  if (result.status >= 300) {
+    throw new Error("Server error");
+  }
+  return await result.json();
 };

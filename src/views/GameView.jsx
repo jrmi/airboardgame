@@ -1,23 +1,50 @@
 import React from "react";
-import { useSetRecoilState } from "recoil";
-import { useParams } from "react-router-dom";
-import { nanoid } from "nanoid";
-import { Provider } from "@scripters/use-socket.io";
+import { useTranslation } from "react-i18next";
+import useAsyncEffect from "use-async-effect";
+import { BoardWrapper } from "react-sync-board";
 
-import { C2CProvider, useC2C } from "../hooks/useC2C";
-import { MessagesAtom } from "../hooks/useMessage";
-
-import { SOCKET_URL, SOCKET_OPTIONS } from "../utils/settings";
-
-import BoardView from "../views/BoardView";
+import { itemTemplates, itemLibrary, premadeItems } from "../gameComponents";
 import Waiter from "../ui/Waiter";
 
+import BoardView from "./BoardView";
 import { getGame } from "../utils/api";
+import { uid } from "../utils";
 
-import { GameProvider } from "../hooks/useGame";
-import { useTranslation } from "react-i18next";
+import useGame, { GameProvider } from "../hooks/useGame";
+import { useSocket } from "@scripters/use-socket.io";
 
-import useAsyncEffect from "use-async-effect";
+// Keep compatibility with previous availableItems shape
+const migrateAvailableItemList = (old) => {
+  const groupMap = old.reduce((acc, { groupId, ...item }) => {
+    if (!acc[groupId]) {
+      acc[groupId] = [];
+    }
+    acc[groupId].push(item);
+    return acc;
+  }, {});
+  return Object.keys(groupMap).map((name) => ({
+    name,
+    items: groupMap[name],
+  }));
+};
+
+const adaptItem = (item) => ({
+  type: item.type,
+  template: item,
+  component: itemTemplates[item.type].component,
+  name: item.name || item.label || item.text || itemTemplates[item.type].name,
+  uid: uid(),
+});
+
+const adaptItems = (nodes) => {
+  return nodes.map((node) => {
+    if (node.type) {
+      return adaptItem(node);
+    } else {
+      return { ...node, items: adaptItems(node.items) };
+    }
+  });
+};
 
 const newGameData = {
   items: [],
@@ -25,37 +52,31 @@ const newGameData = {
   board: { size: 2000, scale: 1 },
 };
 
-export const GameView = ({ session }) => {
-  const { c2c, isMaster } = useC2C();
-  const { gameId } = useParams();
-  const [realGameId, setRealGameId] = React.useState();
+export const GameView = ({ create = false }) => {
   const [gameLoaded, setGameLoaded] = React.useState(false);
-  const [game, setGame] = React.useState(null);
+  const { setGame, gameId, availableItems } = useGame();
+
   const gameLoadingRef = React.useRef(false);
-  const setMessages = useSetRecoilState(MessagesAtom);
 
   const { t } = useTranslation();
 
   useAsyncEffect(
     async (isMounted) => {
-      if (isMaster && !gameLoaded && !gameLoadingRef.current) {
+      if (!gameLoaded && !gameLoadingRef.current) {
         gameLoadingRef.current = true;
         try {
           let gameData;
-          let newRealGameId = gameId;
 
-          if (!gameId) {
+          if (create) {
             // Create new game
             newGameData.board.defaultName = t("New game");
             gameData = JSON.parse(JSON.stringify(newGameData));
-            newRealGameId = nanoid();
           } else {
             // Load game from server
             gameData = await getGame(gameId);
           }
           if (!isMounted) return;
 
-          setRealGameId(newRealGameId);
           setGame(gameData);
           setGameLoaded(true);
         } catch (e) {
@@ -63,49 +84,78 @@ export const GameView = ({ session }) => {
         }
       }
     },
-    [c2c, gameId, gameLoaded, isMaster, setMessages, t]
+    [gameLoaded]
   );
 
-  // Load game from master if any
-  React.useEffect(() => {
-    if (!isMaster && !gameLoaded && !gameLoadingRef.current) {
-      gameLoadingRef.current = true;
-      const onReceiveGame = (receivedGame) => {
-        setGame(receivedGame);
-        setGameLoaded(true);
-      };
-      c2c.call("getGame").then(onReceiveGame, () => {
-        setTimeout(
-          c2c
-            .call("getGame")
-            .then(onReceiveGame, (error) =>
-              console.log("Failed to call getGame with error", error)
-            ),
-          1000
-        );
-      });
+  const availableItemLibrary = React.useMemo(() => {
+    let itemList = availableItems;
+    if (itemList?.length && itemList[0].groupId) {
+      itemList = migrateAvailableItemList(itemList);
     }
-  }, [c2c, isMaster, gameLoaded]);
+    return adaptItems(itemList);
+  }, [availableItems]);
+
+  const premadeLibrary = React.useMemo(() => adaptItems(premadeItems), []);
+
+  const itemLibraries = [
+    {
+      name: t("Standard"),
+      key: "standard",
+      items: itemLibrary,
+    },
+    {
+      name: t("Premade"),
+      key: "premade",
+      items: premadeLibrary,
+    },
+  ];
+
+  if (availableItems.length) {
+    itemLibraries.push({
+      name: t("Box"),
+      key: "box",
+      items: availableItemLibrary,
+    });
+  }
+
+  const mediaLibraries = React.useMemo(() => {
+    return [{ id: "game", name: t("Game"), boxId: "game", resourceId: gameId }];
+  }, [gameId, t]);
 
   if (!gameLoaded) {
-    return <Waiter message={t("Game loading...")} />;
+    return <Waiter message={t("Session loading...")} />;
   }
 
   return (
-    <GameProvider game={game} gameId={realGameId}>
-      <BoardView namespace={realGameId} edit={true} session={session} />
-    </GameProvider>
+    <BoardView
+      mediaLibraries={mediaLibraries}
+      itemLibraries={itemLibraries}
+      edit={true}
+    />
   );
 };
 
-const ConnectedGameView = () => {
-  const { room = nanoid() } = useParams();
+const ConnectedGameView = ({ gameId }) => {
+  const socket = useSocket();
+  const [sessionId] = React.useState(uid());
+
+  const [realGameId] = React.useState(() => gameId || uid());
+
   return (
-    <Provider url={SOCKET_URL} options={SOCKET_OPTIONS}>
-      <C2CProvider room={room}>
-        <GameView session={room} />
-      </C2CProvider>
-    </Provider>
+    <BoardWrapper
+      room={`room_${sessionId}`}
+      session={sessionId}
+      style={{
+        position: "fixed",
+        inset: 0,
+        overflow: "hidden",
+      }}
+      socket={socket}
+    >
+      <GameProvider gameId={realGameId} create={!gameId}>
+        <GameView create={!gameId} />
+      </GameProvider>
+    </BoardWrapper>
   );
 };
 

@@ -1,9 +1,17 @@
 import React from "react";
 import { atomFamily, useRecoilState } from "recoil";
 
+const getFromLocalStorage = (key) => {
+  const item = window.localStorage.getItem(key);
+  if (item === undefined) {
+    return undefined;
+  }
+  return JSON.parse(item);
+};
+
 const localStorageFamily = atomFamily({
   key: "localstorage",
-  default: [false, null],
+  default: (key) => [false, getFromLocalStorage(key)],
 });
 
 const useLocalStorage = (key, initialValue) => {
@@ -66,7 +74,7 @@ const useLocalStorage = (key, initialValue) => {
     };
   }, [key, setStoredValue]);
 
-  return [storedValue, setValue];
+  return [storedValue === undefined ? initialValue : storedValue, setValue];
 };
 
 export default useLocalStorage;
