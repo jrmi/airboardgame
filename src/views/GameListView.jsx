@@ -1,18 +1,20 @@
 import React from "react";
 import { useTranslation, Trans } from "react-i18next";
 import styled from "styled-components";
-import Diacritics from "diacritic";
 import { useQuery } from "react-query";
 
-import { getGames } from "../utils/api";
+import SliderRange from "../ui/SliderRange";
+import Spinner from "../ui/Spinner";
 
-import {
-  StyledGameList,
-  StyledGameFilters,
-  StyledGameResultNumber,
-} from "./StyledGameList";
+import playerSVG from "../images/player.svg";
+import languageSVG from "../images/language.svg";
+import clockSVG from "../images/clock.svg";
+
+import { getGames } from "../utils/api";
+import { search } from "../utils";
 
 import GameListItem from "./GameListItem";
+import { StyledGameList } from "./StyledGameList";
 
 const Header = styled.header`
   background-color: var(--bg-color);
@@ -66,9 +68,10 @@ const Header = styled.header`
 `;
 
 const Filter = styled.div`
+  text-align: center;
+
   & .incentive {
     width: 100%;
-    text-align: center;
     font-size: 3.5vw;
     padding: 0.5em;
     margin: 0;
@@ -78,21 +81,107 @@ const Filter = styled.div`
       font-size: 32px;
     }
   }
+
+  input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="color"]):not([type="button"]):not([type="reset"]) {
+    background-color: #1c1c1c;
+    color: var(--font-color2);
+    max-width: 30rem;
+    display: inline;
+    margin: 2rem;
+
+    &::placeholder {
+      color: var(--font-color2);
+    }
+  }
+`;
+
+const StyledGameFilters = styled.ul`
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+
+  > li {
+    flex: auto;
+    max-width: 25rem;
+    margin: 1rem;
+    padding: 1.5rem 1rem 1rem;
+    text-align: center;
+    border-radius: 0.5rem;
+
+    .filter-title {
+      text-transform: uppercase;
+      color: var(--font-color2);
+      font-size: 1.3rem;
+    }
+
+    &.small-filter {
+      max-width: 20rem;
+    }
+  }
+
+  .language-filter {
+    background: url(${languageSVG}) #1d1d1d no-repeat -35% -25%;
+
+    ul {
+      text-align: left;
+
+      list-style: none;
+      padding: 0;
+      color: var(--font-color2);
+    }
+  }
+
+  .player-filter {
+    background: url(${playerSVG}) #1d1d1d no-repeat -35% -25%;
+  }
+
+  .duration-filter {
+    background: url(${clockSVG}) #1d1d1d no-repeat -40% -40%;
+  }
+`;
+
+const StyledGameResultNumber = styled.p`
+  text-align: center;
 `;
 
 const Content = styled.div`
   background-color: var(--bg-secondary-color);
 `;
 
-const cleanWord = function (word) {
-  return Diacritics.clean(word).toLowerCase();
+const hasIntervalOverlap = (interval1, interval2) => {
+  return interval1[0] <= interval2[1] && interval1[1] >= interval2[0];
+};
+
+const hasRequestedValues = (filterValue, gameSettings) => {
+  if (!filterValue?.length || !gameSettings?.length) {
+    return true;
+  }
+  return hasIntervalOverlap(filterValue, gameSettings);
+};
+
+const hasAllowedMaterialLanguage = (filterCriteria, game) => {
+  const MULTI_LANG_KEYWORD = "Multi-lang";
+
+  return (
+    !game.materialLanguage ||
+    game.materialLanguage === MULTI_LANG_KEYWORD ||
+    filterCriteria.languages.includes(game.materialLanguage)
+  );
 };
 
 const GameListView = () => {
   const { t } = useTranslation();
   const NULL_SEARCH_TERM = "";
 
-  const [searchTerm, setSearchTerm] = React.useState(NULL_SEARCH_TERM);
+  const [filterCriteria, setFilterCriteria] = React.useState({
+    searchTerm: NULL_SEARCH_TERM,
+    nbOfPlayers: [1, 9],
+    durations: [15, 90],
+    languages: ["fr", "en"],
+  });
 
   const { isLoading, data: gameList } = useQuery("games", async () =>
     (await getGames())
@@ -112,23 +201,55 @@ const GameListView = () => {
       })
   );
 
-  const handleChange = (event) => {
-    setSearchTerm(event.target.value);
+  const filteredGameList = React.useMemo(() => {
+    if (gameList) {
+      return gameList.filter(
+        (game) =>
+          (filterCriteria.searchTerm === NULL_SEARCH_TERM ||
+            search(filterCriteria.searchTerm, game.defaultName)) &&
+          hasRequestedValues(filterCriteria.nbOfPlayers, game.playerCount) &&
+          hasRequestedValues(filterCriteria.durations, game.duration) &&
+          hasAllowedMaterialLanguage(filterCriteria, game)
+      );
+    }
+    return [];
+  }, [gameList, filterCriteria]);
+
+  const onChangeNbOfPlayersSlider = (values) => {
+    setFilterCriteria({
+      ...filterCriteria,
+      nbOfPlayers: values,
+    });
   };
 
-  const filteredGameList = React.useMemo(() => {
-    return gameList
-      ? gameList.filter(
-          (game) =>
-          searchTerm === NULL_SEARCH_TERM ||
-            cleanWord(game.defaultName).includes(cleanWord(searchTerm))
-      )
-      : [];
-  }, [gameList, searchTerm]);
+  const onChangeDurationSlider = (values) => {
+    setFilterCriteria({
+      ...filterCriteria,
+      durations: values,
+    });
+  };
 
-  if (isLoading) {
-    return null;
-  }
+  const onChangeSearchTerm = (event) => {
+    setFilterCriteria({
+      ...filterCriteria,
+      searchTerm: event.target.value,
+    });
+  };
+
+  const toggleLang = (lang) => {
+    if (filterCriteria.languages.includes(lang)) {
+      return filterCriteria.languages.filter((language) => language !== lang);
+    } else {
+      return [...filterCriteria.languages, lang];
+    }
+  };
+
+  const onChangelanguageFilter = (lang) => {
+    setFilterCriteria({
+      ...filterCriteria,
+      languages: toggleLang(lang),
+    });
+  };
 
   return (
     <>
@@ -150,28 +271,83 @@ const GameListView = () => {
       <Content>
         <Filter>
           <h2 className="incentive">{t("Start a game now")}</h2>
+          <input
+            type="search"
+            id="game-search"
+            name="game-search"
+            aria-label={t("Search for a game")}
+            placeholder={t("Search for a game")}
+            value={filterCriteria.searchTerm}
+            onChange={onChangeSearchTerm}
+          />
           <StyledGameFilters>
-            <li>
-              <input
-                type="search"
-                id="game-search"
-                name="game-search"
-                aria-label={t("Search for a game")}
-                placeholder={t("Search for a game")}
-                value={searchTerm}
-                onChange={handleChange}
+            <li className="player-filter">
+              <span className="filter-title">{t("Number of players")}</span>
+              <SliderRange
+                defaultValue={[1, 9]}
+                min={1}
+                max={9}
+                value={filterCriteria.nbOfPlayers}
+                step={1}
+                onChange={onChangeNbOfPlayersSlider}
               />
+            </li>
+            <li className="duration-filter">
+              <span className="filter-title">{t("Duration (mins)")}</span>
+              <SliderRange
+                defaultValue={[15, 90]}
+                min={15}
+                max={90}
+                value={filterCriteria.durations}
+                step={15}
+                onChange={onChangeDurationSlider}
+              />
+            </li>
+            <li className="small-filter language-filter">
+              <span className="filter-title">{t("Language")}</span>
+              <div>
+                <ul>
+                  <li>
+                    <input
+                      type="checkbox"
+                      id="french-filter"
+                      name="french-filter"
+                      defaultChecked={filterCriteria.languages.includes("fr")}
+                      onChange={() => onChangelanguageFilter("fr")}
+                    />
+                    <label htmlFor="french-filter">{t("French")}</label>
+                  </li>
+                  <li>
+                    <input
+                      type="checkbox"
+                      id="english-filter"
+                      name="english-filter"
+                      defaultChecked={filterCriteria.languages.includes("en")}
+                      onChange={() => onChangelanguageFilter("en")}
+                      data-lang="en"
+                    />
+                    <label htmlFor="english-filter">{t("English")}</label>
+                  </li>
+                </ul>
+              </div>
             </li>
           </StyledGameFilters>
           <StyledGameResultNumber>
             {t("games-available", { nbOfGames: `${filteredGameList.length}` })}
           </StyledGameResultNumber>
         </Filter>
-        <StyledGameList>
-          {filteredGameList.map((game) => (
-            <GameListItem key={game.id} game={game} />
-          ))}
-        </StyledGameList>
+        {!isLoading && (
+          <StyledGameList>
+            {filteredGameList.map((game) => (
+              <GameListItem key={game.id} game={game} />
+            ))}
+          </StyledGameList>
+        )}
+        {isLoading && (
+          <div style={{ padding: "1em" }}>
+            <Spinner />
+          </div>
+        )}
       </Content>
     </>
   );

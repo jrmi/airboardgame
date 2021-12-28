@@ -36,7 +36,7 @@ describe("Studio", () => {
     cy.get(".board-pane").should(
       "have.css",
       "transform",
-      "matrix(1, 0, 0, 1, -500, -700)"
+      "matrix(0.24, 0, 0, 0.24, 260, 60)"
     );
   });
 
@@ -45,7 +45,7 @@ describe("Studio", () => {
     cy.get(".board-pane").should(
       "have.css",
       "transform",
-      "matrix(1, 0, 0, 1, -500, -700)"
+      "matrix(0.24, 0, 0, 0.24, 260, 60)"
     );
 
     // save
@@ -70,10 +70,10 @@ describe("Studio", () => {
     cy.get(".board-pane").should(
       "have.css",
       "transform",
-      "matrix(1, 0, 0, 1, -500, -700)"
+      "matrix(0.24, 0, 0, 0.24, 260, 60)"
     );
     // Add an item
-    cy.get("[title^='Add an item']").click();
+    cy.get("[title^='Add an item']").click({ force: true });
     cy.contains("Rectangle").parent().parent().click();
     cy.get(".side-panel.open [alt^='Close']").click();
 
@@ -96,15 +96,15 @@ describe("Studio", () => {
   });
 
   it("Can edit game properties", () => {
-    cy.get("[title^='Add a game']").click();
+    cy.get("[title^='Add a game']").click({ force: true });
     cy.get(".board-pane").should(
       "have.css",
       "transform",
-      "matrix(1, 0, 0, 1, -500, -700)"
+      "matrix(0.24, 0, 0, 0.24, 260, 60)"
     );
 
     // Edit title
-    cy.get("[title^='Edit game information']").click();
+    cy.get("[title^='Configuration']").click({ force: true });
     cy.get('input[name="defaultName"]').clear().type("ChangeGameName");
     cy.get(".side-panel.open [alt^='Close']").click();
 
@@ -128,14 +128,14 @@ describe("Studio", () => {
 
   describe("Item edition", () => {
     beforeEach(() => {
-      cy.get("[title^='Add a game']").click();
+      cy.get("[title^='Add a game']").click({ force: true });
       cy.get(".board-pane").should(
         "have.css",
         "transform",
-        "matrix(1, 0, 0, 1, -500, -700)"
+        "matrix(0.24, 0, 0, 0.24, 260, 60)"
       );
       // Add an item
-      cy.get("[title^='Add an item']").click();
+      cy.get("[title^='Add an item']").click({ force: true });
       cy.contains("Rectangle").parent().parent().click();
       cy.get(".side-panel.open [alt^='Close']").click();
     });
@@ -152,7 +152,6 @@ describe("Studio", () => {
         .children()
         .first()
         .should((elt) => {
-          console.log(elt[0]);
           const { clientWidth, clientHeight } = elt[0];
           expect(clientWidth).to.equal(100);
           expect(clientHeight).to.equal(75);
@@ -192,11 +191,11 @@ describe("Studio", () => {
       cy.get(".item").click({ force: true });
       cy.get("button img[alt^='Edit']").click({ force: true });
 
-      cy.get(".item").parent().should("have.css", "z-index", "3");
+      cy.get(".item").parent().should("have.css", "z-index", "140");
 
-      cy.get(".rc-slider-mark-text").contains("-1").click();
+      cy.get(".slider-layer .rc-slider-mark-text").contains("-1").click();
 
-      cy.get(".item").parent().should("have.css", "z-index", "2");
+      cy.get(".item").parent().should("have.css", "z-index", "130");
     });
   });
 });

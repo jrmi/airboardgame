@@ -13,6 +13,7 @@ const genGame = () => {
       "flip",
       "flipSelf",
       "tap",
+      { name: "rotate", args: { angle: 25 } },
       "rotate45",
       "rotate90",
       "stack",
@@ -145,6 +146,7 @@ const genGame = () => {
     width: 500,
     height: 300,
     locked: true,
+    onItem: ["reveal"],
     x: 200,
     y: 600,
   });
@@ -189,16 +191,107 @@ const genGame = () => {
     y: 600,
   });
 
+  items.push({
+    label: "Generator",
+    type: "generator",
+    layer: -1,
+    x: 500,
+    y: 700,
+    item: {
+      label: "My jewel",
+      type: "jewel",
+      size: 70,
+      color: "#ff0000",
+    },
+  });
+
   return {
     items,
     availableItems: [
       {
-        groupId: "Group",
-        label: "Rect",
+        name: "Blue rect",
+        label: "rect",
         type: "rect",
-        color: "#00D022",
+        color: "#0000D2",
         width: 80,
         height: 80,
+      },
+      {
+        name: "First group",
+        items: [
+          {
+            name: "Green rect",
+            label: "rect",
+            type: "rect",
+            color: "#00D022",
+            width: 80,
+            height: 80,
+          },
+          {
+            label: "Red rect",
+            type: "rect",
+            color: "#D00022",
+            width: 80,
+            height: 80,
+          },
+        ],
+      },
+      {
+        name: "Second group",
+        items: [
+          {
+            name: "Green pawn",
+            label: "rect",
+            type: "pawn",
+            color: "#00D022",
+            size: 80,
+          },
+          {
+            name: "Red pawn",
+            type: "pawn",
+            color: "#D00022",
+            size: 80,
+          },
+          {
+            name: "blue pawn",
+            type: "pawn",
+            color: "#2000D2",
+            size: 80,
+          },
+          {
+            name: "Third nested group",
+            items: [
+              {
+                name: "Green rect",
+                label: "rect",
+                type: "rect",
+                color: "#00D022",
+                width: 80,
+                height: 80,
+              },
+              {
+                name: "Red rect",
+                type: "rect",
+                color: "#D00022",
+                width: 80,
+                height: 80,
+              },
+            ],
+          },
+        ],
+      },
+      {
+        name: "Green circle",
+        label: "round",
+        type: "round",
+        color: "#00D022",
+        size: 80,
+      },
+      {
+        name: "Red circle",
+        type: "round",
+        color: "#D00022",
+        size: 80,
       },
     ],
     board: {
@@ -211,12 +304,14 @@ const genGame = () => {
           language: "fr",
           name: "0 Jeu test",
           description: "Un jeu pour tester",
+          baseline: "Un jeu de test",
         },
       ],
       playerCount: [2, 4],
       defaultName: "0 Test game",
       defaultLanguage: "en",
       defaultDescription: "A classic",
+      defaultBaseline: "A test game",
       materialLanguage: "Multi-lang",
       minAge: "10",
       duration: [30, 90],

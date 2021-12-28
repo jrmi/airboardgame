@@ -2,13 +2,14 @@ const path = require("path");
 require("dotenv").config({
   path: path.join(__dirname, ".env"),
 });
+const EncryptPlugin = require("ricochetjs").EncryptPlugin;
+const Dotenv = require("dotenv-webpack");
 const CopyPlugin = require("copy-webpack-plugin");
-const EncryptPlugin = require("ricochet-js").EncryptPlugin;
 
-const SECRET_KEY = process.env.RICOCHET_SECRET_KEY;
+const SECRET_KEY = process.env.RICOCHET_SITE_KEY;
 
 if (!SECRET_KEY) {
-  console.log("You must define a RICOCHET_SECRET_KEY env variable");
+  console.log("You must define a RICOCHET_SITE_KEY env variable");
   process.exit(-1);
 }
 
@@ -18,12 +19,13 @@ module.exports = {
   devtool: false,
   output: {
     path: path.resolve(__dirname, "../public"),
-    filename: "setup.js",
-    library: "main",
-    libraryTarget: "var",
-    libraryExport: "default",
+    filename: "ricochet.json",
+    library: {
+      type: "commonjs",
+    },
   },
   plugins: [
+    new Dotenv(),
     new CopyPlugin({
       patterns: [
         {
@@ -33,7 +35,7 @@ module.exports = {
       ],
     }),
     new EncryptPlugin({
-      key: process.env.RICOCHET_SECRET_KEY,
+      key: SECRET_KEY,
     }),
   ],
 };

@@ -1,24 +1,29 @@
 import React from "react";
 import styled from "styled-components";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { deleteGame, getBestTranslationFromConfig } from "../utils/api";
 import { confirmAlert } from "react-confirm-alert";
 import { toast } from "react-toastify";
-import { media2Url } from "../components/mediaLibrary";
+import { useMutation, useQueryClient } from "react-query";
+import { media2Url } from "../mediaLibrary";
 
 const Game = styled.li`
   position: relative;
   padding: 0em;
   margin: 0px;
+  min-width: 0; /* Fix for elipsis */
 
   & .game-name {
     max-width: 80%;
-    line-height: 1.2em;
+    line-height: 1.1em;
     overflow: hidden;
     margin-bottom: 3px;
     margin: 0.2em 0 0.5em 0;
-    font-size: 2.3vw;
+    font-size: 2.2vw;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   & .unpublished {
@@ -47,6 +52,11 @@ const Game = styled.li`
     z-index: 2;
   }
 
+  & .baseline {
+    max-height: 3em;
+    overflow: hidden;
+  }
+
   &:hover .extra-actions,
   & .extra-actions:hover {
     display: block;
@@ -55,6 +65,8 @@ const Game = styled.li`
   & .img-wrapper {
     display: block;
     position: relative;
+    margin: 0;
+    padding: 0;
     width: 100%;
     padding-top: 64.5%;
     & > span {
@@ -67,6 +79,8 @@ const Game = styled.li`
       overflow: hidden;
       display: block;
       display: flex;
+      justify-content: center;
+      align-items: center;
       border-radius: 5px;
       & > .back {
         filter: blur(5px);
@@ -76,6 +90,15 @@ const Game = styled.li`
         left: 0;
         bottom: 0;
         right: 0;
+      }
+      & > h2 {
+        text-align: center;
+        display: inline;
+        font-size: 3em;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin: 0 0.5em;
       }
     }
   }
@@ -146,13 +169,39 @@ const GameListItem = ({
   },
   game,
   userId,
+  onClick: propOnClick,
   onDelete,
 }) => {
   const { t, i18n } = useTranslation();
+  const history = useHistory();
+  const queryClient = useQueryClient();
+  const deleteMutation = useMutation((gameId) => deleteGame(gameId), {
+    onSuccess: () => {
+      queryClient.invalidateQueries("ownGames");
+      queryClient.invalidateQueries("games");
+    },
+  });
+
+  const realImageUrl = media2Url(imageUrl);
+
+  const [showImage, setShowImage] = React.useState(Boolean(realImageUrl));
 
   const translation = React.useMemo(
     () => getBestTranslationFromConfig(game, i18n.languages),
     [game, i18n.languages]
+  );
+
+  const onClick = React.useCallback(
+    (e) => {
+      e.stopPropagation();
+      e.preventDefault();
+      if (propOnClick) {
+        return propOnClick(id);
+      } else {
+        history.push(`/playgame/${id}`);
+      }
+    },
+    [history, id, propOnClick]
   );
 
   const deleteGameHandler = async () => {
@@ -164,8 +213,8 @@ const GameListItem = ({
           label: t("Yes"),
           onClick: async () => {
             try {
-              await deleteGame(id);
-              onDelete(id);
+              deleteMutation.mutate(id);
+              if (onDelete) onDelete(id);
               toast.success(t("Game deleted"), { autoClose: 1500 });
             } catch (e) {
               if (e.message === "Forbidden") {
@@ -223,23 +272,27 @@ const GameListItem = ({
 
   let materialLanguageDisplay = t(materialLanguage);
 
-  const realImageUrl = media2Url(imageUrl);
-
   return (
     <Game>
-      <Link to={`/game/${id}/session/`} className="img-wrapper">
-        <span>
-          {realImageUrl && (
+      <a href={`/playgame/${id}`} className="img-wrapper button">
+        <span onClick={onClick}>
+          {showImage && (
             <>
               <span
                 className="back"
                 style={{ backgroundImage: `url(${realImageUrl})` }}
               />
-              <img className="img" src={realImageUrl} />
+              <img
+                className="img"
+                src={realImageUrl}
+                alt={translation.name}
+                onError={() => setShowImage(false)}
+              />
             </>
           )}
+          {!showImage && <h2>{translation.name}</h2>}
         </span>
-      </Link>
+      </a>
       {userId && (userId === owner || !owner) && (
         <span className="extra-actions">
           <button

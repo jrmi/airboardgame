@@ -2,7 +2,8 @@
 name: Build and Deploy to Netlify
 on:
   pull_request:
-  #push:
+  push:
+  workflow_dispatch:
 jobs:
   build:
     runs-on: ubuntu-20.04
@@ -13,17 +14,25 @@ jobs:
         with:
           node-version: 14
 
-      - run: npm install -g npm && npm ci && npm rebuild node-sass
-      - run: npm run lint 
+      - run: npm ci
+      - run: npm run lint  
+      - run: |
+          cat <<EOF > ./backend/.env
+          OPENVIDU_URL=${{ secrets.OPENVIDU_URL }}
+          OPENVIDU_SECRET=${{ secrets.OPENVIDU_SECRET }}
+          EOF
+      - run: cat backend/.env
       - run: cd backend && npm ci && npm run build
         env:      
-          RICOCHET_SECRET_KEY: ${{ secrets.RICOCHET_SECRET_KEY }}
+          RICOCHET_SITE_KEY: ${{ secrets.RICOCHET_SECRET_KEY }}
       - run: npm run build
         env:
-          VITE_SOCKET_URL: https://ricochetjs.herokuapp.com/
           VITE_API_ENDPOINT: /api
+          VITE_SOCKET_URL: https://public.jeremiez.net/
+          VITE_SOCKET_PATH: /wamp/socket.io
           VITE_RICOCHET_SITEID: airboardgame
           VITE_USE_PROXY: 0
+          VITE_ENABLE_WEBCONFERENCE: 1
           CYPRESS_INSTALL_BINARY: 0
       - run: |
           cat <<EOF > ./dist/_redirects
