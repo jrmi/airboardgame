@@ -27,7 +27,6 @@ const EditItemButton = ({ showEdit, setShowEdit }) => {
   const onSubmitHandler = React.useCallback(
     (formValues) => {
       batchUpdateItems(selectedItems, (item) => {
-        console.log(JSON.parse(JSON.stringify(item)), formValues);
         if (formValues.item) {
           // Merge subitem for generator
           return {
