@@ -38,6 +38,13 @@ const checkDeprecatedVars = () => {
 
 checkDeprecatedVars();
 
+if (!siteId) {
+  console.log(
+    "ERR! You must define a VITE_RICOCHET_SITEID environment variable."
+  );
+  process.exit(1);
+}
+
 let proxy = {};
 
 if (useProxy) {
