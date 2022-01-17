@@ -141,7 +141,11 @@ cp .env.dist .env
 ```
 
 Customize the `.env` file. Default should be fine if you haven't modified
-server configuration host and port.
+server configuration host, port and Site Id.
+
+⚠️ Make sure you have the same value for `VITE_RICOCHET_SITEID` as the `Site Id` you
+ used to register the site during the *Fill the site creation form* of backend
+ installation.
 
 Then you can start the client:
 
@@ -156,10 +160,24 @@ Now you should have two terminals:
 - first with:
   - the Ricochet.js server. Backend logs can be found here.
   - a `wire.io` server running
-  - and the auto build on change for airboardgame backend files
+  - and the auto build on change for Airboardgame backend files
 - and another with web-frontend server
 
-# (Optionnal) More details on server
+# Troubleshooting
+
+If you have troubles getting everything to work, you can first try to
+launch the check script from the project root directory:
+
+```sh
+npm run check
+```
+
+It should helps you to point out what's wrong with your installation.
+
+If you still can't make it works, join us on [discord](https://discord.gg/EsZGJ5h6UA)
+or through [github](https://github.com/jrmi/airboardgame/discussions).
+
+# (Optional) More details on server
 
 When you start the backend part of Airboardgame, you need to start 3 commands.
 You can start all by using the `npm run all` command but sometimes you may want
@@ -226,8 +244,8 @@ Section in progress...
 
 To deploy an instance in production you need to deploy the same stack as in dev.
 
-- You need a Ricochet.js instance.
-- You need a Wire.io instance.
+- You need a Ricochet.js server.
+- You need a Wire.io server.
 - Build the backend `ricochet.json` file.
 - Build the frontend and deploy it to a CDN.
 
