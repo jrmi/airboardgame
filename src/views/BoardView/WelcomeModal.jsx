@@ -8,6 +8,8 @@ import Modal from "../../ui/Modal";
 
 import useSession from "../../hooks/useSession";
 
+import GameInformation from "./GameInformation";
+
 const StyledUrl = styled.div`
   background-color: var(--color-midGrey);
   padding: 0.5em;
@@ -32,19 +34,11 @@ const StyledUrl = styled.div`
 const WelcomeModal = ({ show, setShow, welcome = true }) => {
   const { t } = useTranslation();
   const currentUrl = window.location.href;
-  const inputRef = React.useRef();
 
-  const { sessionId: room } = useSession();
-
-  const handleCopy = () => {
-    inputRef.current.style.display = "block";
-    inputRef.current.select();
-    document.execCommand("copy");
-    inputRef.current.style.display = "none";
+  const handleCopy = async () => {
+    await navigator.clipboard.writeText(window.location.href);
     toast.info(t("Url copied to clipboard!"), { autoClose: 1000 });
   };
-
-  const meetUrl = `https://meet.jit.si/airboardgame__${room}`;
 
   return (
     <Modal
@@ -65,31 +59,25 @@ const WelcomeModal = ({ show, setShow, welcome = true }) => {
             onClick={handleCopy}
           />
         </StyledUrl>
+        <p>
+          {t(
+            "Share this link with your friends and start playing immediately."
+          )}
+        </p>
 
-        <Trans i18nKey="welcomeTip">
-          <p>
-            Tip: Use an audio conferencing system to talk with other players,
-            like <a href={meetUrl}>Jitsi</a> (free & open-source).
-          </p>
-        </Trans>
+        {welcome && (
+          <button
+            onClick={() => {
+              setShow(false);
+            }}
+            className="button success"
+            style={{ margin: "1em auto" }}
+          >
+            {t("I want to play...")}
+          </button>
+        )}
       </section>
-      {welcome && (
-        <button
-          onClick={() => {
-            setShow(false);
-          }}
-          className="button success"
-          style={{ margin: "1em auto" }}
-        >
-          {t("I want to play...")}
-        </button>
-      )}
-      <input
-        value={currentUrl}
-        readOnly
-        ref={inputRef}
-        style={{ display: "none" }}
-      />
+      {welcome && <GameInformation />}
     </Modal>
   );
 };

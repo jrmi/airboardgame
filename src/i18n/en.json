@@ -218,7 +218,6 @@
   "items": "One item",
   "items_plural": "{{count}} items",
   "moreInformation": "<0>For more information, visit <2>github repository</2>.</0>",
-  "welcomeTip": "<0>Tip: Use an audio conferencing system to talk with other players, like <1>Jitsi</1> (free & open-source).</0>",
   "{{count}} player": "{{count}} player",
   "{{count}} player_plural": "{{count}} players",
   "{{min}} - {{max}} players": "{{min}} - {{max}} players",
@@ -260,5 +259,6 @@
   "Generated item": "Generated item",
   "Item type": "Generated item type",
   "No item type defined": "No item type defined",
-  "Generator": "Generator"
+  "Generator": "Generator",
+  "Share this link with your friends and start playing immediately.": "Share this link with your friends and start playing immediately."
 }
