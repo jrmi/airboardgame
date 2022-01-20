@@ -1,9 +1,10 @@
 import React from "react";
 
-import Stream from "./Stream";
+import UserStream from "./UserStream";
 
 const LocalStream = ({
   stream,
+  user,
   publish = true,
   audio = true,
   video = true,
@@ -46,7 +47,16 @@ const LocalStream = ({
     return null;
   }
 
-  return <Stream stream={stream} />;
+  return (
+    <UserStream
+      stream={stream}
+      self={true}
+      name={user.name}
+      color={user.color}
+      audio={audio}
+      video={video}
+    />
+  );
 };
 
 export default LocalStream;

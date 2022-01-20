@@ -3,7 +3,6 @@ import React from "react";
 import styled from "styled-components";
 import { useTranslation } from "react-i18next";
 
-import { ENABLE_WEBCONFERENCE } from "../../utils/settings";
 import useLocalStorage from "../../hooks/useLocalStorage";
 import { useWire } from "react-sync-board";
 
@@ -121,7 +120,6 @@ const RoomNavBar = () => {
   const { t } = useTranslation();
   const { room } = useWire("room");
   const [showLink, setShowLink] = React.useState(false);
-  const [isBeta] = useLocalStorage("isBeta", false);
 
   return (
     <StyledNavBar>
@@ -144,7 +142,7 @@ const RoomNavBar = () => {
             title={t("Invite more player")}
           />
         }
-        {ENABLE_WEBCONFERENCE && isBeta && <WebConferenceButton room={room} />}
+        <WebConferenceButton room={room} />
       </div>
     </StyledNavBar>
   );
