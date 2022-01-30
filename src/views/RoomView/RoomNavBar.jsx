@@ -2,15 +2,16 @@ import React from "react";
 
 import styled from "styled-components";
 import { useTranslation } from "react-i18next";
-
-import useLocalStorage from "../../hooks/useLocalStorage";
 import { useWire } from "react-sync-board";
 
 import Touch from "../../ui/Touch";
 import UserList from "../../users/UserList";
 import WebConferenceButton from "../../webconf/WebConferenceButton";
+import InviteModal from "./InviteModal";
 
 import Brand from "../Brand";
+import WelcomeModal from "../BoardView/WelcomeModal";
+import { useLocation } from "react-router";
 
 const StyledNavBar = styled.div.attrs(() => ({ className: "nav" }))`
   position: fixed;
@@ -119,7 +120,8 @@ const StyledNavBar = styled.div.attrs(() => ({ className: "nav" }))`
 const RoomNavBar = () => {
   const { t } = useTranslation();
   const { room } = useWire("room");
-  const [showLink, setShowLink] = React.useState(false);
+  const { state: { showInvite: initialShowInvite } = {} } = useLocation();
+  const [showInvite, setShowInvite] = React.useState(initialShowInvite);
 
   return (
     <StyledNavBar>
@@ -128,7 +130,7 @@ const RoomNavBar = () => {
       </div>
 
       <div className="nav-center">
-        <h3>Air Board Game</h3>
+        <h3>{t("Choose your board")}</h3>
       </div>
 
       <div className="nav-right">
@@ -136,7 +138,7 @@ const RoomNavBar = () => {
         {
           <Touch
             onClick={() => {
-              setShowLink(true);
+              setShowInvite(true);
             }}
             icon="add-user"
             title={t("Invite more player")}
@@ -144,6 +146,7 @@ const RoomNavBar = () => {
         }
         <WebConferenceButton room={room} />
       </div>
+      <InviteModal show={showInvite} setShow={setShowInvite} />
     </StyledNavBar>
   );
 };

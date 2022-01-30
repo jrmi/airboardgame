@@ -260,5 +260,9 @@
   "Item type": "Type de l'élément généré",
   "No item type defined": "Aucun type sélectionné",
   "Generator": "Générateur",
-  "Share this link with your friends and start playing immediately.": "Partagez ce lien avec vos amis et commencez à jouer."
+  "Share this link with your friends and start playing immediately.": "Partagez ce lien avec vos amis et commencez à jouer.",
+  "Or": "Ou",
+  "start a multi room session": "jouer sur plusieurs tables",
+  "Let's go...": "C'est parti…",
+  "Choose your board": "Choisissez une table"
 }

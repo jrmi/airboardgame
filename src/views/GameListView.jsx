@@ -2,6 +2,7 @@ import React from "react";
 import { useTranslation, Trans } from "react-i18next";
 import styled from "styled-components";
 import { useQuery } from "react-query";
+import { NavLink } from "react-router-dom";
 
 import SliderRange from "../ui/SliderRange";
 import Spinner from "../ui/Spinner";
@@ -74,8 +75,15 @@ const Filter = styled.div`
     width: 100%;
     font-size: 3.5vw;
     padding: 0.5em;
+    padding-bottom: 0;
     margin: 0;
+    line-height: 1em;
   }
+
+  & .subincentive {
+    font-size: 1.3em;
+  }
+
   @media screen and (max-width: 1024px) {
     & .incentive {
       font-size: 32px;
@@ -271,6 +279,10 @@ const GameListView = () => {
       <Content>
         <Filter>
           <h2 className="incentive">{t("Start a game now")}</h2>
+          <h3 className="subincentive">
+            {t("Or")}{" "}
+            <NavLink to={"/room/"}>{t("start a multi room session")}</NavLink>
+          </h3>
           <input
             type="search"
             id="game-search"
