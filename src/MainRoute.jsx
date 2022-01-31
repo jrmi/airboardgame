@@ -33,7 +33,14 @@ const MainRoute = () => {
           },
         }) => {
           // Redirect to new session id
-          return <Redirect to={`/session/${uid()}/?fromGame=${gameId}`} />;
+          return (
+            <Redirect
+              to={{
+                pathName: `/session/${uid()}/`,
+                state: { fromGame: gameId },
+              }}
+            />
+          );
         }}
       </Route>
       {/* for compat with old url scheme */}
@@ -43,7 +50,14 @@ const MainRoute = () => {
             params: { gameId, sessionId },
           },
         }) => {
-          return <Redirect to={`/session/${sessionId}/?fromGame=${gameId}`} />;
+          return (
+            <Redirect
+              to={{
+                pathName: `/session/${sessionId}`,
+                state: { fromGame: gameId },
+              }}
+            />
+          );
         }}
       </Route>
       {/* Start a new session from this game */}
@@ -58,7 +72,9 @@ const MainRoute = () => {
             <Redirect
               to={{
                 pathname: `/session/${uid()}/`,
-                search: `?fromGame=${gameId}`,
+                state: {
+                  fromGame: gameId,
+                },
               }}
             />
           );
@@ -66,14 +82,11 @@ const MainRoute = () => {
       </Route>
       <Route path="/session/:sessionId">
         {({
-          location: { search },
           match: {
             params: { sessionId },
           },
+          location: { state: { fromGame } = {} } = {},
         }) => {
-          const params = new URLSearchParams(search);
-          const fromGame = params.get("fromGame");
-
           // Redirect to new session id
           return (
             <WithSocketIO>
@@ -102,18 +115,34 @@ const MainRoute = () => {
           match: {
             params: { roomId },
           },
+          location: { state: { showInvite = false } = {} } = {},
         }) => (
           <WithSocketIO>
-            <RoomView roomId={roomId} />
+            <RoomView roomId={roomId} showInvite={showInvite} />
           </WithSocketIO>
         )}
+      </Route>
+      <Route path="/room/" exact>
+        {() => {
+          // Redirect to new room
+          return (
+            <Redirect
+              to={{
+                pathname: `/room/${uid()}/`,
+                state: { showInvite: true },
+              }}
+            />
+          );
+        }}
       </Route>
       {/* Auth rout */}
       <Route exact path="/login/:userHash/:token">
         <AuthView />
       </Route>
       {/* Default route */}
-      <Redirect from="/" to="/games/" exact />
+      <Route path="/" exact>
+        <Redirect to="/games/" />
+      </Route>
       <Route path="/">
         <Home />
       </Route>

@@ -246,8 +246,13 @@ To deploy an instance in production you need to deploy the same stack as in dev.
 
 - You need a Ricochet.js server.
 - You need a Wire.io server.
-- Build the backend `ricochet.json` file.
-- Build the frontend and deploy it to a CDN.
+- Build the backend `ricochet.json` file. (it will be included automatically with the frontend)
+- Build the frontend and deploy it to a CDN or with any static file server (Apache, Nginx, ...).
+
+**Advice**
+
+- You need to redirect all frontend requests to the `index.html` page as it's a
+  single page app.
 
 # Contributing guide
 

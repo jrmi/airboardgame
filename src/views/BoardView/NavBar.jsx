@@ -132,7 +132,7 @@ const StyledNavBar = styled.div.attrs(() => ({ className: "nav" }))`
   }
 `;
 
-const NavBar = ({ editMode }) => {
+const NavBar = ({ editMode, title }) => {
   const { t, i18n } = useTranslation();
   const { sessionId: room } = useSession();
   const [boardConfig] = useBoardConfig();
@@ -147,7 +147,6 @@ const NavBar = ({ editMode }) => {
   const [showChangeGameModal, setShowChangeGameModal] = React.useState(false);
   const [showInfoModal, setShowInfoModal] = React.useState(false);
   const [showLink, setShowLink] = React.useState(false);
-  const [isBeta] = useLocalStorage("isBeta", false);
 
   const translation = React.useMemo(
     () => getBestTranslationFromConfig(boardConfig, i18n.languages),
@@ -232,7 +231,9 @@ const NavBar = ({ editMode }) => {
         </div>
 
         <div className="nav-center">
-          <h3>{translation.name ? translation.name : "Air Board Game"}</h3>
+          <h3>
+            {translation.name ? translation.name : title || "Air Board Game"}
+          </h3>
         </div>
 
         <div className="nav-right">

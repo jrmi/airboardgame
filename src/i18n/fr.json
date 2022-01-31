@@ -218,7 +218,6 @@
   "items": "Un élément",
   "items_plural": "{{count}} éléments",
   "moreInformation": "<0>Pour plus d'informations, visitez le <2>dépôt github</2>.</0>",
-  "welcomeTip": "<0>Astuce: Utilisez un système de conférence audio pour parler avec vos amis, comme <1>Jitsi</1> (libre & gratuit).</0>",
   "{{count}} player": "{{count}} joueur",
   "{{count}} player_plural": "{{count}} joueurs",
   "{{min}} - {{max}} players": "{{min}} - {{max}} joueurs",
@@ -260,5 +259,10 @@
   "Generated item": "Élément généré",
   "Item type": "Type de l'élément généré",
   "No item type defined": "Aucun type sélectionné",
-  "Generator": "Générateur"
+  "Generator": "Générateur",
+  "Share this link with your friends and start playing immediately.": "Partagez ce lien avec vos amis et commencez à jouer.",
+  "Or": "Ou",
+  "start a multi room session": "jouer sur plusieurs tables",
+  "Let's go...": "C'est parti…",
+  "Choose your board": "Choisissez une table"
 }

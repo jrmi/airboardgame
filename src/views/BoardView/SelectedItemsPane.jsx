@@ -87,14 +87,16 @@ const SelectedItemsPane = ({ hideMenu = false }) => {
 
   const parsedAvailableActions = React.useMemo(
     () =>
-      availableActions.map(({ name, args }) => {
-        const action = { ...actionMap[name] };
-        action.action = action.action(args);
-        action.label = action.label(args);
-        action.uid = smallUid();
-        return action;
-      }),
-    [actionMap, availableActions]
+      availableActions
+        .map(({ name, args }) => {
+          const action = { ...actionMap[name] };
+          action.action = action.action(args);
+          action.label = action.label(args);
+          action.uid = smallUid();
+          return action;
+        })
+        .filter(({ multiple }) => !multiple || selectedItems.length > 1),
+    [actionMap, availableActions, selectedItems]
   );
 
   const showEditButton =
@@ -171,16 +173,7 @@ const SelectedItemsPane = ({ hideMenu = false }) => {
       )}
       {!boardState.selecting &&
         parsedAvailableActions.map(
-          ({
-            label,
-            action,
-            multiple,
-            edit: onlyEdit,
-            shortcut,
-            icon,
-            uid,
-          }) => {
-            if (multiple && selectedItems.length < 2) return null;
+          ({ label, action, edit: onlyEdit, shortcut, icon, uid }) => {
             if (onlyEdit && !showEdit) return null;
             return (
               <button

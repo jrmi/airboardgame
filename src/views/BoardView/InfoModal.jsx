@@ -1,12 +1,10 @@
 import React from "react";
 import { useTranslation, Trans } from "react-i18next";
-import useAsyncEffect from "use-async-effect";
 import styled from "styled-components";
-import { useBoardConfig } from "react-sync-board";
 
 import Modal from "../../ui/Modal";
 
-import { getBestTranslationFromConfig } from "../../utils/api";
+import GameInformation from "./GameInformation";
 
 const Kbd = styled.kbd`
   background-color: #eee;
@@ -25,50 +23,11 @@ const Kbd = styled.kbd`
 `;
 
 const InfoModal = ({ show, setShow }) => {
-  const { t, i18n } = useTranslation();
-
-  const [info, setInfo] = React.useState("");
-
-  const [boardConfig] = useBoardConfig();
-
-  const translation = React.useMemo(
-    () => getBestTranslationFromConfig(boardConfig, i18n.languages),
-    [boardConfig, i18n.languages]
-  );
-
-  useAsyncEffect(
-    async (isMounted) => {
-      const marked = (await import("marked")).default;
-      if (!isMounted()) return;
-
-      const renderer = new marked.Renderer();
-      renderer.link = (href, title, text) => {
-        return `<a target="_blank" rel="noopener" href="${href}" title="${title}">${text}</a>`;
-      };
-      setInfo(
-        marked(translation.description || "", {
-          renderer: renderer,
-        })
-      );
-    },
-    [setInfo, translation.description]
-  );
+  const { t } = useTranslation();
 
   return (
     <Modal title={t("Help & info")} setShow={setShow} show={show}>
-      <header>
-        <h3>{t("Game information")}</h3>
-      </header>
-      <section>
-        {translation.description && (
-          <div
-            dangerouslySetInnerHTML={{
-              __html: info,
-            }}
-          ></div>
-        )}
-        {!translation.description && <div>{t("No information")}</div>}
-      </section>
+      <GameInformation />
       <header>
         <h3>{t("Board interactions")}</h3>
       </header>

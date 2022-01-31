@@ -50,7 +50,6 @@ const Brand = () => (
     <h1 className="short">
       <Link to="/">ABG</Link>
     </h1>
-    <span>Beta</span>
   </StyledBrand>
 );
 

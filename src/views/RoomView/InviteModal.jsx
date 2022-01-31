@@ -5,8 +5,6 @@ import { toast } from "react-toastify";
 
 import Modal from "../../ui/Modal";
 
-import GameInformation from "./GameInformation";
-
 const StyledUrl = styled.div`
   background-color: var(--color-midGrey);
   padding: 0.5em;
@@ -28,7 +26,7 @@ const StyledUrl = styled.div`
   }
 `;
 
-const WelcomeModal = ({ show, setShow, welcome = true }) => {
+const InviteModal = ({ show, setShow, welcome = true }) => {
   const { t } = useTranslation();
   const currentUrl = window.location.href;
 
@@ -61,7 +59,6 @@ const WelcomeModal = ({ show, setShow, welcome = true }) => {
             "Share this link with your friends and start playing immediately."
           )}
         </p>
-
         {welcome && (
           <button
             onClick={() => {
@@ -70,13 +67,12 @@ const WelcomeModal = ({ show, setShow, welcome = true }) => {
             className="button success"
             style={{ margin: "1em auto" }}
           >
-            {t("I want to play...")}
+            {t("Let's go...")}
           </button>
         )}
       </section>
-      {welcome && <GameInformation />}
     </Modal>
   );
 };
 
-export default WelcomeModal;
+export default InviteModal;
