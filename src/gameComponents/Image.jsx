@@ -79,7 +79,7 @@ const Image = ({
 }) => {
   const { currentUser, localUsers: users } = useUsers();
 
-  const imageContent = media2Url(content);
+  const imageContent = media2Url(content) || "/default.png";
   const backContent = media2Url(rawBackContent);
   const overlayContent = media2Url(overlay?.content);
 

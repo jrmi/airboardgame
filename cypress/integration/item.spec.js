@@ -15,7 +15,7 @@ describe("Item interactions", () => {
     cy.get(".board-pane", { timeout: 10000 }).should(
       "have.css",
       "transform",
-      "matrix(0.48, 0, 0, 0.48, 260, 60)"
+      "matrix(0.48, 0, 0, 0.48, -11693.9, -11917.9)"
     );
     cy.get(".item")
       .first()
@@ -111,13 +111,11 @@ describe("Item interactions", () => {
 
   it("should hide menu", () => {
     // Select card
-    cy.get("img[src='/game_assets/JC.jpg']")
-      .parents(".item")
-      .click(500, 500, { force: true });
+    cy.get("img[src='/game_assets/JC.jpg']").click(500, 500, { force: true });
 
     cy.get("img[alt='Edit']").should("exist");
 
-    cy.get("img[alt='Hide menu']").click();
+    cy.get("img[alt='Hide menu']").click({ scrollBehavior: false });
 
     cy.get("img[alt='Edit']").should("not.exist");
   });

@@ -36,7 +36,7 @@ const MainRoute = () => {
           return (
             <Redirect
               to={{
-                pathName: `/session/${uid()}/`,
+                pathname: `/session/${uid()}/`,
                 state: { fromGame: gameId },
               }}
             />
@@ -53,7 +53,7 @@ const MainRoute = () => {
           return (
             <Redirect
               to={{
-                pathName: `/session/${sessionId}`,
+                pathname: `/session/${sessionId}/`,
                 state: { fromGame: gameId },
               }}
             />
@@ -115,10 +115,9 @@ const MainRoute = () => {
           match: {
             params: { roomId },
           },
-          location: { state: { showInvite = false } = {} } = {},
         }) => (
           <WithSocketIO>
-            <RoomView roomId={roomId} showInvite={showInvite} />
+            <RoomView roomId={roomId} />
           </WithSocketIO>
         )}
       </Route>

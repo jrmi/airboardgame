@@ -4,7 +4,12 @@ import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 import { useItemActions, useUsers, useSelectedItems } from "react-sync-board";
 
-import { shuffle as shuffleArray, randInt, uid } from "../utils";
+import {
+  shuffle as shuffleArray,
+  randInt,
+  uid,
+  getItemElement,
+} from "../utils";
 
 import RotateActionForm from "./forms/RotateActionForm";
 import RandomlyRotateActionForm from "./forms/RandomlyRotateActionForm";
@@ -102,16 +107,12 @@ export const useGameItemActions = () => {
       minMax.min.x = Math.min(...items.map(({ x }) => x));
       minMax.min.y = Math.min(...items.map(({ y }) => y));
       minMax.max.x = Math.max(
-        ...items.map(({ x, id }) => x + document.getElementById(id).clientWidth)
+        ...items.map(({ x, id }) => x + getItemElement(id).clientWidth)
       );
       minMax.max.y = Math.max(
-        ...items.map(
-          ({ y, id }) => y + document.getElementById(id).clientHeight
-        )
+        ...items.map(({ y, id }) => y + getItemElement(id).clientHeight)
       );
-      const { clientWidth, clientHeight } = document.getElementById(
-        items[0].id
-      );
+      const { clientWidth, clientHeight } = getItemElement(items[0].id);
       let newX =
         minMax.min.x + (minMax.max.x - minMax.min.x) / 2 - clientWidth / 2;
       let newY =
@@ -174,7 +175,7 @@ export const useGameItemActions = () => {
       let { x: newX, y: newY } = items[0];
 
       batchUpdateItems(ids, (item) => {
-        const { clientWidth } = document.getElementById(item.id);
+        const { clientWidth } = getItemElement(item.id);
         const newItem = {
           ...item,
           x: newX,
@@ -202,7 +203,7 @@ export const useGameItemActions = () => {
       let currentColumn = 1;
 
       batchUpdateItems(ids, (item) => {
-        const { clientWidth, clientHeight } = document.getElementById(item.id);
+        const { clientWidth, clientHeight } = getItemElement(item.id);
         const newItem = {
           ...item,
           x: newX,
@@ -226,7 +227,7 @@ export const useGameItemActions = () => {
       const [ids] = await getItemListOrSelected(itemIds);
 
       ids.forEach((itemId) => {
-        const elem = document.getElementById(itemId);
+        const elem = getItemElement(itemId);
         elem.firstChild.className = "hvr-wobble-horizontal";
       });
       const shuffledItems = shuffleArray([...ids]);

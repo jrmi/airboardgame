@@ -14,7 +14,7 @@ describe("Board interactions", () => {
     cy.get(".board-pane", { timeout: 10000 }).should(
       "have.css",
       "transform",
-      "matrix(0.48, 0, 0, 0.48, 260, 60)"
+      "matrix(0.48, 0, 0, 0.48, -11693.9, -11917.9)"
     );
     cy.get(".item")
       .first()
@@ -52,7 +52,7 @@ describe("Board interactions", () => {
     cy.get(".board-pane").should(
       "have.css",
       "transform",
-      "matrix(0.48, 0, 0, 0.48, 360, 160)"
+      "matrix(0.48, 0, 0, 0.48, -11593.9, -11817.9)"
     );
   });
 
@@ -81,12 +81,14 @@ describe("Board interactions", () => {
     cy.get(".board-pane").should(
       "have.css",
       "transform",
-      "matrix(0.48, 0, 0, 0.48, 360, 160)"
+      "matrix(0.48, 0, 0, 0.48, -11593.9, -11817.9)"
     );
   });
 
   it("Pan board with left click when is main action", () => {
-    cy.get("[title^='Switch to move mode']").click();
+    cy.get("[title^='Switch to move mode']").click({
+      scrollBehavior: false,
+    });
 
     cy.get(".board")
       .trigger("pointerdown", {
@@ -96,6 +98,8 @@ describe("Board interactions", () => {
         clientX: 150,
         clientY: 200,
         pointerId: 1,
+        force: true,
+        scrollBehavior: false,
       })
       .trigger("pointermove", {
         button: 0,
@@ -105,16 +109,18 @@ describe("Board interactions", () => {
         clientY: 400,
         pointerId: 1,
         force: true,
+        scrollBehavior: false,
       })
       .trigger("pointerup", {
         force: true,
         pointerId: 1,
         isPrimary: true,
+        scrollBehavior: false,
       });
     cy.get(".board-pane").should(
       "have.css",
       "transform",
-      "matrix(0.48, 0, 0, 0.48, 260, 60)"
+      "matrix(0.48, 0, 0, 0.48, -11443.9, -11717.9)"
     );
   });
 });

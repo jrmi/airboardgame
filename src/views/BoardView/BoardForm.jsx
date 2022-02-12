@@ -7,7 +7,10 @@ import { useBoardConfig } from "react-sync-board";
 import Hint from "../../ui/formUtils/Hint";
 import Label from "../../ui/formUtils/Label";
 import SliderRange from "../../ui/SliderRange";
+
 import { ImageField } from "../../mediaLibrary";
+
+import { backgrounds } from "../../gameComponents";
 
 const BoardConfigForm = () => {
   const { t } = useTranslation();
@@ -30,6 +33,10 @@ const BoardConfigForm = () => {
     }));
   };
 
+  const CurrentBgForm = backgrounds.find(
+    ({ type }) => type === (boardConfig.bgType || "default")
+  )?.form;
+
   return (
     <>
       <Label>
@@ -42,6 +49,33 @@ const BoardConfigForm = () => {
         />
         <Hint>{t("Check it to make your board publicly visible")}</Hint>
       </Label>
+      <fieldset style={{ marginBottom: "2em", paddingBottom: "1em" }}>
+        <legend>{t("Background")}</legend>
+
+        <Label>{t("Type")}</Label>
+        <Field
+          name="bgType"
+          component="select"
+          initialValue={boardConfig.bgType || "default"}
+        >
+          {backgrounds.map((bg) => {
+            return (
+              <option key={bg.type} value={bg.type}>
+                {bg.name}
+              </option>
+            );
+          })}
+        </Field>
+        <div style={{ paddingTop: "1em" }}>
+          {CurrentBgForm && (
+            <Field name="bgConf" initialValue={boardConfig.bgConf}>
+              {({ input: { onChange, value } }) => {
+                return <CurrentBgForm value={value} onChange={onChange} />;
+              }}
+            </Field>
+          )}
+        </div>
+      </fieldset>
       <Label>
         {t("Number of players")}
         <Field
@@ -96,15 +130,6 @@ const BoardConfigForm = () => {
         />
       </Label>
       <Label>
-        {t("Board size")}
-        <Field
-          name="size"
-          component="input"
-          initialValue={boardConfig.size}
-          style={{ width: "5em", textAlign: "right" }}
-        />
-      </Label>
-      <Label>
         {t("Magnetic Grid size")}
         <Field
           name="gridSize"
@@ -114,7 +139,7 @@ const BoardConfigForm = () => {
         />
       </Label>
       <Label>
-        {t("Image")}
+        {t("Main image")}
         <Field name="imageUrl" initialValue={boardConfig.imageUrl}>
           {({ input: { value, onChange } }) => {
             return <ImageField value={value} onChange={onChange} />;

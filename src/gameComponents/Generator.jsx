@@ -2,7 +2,7 @@ import React, { memo } from "react";
 import styled, { css } from "styled-components";
 import { useItemActions, useItemInteraction, useWire } from "react-sync-board";
 
-import { uid } from "../utils";
+import { uid, getItemElement } from "../utils";
 import itemTemplates from "./itemTemplates";
 import { useTranslation } from "react-i18next";
 import debounce from "lodash.debounce";
@@ -158,7 +158,7 @@ const Generator = ({ color = "#ccc", item, id, currentItemId, setState }) => {
 
       if (currentItemRef.current) {
         // Get size from current item if any
-        const currentDomItem = document.getElementById(currentItemRef.current);
+        const currentDomItem = getItemElement(currentItemRef.current);
         if (currentDomItem) {
           targetWidth = currentDomItem.clientWidth;
           targetHeight = currentDomItem.clientHeight;

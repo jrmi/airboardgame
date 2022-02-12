@@ -39,7 +39,7 @@ export const SubscribeSessionEvents = ({ getSession, setSession }) => {
     return () => {
       unsub.forEach((u) => u());
     };
-  }, [wire, setBoardConfig, setSession]);
+  }, [wire, setSession]);
 
   return null;
 };

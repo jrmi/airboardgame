@@ -64,3 +64,11 @@ export const uid = customAlphabet(alpha, 10);
 
 // Custom small uid generator
 export const smallUid = customAlphabet(alpha, 5);
+
+export const getItemElement = (id) => {
+  const elem = document.getElementsByClassName(`item ${id}`)[0];
+  if (!elem) {
+    console.warn(`Missing element for id ${id}`);
+  }
+  return elem;
+};
