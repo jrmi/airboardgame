@@ -165,9 +165,6 @@ textarea[type="text"] {
 .hvr-curl-top-right {
   display: inline-block;
   vertical-align: middle;
-  -webkit-transform: perspective(1px) translateZ(0);
-  transform: perspective(1px) translateZ(0);
-  box-shadow: 0 0 1px rgba(0, 0, 0, 0);
   position: relative;
 }
 .hvr-curl-top-right:before {
@@ -187,16 +184,8 @@ textarea[type="text"] {
     white 80%
   );
   box-shadow: -1px 1px 1px rgba(0, 0, 0, 0.4);
-  -webkit-transition-duration: 0.3s;
-  transition-duration: 0.3s;
-  -webkit-transition-property: width, height;
-  transition-property: width, height;
   z-index: 5;
   opacity: 0.5;
-}
-.hvr-curl-top-right:hover:before,
-.hvr-curl-top-right:focus:before,
-.hvr-curl-top-right:active:before {
   width: 7px;
   height: 7px;
 }

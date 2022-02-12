@@ -39,20 +39,14 @@ const Label = styled.div`
   line-height: 1.5em;
 `;
 
-const Wrapper = styled.div.attrs(({ flippable }) => ({
-  className: flippable ? "hvr-curl-top-right" : "",
-}))`
+const Wrapper = styled.div`
   user-select: none;
   position: relative;
   line-height: 0em;
-  //filter: drop-shadow(2px 2px 3px #2225);
 `;
 
 const FrontImage = styled.img`
-  transition: transform 200ms, opacity 200ms;
-  transform: rotateY(${({ visible }) => (visible ? 0 : 180)}deg);
-  -webkit-backface-visibility: hidden;
-  backface-visibility: hidden;
+  transition: opacity 300ms;
   pointer-events: none;
   opacity: ${({ visible }) => (visible ? 1 : 0)};
 `;
@@ -115,13 +109,23 @@ const Image = ({
   const flippable = Boolean(backContent);
 
   return (
-    <Wrapper flippable={flippable}>
+    <Wrapper
+      onMouseEnter={(e) => {
+        flippable && e.target.classList.add("hvr-curl-top-right");
+        e.target.classList.add("hovered");
+      }}
+      onMouseLeave={(e) => {
+        flippable && e.target.classList.remove("hvr-curl-top-right");
+        e.target.classList.remove("hovered");
+      }}
+    >
       <UnflippedFor>
         {unflippedForUsers &&
           unflippedForUsers.map(({ color, id }) => {
             return <UnflippedForUser key={id} src={eye} color={color} />;
           })}
       </UnflippedFor>
+
       <FrontImage
         visible={!flippedForMe}
         src={imageContent}
@@ -129,6 +133,7 @@ const Image = ({
         draggable={false}
         {...size}
       />
+
       <BackImage
         visible={flippedForMe}
         src={backContent}
@@ -136,6 +141,7 @@ const Image = ({
         draggable={false}
         {...size}
       />
+
       {overlayContent && (
         <OverlayImage src={overlayContent} draggable={false} alt="" {...size} />
       )}
