@@ -10,7 +10,11 @@ export const media2Url = (value) => {
   if (value && typeof value === "object") {
     switch (value.type) {
       case "local":
-        return `${API_BASE}/${value.content}`;
+        if (value.content) {
+          return `${API_BASE}/${value.content}`;
+        } else {
+          return "";
+        }
       case "external":
         return value.content;
       case "dataUrl":

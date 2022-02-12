@@ -19,7 +19,7 @@ const GameInformation = () => {
 
   useAsyncEffect(
     async (isMounted) => {
-      const marked = (await import("marked")).default;
+      const { marked } = await import("marked");
       if (!isMounted()) return;
 
       const renderer = new marked.Renderer();
@@ -27,7 +27,7 @@ const GameInformation = () => {
         return `<a target="_blank" rel="noopener" href="${href}" title="${title}">${text}</a>`;
       };
       setInfo(
-        marked(translation.description || "", {
+        marked.parse(translation.description || "", {
           renderer: renderer,
         })
       );

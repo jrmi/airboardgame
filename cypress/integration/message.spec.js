@@ -14,7 +14,7 @@ describe("Messages interactions", () => {
     cy.get(".board-pane", { timeout: 10000 }).should(
       "have.css",
       "transform",
-      "matrix(0.48, 0, 0, 0.48, 260, 60)"
+      "matrix(0.48, 0, 0, 0.48, -11693.9, -11917.9)"
     );
   });
 

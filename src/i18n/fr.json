@@ -264,5 +264,15 @@
   "Or": "Ou",
   "start a multi room session": "jouer sur plusieurs tables",
   "Let's go...": "C'est parti…",
-  "Choose your board": "Choisissez une table"
+  "Choose your board": "Choisissez une table",
+  "Default": "Par défaut",
+  "Dot": "Points",
+  "Square": "Carrés",
+  "Horizontal Stripe": "Rayures horizontales",
+  "Vertical Stripe": "Rayures verticales",
+  "Crossed stripes": "Rayures croisées",
+  "Custom": "Personnaliser",
+  "Background": "Fond du plateau",
+  "Type": "Type",
+  "Main image": "Image principale"
 }

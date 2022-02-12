@@ -264,5 +264,15 @@
   "Or": "Or",
   "start a multi room session": "start a multi board session",
   "Let's go...": "Let's go...",
-  "Choose your board": "Choose your board"
+  "Choose your board": "Choose your board",
+  "Default": "Default",
+  "Dot": "Dot",
+  "Square": "Square",
+  "Horizontal Stripe": "Horizontal Stripe",
+  "Vertical Stripe": "Vertical Stripe",
+  "Crossed stripes": "Crossed stripes",
+  "Custom": "Custom",
+  "Background": "Background",
+  "Type": "Type",
+  "Main image": "Main image"
 }

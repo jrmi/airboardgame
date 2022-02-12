@@ -14,7 +14,7 @@ describe("Selection action", () => {
     cy.get(".board-pane", { timeout: 10000 }).should(
       "have.css",
       "transform",
-      "matrix(0.48, 0, 0, 0.48, 260, 60)"
+      "matrix(0.48, 0, 0, 0.48, -11693.9, -11917.9)"
     );
     cy.get(".item")
       .first()
@@ -24,45 +24,34 @@ describe("Selection action", () => {
   });
 
   it("should select multiple items with left click ", () => {
+    const posInit = {
+      clientX: 400,
+      clientY: 210,
+    };
     cy.get(".board")
       .trigger("pointerdown", {
-        x: 400,
-        y: 400,
         button: 0,
-        clientX: 400,
-        clientY: 400,
         pointerId: 1,
         isPrimary: true,
+        scrollBehavior: false,
+        force: true,
+        ...posInit,
       })
       .trigger("pointermove", {
-        x: 700,
-        y: 150,
         button: 0,
-        clientX: 700,
-        clientY: 150,
         force: true,
         pointerId: 1,
         isPrimary: true,
+        scrollBehavior: false,
+        clientX: posInit.clientX + 300,
+        clientY: posInit.clientY + 250,
       });
 
-    cy.get(".selector").should(
+    cy.get(".selection").should(
       "have.css",
       "transform",
-      "matrix(1, 0, 0, 1, 291.667, 312.5)"
+      "matrix(1, 0, 0, 1, 498.08, 274.08)"
     );
-
-    cy.get(".board").trigger("pointermove", {
-      x: 601,
-      y: 151,
-      button: 0,
-      clientX: 601,
-      clientY: 151,
-      pointerId: 1,
-      isPrimary: true,
-      force: true,
-    });
-
-    cy.wait(500);
 
     cy.get(".board").trigger("pointerup", {
       isPrimary: true,

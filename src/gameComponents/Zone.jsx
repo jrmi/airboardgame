@@ -3,7 +3,7 @@ import { memo } from "react";
 import styled, { css } from "styled-components";
 import { useItemInteraction } from "react-sync-board";
 
-import { isItemInsideElement } from "..//utils";
+import { isItemInsideElement, getItemElement } from "../utils";
 import useGameItemActions from "./useGameItemActions";
 
 const ZoneWrapper = styled.div`
@@ -39,7 +39,7 @@ const Zone = ({ width, height, label, onItem }) => {
   const onInsideItem = React.useCallback(
     (itemIds) => {
       const insideItems = itemIds.filter((itemId) =>
-        isItemInsideElement(document.getElementById(itemId), zoneRef.current)
+        isItemInsideElement(getItemElement(itemId), zoneRef.current)
       );
       if (!insideItems.length) return;
 
