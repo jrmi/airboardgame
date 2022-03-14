@@ -5,6 +5,8 @@
   "dependencies": {
     "@color2k/compat": "^1.0.0-rc.5",
     "@scripters/use-socket.io": "git+https://github.com/jrmi/use-socket.io.git#updated",
+    "@sentry/react": "^6.18.2",
+    "@sentry/tracing": "^6.18.2",
     "chota": "^0.8.0",
     "color2k": "^1.0.0-rc.5",
     "dayjs": "^1.10.4",
