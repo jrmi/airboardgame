@@ -33,6 +33,8 @@ jobs:
           VITE_RICOCHET_SITEID: airboardgame
           VITE_USE_PROXY: 0
           VITE_WEBCONFERENCE: audio
+          VITE_SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+          VITE_ENVIRONMENT: production
           CYPRESS_INSTALL_BINARY: 0
       - run: |
           cat <<EOF > ./dist/_redirects
