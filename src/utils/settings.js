@@ -40,3 +40,7 @@ export const WEBCONFERENCE = ["audio", "video"].includes(
 )
   ? import.meta.env.VITE_WEBCONFERENCE
   : false;
+
+export const SENTRY_DSN = import.meta.env.VITE_SENTRY_DSN;
+export const SENTRY_ENVIRONMENT =
+  import.meta.env.VITE_SENTRY_ENVIRONMENT || "Unknown";
