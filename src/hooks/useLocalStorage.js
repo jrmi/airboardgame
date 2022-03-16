@@ -3,8 +3,8 @@ import { atomFamily, useRecoilState } from "recoil";
 
 const getFromLocalStorage = (key) => {
   const item = window.localStorage.getItem(key);
-  if (item === undefined) {
-    return undefined;
+  if (item === null) {
+    return null;
   }
   return JSON.parse(item);
 };
@@ -25,7 +25,7 @@ const useLocalStorage = (key, initialValue) => {
         // Get from local storage by key
         const item = window.localStorage.getItem(key);
 
-        if (item === undefined) {
+        if (item === null) {
           // If missing we add it
           window.localStorage.setItem(key, JSON.stringify(initialValue));
           setStoredValue([true, initialValue]);
@@ -44,21 +44,21 @@ const useLocalStorage = (key, initialValue) => {
   const setValue = React.useCallback(
     (value) => {
       try {
-        // Allow value to be a function so we have same API as useState
-        const valueToStore =
-          value instanceof Function ? value(storedValue) : value;
-
         // Save state
-        setStoredValue([true, valueToStore]);
+        setStoredValue(([, prev]) => {
+          // Allow value to be a function so we have same API as useState
+          const valueToStore = value instanceof Function ? value(prev) : value;
 
-        // Save to local storage
-        window.localStorage.setItem(key, JSON.stringify(valueToStore));
+          // Save to local storage
+          window.localStorage.setItem(key, JSON.stringify(valueToStore));
+          return [true, valueToStore];
+        });
       } catch (error) {
         // A more advanced implementation would handle the error case
         console.log(error);
       }
     },
-    [key, setStoredValue, storedValue]
+    [key, setStoredValue]
   );
 
   // React on other tab modifications
@@ -74,7 +74,7 @@ const useLocalStorage = (key, initialValue) => {
     };
   }, [key, setStoredValue]);
 
-  return [storedValue === undefined ? initialValue : storedValue, setValue];
+  return [storedValue === null ? initialValue : storedValue, setValue];
 };
 
 export default useLocalStorage;
