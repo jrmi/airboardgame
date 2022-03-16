@@ -11,7 +11,6 @@ import Touch from "../../ui/Touch";
 import WebConferenceButton from "../../webconf/WebConferenceButton";
 
 import { getBestTranslationFromConfig } from "../../utils/api";
-import useLocalStorage from "../../hooks/useLocalStorage";
 
 import InfoModal from "./InfoModal";
 import LoadGameModal from "./LoadGameModal";
@@ -100,7 +99,8 @@ const StyledNavBar = styled.div.attrs(() => ({ className: "nav" }))`
       transform: none;
     }
 
-    & .nav-right {
+    /* TODO quick but dirty way to do that, need refactoring */
+    & .hide-mobile {
       display: none;
     }
 
@@ -158,7 +158,7 @@ const NavBar = ({ editMode, title }) => {
     if (match.path === "/session/:sessionId" && history.length > 2) {
       // Go to previous if exists
       // Previous can be home or studio
-      // Yes history should be greater than 2 for any reason...
+      // Yes history should be greater than 2 for some reason...
       history.goBack();
       return;
     }
@@ -204,7 +204,7 @@ const NavBar = ({ editMode, title }) => {
                 style={{ display: "inline" }}
               />
               {isMaster && (
-                <>
+                <div className="hide-mobile">
                   <Touch
                     onClick={() => setShowChangeGameModal((prev) => !prev)}
                     alt={t("Change game")}
@@ -215,7 +215,7 @@ const NavBar = ({ editMode, title }) => {
                     show={showChangeGameModal}
                     setShow={setShowChangeGameModal}
                   />
-                </>
+                </div>
               )}
             </>
           )}
@@ -239,32 +239,42 @@ const NavBar = ({ editMode, title }) => {
         <div className="nav-right">
           {!editMode && (
             <>
-              <UserList />
-              <Touch
-                onClick={() => {
-                  setShowLink(true);
-                }}
-                icon="add-user"
-                title={t("Invite more player")}
-              />
-              <WebConferenceButton room={room} />
+              <div className="hide-mobile">
+                <UserList />
+              </div>
+              <div className="hide-mobile">
+                <Touch
+                  onClick={() => {
+                    setShowLink(true);
+                  }}
+                  icon="add-user"
+                  title={t("Invite more player")}
+                />
+              </div>
+              <div className="hide-mobile">
+                <WebConferenceButton room={room} />
+              </div>
             </>
           )}
           <div className="spacer" />
           {(isMaster || editMode) && (
-            <Touch
-              onClick={() => setShowLoadGameModal((prev) => !prev)}
-              alt={editMode ? t("Load game") : t("Load session")}
-              title={editMode ? t("Load game") : t("Load session")}
-              icon={"upload-to-cloud"}
-            />
+            <div className="hide-mobile">
+              <Touch
+                onClick={() => setShowLoadGameModal((prev) => !prev)}
+                alt={editMode ? t("Load game") : t("Load session")}
+                title={editMode ? t("Load game") : t("Load session")}
+                icon={"upload-to-cloud"}
+              />
+            </div>
           )}
-          <Touch
-            onClick={() => setShowSaveGameModal((prev) => !prev)}
-            alt={t("Save")}
-            title={editMode ? t("Save game") : t("Save session")}
-            icon={editMode ? "save" : "download"}
-          />
+          <div className="hide-mobile">
+            <Touch
+              onClick={() => setShowSaveGameModal((prev) => !prev)}
+              alt={t("Save")}
+              title={editMode ? t("Save game") : t("Save session")}
+              icon={editMode ? "save" : "download"}
+            />
+          </div>
           <div className="spacer" />
           <Touch
             onClick={() => setShowInfoModal((prev) => !prev)}
