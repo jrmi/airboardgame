@@ -6,6 +6,7 @@ import { BoardWrapper, useWire } from "react-sync-board";
 import { itemTemplates, itemLibrary, premadeItems } from "../gameComponents";
 
 import BoardView from "./BoardView";
+import SessionRestoreDim from "./SessionRestoreDim";
 import Waiter from "../ui/Waiter";
 import { uid } from "../utils";
 
@@ -159,6 +160,7 @@ export const Session = () => {
         mediaLibraries={mediaLibraries}
         itemLibraries={itemLibraries}
       />
+      <SessionRestoreDim />
       {isMaster && <AutoSaveSession />}
     </>
   );
