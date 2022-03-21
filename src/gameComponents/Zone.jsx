@@ -2,23 +2,30 @@ import React from "react";
 import { memo } from "react";
 import styled, { css } from "styled-components";
 import { useItemInteraction } from "react-sync-board";
+import { opacify } from "color2k";
 
 import { isItemInsideElement, getItemElement } from "../utils";
 import useGameItemActions from "./useGameItemActions";
 
 const ZoneWrapper = styled.div`
-  ${({ width = 200, height = 200 }) => css`
+  ${({
+    width = 200,
+    height = 200,
+    borderColor = "#cccccc33",
+    borderStyle = "dotted",
+    backgroundColor = "transparent",
+  }) => css`
     width: ${width}px;
     height: ${height}px;
-    border: 0.5em dotted #ccc;
-    opacity: 0.2;
-    border-radius: 1em;
+    border: 0.5em ${borderStyle} ${borderColor};
+    background-color: ${backgroundColor};
+    border-radius: 5px;
     position: relative;
     & > div {
       font-size: 1.5em;
       letter-spacing: -3px;
       user-select: none;
-      background-color: #ccc;
+      background-color: ${opacify(borderColor, 1)};
       position: absolute;
       padding: 1em 0em;
       top: 1em;
@@ -31,7 +38,15 @@ const ZoneWrapper = styled.div`
   `}
 `;
 
-const Zone = ({ width, height, label, onItem }) => {
+const Zone = ({
+  width,
+  height,
+  label,
+  onItem,
+  borderColor,
+  borderStyle,
+  backgroundColor,
+}) => {
   const { register } = useItemInteraction("place");
   const zoneRef = React.useRef(null);
   const { actionMap } = useGameItemActions();
@@ -84,7 +99,14 @@ const Zone = ({ width, height, label, onItem }) => {
   }, [onInsideItem, onItem, register]);
 
   return (
-    <ZoneWrapper width={width} height={height} ref={zoneRef}>
+    <ZoneWrapper
+      width={width}
+      height={height}
+      ref={zoneRef}
+      borderStyle={borderStyle}
+      borderColor={borderColor}
+      backgroundColor={backgroundColor}
+    >
       <div>{label}</div>
     </ZoneWrapper>
   );
