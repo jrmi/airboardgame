@@ -10,6 +10,7 @@ import {
   useSelectionBox,
   useSelectedItems,
   useBoardState,
+  useItemActions,
 } from "react-sync-board";
 import useGameItemActions from "../../gameComponents/useGameItemActions";
 
@@ -73,6 +74,7 @@ const ActionPane = styled.div.attrs(({ top, left, height }) => {
 `;
 
 const SelectedItemsPane = ({ hideMenu = false }) => {
+  const { findElementUnderPointer } = useItemActions();
   const { actionMap } = useGameItemActions();
 
   const { availableActions } = useAvailableActions();
@@ -123,8 +125,10 @@ const SelectedItemsPane = ({ hideMenu = false }) => {
   }, [actionMap, availableActions, parsedAvailableActions, showEdit]);
 
   const onDblClick = React.useCallback(
-    (e) => {
-      const foundElement = insideClass(e.target, "item");
+    async (e) => {
+      const foundElement = await findElementUnderPointer(e, {
+        returnLocked: true,
+      });
 
       // We dblclick outside of an element
       if (!foundElement) return;
@@ -146,7 +150,7 @@ const SelectedItemsPane = ({ hideMenu = false }) => {
         filteredActions[0].action();
       }
     },
-    [parsedAvailableActions, t]
+    [findElementUnderPointer, parsedAvailableActions, t]
   );
 
   React.useEffect(() => {
