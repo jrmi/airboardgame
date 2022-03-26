@@ -274,5 +274,16 @@
   "Custom": "Personnaliser",
   "Background": "Fond du plateau",
   "Type": "Type",
-  "Main image": "Image principale"
+  "Main image": "Image principale",
+  "Background color": "couleur de fond",
+  "Border color": "couleur de bordure",
+  "Border style": "Style de bordure",
+  "Dotted": "Pointillés",
+  "solid": "Trait plein",
+  "Dashed": "Tirets",
+  "Screen": "Écran",
+  "Claim it": "Révéler",
+  "If you claim this screen, everything inside this zone will be hidden from other players.": "Si vous révélez cet écran, tout ce qui sera sous la zone de l'écran sera caché pour les autres joueurs.",
+  "This screen is owned by {{name}}": "Cet écran est révélé par {{name}}",
+  "Release it": "Cacher"
 }

@@ -164,11 +164,16 @@ describe("Studio", () => {
       cy.get(".item").click({ force: true });
       cy.get("button img[alt^='Edit']").click({ force: true });
 
-      cy.get('input[name="locked"]').click();
+      cy.get("input[name='locked']").click();
 
       cy.get(".item").should("have.class", "locked");
 
-      cy.contains("New").click();
+      cy.get(".board").click({
+        scrollBehavior: false,
+        force: true,
+      });
+
+      // cy.contains("New").click();
 
       cy.get(".item").click({ force: true });
 

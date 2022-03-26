@@ -12,6 +12,7 @@ import Dice from "./Dice";
 import DiceImage from "./DiceImage";
 import Note from "./Note";
 import Zone from "./Zone";
+import Screen from "./Screen";
 import Meeple from "./Meeple";
 import Jewel from "./Jewel";
 import Pawn from "./Pawn";
@@ -28,6 +29,7 @@ import DiceFormFields from "./forms/DiceFormFields";
 import DiceImageFormFields from "./forms/DiceImageFormFields";
 import NoteFormFields from "./forms/NoteFormFields";
 import ZoneFormFields from "./forms/ZoneFormFields";
+import ScreenFormFields from "./forms/ScreenFormFields";
 import TokenFormFields from "./forms/TokenFormFields";
 import MeepleFormFields from "./forms/MeepleFormFields";
 import JewelFormFields from "./forms/JewelFormFields";
@@ -329,6 +331,23 @@ const itemTemplates = {
     name: i18n.t("Zone"),
     template: {
       layer: -1,
+    },
+  },
+  screen: {
+    component: Screen,
+    defaultActions: ["clone", "lock", "remove"],
+    availableActions: ["clone", "lock", "remove"],
+    form: ScreenFormFields,
+    name: i18n.t("Screen"),
+    template: {
+      layer: -2,
+    },
+    stateHook: (state, { currentUser }) => {
+      const { ownedBy } = state;
+      if (!Array.isArray(ownedBy) || !ownedBy.includes(currentUser.uid)) {
+        return { ...state, layer: 3.6 };
+      }
+      return state;
     },
   },
   generator: {

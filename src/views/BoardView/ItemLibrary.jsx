@@ -6,9 +6,9 @@ import debounce from "lodash.debounce";
 
 import { useItemActions } from "react-sync-board";
 
-import { search, uid } from "../utils";
+import { search, uid } from "../../utils";
 
-import Chevron from "../ui/Chevron";
+import Chevron from "../../ui/Chevron";
 
 const StyledItemList = styled.ul`
   display: flex;
@@ -74,7 +74,7 @@ const NewItem = memo(({ type, template, component: Component, name }) => {
 
   return (
     <StyledItem onClick={addItem}>
-      <div>
+      <div className="item-library__component">
         <Component
           {...(typeof template === "function" ? template() : template)}
           width={size}

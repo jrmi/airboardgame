@@ -88,36 +88,39 @@ const MediaLibraryModal = ({ show, setShow, onSelect }) => {
     }
   );
 
-  const onRemove = React.useCallback((key) => {
-    confirmAlert({
-      title: t("Confirmation"),
-      message: t("Do you really want to remove this media?"),
-      buttons: [
-        {
-          label: t("Yes"),
-          onClick: async () => {
-            try {
-              await removeMedia(key);
-              toast.success(t("Media deleted"), { autoClose: 1500 });
-            } catch (e) {
-              if (e.message === "Forbidden") {
-                toast.error(t("Action forbidden. Try logging in again."));
-              } else {
-                console.log(e);
-                toast.error(
-                  t("Error while deleting media. Try again later...")
-                );
+  const onRemove = React.useCallback(
+    (key) => {
+      confirmAlert({
+        title: t("Confirmation"),
+        message: t("Do you really want to remove this media?"),
+        buttons: [
+          {
+            label: t("Yes"),
+            onClick: async () => {
+              try {
+                await removeMedia(key);
+                toast.success(t("Media deleted"), { autoClose: 1500 });
+              } catch (e) {
+                if (e.message === "Forbidden") {
+                  toast.error(t("Action forbidden. Try logging in again."));
+                } else {
+                  console.log(e);
+                  toast.error(
+                    t("Error while deleting media. Try again later...")
+                  );
+                }
               }
-            }
+            },
           },
-        },
-        {
-          label: t("No"),
-          onClick: () => {},
-        },
-      ],
-    });
-  }, []);
+          {
+            label: t("No"),
+            onClick: () => {},
+          },
+        ],
+      });
+    },
+    [removeMedia, t]
+  );
 
   const { getRootProps, getInputProps } = useDropzone({
     onDrop: uploadMediaMutation.mutate,

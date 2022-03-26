@@ -8,17 +8,25 @@ const CounterPane = styled.div`
     text-align: center;
     border-radius: 3px;
     box-shadow: 4px 4px 5px 0px rgb(0, 0, 0, 0.3);
+
+    .item-library__component & {
+      transform: scale(0.7);
+    }
+
     button {
       padding: 1rem;
     }
+
     input {
       width: 2em;
     }
+
     h3 {
       user-select: none;
       padding: 0;
       margin: 0;
     }
+
     div {
       display: flex;
       justify-content: space-between;

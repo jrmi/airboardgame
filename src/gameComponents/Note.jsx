@@ -13,12 +13,17 @@ const NotePane = styled.div`
     box-shadow: 5px 5px 7px rgba(33, 33, 33, 0.7);
     color: ${textColor};
 
-    & h3 {
+    .item-library__component & {
+      background-color: #ccc;
+    }
+
+    & .note__title {
       font-weight: bold;
       padding: 0.2em 0;
       margin: 0;
     }
-    & textarea {
+
+    & .note__textarea {
       height: ${height}px;
       font-family: "Satisfy", cursive;
       width: 100%;
@@ -27,6 +32,10 @@ const NotePane = styled.div`
       resize: none;
       border: 1px solid #00000011;
       font-size: ${fontSize}px;
+
+      .item-library__component & {
+        height: 35px;
+      }
     }
   `}
 `;
@@ -74,10 +83,17 @@ const Note = ({
       onWheel={(e) =>
         e.target === document.activeElement && e.stopPropagation()
       }
+      onPointerMove={(e) =>
+        e.target === document.activeElement && e.stopPropagation()
+      }
     >
       <label style={{ userSelect: "none" }}>
-        <h3>{label}</h3>
-        <textarea value={currentValue} onChange={setValue} />
+        <h3 className="note__title">{label}</h3>
+        <textarea
+          className="note__textarea"
+          value={currentValue}
+          onChange={setValue}
+        />
       </label>
     </NotePane>
   );

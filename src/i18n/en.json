@@ -274,5 +274,16 @@
   "Custom": "Custom",
   "Background": "Background",
   "Type": "Type",
-  "Main image": "Main image"
+  "Main image": "Main image",
+  "Background color": "Background color",
+  "Border color": "Border color",
+  "Border style": "Border style",
+  "Dotted": "Dotted",
+  "solid": "Solid",
+  "Dashed": "Dashed",
+  "Screen": "Screen",
+  "Claim it": "Claim it",
+  "If you claim this screen, everything inside this zone will be hidden from other players.": "If you claim this screen, everything inside this zone will be hidden from other players.",
+  "This screen is owned by {{name}}": "This screen is owned by {{name}}",
+  "Release it": "Release it"
 }

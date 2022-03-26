@@ -21,11 +21,13 @@ const StyledShape = styled.div`
       opacity: 0.3;
       position: relative;
     }
+
     & .item-wrapper {
       position: absolute;
       top: ${({ center: { top } }) => `${top}px`};
       left: ${({ center: { left } }) => `${left}px`};
     }
+
     & .handle {
       position: absolute;
       top: -15px;
@@ -33,6 +35,18 @@ const StyledShape = styled.div`
       user-select: none;
       & img {
         pointer-events: none;
+      }
+    }
+
+    & .generator__empty-message {
+      display: block;
+      width: 60px;
+      height: 60px;
+      font-size: 0.65em;
+      text-align: center;
+
+      .item-library__component & {
+        visibility: hidden;
       }
     }
   `}
@@ -263,17 +277,7 @@ const Generator = ({ color = "#ccc", item, id, currentItemId, setState }) => {
 
   // Define item component if type is defined
   let Item = () => (
-    <div
-      style={{
-        display: "block",
-        width: "60px",
-        height: "60px",
-        fontSize: "0.65em",
-        textAlign: "center",
-      }}
-    >
-      {t("No item type defined")}
-    </div>
+    <div className="generator__empty-message">{t("No item type defined")}</div>
   );
   if (item) {
     const itemTemplate = itemTemplates[item.type];

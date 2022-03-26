@@ -13,11 +13,17 @@ const DicePane = styled.div`
     align-items: center;
     border-radius: 3px;
     box-shadow: 3px 3px 8px 0px rgb(0, 0, 0, 0.3);
+
     & h3 {
       user-select: none;
       padding: 0;
       margin: 0;
     }
+
+    .item-library__component & {
+      transform: scale(0.8);
+    }
+
     &
       input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="color"]):not([type="button"]):not([type="reset"]).result {
       width: 3em;
