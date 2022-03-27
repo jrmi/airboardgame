@@ -50,6 +50,9 @@ const Game = styled.li`
     right: 0.5em;
     display: none;
     z-index: 2;
+    & .button {
+      border-radius: 4px;
+    }
   }
 
   & .baseline {
@@ -156,6 +159,8 @@ const Game = styled.li`
   }
 `;
 
+const getGameUrl = (id) => `${window.location.origin}/playgame/${id}`;
+
 const GameListItem = ({
   game: {
     published,
@@ -202,6 +207,17 @@ const GameListItem = ({
       }
     },
     [history, id, propOnClick]
+  );
+
+  const onShare = React.useCallback(
+    async (e) => {
+      e.stopPropagation();
+      e.preventDefault();
+
+      await navigator.clipboard.writeText(getGameUrl(id));
+      toast.info(t("Url copied to clipboard!"), { autoClose: 1000 });
+    },
+    [id, t]
   );
 
   const deleteGameHandler = async () => {
@@ -293,25 +309,40 @@ const GameListItem = ({
           {!showImage && <h2>{translation.name}</h2>}
         </span>
       </a>
-      {userId && (userId === owner || !owner) && (
-        <span className="extra-actions">
-          <button
-            onClick={deleteGameHandler}
-            className="button edit icon-only error"
-          >
-            <img
-              src="https://icongr.am/feather/trash.svg?size=16&color=ffffff"
-              alt={t("Delete")}
-            />
-          </button>
-          <Link to={`/game/${id}/edit`} className="button edit icon-only ">
-            <img
-              src="https://icongr.am/feather/edit.svg?size=16&color=ffffff"
-              alt={t("Edit")}
-            />
-          </Link>
-        </span>
-      )}
+      <span className="extra-actions">
+        <a
+          href={getGameUrl(id)}
+          className="button edit icon-only success"
+          onClick={onShare}
+        >
+          <img
+            src="https://icongr.am/feather/share-2.svg?size=16&color=ffffff"
+            alt={t("Share game link")}
+            title={t("Share game link")}
+          />
+        </a>
+        {userId && (userId === owner || !owner) && (
+          <>
+            <button
+              onClick={deleteGameHandler}
+              className="button edit icon-only error"
+            >
+              <img
+                src="https://icongr.am/feather/trash.svg?size=16&color=ffffff"
+                alt={t("Delete")}
+                title={t("Delete")}
+              />
+            </button>
+            <Link to={`/game/${id}/edit`} className="button edit icon-only ">
+              <img
+                src="https://icongr.am/feather/edit.svg?size=16&color=ffffff"
+                alt={t("Edit")}
+                title={t("Edit")}
+              />
+            </Link>
+          </>
+        )}
+      </span>
       {!published && (
         <img
           className="unpublished"

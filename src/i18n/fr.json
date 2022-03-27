@@ -196,7 +196,7 @@
   "Unpublished": "Privé",
   "Untap": "Restaurer",
   "Uploading image(s)...": "Envoi des images en cours…",
-  "Url copied to clipboard!": "L'Url a été copiée dans le presse-papier",
+  "Url copied to clipboard!": "Le lien a été copiée dans le presse-papier",
   "User details": "Informations utilisateur",
   "Username": "Nom",
   "Vertical hexagons": "Hexagones verticaux",
@@ -285,5 +285,6 @@
   "Claim it": "Révéler",
   "If you claim this screen, everything inside this zone will be hidden from other players.": "Si vous révélez cet écran, tout ce qui sera sous la zone de l'écran sera caché pour les autres joueurs.",
   "This screen is owned by {{name}}": "Cet écran est révélé par {{name}}",
-  "Release it": "Cacher"
+  "Release it": "Cacher",
+  "Share game link": "Partager le lien du jeu"
 }

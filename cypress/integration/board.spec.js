@@ -9,7 +9,10 @@ describe("Board interactions", () => {
       "[]"
     );
     cy.visit("/");
-    cy.contains("0 Test game", { timeout: 10000 }).parent().find("img").click();
+    cy.contains("0 Test game", { timeout: 10000 })
+      .parent()
+      .find(".img-wrapper")
+      .click();
     // Way board loading
     cy.get(".board-pane", { timeout: 10000 }).should(
       "have.css",
