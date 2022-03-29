@@ -286,5 +286,7 @@
   "If you claim this screen, everything inside this zone will be hidden from other players.": "If you claim this screen, everything inside this zone will be hidden from other players.",
   "This screen is owned by {{name}}": "This screen is owned by {{name}}",
   "Release it": "Release it",
-  "Share game link": "Share game link"
+  "Share game link": "Share game link",
+  "Font family": "Font family",
+  "Text color": "Text color"
 }
