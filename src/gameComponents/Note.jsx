@@ -33,12 +33,18 @@ const NotePane = styled.div`
       color: ${textColor};
       font-family: "${fontFamily}", sans-serif;
 
+      &:focus{
+        outline: none;
+        box-shadow: none;
+        border: 1px solid #00000033;
+      }
+
       height: ${height}px;
       width: 100%;
-      padding: 0.2em 0;
+      padding: 0.3em;
       background-color: transparent;
       resize: none;
-      border: 1px solid #00000011;
+      border: 1px solid #00000005;
       font-size: ${fontSize}px;
       border-radius: 1px;
 
