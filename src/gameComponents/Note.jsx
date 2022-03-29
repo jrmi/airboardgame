@@ -2,7 +2,7 @@ import React, { memo, useEffect } from "react";
 import styled, { css } from "styled-components";
 
 const NotePane = styled.div`
-  ${({ color, fontSize, textColor, width, height }) => css`
+  ${({ color, fontSize, textColor, width, height, fontFamily }) => css`
     background-color: ${color};
     width: ${width}px;
     padding: 0.5em;
@@ -18,20 +18,29 @@ const NotePane = styled.div`
     }
 
     & .note__title {
+      min-height: 2em;
+      font-family: "${fontFamily}", sans-serif;
       font-weight: bold;
       padding: 0.2em 0;
       margin: 0;
+
+      .item-library__component & {
+        min-height: auto;
+      }
     }
 
     & .note__textarea {
+      color: ${textColor};
+      font-family: "${fontFamily}", sans-serif;
+
       height: ${height}px;
-      font-family: "Satisfy", cursive;
       width: 100%;
       padding: 0.2em 0;
       background-color: transparent;
       resize: none;
       border: 1px solid #00000011;
       font-size: ${fontSize}px;
+      border-radius: 1px;
 
       .item-library__component & {
         height: 35px;
@@ -40,11 +49,15 @@ const NotePane = styled.div`
   `}
 `;
 
+const stopPropagationIfActive = (e) =>
+  e.target === document.activeElement && e.stopPropagation();
+
 const Note = ({
   value = "",
   color = "#ffc",
   label = "",
   textColor = "#000",
+  fontFamily = "Roboto",
   fontSize = "20",
   width = 300,
   height = 200,
@@ -72,20 +85,13 @@ const Note = ({
       color={color}
       fontSize={fontSize}
       textColor={textColor}
+      fontFamily={fontFamily}
       width={width}
       height={height}
-      onKeyDown={(e) =>
-        e.target === document.activeElement && e.stopPropagation()
-      }
-      onKeyUp={(e) =>
-        e.target === document.activeElement && e.stopPropagation()
-      }
-      onWheel={(e) =>
-        e.target === document.activeElement && e.stopPropagation()
-      }
-      onPointerMove={(e) =>
-        e.target === document.activeElement && e.stopPropagation()
-      }
+      onKeyDown={stopPropagationIfActive}
+      onKeyUp={stopPropagationIfActive}
+      onWheel={stopPropagationIfActive}
+      onPointerMove={stopPropagationIfActive}
     >
       <label style={{ userSelect: "none" }}>
         <h3 className="note__title">{label}</h3>

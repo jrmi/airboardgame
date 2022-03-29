@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
 
-import { insideClass, hasClass, smallUid } from "../../utils";
+import { hasClass, smallUid } from "../../utils";
 import EditItemButton from "./EditItemButton";
 import {
   useAvailableActions,
