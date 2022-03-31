@@ -288,5 +288,7 @@
   "Release it": "Release it",
   "Share game link": "Share game link",
   "Font family": "Font family",
-  "Text color": "Text color"
+  "Text color": "Text color",
+  "Horizontal offset": "Horizontal offset",
+  "Vertical offset": "Vertical offset"
 }
