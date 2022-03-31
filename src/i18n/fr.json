@@ -288,5 +288,7 @@
   "Release it": "Cacher",
   "Share game link": "Partager le lien du jeu",
   "Font family": "Police de caractères",
-  "Text color": "Couleur du texte"
+  "Text color": "Couleur du texte",
+  "Horizontal offset": "Décalage horizontal",
+  "Vertical offset": "Décalage vertical"
 }
