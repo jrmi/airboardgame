@@ -1,6 +1,6 @@
 import { throwError } from "./utils";
 
-export const ownerOrNewHooks = async (context) => {
+export const ownerOrAdminOrNewHooks = async (context) => {
   let existingGame = null;
 
   const { userId, store, resourceId, body, boxId, method } = context;
@@ -15,7 +15,7 @@ export const ownerOrNewHooks = async (context) => {
     return context;
   }
 
-  // It a game modification...
+  // It's a game modification...
 
   if (!userId) {
     throwError(
@@ -43,27 +43,84 @@ export const ownerOrNewHooks = async (context) => {
     return nextContext;
   }
 
-  if (existingGame.owner !== userId) {
-    // Update with bad user
-    throwError("Modification allowed only for owner", 403);
+  let isAdmin = false;
+  try {
+    const currentUser = await store.get("user", userId);
+    isAdmin = Boolean(currentUser?.isAdmin);
+  } catch (e) {
+    if (e.statusCode !== 404) {
+      throw e;
+    }
   }
+
+  if (existingGame.owner !== userId && !isAdmin) {
+    throwError("Modification allowed only for owner or Admin", 403);
+  }
+
+  const owner = existingGame.owner || userId;
+
   // Update with good user (and force user)
-  return nextContext;
+  return {
+    ...nextContext,
+    body: { ...body, owner: owner },
+  };
 };
 
 export const onlySelfOrPublicGames = async (context) => {
-  const { boxId, userId, method, response, resourceId } = context;
+  const { boxId, userId, method, response, resourceId, store } = context;
   if (boxId !== "game") {
     return context;
   }
+
   if (!["GET"].includes(method) || resourceId) {
     return context;
+  }
+
+  // Get current user account
+  let userIsAdmin = false;
+  try {
+    const { isAdmin = false } = await store.get("user", userId);
+    userIsAdmin = isAdmin;
+  } catch (e) {
+    if (e.statusCode !== 404) {
+      throw e;
+    }
   }
 
   const newContext = { ...context };
 
   newContext.response = response.filter(
-    ({ board: { published }, owner }) => published || owner === userId
+    ({ board: { published }, owner }) =>
+      published || owner === userId || userIsAdmin
   );
+
   return newContext;
+};
+
+export const onlySelfUser = async (context) => {
+  const { boxId, userId, method, resourceId, store } = context;
+  if (boxId !== "user") {
+    return context;
+  }
+
+  if (method !== "GET") {
+    throwError("Method not allowed", 405);
+  }
+
+  if (resourceId !== userId) {
+    throwError("You can only access your account", 403);
+  }
+
+  // Create user account if missing
+  try {
+    await store.get("user", userId);
+  } catch (e) {
+    if (e.statusCode === 404) {
+      await store.save("user", userId, {});
+    } else {
+      throw e;
+    }
+  }
+
+  return { ...context, allow: true };
 };

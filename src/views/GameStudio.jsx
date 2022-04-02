@@ -34,11 +34,15 @@ const Content = styled.div`
 const GameListView = () => {
   const { t } = useTranslation();
 
-  const { isAuthenticated, userId } = useAuth();
+  const { isAuthenticated, userId, userAccount } = useAuth();
+
+  const isAdmin = userAccount?.isAdmin;
 
   const { isLoading, data: gameList } = useQuery("ownGames", async () =>
     (await getGames())
-      .filter(({ owner }) => userId && (!owner || owner === userId))
+      .filter(
+        ({ owner }) => (userId && (!owner || owner === userId)) || isAdmin
+      )
       .sort((a, b) => {
         const [nameA, nameB] = [
           a.board.defaultName || a.board.name,
@@ -67,7 +71,13 @@ const GameListView = () => {
         <NewGameItem />
         {!isLoading &&
           gameList.map((game) => (
-            <GameListItem key={game.id} game={game} userId={userId} />
+            <GameListItem
+              key={game.id}
+              game={game}
+              userId={userId}
+              isAdmin={isAdmin}
+              studio={true}
+            />
           ))}
         {isLoading && (
           <div style={{ paddingTop: "4em" }}>

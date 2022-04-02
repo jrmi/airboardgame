@@ -1,8 +1,10 @@
 import React from "react";
+import { useQuery } from "react-query";
 import {
   login as loginAPI,
   logout as logoutAPI,
   checkAuthentication,
+  getAccount,
 } from "../utils/api";
 import useLocalStorage from "../hooks/useLocalStorage";
 
@@ -13,6 +15,10 @@ const useAuth = () => {
   );
   const [userId, setUserId] = useLocalStorage("userId", null);
   const mountedRef = React.useRef(true);
+
+  const { data: userAccount } = useQuery("account", async () =>
+    isAuthenticated ? await getAccount(userId) : null
+  );
 
   const login = React.useCallback(
     async (userHash, token) => {
@@ -53,6 +59,7 @@ const useAuth = () => {
     userId,
     login,
     logout,
+    userAccount,
   };
 };
 
