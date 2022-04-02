@@ -1,12 +1,16 @@
-import { ownerOrNewHooks, onlySelfOrPublicGames } from "./hooks";
+import {
+  ownerOrAdminOrNewHooks,
+  onlySelfOrPublicGames,
+  onlySelfUser,
+} from "./hooks";
 import getConfToken from "./getConfToken";
 
 const SESSION_DURATION = 60; // Session duration in days
 
 export const main = async ({ store, schedules, hooks, functions }) => {
-  hooks.before = [ownerOrNewHooks];
-  hooks.after = [ownerOrNewHooks, onlySelfOrPublicGames];
-  hooks.beforeFile = [ownerOrNewHooks];
+  hooks.before = [ownerOrAdminOrNewHooks, onlySelfUser];
+  hooks.after = [ownerOrAdminOrNewHooks, onlySelfOrPublicGames];
+  hooks.beforeFile = [ownerOrAdminOrNewHooks];
 
   functions.getConfToken = getConfToken;
 
@@ -14,6 +18,7 @@ export const main = async ({ store, schedules, hooks, functions }) => {
   await store.createOrUpdateBox("game", { security: "readOnly" });
   await store.createOrUpdateBox("room", { security: "public" });
   await store.createOrUpdateBox("session", { security: "public" });
+  await store.createOrUpdateBox("user", { security: "private" });
 
   // Add schedules
   schedules["daily"] = [

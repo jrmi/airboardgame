@@ -9,6 +9,7 @@ const oldUploadURI = `${API_ENDPOINT}/file`;
 const gameURI = `${API_ENDPOINT}/store/game`;
 const sessionURI = `${API_ENDPOINT}/store/session`;
 const roomURI = `${API_ENDPOINT}/store/room`;
+const userURI = `${API_ENDPOINT}/store/user`;
 const execURI = `${API_ENDPOINT}/execute`;
 const authURI = `${API_ENDPOINT}/auth`;
 
@@ -379,6 +380,27 @@ export const getConfToken = async (session) => {
 
   if (result.status === 404) {
     throw new Error("Webconference not enabled");
+  }
+  if (result.status === 403) {
+    throw new Error("Forbidden");
+  }
+  if (result.status >= 300) {
+    throw new Error("Server error");
+  }
+  return await result.json();
+};
+
+export const getAccount = async (id) => {
+  const result = await fetch(`${userURI}/${id}`, {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+  });
+  if (result.status === 404) {
+    throw new Error("Resource not found");
   }
   if (result.status === 403) {
     throw new Error("Forbidden");
