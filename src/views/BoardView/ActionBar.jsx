@@ -54,6 +54,23 @@ const ActionBar = ({
   setHideMenu,
 }) => {
   const { t } = useTranslation();
+
+  React.useEffect(() => {
+    const onKeyUp = (e) => {
+      // Block shortcut if we are typing in a textarea or input
+      if (["INPUT", "TEXTAREA"].includes(e.target.tagName)) return;
+
+      if (e.key === "m") {
+        setHideMenu((prev) => !prev);
+        return;
+      }
+    };
+    document.addEventListener("keyup", onKeyUp);
+    return () => {
+      document.removeEventListener("keyup", onKeyUp);
+    };
+  }, [setHideMenu]);
+
   return (
     <StyledActionBar>
       {!editMode && <MessageButton />}
