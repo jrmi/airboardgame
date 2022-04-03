@@ -94,7 +94,7 @@ const SubItemList = ({ name, items }) => {
   const [open, setOpen] = React.useState(false);
   const { pushItems } = useItemActions();
 
-  const addItems = useRecoilCallback(
+  const addItems = React.useCallback(
     async (itemsToAdd) => {
       pushItems(
         itemsToAdd.map(({ template }) => ({
