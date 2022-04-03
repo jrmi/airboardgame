@@ -476,7 +476,7 @@ export const useGameItemActions = () => {
       shuffle: {
         action: () => shuffleItems,
         label: t("Shuffle"),
-        shortcut: "s",
+        shortcut: "z",
         multiple: true,
         icon: shuffleIcon,
       },
@@ -591,13 +591,14 @@ export const useGameItemActions = () => {
         label: t("Clone"),
         shortcut: "c",
         disableDblclick: true,
-        edit: true,
         icon: duplicateIcon,
       },
       lock: {
         action: () => toggleLock,
         label: t("Unlock") + "/" + t("Lock"),
+        shortcut: "l",
         disableDblclick: true,
+        edit: true,
         icon: lockIcon,
       },
       remove: {

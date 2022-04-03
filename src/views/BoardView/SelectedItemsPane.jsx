@@ -110,6 +110,11 @@ const SelectedItemsPane = ({ hideMenu = false }) => {
       // Block shortcut if we are typing in a textarea or input
       if (["INPUT", "TEXTAREA"].includes(e.target.tagName)) return;
 
+      if (e.key === "e") {
+        setShowEdit((prev) => !prev);
+        return;
+      }
+
       for (let i = 0; i < parsedAvailableActions.length; i++) {
         const { shortcut, action, edit: whileEdit } = parsedAvailableActions[i];
         if (shortcut === e.key && showEdit === !!whileEdit) {
