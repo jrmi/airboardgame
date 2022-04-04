@@ -73,12 +73,11 @@ const ActionPane = styled.div.attrs(({ top, left, height }) => {
   }
 `;
 
-const SelectedItemsPane = ({ hideMenu = false }) => {
+const SelectedItemsPane = ({ hideMenu = false, showEdit, setShowEdit }) => {
   const { findElementUnderPointer } = useItemActions();
   const { actionMap } = useGameItemActions();
 
   const { availableActions } = useAvailableActions();
-  const [showEdit, setShowEdit] = React.useState(false);
 
   const { t } = useTranslation();
 

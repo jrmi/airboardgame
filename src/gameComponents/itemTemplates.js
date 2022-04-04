@@ -71,6 +71,19 @@ const defaultDiceImages = () => [
   },
 ];
 
+const sizeResize = ({ width, actualWidth, prevState }) => {
+  let { size: currentSize } = prevState;
+  currentSize = parseFloat(currentSize);
+  if (!currentSize || Number.isNaN(Number(currentSize))) {
+    currentSize = actualWidth;
+  }
+
+  return {
+    ...prevState,
+    size: (currentSize + width).toFixed(2),
+  };
+};
+
 const itemTemplates = {
   rect: {
     component: Rect,
@@ -103,6 +116,8 @@ const itemTemplates = {
     form: CubeFormFields,
     name: i18n.t("Cube"),
     template: {},
+    resize: sizeResize,
+    resizeDirections: { b: true },
   },
   cylinder: {
     component: Cylinder,
@@ -119,6 +134,8 @@ const itemTemplates = {
     form: CylinderFormFields,
     name: i18n.t("Cylinder"),
     template: {},
+    resize: sizeResize,
+    resizeDirections: { b: true },
   },
   round: {
     component: Round,
@@ -135,6 +152,8 @@ const itemTemplates = {
     form: RoundFormFields,
     name: i18n.t("Round"),
     template: {},
+    resize: sizeResize,
+    resizeDirections: { b: true },
   },
   token: {
     component: Token,
@@ -151,6 +170,8 @@ const itemTemplates = {
     form: TokenFormFields,
     name: i18n.t("Token"),
     template: {},
+    resize: sizeResize,
+    resizeDirections: { b: true },
   },
   meeple: {
     component: Meeple,
@@ -167,6 +188,8 @@ const itemTemplates = {
     form: MeepleFormFields,
     name: i18n.t("Meeple"),
     template: {},
+    resize: sizeResize,
+    resizeDirections: { b: true },
   },
   pawn: {
     component: Pawn,
@@ -183,6 +206,8 @@ const itemTemplates = {
     form: PawnFormFields,
     name: i18n.t("Pawn"),
     template: {},
+    resize: sizeResize,
+    resizeDirections: { b: true },
   },
   jewel: {
     component: Jewel,
@@ -199,6 +224,8 @@ const itemTemplates = {
     form: JewelFormFields,
     name: i18n.t("Jewel"),
     template: {},
+    resize: sizeResize,
+    resizeDirections: { b: true },
   },
   checkerboard: {
     component: CheckerBoard,
@@ -270,6 +297,7 @@ const itemTemplates = {
     form: CounterFormFields,
     name: i18n.t("Counter"),
     template: {},
+    resizeDirections: {},
   },
   dice: {
     component: Dice,
@@ -284,6 +312,7 @@ const itemTemplates = {
     form: DiceFormFields,
     name: i18n.t("Dice"),
     template: {},
+    resizeDirections: {},
   },
   diceImage: {
     component: DiceImage,
@@ -358,6 +387,7 @@ const itemTemplates = {
     excludeFields: { rotation: true },
     name: i18n.t("Generator"),
     template: { layer: 0 },
+    resizeDirections: {},
   },
 };
 
