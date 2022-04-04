@@ -24,6 +24,7 @@ export const BoardView = ({ mediaLibraries, edit, itemLibraries }) => {
 
   const [moveFirst, setMoveFirst] = React.useState(false);
   const [hideMenu, setHideMenu] = React.useState(false);
+  const [showEdit, setShowEdit] = React.useState(false);
 
   const style = React.useMemo(() => {
     const currentBackground =
@@ -39,6 +40,7 @@ export const BoardView = ({ mediaLibraries, edit, itemLibraries }) => {
           moveFirst={moveFirst}
           style={style}
           itemTemplates={itemTemplates}
+          showResizeHandle={showEdit}
         />
         <NavBar editMode={edit} />
         <ActionBar
@@ -52,7 +54,11 @@ export const BoardView = ({ mediaLibraries, edit, itemLibraries }) => {
         />
         <WelcomeModal show={showWelcomeModal} setShow={setShowWelcomeModal} />
       </ImageDropNPaste>
-      <SelectedItemsPane hideMenu={hideMenu} />
+      <SelectedItemsPane
+        hideMenu={hideMenu}
+        showEdit={showEdit}
+        setShowEdit={setShowEdit}
+      />
     </MediaLibraryProvider>
   );
 };

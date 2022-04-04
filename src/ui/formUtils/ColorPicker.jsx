@@ -38,6 +38,9 @@ const ColorPickerWrapper = styled.div`
 const ColorPicker = ({ value, onChange, disableAlpha = true }) => {
   const [showPicker, setShowPicker] = React.useState(false);
   const [currentColor, setCurrentColor] = React.useState(() => {
+    if (value === "") {
+      return { r: 150, g: 150, b: 150, a: 1 };
+    }
     try {
       const [red, green, blue, alpha] = parseToRgba(value);
       return { r: red, g: green, b: blue, a: alpha };
