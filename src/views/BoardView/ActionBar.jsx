@@ -8,6 +8,7 @@ import styled from "styled-components";
 import { useTranslation } from "react-i18next";
 
 import Touch from "../../ui/Touch";
+import target from "../../images/target.svg";
 
 const StyledActionBar = styled.div`
   position: absolute;
@@ -55,6 +56,8 @@ const ActionBar = ({
 }) => {
   const { t } = useTranslation();
 
+  const [showAddPanel, setShowAddPanel] = React.useState(false);
+
   React.useEffect(() => {
     const onKeyUp = (e) => {
       // Block shortcut if we are typing in a textarea or input
@@ -72,36 +75,54 @@ const ActionBar = ({
   }, [setHideMenu]);
 
   return (
-    <StyledActionBar>
-      {!editMode && <MessageButton />}
-      {editMode && <EditInfoButton BoardFormComponent={BoardFormComponent} />}
-      <div className="spacer" />
-      <Touch
-        onClick={() => setMoveFirst(false)}
-        alt={t("Select mode")}
-        label={t("Select")}
-        title={t("Switch to select mode")}
-        icon={"mouse-pointer"}
-        active={!moveFirst}
-      />
-      <Touch
-        onClick={() => setMoveFirst(true)}
-        alt={t("Move mode")}
-        label={t("Move")}
-        title={t("Switch to move mode")}
-        icon={"hand"}
-        active={moveFirst}
-      />
-      <Touch
-        onClick={() => setHideMenu((prev) => !prev)}
-        alt={hideMenu ? t("Show menu") : t("Hide menu")}
-        label={hideMenu ? t("Show menu") : t("Hide menu")}
-        title={hideMenu ? t("Show action menu") : t("Hide action menu")}
-        icon={hideMenu ? "eye-with-line" : "eye"}
-      />
-      <div className="spacer" />
-      <AddItemButton itemLibraries={itemLibraries} />
-    </StyledActionBar>
+    <>
+      <StyledActionBar>
+        {!editMode && <MessageButton />}
+        {editMode && <EditInfoButton BoardFormComponent={BoardFormComponent} />}
+        <div className="spacer" />
+        <Touch
+          onClick={() => setMoveFirst(false)}
+          alt={t("Select mode")}
+          label={t("Select")}
+          title={t("Switch to select mode")}
+          icon={"mouse-pointer"}
+          active={!moveFirst}
+        />
+        <Touch
+          onClick={() => setMoveFirst(true)}
+          alt={t("Move mode")}
+          label={t("Move")}
+          title={t("Switch to move mode")}
+          icon={"hand"}
+          active={moveFirst}
+        />
+        <Touch
+          onClick={() => setHideMenu((prev) => !prev)}
+          alt={hideMenu ? t("Show menu") : t("Hide menu")}
+          label={hideMenu ? t("Show menu") : t("Hide menu")}
+          title={hideMenu ? t("Show action menu") : t("Hide action menu")}
+          icon={hideMenu ? "eye-with-line" : "eye"}
+        />
+        <div className="spacer" />
+        <AddItemButton
+          itemLibraries={itemLibraries}
+          setShowAddPanel={setShowAddPanel}
+          showAddPanel={showAddPanel}
+        />
+      </StyledActionBar>
+      {showAddPanel && (
+        <img
+          style={{
+            position: "absolute",
+            left: "calc(50% - 80px)",
+            top: "calc(50% - 80px)",
+            pointerEvents: "none",
+            opacity: 0.1,
+          }}
+          src={target}
+        />
+      )}
+    </>
   );
 };
 

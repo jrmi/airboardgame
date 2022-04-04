@@ -35,10 +35,8 @@ const AddItemPanel = ({ itemLibraries, open, onClose }) => {
   );
 };
 
-const AddItemButton = ({ itemLibraries }) => {
+const AddItemButton = ({ itemLibraries, showAddPanel, setShowAddPanel }) => {
   const { t } = useTranslation();
-
-  const [showAddPanel, setShowAddPanel] = React.useState(false);
 
   return (
     <>

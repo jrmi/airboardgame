@@ -1,7 +1,6 @@
 import React, { memo } from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
-import { useRecoilCallback } from "recoil";
 import debounce from "lodash.debounce";
 
 import { useItemActions } from "react-sync-board";
