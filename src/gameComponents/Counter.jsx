@@ -56,14 +56,16 @@ const Counter = ({
     }));
   };
 
-  const increment = () => {
+  const increment = (e) => {
+    e.stopPropagation();
     setState((prevState) => ({
       ...prevState,
       value: (prevState.value || 0) + 1,
     }));
   };
 
-  const decrement = () => {
+  const decrement = (e) => {
+    e.stopPropagation;
     setState((prevState) => ({
       ...prevState,
       value: (prevState.value || 0) - 1,
@@ -74,7 +76,11 @@ const Counter = ({
     <CounterPane color={color}>
       <h3>{label}</h3>
       <div>
-        <button onClick={decrement} style={{ margin: "2px" }}>
+        <button
+          onClick={decrement}
+          onDoubleClick={(e) => e.stopPropagation()}
+          style={{ margin: "2px" }}
+        >
           -
         </button>
         <label style={{ userSelect: "none" }}>
@@ -96,7 +102,11 @@ const Counter = ({
             onChange={setValue}
           />
         </label>
-        <button onClick={increment} style={{ margin: "2px" }}>
+        <button
+          onClick={increment}
+          onDoubleClick={(e) => e.stopPropagation()}
+          style={{ margin: "2px" }}
+        >
           +
         </button>
       </div>
