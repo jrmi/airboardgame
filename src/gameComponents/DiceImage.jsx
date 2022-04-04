@@ -83,7 +83,9 @@ const Dice = ({
       <DicePane
         width={width}
         height={height}
-        onDoubleClick={() => (rollOnDblClick ? roll() : null)}
+        onDoubleClick={(e) =>
+          e.stopPropagation() || (rollOnDblClick ? roll() : null)
+        }
       >
         {images[value] && <img src={media2Url(images[value])} />}
       </DicePane>

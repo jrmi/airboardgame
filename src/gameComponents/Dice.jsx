@@ -102,7 +102,9 @@ const Dice = ({
           />
         </label>
         <span>
-          <button onClick={roll}>{t("Roll")}</button>
+          <button onClick={roll} onDoubleClick={(e) => e.stopPropagation()}>
+            {t("Roll")}
+          </button>
         </span>
       </DicePane>
     </div>
