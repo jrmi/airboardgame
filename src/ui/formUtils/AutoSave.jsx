@@ -5,6 +5,7 @@ const diff = (o1, o2) => {
   const keys = [...new Set([...Object.keys(o1), ...Object.keys(o2)])];
   const result = keys.reduce((diff, key) => {
     if (o1[key] === o2[key]) return diff;
+    if (JSON.stringify(o1[key]) === JSON.stringify(o2[key])) return diff;
     return {
       ...diff,
       [key]: o2[key],

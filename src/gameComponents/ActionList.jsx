@@ -98,7 +98,7 @@ const Action = ({ name, onUp, onDown, onRemove }) => {
   );
 };
 
-const ActionList = ({ name, initialValue, availableActions = [] }) => {
+const ActionList = ({ name, initialValue, availableActions }) => {
   const { t } = useTranslation();
   const { actionMap } = useGameItemActions();
 
@@ -133,7 +133,7 @@ const ActionList = ({ name, initialValue, availableActions = [] }) => {
             <option key={name} value={""}>
               {t("Select an action to add...")}
             </option>
-            {availableActions.map((name) => {
+            {(availableActions || []).map((name) => {
               return (
                 <option key={name} value={name}>
                   {actionMap[name].genericLabel || actionMap[name].label()}

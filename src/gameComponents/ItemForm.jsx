@@ -58,25 +58,15 @@ const toInt = (val) => {
 const ItemForm = ({ items, types, extraExcludeFields = {} }) => {
   const { t } = useTranslation();
 
-  let FieldsComponent;
   const oneType = types.length === 1;
 
-  if (items.length === 1) {
-    FieldsComponent = getFormFieldComponent(items[0].type);
-  } else {
+  const FieldsComponent = React.useMemo(() => {
     if (oneType) {
-      FieldsComponent = getFormFieldComponent(types[0]);
+      return getFormFieldComponent(types[0]);
     } else {
-      FieldsComponent = () => null;
+      return () => null;
     }
-  }
-
-  const defaultActions = React.useMemo(() => {
-    if (oneType) {
-      return getDefaultActionsFromItem(items[0]);
-    }
-    return undefined;
-  }, [items, oneType]);
+  }, [oneType, types]);
 
   const availableActions = React.useMemo(() => {
     if (oneType) {
@@ -88,25 +78,28 @@ const ItemForm = ({ items, types, extraExcludeFields = {} }) => {
   // Merge extra excluded fields and all item excluded fields
   const excludeFields = { ...getExcludedFields(types), ...extraExcludeFields };
 
-  let initialValues;
+  const initialValues = React.useMemo(() => {
+    const defaultActions = oneType ? getDefaultActionsFromItem(items[0]) : [];
 
-  // Set initial values to item values only if one element selected
-  // Empty object otherwise
-  if (items.length === 1) {
-    initialValues = { ...items[0] };
+    // Set initial values to item values only if one element selected
+    // Empty object otherwise
     if (items.length === 1) {
-      initialValues.actions = (initialValues.actions || defaultActions).map(
-        (action) => {
-          if (typeof action === "string") {
-            return { name: action };
+      const initialValues = { ...items[0] };
+      if (items.length === 1) {
+        initialValues.actions = (initialValues.actions || defaultActions).map(
+          (action) => {
+            if (typeof action === "string") {
+              return { name: action };
+            }
+            return action;
           }
-          return action;
-        }
-      );
+        );
+      }
+      return initialValues;
+    } else {
+      return {};
     }
-  } else {
-    initialValues = {};
-  }
+  }, [items, oneType]);
 
   return (
     <>
@@ -233,7 +226,6 @@ const ItemForm = ({ items, types, extraExcludeFields = {} }) => {
           </Field>
         </Label>
       </div>
-
       {oneType && (
         <>
           <h3>{t("Item actions")}</h3>
