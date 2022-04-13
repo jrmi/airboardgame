@@ -71,8 +71,8 @@ const defaultDiceImages = () => [
   },
 ];
 
-const sizeResize = ({ width, actualWidth, prevState }) => {
-  let { size: currentSize } = prevState;
+const resize = (prop) => ({ width, actualWidth, prevState }) => {
+  let { [prop]: currentSize } = prevState;
   currentSize = parseFloat(currentSize);
   if (!currentSize || Number.isNaN(Number(currentSize))) {
     currentSize = actualWidth;
@@ -80,9 +80,12 @@ const sizeResize = ({ width, actualWidth, prevState }) => {
 
   return {
     ...prevState,
-    size: (currentSize + width).toFixed(2),
+    [prop]: (currentSize + width).toFixed(2),
   };
 };
+
+const sizeResize = resize("size");
+const radiusResize = resize("radius");
 
 const itemTemplates = {
   rect: {
@@ -152,7 +155,7 @@ const itemTemplates = {
     form: RoundFormFields,
     name: i18n.t("Round"),
     template: {},
-    resize: sizeResize,
+    resize: radiusResize,
     resizeDirections: { b: true },
   },
   token: {
