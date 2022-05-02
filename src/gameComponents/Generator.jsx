@@ -166,6 +166,12 @@ const Generator = ({ color = "#ccc", item, id, currentItemId, setState }) => {
   const resize = React.useCallback(
     debounce((rotation) => {
       let targetWidth, targetHeight;
+
+      if (!itemRef.current) {
+        // The component is probably unmounted
+        return;
+      }
+
       const { clientWidth, clientHeight } = itemRef.current;
       targetWidth = clientWidth;
       targetHeight = clientHeight;

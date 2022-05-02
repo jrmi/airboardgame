@@ -10,6 +10,8 @@ import ActionList from "./ActionList";
 
 import { itemTemplates } from "./";
 
+import { objectIntersection } from "../utils";
+
 export const getFormFieldComponent = (type) => {
   if (type in itemTemplates) {
     return itemTemplates[type].form;
@@ -79,26 +81,29 @@ const ItemForm = ({ items, types, extraExcludeFields = {} }) => {
   const excludeFields = { ...getExcludedFields(types), ...extraExcludeFields };
 
   const initialValues = React.useMemo(() => {
-    const defaultActions = oneType ? getDefaultActionsFromItem(items[0]) : [];
+    const [firstItem, ...restItems] = items;
+    const defaultActions = oneType ? getDefaultActionsFromItem(firstItem) : [];
 
-    // Set initial values to item values only if one element selected
-    // Empty object otherwise
+    let initial = JSON.parse(JSON.stringify(firstItem));
+
+    // Set initial values to intersection of all common item values
+    initial = restItems.reduce(objectIntersection, initial);
+
     if (items.length === 1) {
-      const initialValues = { ...items[0] };
-      if (items.length === 1) {
-        initialValues.actions = (initialValues.actions || defaultActions).map(
-          (action) => {
-            if (typeof action === "string") {
-              return { name: action };
-            }
-            return action;
-          }
-        );
-      }
-      return initialValues;
+      // If only one item we can use default actions
+      initial.actions = initial.actions || defaultActions;
     } else {
-      return {};
+      initial.actions = initial.actions || [];
     }
+
+    initial.actions = initial.actions.map((action) => {
+      if (typeof action === "string") {
+        return { name: action };
+      }
+      return action;
+    });
+
+    return initial;
   }, [items, oneType]);
 
   return (
