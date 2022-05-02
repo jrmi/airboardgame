@@ -1,5 +1,11 @@
 import Diacritics from "diacritic";
 import { customAlphabet } from "nanoid";
+export {
+  isItemInsideElement,
+  getItemElement,
+  pointInItem,
+  fastItemIntersect,
+} from "./item";
 
 const cleanWord = (word) => Diacritics.clean(word).toLowerCase();
 
@@ -42,21 +48,6 @@ export const shuffle = (a) => {
 export const randInt = (min, max) =>
   Math.floor(Math.random() * (max - min + 1)) + min;
 
-const isPointInsideRect = (point, rect) =>
-  point.x > rect.left &&
-  point.x < rect.left + rect.width &&
-  point.y > rect.top &&
-  point.y < rect.top + rect.height;
-
-export const isItemInsideElement = (itemElement, otherElem) => {
-  const rect = otherElem.getBoundingClientRect();
-  const fourElem = Array.from(itemElement.querySelectorAll(".corner"));
-  return fourElem.every((corner) => {
-    const { top: y, left: x } = corner.getBoundingClientRect();
-    return isPointInsideRect({ x, y }, rect);
-  });
-};
-
 const alpha = "23456789ABCDEFGHJKMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz";
 
 // Custom uid generator
@@ -64,14 +55,6 @@ export const uid = customAlphabet(alpha, 10);
 
 // Custom small uid generator
 export const smallUid = customAlphabet(alpha, 5);
-
-export const getItemElement = (id) => {
-  const elem = document.getElementsByClassName(`item ${id}`)[0];
-  if (!elem) {
-    console.warn(`Missing element for id ${id}`);
-  }
-  return elem;
-};
 
 export const objectIntersection = (o1, o2) => {
   const keys = [...new Set([...Object.keys(o1), ...Object.keys(o2)])];
@@ -103,6 +86,3 @@ export const objectDiff = (o1, o2) => {
 
   return result;
 };
-
-export const getRandomInt = (min, max) =>
-  Math.floor(Math.random() * (max - min + 1) + min);

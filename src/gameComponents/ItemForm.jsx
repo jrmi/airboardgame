@@ -181,55 +181,74 @@ const ItemForm = ({ items, types, extraExcludeFields }) => {
           </Field>
         </Label>
       )}
+      {!excludeFields.family && (
+        <Label>
+          {t("Family")}
+          <Field
+            name="groupId"
+            component="input"
+            initialValue={initialValues.groupId || ""}
+          />
+          <Hint>
+            {t(
+              "Optional - Use the same family name for items that are part of the same set."
+            )}
+          </Hint>
+        </Label>
+      )}
       <FieldsComponent initialValues={initialValues} />
-      <h3>{t("Snap to grid")}</h3>
-      <Label>
-        {t("Grid type")}
-        <Field
-          name="grid.type"
-          initialValue={initialValues.grid?.type}
-          component="select"
-        >
-          <option value="none">{t("None")}</option>
-          <option value="grid">{t("Grid")}</option>
-          <option value="hexH">{t("Horizontal hexagons")}</option>
-          <option value="hexV">{t("Vertical hexagons")}</option>
-        </Field>
-      </Label>
-      <div style={{ display: "flex", gap: "10px", alignItems: "flex-end" }}>
-        <Label>
-          {t("Size")}
-          <Field
-            name="grid.size"
-            component="input"
-            initialValue={initialValues.grid?.size}
-          >
-            {(props) => <input {...props.input} type="number" />}
-          </Field>
-        </Label>
-        <Label>
-          {t("Horizontal offset")}
-          <Field
-            name="grid.offset.x"
-            component="input"
-            parse={toInt}
-            initialValue={initialValues.grid?.offset?.x || 0}
-          >
-            {(props) => <input {...props.input} type="number" />}
-          </Field>
-        </Label>
-        <Label>
-          {t("Vertical offset")}
-          <Field
-            name="grid.offset.y"
-            component="input"
-            parse={toInt}
-            initialValue={initialValues.grid?.offset?.y || 0}
-          >
-            {(props) => <input {...props.input} type="number" />}
-          </Field>
-        </Label>
-      </div>
+      {!excludeFields.grid && (
+        <>
+          <h3>{t("Snap to grid")}</h3>
+          <Label>
+            {t("Grid type")}
+            <Field
+              name="grid.type"
+              initialValue={initialValues.grid?.type}
+              component="select"
+            >
+              <option value="none">{t("None")}</option>
+              <option value="grid">{t("Grid")}</option>
+              <option value="hexH">{t("Horizontal hexagons")}</option>
+              <option value="hexV">{t("Vertical hexagons")}</option>
+            </Field>
+          </Label>
+          <div style={{ display: "flex", gap: "10px", alignItems: "flex-end" }}>
+            <Label>
+              {t("Size")}
+              <Field
+                name="grid.size"
+                component="input"
+                initialValue={initialValues.grid?.size}
+              >
+                {(props) => <input {...props.input} type="number" />}
+              </Field>
+            </Label>
+            <Label>
+              {t("Horizontal offset")}
+              <Field
+                name="grid.offset.x"
+                component="input"
+                parse={toInt}
+                initialValue={initialValues.grid?.offset?.x || 0}
+              >
+                {(props) => <input {...props.input} type="number" />}
+              </Field>
+            </Label>
+            <Label>
+              {t("Vertical offset")}
+              <Field
+                name="grid.offset.y"
+                component="input"
+                parse={toInt}
+                initialValue={initialValues.grid?.offset?.y || 0}
+              >
+                {(props) => <input {...props.input} type="number" />}
+              </Field>
+            </Label>
+          </div>
+        </>
+      )}
       {oneType && (
         <>
           <h3>{t("Item actions")}</h3>

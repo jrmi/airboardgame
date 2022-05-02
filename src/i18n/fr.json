@@ -290,5 +290,10 @@
   "Horizontal offset": "Décalage horizontal",
   "Vertical offset": "Décalage vertical",
   "Roll on move": "Lancer après un déplacement",
-  "Check it to roll the dice after each move.": "Cocher pour lancer le dé après chaque déplacement."
+  "Check it to roll the dice after each move.": "Cocher pour lancer le dé après chaque déplacement.",
+  "Snap families": "Familles à aimanter",
+  "Let this field empty to snap all items, or set a comma separated list of families that will be snapped.": "Laissez ce champ vide pour aimanter tous les éléments ou définissez une liste de familles d'élément à aimanter séparées par une virgule.",
+  "Family": "Famille",
+  "Optional - Use the same family name for items that are part of the same set.": "Optionnel : définissez un nom de famille aux éléments appartenant à un même ensemble",
+  "Anchor": "Ancre"
 }

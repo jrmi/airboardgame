@@ -19,6 +19,7 @@ import Pawn from "./Pawn";
 import CheckerBoard from "./CheckerBoard";
 import Cylinder from "./Cylinder";
 import Generator from "./Generator";
+import Anchor from "./Anchor";
 
 import ImageFormFields from "./forms/ImageFormFields";
 import CounterFormFields from "./forms/CounterFormFields";
@@ -37,6 +38,7 @@ import PawnFormFields from "./forms/PawnFormFields";
 import CheckerBoardFormFields from "./forms/CheckerBoardFormFields";
 import CylinderFormFields from "./forms/CylinderFormFields";
 import GeneratorFormFields from "./forms/GeneratorFormFields";
+import AnchorFormFields from "./forms/AnchorFormFields";
 
 const defaultDiceImages = () => [
   {
@@ -350,6 +352,16 @@ const itemTemplates = {
     form: NoteFormFields,
     name: i18n.t("Note"),
     template: {},
+  },
+  anchor: {
+    component: Anchor,
+    defaultActions: ["clone", "lock", "remove"],
+    availableActions: ["clone", "lock", "remove"],
+    form: AnchorFormFields,
+    name: i18n.t("Anchor"),
+    template: {},
+    resizeDirections: {},
+    excludeFields: { rotation: true, family: true, grid: true },
   },
   zone: {
     component: Zone,
