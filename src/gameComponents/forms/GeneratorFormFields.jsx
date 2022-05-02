@@ -15,6 +15,8 @@ const CardContent = styled.div.attrs(() => ({ className: "content" }))`
   padding: 0.5em;
 `;
 
+const extraExcludeFields = { locked: true, layer: true };
+
 const EditSubItemButton = ({ showEdit, setShowEdit, subItem, onUpdate }) => {
   const { t } = useTranslation();
 
@@ -36,7 +38,7 @@ const EditSubItemButton = ({ showEdit, setShowEdit, subItem, onUpdate }) => {
           <ItemFormFactory
             onUpdate={onUpdate}
             items={[subItem]}
-            extraExcludeFields={{ locked: true, layer: true }}
+            extraExcludeFields={extraExcludeFields}
           />
         </CardContent>
       </SidePanel>

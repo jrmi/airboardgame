@@ -222,6 +222,24 @@ export const useGameItemActions = () => {
     [getItemListOrSelected, batchUpdateItems]
   );
 
+  const snapToPoint = React.useCallback(
+    async (itemIds, { x, y } = {}) => {
+      batchUpdateItems(itemIds, (item) => {
+        const { clientWidth, clientHeight } = getItemElement(item.id);
+        let newX = x - clientWidth / 2;
+        let newY = y - clientHeight / 2;
+
+        const newItem = {
+          ...item,
+          x: newX,
+          y: newY,
+        };
+        return newItem;
+      });
+    },
+    [batchUpdateItems]
+  );
+
   const shuffleItems = React.useCallback(
     async (itemIds) => {
       const [ids] = await getItemListOrSelected(itemIds);
@@ -648,6 +666,7 @@ export const useGameItemActions = () => {
     toggleFlipSelf,
     toggleLock,
     toggleTap,
+    snapToPoint,
     shuffle: shuffleItems,
     randomlyRotate: randomlyRotateSelectedItems,
     rotate,

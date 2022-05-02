@@ -14,18 +14,23 @@ import ActionBar from "./ActionBar";
 
 import { MediaLibraryProvider, ImageDropNPaste } from "../../mediaLibrary";
 import HintOnLockedItem from "./HintOnLockedItem";
+import useGlobalConf from "../../hooks/useGlobalConf";
 
-export const BoardView = ({ mediaLibraries, edit, itemLibraries }) => {
+export const BoardView = ({
+  mediaLibraries,
+  edit: editMode,
+  itemLibraries,
+}) => {
   const { isMaster } = useWire("board");
   const [showWelcomeModal, setShowWelcomeModal] = React.useState(
-    SHOW_WELCOME && !edit && isMaster
+    SHOW_WELCOME && !editMode && isMaster
   );
 
   const [boardConfig] = useBoardConfig();
 
   const [moveFirst, setMoveFirst] = React.useState(false);
   const [hideMenu, setHideMenu] = React.useState(false);
-  const [showEdit, setShowEdit] = React.useState(false);
+  const { editItem, setEditItem } = useGlobalConf();
 
   const style = React.useMemo(() => {
     const currentBackground =
@@ -41,11 +46,11 @@ export const BoardView = ({ mediaLibraries, edit, itemLibraries }) => {
           moveFirst={moveFirst}
           style={style}
           itemTemplates={itemTemplates}
-          showResizeHandle={showEdit}
+          showResizeHandle={editItem}
         />
-        <NavBar editMode={edit} />
+        <NavBar editMode={editMode} />
         <ActionBar
-          editMode={edit}
+          editMode={editMode}
           BoardFormComponent={BoardForm}
           itemLibraries={itemLibraries}
           moveFirst={moveFirst}
@@ -57,8 +62,8 @@ export const BoardView = ({ mediaLibraries, edit, itemLibraries }) => {
       </ImageDropNPaste>
       <SelectedItemsPane
         hideMenu={hideMenu}
-        showEdit={showEdit}
-        setShowEdit={setShowEdit}
+        showEdit={editItem}
+        setShowEdit={setEditItem}
       />
       <HintOnLockedItem />
     </MediaLibraryProvider>
