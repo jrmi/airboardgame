@@ -24,12 +24,12 @@ const ItemFormFactory = ({ onUpdate, items, extraExcludeFields = {} }) => {
             flexDirection: "column",
           }}
         >
-          <AutoSave save={onUpdate} />
           <ItemForm
             items={items}
             types={types}
             extraExcludeFields={extraExcludeFields}
           />
+          <AutoSave save={onUpdate} />
         </div>
       )}
     />
