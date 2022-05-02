@@ -13,6 +13,7 @@ import { itemTemplates, backgrounds } from "../../gameComponents";
 import ActionBar from "./ActionBar";
 
 import { MediaLibraryProvider, ImageDropNPaste } from "../../mediaLibrary";
+import HintOnLockedItem from "./HintOnLockedItem";
 
 export const BoardView = ({ mediaLibraries, edit, itemLibraries }) => {
   const { isMaster } = useWire("board");
@@ -59,6 +60,7 @@ export const BoardView = ({ mediaLibraries, edit, itemLibraries }) => {
         showEdit={showEdit}
         setShowEdit={setShowEdit}
       />
+      <HintOnLockedItem />
     </MediaLibraryProvider>
   );
 };
