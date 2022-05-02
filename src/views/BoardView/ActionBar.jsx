@@ -114,10 +114,12 @@ const ActionBar = ({
         <img
           style={{
             position: "absolute",
-            left: "calc(50% - 80px)",
-            top: "calc(50% - 80px)",
+            width: "60px",
+            height: "60px",
+            left: "calc(50% - 30px)",
+            top: "calc(50% - 30px)",
             pointerEvents: "none",
-            opacity: 0.1,
+            opacity: 0.3,
           }}
           src={target}
         />
