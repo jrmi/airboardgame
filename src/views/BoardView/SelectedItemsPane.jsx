@@ -1,9 +1,8 @@
 import React from "react";
 import styled from "styled-components";
-import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
 
-import { hasClass, smallUid } from "../../utils";
+import { smallUid } from "../../utils";
 import EditItemButton from "./EditItemButton";
 import {
   useAvailableActions,
@@ -68,16 +67,12 @@ const ActionPane = styled.div.attrs(({ top, left, height }) => {
 `;
 
 const SelectedItemsPane = ({ hideMenu = false, showEdit, setShowEdit }) => {
+  const { t } = useTranslation();
   const { findElementUnderPointer } = useItemActions();
   const { actionMap } = useGameItemActions();
-
   const { availableActions } = useAvailableActions();
-
-  const { t } = useTranslation();
-
   const selectedItems = useSelectedItems();
   const boardState = useBoardState();
-
   const selectionBox = useSelectionBox();
 
   const parsedAvailableActions = React.useMemo(
@@ -126,17 +121,10 @@ const SelectedItemsPane = ({ hideMenu = false, showEdit, setShowEdit }) => {
 
   const onDblClick = React.useCallback(
     async (e) => {
-      const foundElement = await findElementUnderPointer(e, {
-        returnLocked: true,
-      });
+      const foundElement = await findElementUnderPointer(e);
 
       // We dblclick outside of an element
       if (!foundElement) return;
-
-      if (hasClass(foundElement, "locked")) {
-        toast.info(t("Long click to select locked elements"));
-        return;
-      }
 
       // Ignore action disabled on dblclick
       const filteredActions = parsedAvailableActions.filter(
@@ -150,7 +138,7 @@ const SelectedItemsPane = ({ hideMenu = false, showEdit, setShowEdit }) => {
         filteredActions[0].action();
       }
     },
-    [findElementUnderPointer, parsedAvailableActions, t]
+    [findElementUnderPointer, parsedAvailableActions]
   );
 
   React.useEffect(() => {
@@ -160,8 +148,8 @@ const SelectedItemsPane = ({ hideMenu = false, showEdit, setShowEdit }) => {
     };
   }, [onDblClick]);
 
-  if (hideMenu || selectedItems.length === 0) {
-    return null;
+  if (hideMenu) {
+    return false;
   }
 
   return (
