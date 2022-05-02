@@ -290,5 +290,10 @@
   "Horizontal offset": "Horizontal offset",
   "Vertical offset": "Vertical offset",
   "Roll on move": "Roll on move",
-  "Check it to roll the dice after each move.": "Check it to roll the dice after each move."
+  "Check it to roll the dice after each move.": "Check it to roll the dice after each move.",
+  "Snap families": "Snap families",
+  "Let this field empty to snap all items, or set a comma separated list of families that will be snapped.": "Let this field empty to snap all items, or set a comma separated list of families that will be snapped.",
+  "Family": "Family",
+  "Optional - Use the same family name for items that are part of the same set.": "Optional - Use the same family name for items that are part of the same set.",
+  "Anchor": "Anchor"
 }

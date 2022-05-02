@@ -9,7 +9,6 @@ import {
   randInt,
   uid,
   getItemElement,
-  getRandomInt,
 } from "../utils";
 
 import RotateActionForm from "./forms/RotateActionForm";
@@ -254,12 +253,12 @@ export const useGameItemActions = () => {
         batchUpdateItems(ids, (item) => {
           return {
             ...item,
-            value: getRandomInt(0, (item.side || 6) - 1),
+            value: randInt(0, (item.side || 6) - 1),
           };
         });
         if (nextTimeout < 300) {
           setTimeout(
-            () => simulateRoll(nextTimeout + getRandomInt(10, 50)),
+            () => simulateRoll(nextTimeout + randInt(10, 50)),
             nextTimeout
           );
         }
