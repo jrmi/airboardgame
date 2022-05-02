@@ -148,8 +148,14 @@ const SelectedItemsPane = ({ hideMenu = false, showEdit, setShowEdit }) => {
     };
   }, [onDblClick]);
 
-  if (hideMenu) {
-    return false;
+  if (
+    hideMenu ||
+    selectedItems.length === 0 ||
+    boardState.zooming ||
+    boardState.panning ||
+    boardState.movingItems
+  ) {
+    return null;
   }
 
   return (
@@ -188,18 +194,4 @@ const SelectedItemsPane = ({ hideMenu = false, showEdit, setShowEdit }) => {
   );
 };
 
-const PreventItemPane = ({ ...props }) => {
-  const boardState = useBoardState();
-  const selectedItems = useSelectedItems();
-  if (
-    selectedItems.length === 0 ||
-    boardState.zooming ||
-    boardState.panning ||
-    boardState.movingItems
-  ) {
-    return null;
-  }
-  return <SelectedItemsPane {...props} />;
-};
-
-export default PreventItemPane;
+export default SelectedItemsPane;
