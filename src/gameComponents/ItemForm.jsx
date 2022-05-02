@@ -57,7 +57,7 @@ const toInt = (val) => {
   return value;
 };
 
-const ItemForm = ({ items, types, extraExcludeFields = {} }) => {
+const ItemForm = ({ items, types, extraExcludeFields }) => {
   const { t } = useTranslation();
 
   const oneType = types.length === 1;
@@ -78,7 +78,9 @@ const ItemForm = ({ items, types, extraExcludeFields = {} }) => {
   }, [items, oneType]);
 
   // Merge extra excluded fields and all item excluded fields
-  const excludeFields = { ...getExcludedFields(types), ...extraExcludeFields };
+  const excludeFields = React.useMemo(() => {
+    return { ...getExcludedFields(types), ...extraExcludeFields };
+  }, [extraExcludeFields, types]);
 
   const initialValues = React.useMemo(() => {
     const [firstItem, ...restItems] = items;

@@ -101,7 +101,7 @@ const SelectedItemsPane = ({ hideMenu = false, showEdit, setShowEdit }) => {
 
       for (let i = 0; i < parsedAvailableActions.length; i++) {
         const { shortcut, action, edit: whileEdit } = parsedAvailableActions[i];
-        if (shortcut === e.key && showEdit === !!whileEdit) {
+        if (shortcut === e.key && (showEdit || !whileEdit)) {
           action();
           break;
         }

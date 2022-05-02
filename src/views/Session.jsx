@@ -2,6 +2,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import useAsyncEffect from "use-async-effect";
 import { BoardWrapper, useWire } from "react-sync-board";
+import { useSocket } from "@scripters/use-socket.io";
 
 import { itemTemplates, itemLibrary, premadeItems } from "../gameComponents";
 
@@ -9,10 +10,10 @@ import BoardView from "./BoardView";
 import SessionRestoreDim from "./SessionRestoreDim";
 import Waiter from "../ui/Waiter";
 import { uid } from "../utils";
+import { GlobalConfProvider } from "../hooks/useGlobalConf";
 
 import useSession, { SessionProvider } from "../hooks/useSession";
 import AutoSaveSession from "./AutoSaveSession";
-import { useSocket } from "@scripters/use-socket.io";
 
 // Keep compatibility with previous availableItems shape
 const migrateAvailableItemList = (old) => {
@@ -156,10 +157,12 @@ export const Session = () => {
 
   return (
     <>
-      <BoardView
-        mediaLibraries={mediaLibraries}
-        itemLibraries={itemLibraries}
-      />
+      <GlobalConfProvider>
+        <BoardView
+          mediaLibraries={mediaLibraries}
+          itemLibraries={itemLibraries}
+        />
+      </GlobalConfProvider>
       <SessionRestoreDim />
       {isMaster && <AutoSaveSession />}
     </>

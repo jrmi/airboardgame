@@ -2,6 +2,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import useAsyncEffect from "use-async-effect";
 import { BoardWrapper } from "react-sync-board";
+import { useSocket } from "@scripters/use-socket.io";
 
 import { itemTemplates, itemLibrary, premadeItems } from "../gameComponents";
 import Waiter from "../ui/Waiter";
@@ -11,7 +12,7 @@ import { getGame } from "../utils/api";
 import { uid } from "../utils";
 
 import useGame, { GameProvider } from "../hooks/useGame";
-import { useSocket } from "@scripters/use-socket.io";
+import { GlobalConfProvider } from "../hooks/useGlobalConf";
 
 // Keep compatibility with previous availableItems shape
 const migrateAvailableItemList = (old) => {
@@ -127,11 +128,13 @@ export const GameView = ({ create = false }) => {
   }
 
   return (
-    <BoardView
-      mediaLibraries={mediaLibraries}
-      itemLibraries={itemLibraries}
-      edit={true}
-    />
+    <GlobalConfProvider editMode={true}>
+      <BoardView
+        mediaLibraries={mediaLibraries}
+        itemLibraries={itemLibraries}
+        edit={true}
+      />
+    </GlobalConfProvider>
   );
 };
 
