@@ -83,30 +83,27 @@ const ItemForm = ({ items, types, extraExcludeFields }) => {
   }, [extraExcludeFields, types]);
 
   const initialValues = React.useMemo(() => {
-    const [firstItem, ...restItems] = items;
-    const defaultActions = oneType ? getDefaultActionsFromItem(firstItem) : [];
-
-    let initial = JSON.parse(JSON.stringify(firstItem));
-
-    // Set initial values to intersection of all common item values
-    initial = restItems.reduce(objectIntersection, initial);
-
-    if (items.length === 1) {
-      // If only one item we can use default actions
-      initial.actions = initial.actions || defaultActions;
-    } else {
-      initial.actions = initial.actions || [];
-    }
-
-    initial.actions = initial.actions.map((action) => {
-      if (typeof action === "string") {
-        return { name: action };
-      }
-      return action;
+    const [firstItem, ...restItems] = items.map((item) => {
+      const newActions = (item.actions || getDefaultActionsFromItem(item)).map(
+        (action) => {
+          if (typeof action === "string") {
+            return { name: action };
+          }
+          return action;
+        }
+      );
+      return {
+        ...item,
+        actions: newActions,
+      };
     });
 
-    return initial;
-  }, [items, oneType]);
+    // Set initial values to intersection of all common item values
+    return restItems.reduce(
+      objectIntersection,
+      JSON.parse(JSON.stringify(firstItem))
+    );
+  }, [items]);
 
   return (
     <>
@@ -239,7 +236,7 @@ const ItemForm = ({ items, types, extraExcludeFields }) => {
 
           <ActionList
             name="actions"
-            initialValue={initialValues.actions}
+            initialValue={initialValues.actions || []}
             availableActions={availableActions}
           />
         </>
