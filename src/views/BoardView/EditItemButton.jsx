@@ -4,7 +4,11 @@ import { useTranslation } from "react-i18next";
 
 import SidePanel from "../../ui/SidePanel";
 import ItemFormFactory from "./ItemFormFactory";
-import { useItemActions, useSelectedItems, useItems } from "react-sync-board";
+import {
+  useItemActions,
+  useSelectedItems,
+  useDebouncedItems,
+} from "react-sync-board";
 
 const CardContent = styled.div.attrs(() => ({ className: "content" }))`
   display: flex;
@@ -15,7 +19,7 @@ const CardContent = styled.div.attrs(() => ({ className: "content" }))`
 const EditItemButton = ({ showEdit, setShowEdit }) => {
   const { t } = useTranslation();
 
-  const items = useItems();
+  const items = useDebouncedItems();
   const selectedItems = useSelectedItems();
   const { batchUpdateItems } = useItemActions();
 

@@ -39,15 +39,9 @@ const ActionPane = styled.div.attrs(({ top, left, height }) => {
   align-items: center;
   border-radius: 4px;
   padding: 0.1em 0.5em;
-  transition: opacity 100ms;
-  opacity: ${({ hide }) => (hide ? 0 : 0.9)};
   
   box-shadow: 2px 2px 10px 0.3px rgba(0, 0, 0, 0.5);
-
-  &:hover{
-    opacity: 1;
-  }
-
+  
   & button{
     margin 0 4px;
     padding: 0em;
@@ -100,10 +94,6 @@ const SelectedItemsPane = ({ hideMenu = false, showEdit, setShowEdit }) => {
     [actionMap, availableActions, selectedItems]
   );
 
-  const showEditButton =
-    !boardState.selecting &&
-    !(boardState.zooming || boardState.panning || boardState.movingItems);
-
   React.useEffect(() => {
     const onKeyUp = (e) => {
       // Block shortcut if we are typing in a textarea or input
@@ -126,7 +116,13 @@ const SelectedItemsPane = ({ hideMenu = false, showEdit, setShowEdit }) => {
     return () => {
       document.removeEventListener("keyup", onKeyUp);
     };
-  }, [actionMap, availableActions, parsedAvailableActions, showEdit]);
+  }, [
+    actionMap,
+    availableActions,
+    parsedAvailableActions,
+    setShowEdit,
+    showEdit,
+  ]);
 
   const onDblClick = React.useCallback(
     async (e) => {
@@ -169,10 +165,7 @@ const SelectedItemsPane = ({ hideMenu = false, showEdit, setShowEdit }) => {
   }
 
   return (
-    <ActionPane
-      {...selectionBox}
-      hide={boardState.zooming || boardState.panning || boardState.movingItems}
-    >
+    <ActionPane {...selectionBox}>
       {(selectedItems.length > 1 || boardState.selecting) && (
         <div className="count">
           <span className="number">{selectedItems.length}</span>
@@ -200,11 +193,25 @@ const SelectedItemsPane = ({ hideMenu = false, showEdit, setShowEdit }) => {
           }
         )}
 
-      {showEditButton && (
+      {!boardState.selecting && (
         <EditItemButton showEdit={showEdit} setShowEdit={setShowEdit} />
       )}
     </ActionPane>
   );
 };
 
-export default SelectedItemsPane;
+const PreventItemPane = ({ ...props }) => {
+  const boardState = useBoardState();
+  const selectedItems = useSelectedItems();
+  if (
+    selectedItems.length === 0 ||
+    boardState.zooming ||
+    boardState.panning ||
+    boardState.movingItems
+  ) {
+    return null;
+  }
+  return <SelectedItemsPane {...props} />;
+};
+
+export default PreventItemPane;
