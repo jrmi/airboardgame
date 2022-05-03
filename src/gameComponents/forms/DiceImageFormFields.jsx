@@ -76,21 +76,23 @@ const Form = ({ initialValues }) => {
       </Label>
 
       <Label>
-        {t("Double click to roll")}
+        {t("Roll on move")}
         <Field
-          name="rollOnDblClick"
+          name="rollOnMove"
           component="input"
           type="checkbox"
-          initialValue={initialValues.rollOnDblClick}
+          initialValue={initialValues.rollOnMove}
         />
-        <Hint>
-          {t("Check it to activate roll on double click instead of moving.")}
-        </Hint>
+        <Hint>{t("Check it to roll the dice after each move.")}</Hint>
       </Label>
 
       <Label>
         {t("Side count")}
-        <Field name="side" component="input" initialValue={initialValues.side}>
+        <Field
+          name="side"
+          component="input"
+          initialValue={initialValues.side || 6}
+        >
           {(props) => {
             const onChange = (newValue) => {
               const parsed = parseInt(newValue.target.value, 10);

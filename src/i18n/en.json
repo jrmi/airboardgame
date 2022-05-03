@@ -224,8 +224,6 @@
   "{{min}}~{{max}} min": "{{min}}~{{max}} min",
   "~{{count}} min": "~{{count}} minute",
   "~{{count}} min_plural": "{{count}} minutes",
-  "Double click to roll": "Double click to roll",
-  "Check it to activate roll on double click instead of moving.": "check it to activate roll on double click instead of moving.",
   "Dice image {{index}}": "Side #{{index}}",
   "Image dice": "Image dice",
   "Black": "Black",
@@ -290,5 +288,7 @@
   "Font family": "Font family",
   "Text color": "Text color",
   "Horizontal offset": "Horizontal offset",
-  "Vertical offset": "Vertical offset"
+  "Vertical offset": "Vertical offset",
+  "Roll on move": "Roll on move",
+  "Check it to roll the dice after each move.": "Check it to roll the dice after each move."
 }

@@ -2,6 +2,7 @@ import React, { memo } from "react";
 import styled from "styled-components";
 import { useItemInteraction } from "react-sync-board";
 import { media2Url } from "../mediaLibrary";
+import useGameItemActions from "./useGameItemActions";
 
 const DicePane = styled.div`
   line-height: 0;
@@ -12,12 +13,6 @@ const DicePane = styled.div`
     pointer-events: none;
   }
 `;
-
-const getRandomInt = (sides) => {
-  let min = 1;
-  let max = Math.ceil(sides);
-  return Math.floor(Math.random() * max) + min;
-};
 
 const defaultDiceImages = [
   "/game_assets/dice/one.svg",
@@ -31,43 +26,21 @@ const defaultDiceImages = [
 const Dice = ({
   id,
   value = 0,
-  side = 6,
   images = defaultDiceImages,
   width = 50,
   height = 50,
   rollOnDblClick = false,
-  setState,
+  rollOnMove = !rollOnDblClick,
 }) => {
   const { register } = useItemInteraction("place");
-  const diceWrapper = React.useRef(null);
-
-  const roll = React.useCallback(() => {
-    diceWrapper.current.className = "hvr-wobble-horizontal";
-    const simulateRoll = (nextTimeout) => {
-      setState((prevState) => ({
-        ...prevState,
-        value: getRandomInt(side - 1),
-      }));
-      if (nextTimeout < 200) {
-        setTimeout(
-          () => simulateRoll(nextTimeout + getRandomInt(30)),
-          nextTimeout
-        );
-      }
-    };
-    simulateRoll(100);
-  }, [setState, side]);
-
-  const removeClass = (e) => {
-    e.target.className = "";
-  };
+  const { roll } = useGameItemActions();
 
   React.useEffect(() => {
     const unregisterList = [];
-    if (!rollOnDblClick) {
+    if (rollOnMove) {
       const rollOnPlace = (itemIds) => {
         if (itemIds.includes(id)) {
-          roll();
+          roll([id]);
         }
       };
 
@@ -76,20 +49,12 @@ const Dice = ({
     return () => {
       unregisterList.forEach((callback) => callback());
     };
-  }, [roll, register, rollOnDblClick, id]);
+  }, [roll, register, id, rollOnMove]);
 
   return (
-    <div onAnimationEnd={removeClass} ref={diceWrapper}>
-      <DicePane
-        width={width}
-        height={height}
-        onDoubleClick={(e) =>
-          e.stopPropagation() || (rollOnDblClick ? roll() : null)
-        }
-      >
-        {images[value] && <img src={media2Url(images[value])} />}
-      </DicePane>
-    </div>
+    <DicePane width={width} height={height}>
+      {images[value] && <img src={media2Url(images[value])} />}
+    </DicePane>
   );
 };
 
