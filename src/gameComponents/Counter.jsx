@@ -4,7 +4,7 @@ import styled, { css } from "styled-components";
 const CounterPane = styled.div`
   ${({ color }) => css`
     background-color: ${color};
-    padding: 0.2em;
+    padding: 0.5em;
     text-align: center;
     border-radius: 3px;
     box-shadow: 4px 4px 5px 0px rgb(0, 0, 0, 0.3);
@@ -13,25 +13,32 @@ const CounterPane = styled.div`
       transform: scale(0.7);
     }
 
+    .counter-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: stretch;
+    }
+
     button {
       padding: 1rem;
+      margin: 0;
+      border: none;
+      margin-top: -1px;
     }
 
     input {
-      width: 2em;
+      user-select: none;
+      text-align: center;
+      width: 3em !important;
+      border-radius: 0 !important;
+      border: none !important;
+      margin: 0 -1px;
     }
 
     h3 {
       user-select: none;
       padding: 0;
       margin: 0;
-    }
-
-    div {
-      display: flex;
-      justify-content: space-between;
-      flex-direction: row;
-      align-items: center;
     }
   `}
 `;
@@ -75,37 +82,28 @@ const Counter = ({
   return (
     <CounterPane color={color}>
       <h3>{label}</h3>
-      <div>
+      <div className="counter-content">
         <button
           onClick={decrement}
           onDoubleClick={(e) => e.stopPropagation()}
-          style={{ margin: "2px" }}
+          style={{ borderRadius: "2px 0 0 2px" }}
         >
           -
         </button>
-        <label style={{ userSelect: "none" }}>
-          <input
-            style={{
-              textColor,
-              width: "2.5em",
-              display: "block",
-              textAlign: "center",
-              border: "none",
-              margin: "0.2em 0",
-              padding: "0.2em 0",
-              fontSize: fontSize + "px",
-              userSelect: "none",
-            }}
-            onKeyUp={(e) => e.stopPropagation()}
-            onKeyDown={(e) => e.stopPropagation()}
-            value={value}
-            onChange={setValue}
-          />
-        </label>
+        <input
+          style={{
+            color: textColor,
+            fontSize: fontSize + "px",
+          }}
+          onKeyUp={(e) => e.stopPropagation()}
+          onKeyDown={(e) => e.stopPropagation()}
+          value={value}
+          onChange={setValue}
+        />
         <button
           onClick={increment}
           onDoubleClick={(e) => e.stopPropagation()}
-          style={{ margin: "2px" }}
+          style={{ borderRadius: "0 2px 2px 0" }}
         >
           +
         </button>
