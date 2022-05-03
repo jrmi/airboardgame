@@ -31,7 +31,7 @@ const Rect = ({
       {text && (
         <span
           style={{
-            textColor,
+            color: textColor,
             fontSize: fontSize + "px",
           }}
         >

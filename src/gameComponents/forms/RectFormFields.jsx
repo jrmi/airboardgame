@@ -66,6 +66,23 @@ const Form = ({ initialValues }) => {
           {(props) => <input {...props.input} type="number" />}
         </Field>
       </Label>
+
+      <Label>
+        {t("Text color")}
+        <Field
+          name="textColor"
+          component="input"
+          initialValue={initialValues.textColor || "#000"}
+        >
+          {({ input: { onChange, value } }) => (
+            <ColorPicker
+              value={value}
+              onChange={onChange}
+              disableAlpha={true}
+            />
+          )}
+        </Field>
+      </Label>
     </>
   );
 };
