@@ -304,8 +304,9 @@ const itemTemplates = {
   },
   dice: {
     component: Dice,
-    defaultActions: ["clone", "lock", "remove"],
+    defaultActions: ["roll", "clone", "lock", "remove"],
     availableActions: [
+      "roll",
       "clone",
       "lock",
       "remove",
@@ -319,8 +320,9 @@ const itemTemplates = {
   },
   diceImage: {
     component: DiceImage,
-    defaultActions: ["clone", "lock", "remove"],
+    defaultActions: ["roll", "clone", "lock", "remove"],
     availableActions: [
+      "roll",
       "clone",
       "lock",
       "remove",

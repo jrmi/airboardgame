@@ -103,3 +103,6 @@ export const objectDiff = (o1, o2) => {
 
   return result;
 };
+
+export const getRandomInt = (min, max) =>
+  Math.floor(Math.random() * (max - min + 1) + min);

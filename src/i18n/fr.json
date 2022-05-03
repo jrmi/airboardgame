@@ -224,8 +224,6 @@
   "{{min}}~{{max}} min": "{{min}}~{{max}} minutes",
   "~{{count}} min": "~{{count}} minute",
   "~{{count}} min_plural": "~{{count}} minutes",
-  "Double click to roll": "Double clic pour lancer",
-  "Check it to activate roll on double click instead of moving.": "Cocher pour activer le lancé au double clic à la place du déplacement.",
   "Dice image {{index}}": "Face n° {{index}}",
   "Image dice": "Dé avec image",
   "Black": "Noir",
@@ -290,5 +288,7 @@
   "Font family": "Police de caractères",
   "Text color": "Couleur du texte",
   "Horizontal offset": "Décalage horizontal",
-  "Vertical offset": "Décalage vertical"
+  "Vertical offset": "Décalage vertical",
+  "Roll on move": "Lancer après un déplacement",
+  "Check it to roll the dice after each move.": "Cocher pour lancer le dé après chaque déplacement."
 }

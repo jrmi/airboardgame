@@ -9,6 +9,7 @@ import {
   randInt,
   uid,
   getItemElement,
+  getRandomInt,
 } from "../utils";
 
 import RotateActionForm from "./forms/RotateActionForm";
@@ -26,6 +27,7 @@ import lockIcon from "../images/lock.svg";
 import rotateIcon from "../images/rotate.svg";
 import shuffleIcon from "../images/shuffle.svg";
 import tapIcon from "../images/tap.svg";
+import rollIcon from "../images/rolling-dices.svg";
 
 import useLocalStorage from "../hooks/useLocalStorage";
 
@@ -238,6 +240,33 @@ export const useGameItemActions = () => {
       });
     },
     [batchUpdateItems]
+  );
+
+  const roll = React.useCallback(
+    async (itemIds) => {
+      const [ids] = await getItemListOrSelected(itemIds);
+      ids.forEach((itemId) => {
+        const elem = getItemElement(itemId);
+        elem.firstChild.className = "hvr-wobble-horizontal";
+      });
+
+      const simulateRoll = (nextTimeout) => {
+        batchUpdateItems(ids, (item) => {
+          return {
+            ...item,
+            value: getRandomInt(0, (item.side || 6) - 1),
+          };
+        });
+        if (nextTimeout < 300) {
+          setTimeout(
+            () => simulateRoll(nextTimeout + getRandomInt(10, 50)),
+            nextTimeout
+          );
+        }
+      };
+      simulateRoll(100);
+    },
+    [batchUpdateItems, getItemListOrSelected]
   );
 
   const shuffleItems = React.useCallback(
@@ -491,6 +520,12 @@ export const useGameItemActions = () => {
         multiple: true,
         icon: alignAsSquareIcon,
       },
+      roll: {
+        action: () => roll,
+        label: t("Roll"),
+        shortcut: "r",
+        icon: rollIcon,
+      },
       shuffle: {
         action: () => shuffleItems,
         label: t("Shuffle"),
@@ -644,6 +679,7 @@ export const useGameItemActions = () => {
     cloneItem,
     randomlyRotateSelectedItems,
     remove,
+    roll,
     rotate,
     setFlip,
     setFlipSelf,
@@ -658,8 +694,11 @@ export const useGameItemActions = () => {
   ]);
 
   return {
-    stack: stackToTopLeft,
+    randomlyRotate: randomlyRotateSelectedItems,
     remove,
+    roll,
+    rotate,
+    stack: stackToTopLeft,
     setFlip,
     setFlipSelf,
     toggleFlip,
@@ -668,8 +707,6 @@ export const useGameItemActions = () => {
     toggleTap,
     snapToPoint,
     shuffle: shuffleItems,
-    randomlyRotate: randomlyRotateSelectedItems,
-    rotate,
     actionMap,
   };
 };
