@@ -16,6 +16,11 @@ import { MediaLibraryProvider, ImageDropNPaste } from "../../mediaLibrary";
 import HintOnLockedItem from "./HintOnLockedItem";
 import useGlobalConf from "../../hooks/useGlobalConf";
 
+import flipAudio from "../../media/audio/flip.wav?url";
+import rollAudio from "../../media/audio/roll.wav?url";
+import shuffleAudio from "../../media/audio/shuffle.wav?url";
+import { preloadAudio } from "../../utils";
+
 export const BoardView = ({
   mediaLibraries,
   edit: editMode,
@@ -38,6 +43,8 @@ export const BoardView = ({
       backgrounds.find(({ type }) => type === "default");
     return currentBackground.getStyle(boardConfig.bgConf);
   }, [boardConfig.bgConf, boardConfig.bgType]);
+
+  React.useEffect(() => preloadAudio([flipAudio, shuffleAudio, rollAudio]), []);
 
   return (
     <MediaLibraryProvider libraries={mediaLibraries}>
