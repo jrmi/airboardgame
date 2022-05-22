@@ -72,12 +72,15 @@ const Anchor = ({ families, id, color = "#CCC" }) => {
   );
 
   React.useEffect(() => {
-    const unregisterList = [];
-    unregisterList.push(register(onInsideItem));
+    const unregister = [];
+    // If no Id then we are in the library
+    if (id) {
+      unregister.push(register(onInsideItem));
+    }
     return () => {
-      unregisterList.forEach((callback) => callback());
+      unregister.forEach((unregisterMe) => unregisterMe());
     };
-  }, [onInsideItem, register]);
+  }, [onInsideItem, register, id]);
 
   useAsyncEffect(
     async (isMounted) => {
