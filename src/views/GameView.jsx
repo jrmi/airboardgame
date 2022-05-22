@@ -88,36 +88,36 @@ export const GameView = ({ create = false }) => {
     [gameLoaded]
   );
 
-  const availableItemLibrary = React.useMemo(() => {
+  const itemLibraries = React.useMemo(() => {
     let itemList = availableItems;
-    if (itemList?.length && itemList[0].groupId) {
+    if (itemList.length && itemList[0].groupId) {
       itemList = migrateAvailableItemList(itemList);
     }
-    return adaptItems(itemList);
-  }, [availableItems]);
+    const availableItemLibrary = adaptItems(itemList);
+    const premadeLibrary = adaptItems(premadeItems);
 
-  const premadeLibrary = React.useMemo(() => adaptItems(premadeItems), []);
+    const libraries = [
+      {
+        name: t("Standard"),
+        key: "standard",
+        items: itemLibrary,
+      },
+      {
+        name: t("Premade"),
+        key: "premade",
+        items: premadeLibrary,
+      },
+    ];
 
-  const itemLibraries = [
-    {
-      name: t("Standard"),
-      key: "standard",
-      items: itemLibrary,
-    },
-    {
-      name: t("Premade"),
-      key: "premade",
-      items: premadeLibrary,
-    },
-  ];
-
-  if (availableItems.length) {
-    itemLibraries.push({
-      name: t("Box"),
-      key: "box",
-      items: availableItemLibrary,
-    });
-  }
+    if (availableItems.length) {
+      libraries.push({
+        name: t("Box"),
+        key: "box",
+        items: availableItemLibrary,
+      });
+    }
+    return libraries;
+  }, [availableItems, t]);
 
   const mediaLibraries = React.useMemo(() => {
     return [{ id: "game", name: t("Game"), boxId: "game", resourceId: gameId }];
