@@ -7,9 +7,9 @@ import { NavLink } from "react-router-dom";
 import SliderRange from "../ui/SliderRange";
 import Spinner from "../ui/Spinner";
 
-import playerSVG from "../images/player.svg";
-import languageSVG from "../images/language.svg";
-import clockSVG from "../images/clock.svg";
+import playerSVG from "../media/images/player.svg";
+import languageSVG from "../media/images/language.svg";
+import clockSVG from "../media/images/clock.svg";
 
 import { getGames } from "../utils/api";
 import { search } from "../utils";

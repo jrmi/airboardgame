@@ -8,7 +8,7 @@ import styled from "styled-components";
 import { useTranslation } from "react-i18next";
 
 import Touch from "../../ui/Touch";
-import target from "../../images/target.svg";
+import target from "../../media/images/target.svg";
 
 const StyledActionBar = styled.div`
   position: absolute;

@@ -5,7 +5,7 @@ import { parseToRgba, rgba } from "color2k";
 
 import styled from "styled-components";
 
-import backgroundGrid from "../../images/background-grid.png";
+import backgroundGrid from "../../media/images/background-grid.png";
 
 const Color = styled.div`
   position: relative;
