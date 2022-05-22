@@ -86,3 +86,32 @@ export const objectDiff = (o1, o2) => {
 
   return result;
 };
+
+export const retry = (fn, condition, delay) => {
+  if (condition()) {
+    setTimeout(() => retry(fn, condition, delay), delay);
+  } else {
+    fn();
+  }
+};
+
+const audioFiles = {};
+
+export const preloadAudio = (urls) => {
+  urls.forEach((url) => {
+    if (!audioFiles[url]) {
+      audioFiles[url] = new Audio(url);
+    }
+  });
+};
+
+export const playAudio = (url, volume = 1) => {
+  if (!audioFiles[url]) {
+    audioFiles[url] = new Audio(url);
+  }
+
+  audioFiles[url].pause();
+  audioFiles[url].currentTime = 0;
+  audioFiles[url].volume = volume;
+  audioFiles[url].play();
+};

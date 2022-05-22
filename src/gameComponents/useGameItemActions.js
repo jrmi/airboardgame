@@ -9,6 +9,7 @@ import {
   randInt,
   uid,
   getItemElement,
+  playAudio,
 } from "../utils";
 
 import RotateActionForm from "./forms/RotateActionForm";
@@ -27,6 +28,10 @@ import rotateIcon from "../media/images/rotate.svg";
 import shuffleIcon from "../media/images/shuffle.svg";
 import tapIcon from "../media/images/tap.svg";
 import rollIcon from "../media/images/rolling-dices.svg";
+
+import flipAudio from "../media/audio/flip.wav?url";
+import rollAudio from "../media/audio/roll.wav?url";
+import shuffleAudio from "../media/audio/shuffle.wav?url";
 
 import useLocalStorage from "../hooks/useLocalStorage";
 
@@ -264,6 +269,8 @@ export const useGameItemActions = () => {
         }
       };
       simulateRoll(100);
+
+      playAudio(rollAudio, 0.4);
     },
     [batchUpdateItems, getItemListOrSelected]
   );
@@ -278,6 +285,8 @@ export const useGameItemActions = () => {
       });
       const shuffledItems = shuffleArray([...ids]);
       swapItems(ids, shuffledItems);
+
+      playAudio(shuffleAudio, 0.5);
     },
     [getItemListOrSelected, swapItems]
   );
@@ -354,6 +363,7 @@ export const useGameItemActions = () => {
       if (reverseOrder) {
         reverseItemsOrder(itemIds);
       }
+      playAudio(flipAudio, 0.2);
     },
     [batchUpdateItems, reverseItemsOrder]
   );
