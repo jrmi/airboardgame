@@ -280,7 +280,7 @@ const NavBar = ({ editMode, title }) => {
             onClick={() => setShowInfoModal((prev) => !prev)}
             alt={t("Help & info")}
             title={t("Help & info")}
-            icon={"info"}
+            icon={"help"}
           />
         </div>
       </StyledNavBar>
