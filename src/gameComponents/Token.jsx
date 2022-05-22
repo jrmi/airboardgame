@@ -19,8 +19,11 @@ const StyledShape = styled.div`
       bottom: 0;
     }
     & span {
-      transform: rotateX(25deg);
+      transform: rotateX(30deg);
       padding-bottom: 0.2em;
+      text-align: center;
+      line-height: 1em;
+      margin-top: -10px;
     }
   `}
 `;
