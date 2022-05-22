@@ -3,7 +3,7 @@ import { useUsers } from "react-sync-board";
 import styled from "styled-components";
 import { media2Url } from "../mediaLibrary";
 
-import eye from "../images/eye.svg";
+import eye from "../media/images/eye.svg";
 
 const UnflippedFor = styled.div`
   position: absolute;

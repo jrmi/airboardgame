@@ -10,7 +10,7 @@ import UserCircle from "../../users/UserCircle";
 
 import RoomNavBar from "./RoomNavBar";
 
-import table from "../../images/table.png";
+import table from "../../media/images/table.png";
 import { useTranslation } from "react-i18next";
 import { useSocket } from "@scripters/use-socket.io";
 

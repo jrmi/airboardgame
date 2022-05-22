@@ -14,19 +14,19 @@ import {
 import RotateActionForm from "./forms/RotateActionForm";
 import RandomlyRotateActionForm from "./forms/RandomlyRotateActionForm";
 
-import deleteIcon from "../images/delete.svg";
-import stackToCenterIcon from "../images/stackToCenter.svg";
-import stackToTopLeftIcon from "../images/stackToTopLeft.svg";
-import alignAsLineIcon from "../images/alignAsLine.svg";
-import alignAsSquareIcon from "../images/alignAsSquare.svg";
-import duplicateIcon from "../images/duplicate.svg";
-import seeIcon from "../images/see.svg";
-import flipIcon from "../images/flip.svg";
-import lockIcon from "../images/lock.svg";
-import rotateIcon from "../images/rotate.svg";
-import shuffleIcon from "../images/shuffle.svg";
-import tapIcon from "../images/tap.svg";
-import rollIcon from "../images/rolling-dices.svg";
+import deleteIcon from "../media/images/delete.svg";
+import stackToCenterIcon from "../media/images/stackToCenter.svg";
+import stackToTopLeftIcon from "../media/images/stackToTopLeft.svg";
+import alignAsLineIcon from "../media/images/alignAsLine.svg";
+import alignAsSquareIcon from "../media/images/alignAsSquare.svg";
+import duplicateIcon from "../media/images/duplicate.svg";
+import seeIcon from "../media/images/see.svg";
+import flipIcon from "../media/images/flip.svg";
+import lockIcon from "../media/images/lock.svg";
+import rotateIcon from "../media/images/rotate.svg";
+import shuffleIcon from "../media/images/shuffle.svg";
+import tapIcon from "../media/images/tap.svg";
+import rollIcon from "../media/images/rolling-dices.svg";
 
 import useLocalStorage from "../hooks/useLocalStorage";
 

@@ -4,7 +4,7 @@ import { useQuery, useMutation, useQueryClient } from "react-query";
 import styled from "styled-components";
 
 import { API_BASE } from "../utils/settings";
-import backgroundGrid from "../images/background-grid.png";
+import backgroundGrid from "../media/images/background-grid.png";
 
 import { confirmAlert } from "react-confirm-alert";
 import { toast } from "react-toastify";
