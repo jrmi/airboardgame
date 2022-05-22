@@ -26,6 +26,17 @@ const SaveExportGameModal = ({ show, setShow }) => {
     setShow(false);
   }, [saveGame, setShow, t]);
 
+  React.useEffect(() => {
+    const callback = (e) => {
+      if (e.ctrlKey && e.key === "s") {
+        e.preventDefault();
+        handleSave();
+      }
+    };
+    window.addEventListener("keydown", callback);
+    return () => window.removeEventListener("keydown", callback);
+  }, [handleSave]);
+
   return (
     <Modal title={t("Save & export")} setShow={setShow} show={show}>
       <header>
