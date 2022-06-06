@@ -23,16 +23,16 @@ const ChangeGameModalContent = ({ onLoad }) => {
 
   const { isLoading, data: gameList } = useQuery("games", async () =>
     (await getGames())
-      .filter((game) => game.published)
+      .filter((game) => game.board.published)
       .sort((a, b) => {
         const [nameA, nameB] = [
           a.board.defaultName || a.board.name,
           b.board.defaultName || b.board.name,
         ];
-        if (nameA < nameB) {
+        if (nameA < nameB || a.id === "demo") {
           return -1;
         }
-        if (nameA > nameB) {
+        if (nameA > nameB || b.id === "demo") {
           return 1;
         }
         return 0;

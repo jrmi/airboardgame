@@ -188,6 +188,19 @@ const BoardConfigForm = () => {
         </Label>
 
         <Label>
+          {t("Keep title")}
+          <Field
+            name="keepTitle"
+            component="input"
+            type="checkbox"
+            initialValue={boardConfig.keepTitle}
+          />
+          <Hint>
+            {t("Check it to keep the game title above the game image.")}
+          </Hint>
+        </Label>
+
+        <Label>
           {t("Baseline")}
           <Field
             name="defaultBaseline"

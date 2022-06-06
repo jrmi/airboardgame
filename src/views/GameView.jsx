@@ -50,7 +50,7 @@ const adaptItems = (nodes) => {
 const newGameData = {
   items: [],
   availableItems: [],
-  board: { size: 2000, scale: 1 },
+  board: { size: 2000, scale: 1, imageUrl: "/game_assets/default.png" },
 };
 
 export const GameView = ({ create = false }) => {

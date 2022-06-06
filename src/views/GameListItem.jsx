@@ -12,14 +12,14 @@ const Game = styled.li`
   position: relative;
   padding: 0em;
   margin: 0px;
-  min-width: 0; /* Fix for elipsis */
+  min-width: 0; /* Fix for ellipsis */
 
   & .game-name {
     max-width: 80%;
     line-height: 1.1em;
     overflow: hidden;
     margin-bottom: 3px;
-    margin: 0.2em 0 0.5em 0;
+    margin: 0.1em 0 0.1em 0;
     font-size: 2.2vw;
     white-space: nowrap;
     overflow: hidden;
@@ -77,10 +77,7 @@ const Game = styled.li`
       ${({ other }) => (!other ? "" : "border: 1px solid red")};
 
       position: absolute;
-      top: 0;
-      left: 0;
-      bottom: 0;
-      right: 0;
+      inset: 0;
       overflow: hidden;
       display: block;
       display: flex;
@@ -91,19 +88,24 @@ const Game = styled.li`
         filter: blur(5px);
         background-size: cover;
         position: absolute;
-        top: 0;
-        left: 0;
-        bottom: 0;
-        right: 0;
+        inset: 0;
       }
       & > h2 {
+        position: absolute;
+        width: 100%;
+        top: calc(50%-0.6em);
+        z-index: 200;
+        left: 0;
         text-align: center;
         display: inline;
-        font-size: 3em;
+        font-size: 2em;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-        margin: 0 0.5em;
+        margin: 0;
+        padding: 0.2em 0.5em;
+        line-height: 1.2em;
+        background-color: #111111a0;
       }
     }
   }
@@ -165,14 +167,17 @@ const getGameUrl = (id) => `${window.location.origin}/playgame/${id}`;
 
 const GameListItem = ({
   game: {
-    published,
     owner,
     id,
-    minAge,
-    materialLanguage,
-    duration,
-    playerCount,
-    imageUrl,
+    board: {
+      minAge,
+      materialLanguage,
+      duration,
+      playerCount,
+      published,
+      imageUrl,
+      keepTitle,
+    },
   },
   game,
   userId,
@@ -196,7 +201,7 @@ const GameListItem = ({
   const [showImage, setShowImage] = React.useState(Boolean(realImageUrl));
 
   const translation = React.useMemo(
-    () => getBestTranslationFromConfig(game, i18n.languages),
+    () => getBestTranslationFromConfig(game.board, i18n.languages),
     [game, i18n.languages]
   );
 
@@ -312,7 +317,7 @@ const GameListItem = ({
               />
             </>
           )}
-          {!showImage && <h2>{translation.name}</h2>}
+          {(!showImage || keepTitle) && <h2>{translation.name}</h2>}
         </span>
       </a>
       <span className="extra-actions">

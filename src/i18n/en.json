@@ -295,5 +295,10 @@
   "Let this field empty to snap all items, or set a comma separated list of families that will be snapped.": "Let this field empty to snap all items, or set a comma separated list of families that will be snapped.",
   "Family": "Family",
   "Optional - Use the same family name for items that are part of the same set.": "Optional - Use the same family name for items that are part of the same set.",
-  "Anchor": "Anchor"
+  "Anchor": "Anchor",
+  "Label position": "Label position",
+  "Left": "Left",
+  "Top": "Top",
+  "Keep title": "Show title",
+  "Check it to keep the game title above the game image.": "Check it to keep the game title above the game image."
 }
