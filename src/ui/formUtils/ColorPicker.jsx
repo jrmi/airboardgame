@@ -7,6 +7,25 @@ import styled from "styled-components";
 
 import backgroundGrid from "../../media/images/background-grid.png";
 
+const defaultColors = [
+  "#FFF1E8",
+  "#FFEC27",
+  "#29ADFF",
+  "#FFCCAA",
+  "#00E436",
+  "#C2C3C7",
+  "#FFA300",
+  "#FF77A8",
+  "#83769C",
+  "#FF004D",
+  "#008751",
+  "#AB5236",
+  "#5F574F",
+  "#1D2B53",
+  "#7E2553",
+  "#000000 ",
+];
+
 const Color = styled.div`
   position: relative;
   background-image: url(${backgroundGrid});
@@ -35,7 +54,12 @@ const ColorPickerWrapper = styled.div`
   flex-direction: column;
 `;
 
-const ColorPicker = ({ value, onChange, disableAlpha = true }) => {
+const ColorPicker = ({
+  value,
+  onChange,
+  disableAlpha = true,
+  colors = defaultColors,
+}) => {
   const [showPicker, setShowPicker] = React.useState(false);
   const [currentColor, setCurrentColor] = React.useState(() => {
     if (value === "") {
@@ -83,6 +107,7 @@ const ColorPicker = ({ value, onChange, disableAlpha = true }) => {
             onChange={handleChange}
             disableAlpha={disableAlpha}
             onChangeComplete={handleChangeComplete}
+            presetColors={colors}
           />
           <button onClick={handleClick}>{t("Close")}</button>
         </ColorPickerWrapper>

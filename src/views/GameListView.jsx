@@ -174,9 +174,9 @@ const hasAllowedMaterialLanguage = (filterCriteria, game) => {
   const MULTI_LANG_KEYWORD = "Multi-lang";
 
   return (
-    !game.materialLanguage ||
-    game.materialLanguage === MULTI_LANG_KEYWORD ||
-    filterCriteria.languages.includes(game.materialLanguage)
+    !game.board.materialLanguage ||
+    game.board.materialLanguage === MULTI_LANG_KEYWORD ||
+    filterCriteria.languages.includes(game.board.materialLanguage)
   );
 };
 
@@ -193,16 +193,16 @@ const GameListView = () => {
 
   const { isLoading, data: gameList } = useQuery("games", async () =>
     (await getGames())
-      .filter((game) => game.published)
+      .filter((game) => game.board.published)
       .sort((a, b) => {
         const [nameA, nameB] = [
           a.board.defaultName || a.board.name,
           b.board.defaultName || b.board.name,
         ];
-        if (nameA < nameB) {
+        if (nameA < nameB || a.id === "demo") {
           return -1;
         }
-        if (nameA > nameB) {
+        if (nameA > nameB || b.id === "demo") {
           return 1;
         }
         return 0;
@@ -214,9 +214,12 @@ const GameListView = () => {
       return gameList.filter(
         (game) =>
           (filterCriteria.searchTerm === NULL_SEARCH_TERM ||
-            search(filterCriteria.searchTerm, game.defaultName)) &&
-          hasRequestedValues(filterCriteria.nbOfPlayers, game.playerCount) &&
-          hasRequestedValues(filterCriteria.durations, game.duration) &&
+            search(filterCriteria.searchTerm, game.board.defaultName)) &&
+          hasRequestedValues(
+            filterCriteria.nbOfPlayers,
+            game.board.playerCount
+          ) &&
+          hasRequestedValues(filterCriteria.durations, game.board.duration) &&
           hasAllowedMaterialLanguage(filterCriteria, game)
       );
     }

@@ -100,6 +100,19 @@ const Form = ({ initialValues }) => {
         </Field>
       </Label>
 
+      <Label>
+        {t("Label position")}
+        <Field
+          name="labelPosition"
+          component="select"
+          initialValue={initialValues.labelPosition || "left"}
+          style={{ width: "10em" }}
+        >
+          <option value="left">{t("Left")}</option>
+          <option value="top">{t("Top")}</option>
+        </Field>
+      </Label>
+
       <h3>{t("Interactions")}</h3>
       <Hint>{t("Interaction help")}</Hint>
       <Label>

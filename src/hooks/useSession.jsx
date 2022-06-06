@@ -5,19 +5,25 @@ import {
   useBoardConfig,
   useWire,
 } from "react-sync-board";
+import { useTranslation } from "react-i18next";
 
 import SubscribeSessionEvents from "./SubscribeSessionEvents";
 
 import { updateSession, getSession, getGame } from "../utils/api";
 
+import demoEn from "../games/demo_en.json?url";
+import demoFr from "../games/demo_fr.json?url";
+
 export const SessionContext = React.createContext({});
+
+const demos = {
+  fr: demoFr,
+};
 
 const emtpyBoard = {
   items: [],
   availableItems: [],
   board: {
-    size: 1000,
-    scale: 1,
     translations: [
       {
         language: "fr",
@@ -33,6 +39,7 @@ const emtpyBoard = {
 };
 
 export const SessionProvider = ({ sessionId, fromGameId, children }) => {
+  const { i18n } = useTranslation();
   const { setItemList, getItemList } = useItemActions();
   const { messages, setMessages } = useMessage();
   const [availableItems, setAvailableItems] = React.useState([]);
@@ -61,14 +68,23 @@ export const SessionProvider = ({ sessionId, fromGameId, children }) => {
     } catch {
       if (fromGameId) {
         // Then from initial game
-        sessionData = await getGame(fromGameId);
+        if (fromGameId === "demo") {
+          const foundLang = i18n.languages.find((lang) => demos[lang]);
+          if (foundLang) {
+            sessionData = await (await fetch(demos[foundLang])).json();
+          } else {
+            sessionData = await (await fetch(demoEn)).json();
+          }
+        } else {
+          sessionData = await getGame(fromGameId);
+        }
       } else {
         // Empty board
         sessionData = emtpyBoard;
       }
     }
     return sessionData;
-  }, [fromGameId, sessionId]);
+  }, [fromGameId, i18n.languages, sessionId]);
 
   const setSession = React.useCallback(
     async (newData, sync = false) => {

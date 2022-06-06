@@ -74,7 +74,7 @@
   "Game deleted": "Jeu supprimé",
   "Game information": "Informations sur le jeu",
   "Game name": "Nom du jeu",
-  "Game saved": "Partie sauvegardée",
+  "Game saved": "Sauvegarde effectuée",
   "Game studio": "Créer",
   "Game": "Jeu",
   "Generating export": "Génération de l'export",
@@ -92,7 +92,7 @@
   "Hide": "Cacher",
   "Horizontal hexagons": "Hexagones horizontaux",
   "I want to play...": "Je veux jouer...",
-  "If you have checked the publish checkbox your game will be public.": "Si vous avait coché l'option « Publier », votre jeu sera visibile publiquement.",
+  "If you have checked the publish checkbox your game will be public.": "Si vous avait coché l'option « Publier », votre jeu sera visible publiquement.",
   "Image": "Image",
   "In progress...": "Demande en cours…",
   "Informations": "Informations",
@@ -295,5 +295,10 @@
   "Let this field empty to snap all items, or set a comma separated list of families that will be snapped.": "Laissez ce champ vide pour aimanter tous les éléments ou définissez une liste de familles d'élément à aimanter séparées par une virgule.",
   "Family": "Famille",
   "Optional - Use the same family name for items that are part of the same set.": "Optionnel : définissez un nom de famille aux éléments appartenant à un même ensemble",
-  "Anchor": "Ancre"
+  "Anchor": "Ancre",
+  "Label position": "Position du label",
+  "Left": "Gauche",
+  "Top": "Haut",
+  "Keep title": "Afficher le titre",
+  "Check it to keep the game title above the game image.": "Cochez pour conserver le titre sur l'image du jeu."
 }

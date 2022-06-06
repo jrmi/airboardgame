@@ -21,19 +21,28 @@ const ZoneWrapper = styled.div`
     background-color: ${backgroundColor};
     border-radius: 5px;
     position: relative;
-    & > div {
+    & .zone__label {
       font-size: 1.5em;
-      letter-spacing: -3px;
       user-select: none;
       background-color: ${opacify(borderColor, 1)};
       position: absolute;
+      border-radius: 0.5em;
+      color: var(--color-darkGrey);
+    }
+
+    & .zone__label.left {
       padding: 1em 0em;
       top: 1em;
       left: -1em;
-      border-radius: 0.5em;
-      color: var(--color-darkGrey);
+      letter-spacing: -3px;
       writing-mode: vertical-rl;
       text-orientation: upright;
+    }
+
+    & .zone__label.top {
+      padding: 0em 1em;
+      top: -1em;
+      left: 1em;
     }
   `}
 `;
@@ -46,6 +55,7 @@ const Zone = ({
   borderColor,
   borderStyle,
   backgroundColor,
+  labelPosition = "left",
 }) => {
   const { register } = useItemInteraction("place");
   const zoneRef = React.useRef(null);
@@ -56,6 +66,7 @@ const Zone = ({
       const insideItems = itemIds.filter((itemId) =>
         isItemInsideElement(getItemElement(itemId), zoneRef.current)
       );
+
       if (!insideItems.length) return;
 
       const onItemActions = onItem.map((action) => {
@@ -64,7 +75,6 @@ const Zone = ({
         }
         return action;
       });
-
       onItemActions.forEach(({ name, args }) => {
         switch (name) {
           case "reveal":
@@ -107,7 +117,7 @@ const Zone = ({
       borderColor={borderColor}
       backgroundColor={backgroundColor}
     >
-      <div>{label}</div>
+      <div className={`zone__label ${labelPosition}`}>{label}</div>
     </ZoneWrapper>
   );
 };

@@ -26,23 +26,25 @@ const genGame = () => {
       scale: 0.5,
       name: "Unpublished Game",
       published: false,
+      keepTitle: true,
       translations: [
         {
           language: "fr",
-          name: "2 Jeu non-publie",
-          description: "Un jeu non-publie pour tester",
+          name: "2 Jeu non publié",
+          description: "Un jeu non publié pour tester",
         },
       ],
       playerCount: [1, 9],
       defaultName: "2 Unpublished Game",
       defaultLanguage: "en",
-      defaultDescription: "A non-published game",
+      defaultDescription: "A non published game",
       materialLanguage: "Multi-lang",
       minAge: "10",
       duration: [30, 90],
-      imageUrl: "/game_assets/testgame.png",
+      imageUrl: "/game_assets/default.png",
       gridSize: 1,
     },
+    id: "unpublished",
   };
 };
 

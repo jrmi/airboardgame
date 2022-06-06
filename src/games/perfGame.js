@@ -26,10 +26,11 @@ const genGame = () => {
       scale: 0.5,
       name: "Perf Game",
       published: true,
+      keepTitle: true,
       translations: [
         {
           language: "fr",
-          name: "1 Jeu test de performances et des extrèmes",
+          name: "1 Jeu test de performances et des extrêmes",
           baseline:
             "Un jeu pour tester les performances mais également les limites des différentes saisies. Le texte est tellement long qu'il doit être caché au final.",
         },
@@ -42,9 +43,10 @@ const genGame = () => {
       materialLanguage: "Multi-lang",
       minAge: "10",
       duration: [30, 90],
-      imageUrl: "/game_assets/testgame.png",
+      imageUrl: "/game_assets/default.png",
       gridSize: 1,
     },
+    id: "perf",
   };
 };
 

@@ -299,6 +299,7 @@ const genGame = () => {
       scale: 1,
       name: "Test Game",
       published: true,
+      keepTitle: true,
       translations: [
         {
           language: "fr",
@@ -315,9 +316,10 @@ const genGame = () => {
       materialLanguage: "Multi-lang",
       minAge: "10",
       duration: [30, 90],
-      imageUrl: "/game_assets/testgame.png",
+      imageUrl: "/game_assets/default.png",
       gridSize: 1,
     },
+    id: "test",
   };
 };
 

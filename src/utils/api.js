@@ -90,6 +90,35 @@ export const getBestTranslationFromConfig = (
   return translationsMap[defaultLanguage || "en"];
 };
 
+const demoGame = {
+  id: "demo",
+  owner: "nobody",
+  board: {
+    published: true,
+    defaultName: "How to play?",
+    bgType: "default",
+    playerCount: [],
+    duration: [],
+    gridSize: 1,
+    defaultLanguage: "en",
+    materialLanguage: "Multi-lang",
+    defaultBaseline: "Learn how to play with Airboardgame",
+    imageUrl: "/game_assets/default.png",
+    keepTitle: true,
+    defaultDescription:
+      "# Demo game\n\nThis is a demo game to learn how to play with Airboardgame.\n\nFor other games, you can find useful information about the game like the creator name or the rules.",
+    translations: [
+      {
+        language: "fr",
+        name: "Comment jouer ?",
+        baseline: "Apprenez à jouer avec Airboardgame",
+        description:
+          "# Démonstration\n\nCe jeu vous permet d'apprendre à jouer avec Airboardgame.\n\nPour les autres jeux, vous trouverez dans cette section différentes choses utiles comme le nom de l'auteur ou les règles.",
+      },
+    ],
+  },
+};
+
 export const getGames = async () => {
   const fetchParams = new URLSearchParams({
     fields: "_id,board,owner",
@@ -106,43 +135,17 @@ export const getGames = async () => {
     const serverGames = await result.json();
 
     gameList = serverGames.map((game) => ({
-      name: game.board.defaultName || game.board.name,
       id: game._id,
       owner: game.owner,
-      ...game.board,
       board: game.board,
       url: `${gameURI}/${game._id}`,
     }));
   }
   if (!IS_PRODUCTION || import.meta.env.VITE_CI) {
-    gameList = [
-      {
-        ...testGame,
-        name: "Test Game",
-        data: testGame,
-        id: "test",
-        published: true,
-        ...testGame.board,
-      },
-      {
-        ...perfGame,
-        name: "Perf Test",
-        data: perfGame,
-        id: "perf",
-        published: true,
-        ...perfGame.board,
-      },
-      {
-        ...unpublishedGame,
-        name: "Unpublished Game",
-        data: unpublishedGame,
-        id: "unpublished",
-        published: false,
-        ...unpublishedGame.board,
-      },
-      ...gameList,
-    ];
+    gameList = [testGame, perfGame, unpublishedGame, ...gameList];
   }
+
+  gameList = [demoGame, ...gameList];
 
   return gameList;
 };
@@ -195,7 +198,7 @@ export const createGame = async (data) => {
 
 export const updateGame = async (gameId, data) => {
   // fake games
-  if (["test", "perf", "unpublished"].includes(gameId)) {
+  if (["test", "perf", "unpublished", "demo"].includes(gameId)) {
     return data;
   }
   const result = await fetch(`${gameURI}/${gameId}`, {
