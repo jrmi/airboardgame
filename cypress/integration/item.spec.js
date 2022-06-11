@@ -41,7 +41,7 @@ describe("Item interactions", () => {
     cy.get("img[src='/game_assets/JC.jpg']")
       .parents(".item")
       .trigger("pointerdown", {
-        button: 0,
+        buttons: 1,
         clientX: 430,
         clientY: 430,
         force: true,
@@ -51,7 +51,7 @@ describe("Item interactions", () => {
     cy.get("img[src='/game_assets/JC.jpg']")
       .parents(".item")
       .trigger("pointermove", {
-        button: 0,
+        buttons: 1,
         clientX: 530,
         clientY: 530,
         force: true,
