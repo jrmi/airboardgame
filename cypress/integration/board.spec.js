@@ -36,21 +36,23 @@ describe("Board interactions", () => {
   it("Pan board with middle click", () => {
     cy.get(".board")
       .trigger("pointerdown", {
-        button: 1,
         clientX: 100,
         clientY: 100,
         pointerId: 1,
+        buttons: 4,
       })
       .trigger("pointermove", {
         clientX: 200,
         clientY: 200,
         pointerId: 1,
         force: true,
+        buttons: 4,
       })
       .trigger("pointerup", {
         force: true,
         pointerId: 1,
         isPrimary: true,
+        buttons: 4,
       });
     cy.get(".board-pane").should(
       "have.css",
@@ -62,7 +64,7 @@ describe("Board interactions", () => {
   it("Pan board with left click and altKey ", () => {
     cy.get(".board")
       .trigger("pointerdown", {
-        button: 0,
+        buttons: 1,
         clientX: 100,
         clientY: 100,
         pointerId: 1,
@@ -74,11 +76,13 @@ describe("Board interactions", () => {
         clientY: 200,
         pointerId: 1,
         altKey: true,
+        buttons: 1,
         force: true,
       })
       .trigger("pointerup", {
         force: true,
         pointerId: 1,
+        buttons: 1,
         isPrimary: true,
       });
     cy.get(".board-pane").should(
@@ -103,6 +107,7 @@ describe("Board interactions", () => {
         pointerId: 1,
         force: true,
         scrollBehavior: false,
+        buttons: 1,
       })
       .trigger("pointermove", {
         button: 0,
@@ -112,6 +117,7 @@ describe("Board interactions", () => {
         clientY: 400,
         pointerId: 1,
         force: true,
+        buttons: 1,
         scrollBehavior: false,
       })
       .trigger("pointerup", {
@@ -119,6 +125,7 @@ describe("Board interactions", () => {
         pointerId: 1,
         isPrimary: true,
         scrollBehavior: false,
+        buttons: 1,
       });
     cy.get(".board-pane").should(
       "have.css",

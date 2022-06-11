@@ -33,7 +33,7 @@ describe("Selection action", () => {
     };
     cy.get(".board")
       .trigger("pointerdown", {
-        button: 0,
+        buttons: 1,
         pointerId: 1,
         isPrimary: true,
         scrollBehavior: false,
@@ -41,7 +41,7 @@ describe("Selection action", () => {
         ...posInit,
       })
       .trigger("pointermove", {
-        button: 0,
+        buttons: 1,
         force: true,
         pointerId: 1,
         isPrimary: true,
