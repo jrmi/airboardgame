@@ -23,7 +23,7 @@ const defaultColors = [
   "#5F574F",
   "#1D2B53",
   "#7E2553",
-  "#000000 ",
+  "#000000",
 ];
 
 const Color = styled.div`

@@ -1,14 +1,14 @@
 import i18n from "../i18n";
 
 const colors = [
-  { name: i18n.t("Black"), value: "#111111" },
-  { name: i18n.t("White"), value: "#EEEEEE" },
-  { name: i18n.t("Red"), value: "#D82735" },
-  { name: i18n.t("Orange"), value: "#FF7435" },
-  { name: i18n.t("Yellow"), value: "#F9DF00" },
-  { name: i18n.t("Green"), value: "#006B2A" },
-  { name: i18n.t("Blue"), value: "#275791" },
-  { name: i18n.t("Purple"), value: "#5F3581" },
+  { name: i18n.t("Black"), value: "#1D2B53" },
+  { name: i18n.t("White"), value: "#FFF1E8" },
+  { name: i18n.t("Red"), value: "#FF004D" },
+  { name: i18n.t("Orange"), value: "#FFA300" },
+  { name: i18n.t("Yellow"), value: "#FFEC27" },
+  { name: i18n.t("Green"), value: "#00E436" },
+  { name: i18n.t("Blue"), value: "#29ADFF" },
+  { name: i18n.t("Purple"), value: "#7E2553" },
 ];
 
 const premade = [];
