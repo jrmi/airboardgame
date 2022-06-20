@@ -81,20 +81,20 @@ const ActionBar = ({
         {editMode && <EditInfoButton BoardFormComponent={BoardFormComponent} />}
         <div className="spacer" />
         <Touch
-          onClick={() => setMoveFirst(false)}
-          alt={t("Select mode")}
-          label={t("Select")}
-          title={t("Switch to select mode")}
-          icon={"mouse-pointer"}
-          active={!moveFirst}
-        />
-        <Touch
           onClick={() => setMoveFirst(true)}
           alt={t("Move mode")}
           label={t("Move")}
           title={t("Switch to move mode")}
           icon={"hand"}
           active={moveFirst}
+        />
+        <Touch
+          onClick={() => setMoveFirst(false)}
+          alt={t("Select mode")}
+          label={t("Select")}
+          title={t("Switch to select mode")}
+          icon={"mouse-pointer"}
+          active={!moveFirst}
         />
         <Touch
           onClick={() => setHideMenu((prev) => !prev)}

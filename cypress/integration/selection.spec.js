@@ -26,14 +26,14 @@ describe("Selection action", () => {
       .should("have.css", "transform", "none");
   });
 
-  it("should select multiple items with left click ", () => {
+  it("should select multiple items with right click ", () => {
     const posInit = {
       clientX: 400,
       clientY: 210,
     };
     cy.get(".board")
       .trigger("pointerdown", {
-        buttons: 1,
+        buttons: 4,
         pointerId: 1,
         isPrimary: true,
         scrollBehavior: false,
@@ -41,7 +41,7 @@ describe("Selection action", () => {
         ...posInit,
       })
       .trigger("pointermove", {
-        buttons: 1,
+        buttons: 4,
         force: true,
         pointerId: 1,
         isPrimary: true,

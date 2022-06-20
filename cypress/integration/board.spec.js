@@ -33,26 +33,27 @@ describe("Board interactions", () => {
     cy.get("[title='Add an item']");
   });
 
-  it("Pan board with middle click", () => {
+  it("Pan board with left click when move first", () => {
     cy.get(".board")
       .trigger("pointerdown", {
+        force: true,
         clientX: 100,
         clientY: 100,
         pointerId: 1,
-        buttons: 4,
+        buttons: 1,
       })
       .trigger("pointermove", {
         clientX: 200,
         clientY: 200,
         pointerId: 1,
         force: true,
-        buttons: 4,
+        buttons: 1,
       })
       .trigger("pointerup", {
         force: true,
         pointerId: 1,
         isPrimary: true,
-        buttons: 4,
+        buttons: 1,
       });
     cy.get(".board-pane").should(
       "have.css",
@@ -61,7 +62,10 @@ describe("Board interactions", () => {
     );
   });
 
-  it("Pan board with left click and altKey ", () => {
+  it("Pan board with left click and meta when in select mode", () => {
+    cy.get("[title^='Switch to select mode']").click({
+      scrollBehavior: false,
+    });
     cy.get(".board")
       .trigger("pointerdown", {
         buttons: 1,
@@ -92,8 +96,8 @@ describe("Board interactions", () => {
     );
   });
 
-  it("Pan board with left click when is main action", () => {
-    cy.get("[title^='Switch to move mode']").click({
+  it("Pan board with middle click when select is main action", () => {
+    cy.get("[title^='Switch to select mode']").click({
       scrollBehavior: false,
     });
 
@@ -107,7 +111,7 @@ describe("Board interactions", () => {
         pointerId: 1,
         force: true,
         scrollBehavior: false,
-        buttons: 1,
+        buttons: 4,
       })
       .trigger("pointermove", {
         button: 0,
@@ -117,7 +121,7 @@ describe("Board interactions", () => {
         clientY: 400,
         pointerId: 1,
         force: true,
-        buttons: 1,
+        buttons: 4,
         scrollBehavior: false,
       })
       .trigger("pointerup", {
@@ -125,7 +129,7 @@ describe("Board interactions", () => {
         pointerId: 1,
         isPrimary: true,
         scrollBehavior: false,
-        buttons: 1,
+        buttons: 4,
       });
     cy.get(".board-pane").should(
       "have.css",

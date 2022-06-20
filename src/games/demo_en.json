@@ -23,7 +23,7 @@
       "type": "note",
       "x": -190,
       "y": -259,
-      "value": "- Middle or right click on the board to move the board\n- Wheel to zoom",
+      "value": "- Left click on the board to move the board\n- Wheel to zoom",
       "label": "With a mouse"
     },
     {
@@ -119,7 +119,7 @@
       "type": "note",
       "x": 135,
       "y": 152,
-      "value": "- You can start to select multiple items by clicking outside of any item and moving the mouse.\n- Then you can move all items",
+      "value": "- You can start to select multiple items by clicking outside of any item with the left button and moving the mouse.\n- Then you can move all items",
       "label": "Multiple items"
     },
     {

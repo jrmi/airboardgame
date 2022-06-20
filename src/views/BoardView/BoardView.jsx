@@ -33,7 +33,7 @@ export const BoardView = ({
 
   const [boardConfig] = useBoardConfig();
 
-  const [moveFirst, setMoveFirst] = React.useState(false);
+  const [moveFirst, setMoveFirst] = React.useState(true);
   const [hideMenu, setHideMenu] = React.useState(false);
   const { editItem, setEditItem } = useGlobalConf();
 

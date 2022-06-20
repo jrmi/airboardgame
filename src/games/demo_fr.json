@@ -26,7 +26,7 @@
       "type": "note",
       "x": -190,
       "y": -256,
-      "value": "- Cliquez avec le bouton du milieu ou de gauche pour déplacer le plateau\n- La molette permet de zoomer",
+      "value": "- Cliquez avec le bouton de gauche pour déplacer le plateau\n- La molette permet de zoomer",
       "label": "Avec une souris",
       "locked": true
     },
@@ -138,7 +138,7 @@
       "type": "note",
       "x": 125,
       "y": 142,
-      "value": "- Pour sélectionner plusieurs élément cliquez en dehors d'un élément et tout en maintenant le bouton déplacez la souris. Relachez quand vous êtes satisfait\n- Vous pouvez alors déplacer tous les élements en même temps",
+      "value": "- Pour sélectionner plusieurs élément cliquez en dehors d'un élément et tout en maintenant le bouton droit de la souris et déplacez la. Relâchez quand vous êtes satisfait\n- Vous pouvez alors déplacer tous les éléments en même temps",
       "label": "Plusieurs éléments",
       "width": "300.0",
       "height": "224.0",
