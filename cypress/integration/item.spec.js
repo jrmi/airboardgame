@@ -14,7 +14,7 @@ describe("Item interactions", () => {
       .parent()
       .find(".img-wrapper")
       .click();
-    // Way board loading
+    // Wait board loading
     cy.get(".board-pane", { timeout: 10000 }).should(
       "have.css",
       "transform",
