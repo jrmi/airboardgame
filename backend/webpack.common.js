@@ -1,9 +1,14 @@
-const path = require("path");
-require("dotenv").config({
-  path: path.join(__dirname, ".env"),
+import path from "path";
+import dotenv from "dotenv";
+import Dotenv from "dotenv-webpack";
+import EncryptPlugin from "ricochetjs/encrypt-webpack-plugin";
+import { fileURLToPath } from "url";
+
+const dirname = path.dirname(fileURLToPath(import.meta.url));
+
+dotenv.config({
+  path: path.join(dirname, ".env"),
 });
-const EncryptPlugin = require("ricochetjs").EncryptPlugin;
-const Dotenv = require("dotenv-webpack");
 
 const SECRET_KEY = process.env.RICOCHET_SITE_KEY;
 
@@ -15,15 +20,15 @@ if (!SECRET_KEY) {
   process.exit(-1);
 }
 
-module.exports = {
+export default {
   entry: "./src/index.js",
   target: "node",
   devtool: false,
   output: {
-    path: path.resolve(__dirname, "../public"),
+    path: path.resolve(dirname, "../public"),
     filename: "ricochet.json",
     library: {
-      type: "commonjs",
+      type: "commonjs2",
     },
   },
   plugins: [
