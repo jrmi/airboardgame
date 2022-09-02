@@ -1,4 +1,4 @@
-import { throwError } from "./utils";
+import { throwError } from "./utils.js";
 
 export const ownerOrAdminOrNewHooks = async (context) => {
   let existingGame = null;

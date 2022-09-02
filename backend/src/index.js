@@ -2,8 +2,8 @@ import {
   ownerOrAdminOrNewHooks,
   onlySelfOrPublicGames,
   onlySelfUser,
-} from "./hooks";
-import getConfToken from "./getConfToken";
+} from "./hooks.js";
+import getConfToken from "./getConfToken.js";
 
 const SESSION_DURATION = 60; // Session duration in days
 

@@ -1,22 +1,25 @@
-const path = require("path");
-const { merge } = require("webpack-merge");
-const common = require("./webpack.common.js");
-const LocaltunnelPlugin = require("webpack-plugin-localtunnel");
+import path from "path";
+import { merge } from "webpack-merge";
+import common from "./webpack.common.js";
+import LocalTunnelPlugin from "webpack-plugin-localtunnel";
+import { fileURLToPath } from "url";
+
+const dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const prefix =
-  process.env.TUNNEL_PREFIX || Math.random().toString().substr(2, 8);
+  process.env.TUNNEL_PREFIX || Math.random().toString().substring(2, 10);
 
-module.exports = merge(common, {
+export default merge(common, {
   mode: "development",
   watchOptions: {
     ignored: ["node_modules/**"],
   },
   devServer: {
-    contentBase: path.join(__dirname, "dist"),
+    contentBase: path.join(dirname, "dist"),
     public: prefix + "-ricochet.loca.lt",
     compress: true,
     allowedHosts: [".loca.lt"],
     port: 9000,
   },
-  plugins: [new LocaltunnelPlugin({ subdomain: prefix + "-ricochet" })],
+  plugins: [new LocalTunnelPlugin({ subdomain: prefix + "-ricochet" })],
 });
