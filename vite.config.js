@@ -68,5 +68,8 @@ export default defineConfig({
     reactRefresh(),
     analyze({ summaryOnly: true, hideDeps: true, limit: 20 }),
   ],
+  build: {
+    sourcemap: "inline",
+  },
   ...proxy,
 });
