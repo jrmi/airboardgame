@@ -29,7 +29,7 @@ jobs:
           VITE_CI: 1
           VITE_SOCKET_URL: https://public.jeremiez.net/
           VITE_SOCKET_PATH: /wamp/socket.io
-          VITE_API_ENDPOINT: https://ricochetjs2.herokuapp.com/
+          VITE_API_ENDPOINT: https://ricochetjs.herokuapp.com/
           VITE_RICOCHET_SITEID: airboardgame
           ACTIONS_ALLOW_UNSECURE_COMMANDS: true
       - uses: actions/upload-artifact@v1
