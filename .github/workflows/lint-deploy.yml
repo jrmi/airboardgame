@@ -38,7 +38,7 @@ jobs:
           CYPRESS_INSTALL_BINARY: 0
       - run: |
           cat <<EOF > ./dist/_redirects
-          /api/*  https://ricochetjs.herokuapp.com/:splat  200
+          /api/*  https://ricochetjs.onrender.com/:splat  200
           /*    /index.html   200
           EOF
 
