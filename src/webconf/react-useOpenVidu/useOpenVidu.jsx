@@ -223,7 +223,6 @@ export const OpenViduProvider = ({
       const token = await getToken(room);
 
       const userData = getUserData();
-      console.log(token, userData);
       await newSession.connect(token, userData);
 
       setLocalStream(

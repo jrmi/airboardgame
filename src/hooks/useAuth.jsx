@@ -14,7 +14,6 @@ const useAuth = () => {
     false
   );
   const [userId, setUserId] = useLocalStorage("userId", null);
-  const mountedRef = React.useRef(true);
 
   const { data: userAccount } = useQuery("account", async () =>
     isAuthenticated ? await getAccount(userId) : null
@@ -47,12 +46,6 @@ const useAuth = () => {
       checkAuth();
     }
   }, [isAuthenticated, setIsAuthenticated]);
-
-  React.useEffect(() => {
-    return () => {
-      mountedRef.current = false;
-    };
-  }, []);
 
   return {
     isAuthenticated,

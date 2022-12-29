@@ -172,8 +172,6 @@ const Room = ({ roomId, room, setRoom }) => {
 
 const SubscribeRoomEvents = ({ room, setRoom }) => {
   const { wire, isMaster } = useWire("room");
-  const isMasterRef = React.useRef(isMaster);
-  isMasterRef.current = isMaster;
   const roomRef = React.useRef(room);
   roomRef.current = room;
 

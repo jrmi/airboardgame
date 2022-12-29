@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Board, useWire, useBoardConfig } from "react-sync-board";
+import { Board, useUsers, useBoardConfig } from "react-sync-board";
 
 import { SHOW_WELCOME } from "../../utils/settings";
 import WelcomeModal from "./WelcomeModal";
@@ -26,7 +26,7 @@ export const BoardView = ({
   edit: editMode,
   itemLibraries,
 }) => {
-  const { isMaster } = useWire("board");
+  const { isSpaceMaster: isMaster } = useUsers();
   const [showWelcomeModal, setShowWelcomeModal] = React.useState(
     SHOW_WELCOME && !editMode && isMaster
   );

@@ -105,11 +105,7 @@ describe("Item interactions", () => {
     // Check after
     cy.get("img[src='/game_assets/JC.jpg']")
       .parents(".item")
-      .should(
-        "have.css",
-        "transform",
-        "matrix(6.12323e-17, 1, -1, 6.12323e-17, 0, 0)"
-      );
+      .should("have.css", "transform", "matrix(0, 1, -1, 0, 0, 0)");
   });
 
   it("should hide menu", () => {
