@@ -64,16 +64,6 @@ export const useGameItemActions = () => {
     [getItems, selectedItems]
   );
 
-  const isMountedRef = React.useRef(false);
-
-  React.useEffect(() => {
-    // Mounted guard
-    isMountedRef.current = true;
-    return () => {
-      isMountedRef.current = false;
-    };
-  }, []);
-
   // Stack selection to Center
   const stackToCenter = React.useCallback(
     async (

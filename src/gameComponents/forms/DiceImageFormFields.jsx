@@ -19,7 +19,7 @@ const Form = ({ initialValues }) => {
       return;
     }
     if (initialValues.images.length < initialValues.side) {
-      // Add emtpy element
+      // Add empty element
       batchUpdateItems([initialValues.id], (prevItem) => {
         const newItem = { ...prevItem };
         newItem.images = [...newItem.images];

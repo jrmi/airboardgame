@@ -1,6 +1,6 @@
 import React, { memo } from "react";
 import styled, { css } from "styled-components";
-import { useItemActions, useItemInteraction, useWire } from "react-sync-board";
+import { useItemActions, useItemInteraction, useUsers } from "react-sync-board";
 
 import { uid, getItemElement } from "../utils";
 import itemTemplates from "./itemTemplates";
@@ -54,7 +54,7 @@ const StyledShape = styled.div`
 
 const Generator = ({ color = "#ccc", item, id, currentItemId, setState }) => {
   const { t } = useTranslation();
-  const { isMaster } = useWire("board");
+  const { isSpaceMaster: isMaster } = useUsers();
   const itemRef = React.useRef(null);
   const [dimension, setDimension] = React.useState({
     width: 50,

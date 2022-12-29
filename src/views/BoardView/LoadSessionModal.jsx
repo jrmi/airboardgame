@@ -1,6 +1,5 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { useWire } from "react-sync-board";
 
 import useSession from "../../hooks/useSession";
 
@@ -10,16 +9,14 @@ import LoadData from "./LoadData";
 
 const LoadSessionModal = ({ show, setShow }) => {
   const { t } = useTranslation();
-  const { wire } = useWire("board");
   const { setSession } = useSession();
 
   const loadSession = React.useCallback(
     (sessionData) => {
       setSession(sessionData);
-      wire.publish("loadSession", sessionData);
       setShow(false);
     },
-    [wire, setSession, setShow]
+    [setSession, setShow]
   );
 
   return (

@@ -3,11 +3,9 @@ import {
   useItemActions,
   useMessage,
   useBoardConfig,
-  useWire,
+  useSessionInfo,
 } from "react-sync-board";
 import { useTranslation } from "react-i18next";
-
-import SubscribeSessionEvents from "./SubscribeSessionEvents";
 
 import { updateSession, getSession, getGame } from "../utils/api";
 
@@ -40,15 +38,25 @@ const emtpyBoard = {
 
 export const SessionProvider = ({ sessionId, fromGameId, children }) => {
   const { i18n } = useTranslation();
-  const { setItemList, getItemList } = useItemActions();
   const { messages, setMessages } = useMessage();
-  const [availableItems, setAvailableItems] = React.useState([]);
+  const { setItemList, getItemList } = useItemActions();
   const [boardConfig, setBoardConfig] = useBoardConfig();
 
   const [sessionLoaded, setSessionLoaded] = React.useState(false);
   const [currentGameId, setCurrentGameId] = React.useState(fromGameId);
 
-  const { wire } = useWire("board");
+  const { sessionInfo, updateSessionInfo } = useSessionInfo();
+
+  const setAvailableItems = React.useCallback(
+    (newAvailableItems) => {
+      updateSessionInfo({ availableItems: newAvailableItems });
+    },
+    [updateSessionInfo]
+  );
+
+  const availableItems = React.useMemo(() => sessionInfo.availableItems || [], [
+    sessionInfo.availableItems,
+  ]);
 
   const loadSession = React.useCallback(async () => {
     let sessionData;
@@ -87,22 +95,23 @@ export const SessionProvider = ({ sessionId, fromGameId, children }) => {
   }, [fromGameId, i18n.languages, sessionId]);
 
   const setSession = React.useCallback(
-    async (newData, sync = false) => {
+    async (newData) => {
       const { availableItems, items, board, messages = [] } = newData;
       setAvailableItems(availableItems);
       // The filter prevents the empty item bug or missing type on reload
       setItemList(items.filter((item) => item && item.type));
-      setBoardConfig(board, false);
+      setBoardConfig(board);
       setMessages(messages);
-
-      if (sync) {
-        // Send loadSession event for other user
-        wire.publish("loadSession", newData);
-      }
-
+      updateSessionInfo({ loaded: true });
       setSessionLoaded(true);
     },
-    [wire, setBoardConfig, setItemList, setMessages]
+    [
+      setAvailableItems,
+      setBoardConfig,
+      setItemList,
+      setMessages,
+      updateSessionInfo,
+    ]
   );
 
   const getCurrentSession = React.useCallback(async () => {
@@ -154,13 +163,10 @@ export const SessionProvider = ({ sessionId, fromGameId, children }) => {
         availableItems,
         boardConfig,
         messages,
+        setSessionLoaded,
       }}
     >
       {children}
-      <SubscribeSessionEvents
-        getSession={getCurrentSession}
-        setSession={setSession}
-      />
     </SessionContext.Provider>
   );
 };

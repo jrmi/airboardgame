@@ -31,7 +31,7 @@ const NotifCount = styled.div`
 
 export const MessagePanel = ({ onNewMessage, show, setShow }) => {
   const { t } = useTranslation();
-  const { messages, sendMessage } = useMessage(onNewMessage, true);
+  const { messages, sendMessage } = useMessage(onNewMessage);
 
   return (
     <SidePanel
@@ -55,18 +55,28 @@ export const MessageButton = () => {
   const { t } = useTranslation();
   const { add, reset, count } = useNotify();
   const [showPanel, setShowPanel] = React.useState(false);
+  const showPanelRef = React.useRef(false);
+
+  const setShowPanelRef = React.useCallback(
+    (value) => {
+      setShowPanel(value);
+      showPanelRef.current = value;
+      if (value) {
+        reset();
+      }
+    },
+    [reset]
+  );
 
   const onNewMessage = React.useCallback(() => {
-    if (!showPanel) {
+    if (!showPanelRef.current) {
       add();
     }
-  }, [add, showPanel]);
+  }, [add]);
 
   React.useEffect(() => {
-    if (showPanel) {
-      reset();
-    }
-  }, [reset, showPanel]);
+    reset();
+  }, [reset]);
 
   const countStr = count > 9 ? "9+" : `${count}`;
 
@@ -74,7 +84,7 @@ export const MessageButton = () => {
     <>
       <div style={{ position: "relative" }}>
         <Touch
-          onClick={() => setShowPanel((prev) => !prev)}
+          onClick={() => setShowPanelRef(!showPanelRef.current)}
           alt={t("Chat")}
           title={t("Chat")}
           label={t("Chat")}
@@ -86,7 +96,7 @@ export const MessageButton = () => {
       <MessagePanel
         onNewMessage={onNewMessage}
         show={showPanel}
-        setShow={setShowPanel}
+        setShow={setShowPanelRef}
       />
     </>
   );

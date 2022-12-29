@@ -36,7 +36,6 @@ const StyledAnchor = styled.div`
 `;
 
 const Anchor = ({ families, id, color = "#CCC" }) => {
-  const anchorRef = React.useRef(null);
   const { register } = useItemInteraction("place");
   const { snapToPoint } = useGameItemActions();
   const { getItems } = useItemActions();
@@ -112,7 +111,6 @@ const Anchor = ({ families, id, color = "#CCC" }) => {
 
   return (
     <StyledAnchor
-      ref={anchorRef}
       highlight={movingItems && shouldHighlight}
       editMode={editMode || editItem}
       color={color}

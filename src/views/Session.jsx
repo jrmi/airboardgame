@@ -1,7 +1,7 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import useAsyncEffect from "use-async-effect";
-import { BoardWrapper, useWire } from "react-sync-board";
+import { BoardWrapper, useUsers, useSessionInfo } from "react-sync-board";
 import { useSocket } from "@scripters/use-socket.io";
 
 import { itemTemplates, itemLibrary, premadeItems } from "../gameComponents";
@@ -56,11 +56,12 @@ export const Session = () => {
     gameId,
     sessionId,
     availableItems,
+    setSessionLoaded,
   } = useSession();
 
   const gameLoadingRef = React.useRef(false);
-
-  const { wire, isMaster } = useWire("board");
+  const { isSpaceMaster: isMaster } = useUsers();
+  const { sessionInfo } = useSessionInfo();
 
   const { t } = useTranslation();
 
@@ -71,32 +72,17 @@ export const Session = () => {
         const sessionData = await loadSession();
 
         if (!isMounted) return;
-        setSession(sessionData, true);
+        setSession(sessionData);
       }
     },
     [sessionLoaded, isMaster]
   );
 
-  // Load game from master if any
   React.useEffect(() => {
-    if (!isMaster && !sessionLoaded && !gameLoadingRef.current) {
-      gameLoadingRef.current = true;
-      const onReceiveGame = (receivedSession) => {
-        setSession(receivedSession);
-      };
-      wire.call("getSession").then(onReceiveGame, () => {
-        setTimeout(
-          () =>
-            wire
-              .call("getSession")
-              .then(onReceiveGame, (error) =>
-                console.log("Failed to call getSession with error", error)
-              ),
-          1000
-        );
-      });
+    if (!isMaster && sessionInfo.loaded) {
+      setSessionLoaded(true);
     }
-  }, [wire, isMaster, sessionLoaded, setSession]);
+  }, [isMaster, sessionInfo.loaded, setSessionLoaded]);
 
   const itemLibraries = React.useMemo(() => {
     let itemList = availableItems;
@@ -138,7 +124,12 @@ export const Session = () => {
           boxId: "session",
           resourceId: sessionId,
         },
-        { id: "game", name: t("Game"), boxId: "game", resourceId: gameId },
+        {
+          id: "game",
+          name: t("Game"),
+          boxId: "game",
+          resourceId: gameId,
+        },
       ];
     }
     return [

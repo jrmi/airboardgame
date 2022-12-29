@@ -10,7 +10,6 @@ import WebConferenceButton from "../../webconf/WebConferenceButton";
 import InviteModal from "./InviteModal";
 
 import Brand from "../Brand";
-import WelcomeModal from "../BoardView/WelcomeModal";
 import { useLocation } from "react-router";
 
 const StyledNavBar = styled.div.attrs(() => ({ className: "nav" }))`

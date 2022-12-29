@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { useUsers } from "react-sync-board";
 
 import Message from "./Message";
+import dayjs from "dayjs";
 
 const computeMessageGroup = (messages, userMap, maxTimeDiff = 30000) => {
   if (!messages || messages.length === 0) return [];
@@ -51,7 +52,7 @@ const StyledMessageList = styled.div`
   overflow: auto;
 `;
 
-const MessageList = ({ messages }) => {
+const MessageList = ({ messages: messagesProp = [] }) => {
   const messageList = React.useRef(null);
   const { users } = useUsers();
 
@@ -62,6 +63,15 @@ const MessageList = ({ messages }) => {
         return acc;
       }, {}),
     [users]
+  );
+
+  const messages = React.useMemo(
+    () =>
+      messagesProp.map((message) => ({
+        ...message,
+        timestamp: dayjs(message.timestamp),
+      })),
+    [messagesProp]
   );
 
   const messageGroups = React.useMemo(
