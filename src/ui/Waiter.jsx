@@ -2,6 +2,8 @@ import React from "react";
 
 import styled from "styled-components";
 
+import Spinner from "./Spinner";
+
 const Overlay = styled.div`
   position: fixed;
   width: 100vw;
@@ -21,7 +23,8 @@ const Overlay = styled.div`
 const Waiter = ({ message }) => {
   return (
     <Overlay>
-      <div>{message}</div>
+      {message && <div>{message}</div>}
+      {!message && <Spinner />}
     </Overlay>
   );
 };

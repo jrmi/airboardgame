@@ -1,6 +1,12 @@
 import React from "react";
 
-import { Route, Switch, Redirect } from "react-router-dom";
+import {
+  Route,
+  Routes,
+  Navigate,
+  useParams,
+  useLocation,
+} from "react-router-dom";
 
 import "react-toastify/dist/ReactToastify.css";
 import "./react-confirm-alert.css";
@@ -22,130 +28,91 @@ const WithSocketIO = ({ children }) => (
   </SocketIOProvider>
 );
 
+const RedirectToSession = () => {
+  const { gameId } = useParams();
+  return (
+    <Navigate
+      to={`/session/${uid()}/`}
+      replace
+      state={{
+        fromGame: gameId,
+      }}
+    />
+  );
+};
+
+const StartSession = () => {
+  const { sessionId } = useParams();
+  const { state } = useLocation();
+  return (
+    <WithSocketIO>
+      <Session sessionId={sessionId} fromGame={state ? state.fromGame : null} />
+    </WithSocketIO>
+  );
+};
+
+const StartStudio = () => {
+  const { gameId } = useParams();
+  return (
+    <WithSocketIO>
+      <GameView gameId={gameId} />
+    </WithSocketIO>
+  );
+};
+
+const StartRoom = () => {
+  const { roomId } = useParams();
+  return (
+    <WithSocketIO>
+      <RoomView roomId={roomId} />
+    </WithSocketIO>
+  );
+};
+
+const RedirectToRoom = () => {
+  return (
+    <Navigate to={`/room/${uid()}/`} replace state={{ showInvite: true }} />
+  );
+};
+
+const CompatOldSession = () => {
+  const { gameId, sessionId } = useParams();
+
+  return (
+    <Navigate
+      to={`/session/${sessionId ? sessionId : uid()}/`}
+      replace
+      state={{
+        fromGame: gameId,
+      }}
+    />
+  );
+};
+
 const MainRoute = () => {
   return (
-    <Switch>
+    <Routes>
       {/* for compat with old url scheme */}
-      <Route path="/game/:gameId/session/" exact>
-        {({
-          match: {
-            params: { gameId },
-          },
-        }) => {
-          // Redirect to new session id
-          return (
-            <Redirect
-              to={{
-                pathname: `/session/${uid()}/`,
-                state: { fromGame: gameId },
-              }}
-            />
-          );
-        }}
-      </Route>
+      <Route path="/game/:gameId/session/" element={<CompatOldSession />} />
       {/* for compat with old url scheme */}
-      <Route path="/game/:gameId/session/:sessionId/">
-        {({
-          match: {
-            params: { gameId, sessionId },
-          },
-        }) => {
-          return (
-            <Redirect
-              to={{
-                pathname: `/session/${sessionId}/`,
-                state: { fromGame: gameId },
-              }}
-            />
-          );
-        }}
-      </Route>
+      <Route
+        path="/game/:gameId/session/:sessionId/"
+        element={<CompatOldSession />}
+      />
       {/* Start a new session from this game */}
-      <Route path="/playgame/:gameId" exact>
-        {({
-          match: {
-            params: { gameId },
-          },
-        }) => {
-          // Redirect to new session id
-          return (
-            <Redirect
-              to={{
-                pathname: `/session/${uid()}/`,
-                state: {
-                  fromGame: gameId,
-                },
-              }}
-            />
-          );
-        }}
-      </Route>
-      <Route path="/session/:sessionId">
-        {({
-          match: {
-            params: { sessionId },
-          },
-          location: { state: { fromGame } = {} } = {},
-        }) => {
-          // Redirect to new session id
-          return (
-            <WithSocketIO>
-              <Session sessionId={sessionId} fromGame={fromGame} />
-            </WithSocketIO>
-          );
-        }}
-      </Route>
+      <Route path="/playgame/:gameId" element={<RedirectToSession />} />
+      <Route path="/session/:sessionId" element={<StartSession />} />
       {/* Game edition */}
-      <Route path="/game/:gameId?">
-        {({
-          match: {
-            params: { gameId },
-          },
-        }) => {
-          return (
-            <WithSocketIO>
-              <GameView gameId={gameId} />
-            </WithSocketIO>
-          );
-        }}
-      </Route>
+      <Route path="/game/:gameId?/*" element={<StartStudio />} />
       {/*Room routes*/}
-      <Route path="/room/:roomId">
-        {({
-          match: {
-            params: { roomId },
-          },
-        }) => (
-          <WithSocketIO>
-            <RoomView roomId={roomId} />
-          </WithSocketIO>
-        )}
-      </Route>
-      <Route path="/room/" exact>
-        {() => {
-          // Redirect to new room
-          return (
-            <Redirect
-              to={{
-                pathname: `/room/${uid()}/`,
-                state: { showInvite: true },
-              }}
-            />
-          );
-        }}
-      </Route>
+      <Route path="/room/:roomId/*" element={<StartRoom />} />
+      <Route path="/room/" element={<RedirectToRoom />} />
       {/* Auth rout */}
-      <Route exact path="/login/:userHash/:token">
-        <AuthView />
-      </Route>
+      <Route path="/login/:userHash/:token" element={<AuthView />} />
       {/* Default route */}
-      <Route path="/" exact>
-        <Redirect to="/games/" />
-      </Route>
-      <Route path="/">
-        <Home />
-      </Route>
-    </Switch>
+      <Route path="/" element={<Navigate to="/games/" />} />
+      <Route path="/*" element={<Home />} />
+    </Routes>
   );
 };
 

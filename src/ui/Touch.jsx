@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const StyledWrapper = styled.div`
   display: flex;
@@ -42,7 +42,7 @@ const StyledButton = styled.div.attrs(({ active }) => ({
 
 const Touch = ({ onClick, to, icon, title, alt, active, label, ...rest }) => {
   // Touch icon
-  const history = useHistory();
+  const navigate = useNavigate();
   const handleClick = React.useCallback(
     (e) => {
       e.preventDefault();
@@ -51,10 +51,10 @@ const Touch = ({ onClick, to, icon, title, alt, active, label, ...rest }) => {
         onClick(e);
       }
       if (to) {
-        history.push(to);
+        navigate(to);
       }
     },
-    [history, to, onClick]
+    [onClick, to, navigate]
   );
 
   const iconSrc = icon.startsWith("http")

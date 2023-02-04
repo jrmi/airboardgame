@@ -2,7 +2,7 @@ import React from "react";
 
 import styled from "styled-components";
 import { useTranslation } from "react-i18next";
-import { useHistory, useRouteMatch } from "react-router-dom";
+import { useNavigate, useMatch, useParams } from "react-router-dom";
 import { confirmAlert } from "react-confirm-alert";
 import { useUsers, useBoardConfig } from "react-sync-board";
 
@@ -39,18 +39,15 @@ const StyledNavBar = styled.div.attrs(() => ({ className: "nav" }))`
       position: absolute;
       top: 0;
       margin: 0;
-      padding: 0 2em;
+      padding: 0 1em;
 
       background-color: ${({ edit }) =>
-        edit ? "var(--color-primary)" : "var(--color-blueGrey)"};
-      box-shadow: 0px 3px 6px #00000029;
+        edit ? "var(--color-primary)" : "transparent"};
 
-      line-height: 80px;
+      line-height: 5rem;
       letter-spacing: 0px;
       font-size: 24px;
       text-transform: uppercase;
-
-      transform: perspective(280px) rotateX(-20deg);
     }
   }
 
@@ -139,8 +136,10 @@ const NavBar = ({ editMode, title }) => {
 
   const { isSpaceMaster: isMaster } = useUsers();
 
-  const history = useHistory();
-  const match = useRouteMatch();
+  const navigate = useNavigate();
+  const params = useParams();
+  const insideASession = useMatch("/session/:sessionId");
+  const insideARoom = useMatch("/room/:roomId/session/:sessionId");
 
   const [showLoadGameModal, setShowLoadGameModal] = React.useState(false);
   const [showSaveGameModal, setShowSaveGameModal] = React.useState(false);
@@ -155,21 +154,21 @@ const NavBar = ({ editMode, title }) => {
 
   const handleBack = React.useCallback(() => {
     // If inside session
-    if (match.path === "/session/:sessionId" && history.length > 2) {
+    if (insideASession) {
       // Go to previous if exists
       // Previous can be home or studio
       // Yes history should be greater than 2 for some reason...
-      history.goBack();
+      navigate(-1);
       return;
     }
     // If inside room, go back to that room
-    if (match.path === "/room/:roomId/session/:sessionId") {
-      history.push(`/room/${match.params.roomId}`);
+    if (insideARoom) {
+      navigate(`/room/${params.roomId}`);
       return;
     }
     // Otherwise, go back to home
-    history.push("/games");
-  }, [history, match.params.roomId, match.path]);
+    navigate("/games");
+  }, [insideASession, navigate, insideARoom, params.roomId]);
 
   const handleBackWithConfirm = React.useCallback(() => {
     confirmAlert({
@@ -179,7 +178,7 @@ const NavBar = ({ editMode, title }) => {
         {
           label: t("Yes"),
           onClick: async () => {
-            history.push("/studio");
+            navigate("/studio");
           },
         },
         {
@@ -188,7 +187,7 @@ const NavBar = ({ editMode, title }) => {
         },
       ],
     });
-  }, [history, t]);
+  }, [navigate, t]);
 
   return (
     <>

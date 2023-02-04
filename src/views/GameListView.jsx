@@ -5,7 +5,6 @@ import { useQuery } from "react-query";
 import { NavLink } from "react-router-dom";
 
 import SliderRange from "../ui/SliderRange";
-import Spinner from "../ui/Spinner";
 
 import playerSVG from "../media/images/player.svg";
 import languageSVG from "../media/images/language.svg";
@@ -16,6 +15,7 @@ import { search } from "../utils";
 
 import GameListItem from "./GameListItem";
 import { StyledGameList } from "./StyledGameList";
+import Waiter from "../ui/Waiter";
 
 const Header = styled.header`
   background-color: var(--bg-color);
@@ -358,11 +358,7 @@ const GameListView = () => {
             ))}
           </StyledGameList>
         )}
-        {isLoading && (
-          <div style={{ padding: "1em" }}>
-            <Spinner />
-          </div>
-        )}
+        {isLoading && <Waiter />}
       </Content>
     </>
   );

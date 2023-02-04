@@ -11,6 +11,11 @@ const ItemFormFactory = ({ onUpdate, items, extraExcludeFields }) => {
     [items]
   );
 
+  // Fix a bug when asyncItems aren't up to date
+  if (items.length === 0) {
+    return null;
+  }
+
   return (
     <Form
       onSubmit={onUpdate}

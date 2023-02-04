@@ -388,9 +388,9 @@ const itemTemplates = {
     template: {
       layer: -2,
     },
-    stateHook: (state, { currentUser }) => {
+    stateHook: (state, { getCurrentUser }) => {
       const { ownedBy } = state;
-      if (!Array.isArray(ownedBy) || !ownedBy.includes(currentUser.uid)) {
+      if (!Array.isArray(ownedBy) || !ownedBy.includes(getCurrentUser().uid)) {
         return { ...state, layer: 3.6 };
       }
       return state;

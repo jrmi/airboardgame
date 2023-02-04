@@ -14,6 +14,7 @@ import { GlobalConfProvider } from "../hooks/useGlobalConf";
 
 import useSession, { SessionProvider } from "../hooks/useSession";
 import AutoSaveSession from "./AutoSaveSession";
+import Spinner from "../ui/Spinner";
 
 // Keep compatibility with previous availableItems shape
 const migrateAvailableItemList = (old) => {
@@ -143,7 +144,7 @@ export const Session = () => {
   }, [gameId, sessionId, t]);
 
   if (!sessionLoaded) {
-    return <Waiter message={t("Session loading...")} />;
+    return <Waiter />;
   }
 
   return (
@@ -172,6 +173,7 @@ const ConnectedSessionView = ({ sessionId, fromGame }) => {
         overflow: "hidden",
       }}
       socket={socket}
+      LoadingComponent={Waiter}
     >
       <SessionProvider sessionId={sessionId} fromGameId={fromGame}>
         <Session />

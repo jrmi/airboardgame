@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { Link, useHistory } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { deleteGame, getBestTranslationFromConfig } from "../utils/api";
 import { confirmAlert } from "react-confirm-alert";
@@ -187,7 +187,7 @@ const GameListItem = ({
   studio = false,
 }) => {
   const { t, i18n } = useTranslation();
-  const history = useHistory();
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
   const deleteMutation = useMutation((gameId) => deleteGame(gameId), {
     onSuccess: () => {
@@ -212,10 +212,10 @@ const GameListItem = ({
       if (propOnClick) {
         return propOnClick(id);
       } else {
-        history.push(`/playgame/${id}`);
+        navigate(`/playgame/${id}`);
       }
     },
-    [history, id, propOnClick]
+    [navigate, id, propOnClick]
   );
 
   const onShare = React.useCallback(

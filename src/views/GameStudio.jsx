@@ -1,16 +1,16 @@
 import React from "react";
-import { Redirect } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import { useQuery } from "react-query";
 
 import { getGames } from "../utils/api";
 import useAuth from "../hooks/useAuth";
-import Spinner from "../ui/Spinner";
 
 import { StyledGameList } from "./StyledGameList";
 import NewGameItem from "./NewGameItem";
 import GameListItem from "./GameListItem";
+import Waiter from "../ui/Waiter";
 
 const Filter = styled.div`
   & .incentive {
@@ -59,7 +59,7 @@ const GameListView = () => {
   );
 
   if (!isAuthenticated) {
-    return <Redirect to="/games/" />;
+    return <Navigate to="/games/" />;
   }
 
   return (
@@ -79,11 +79,7 @@ const GameListView = () => {
               studio={true}
             />
           ))}
-        {isLoading && (
-          <div style={{ paddingTop: "4em" }}>
-            <Spinner />
-          </div>
-        )}
+        {isLoading && <Waiter />}
       </StyledGameList>
     </Content>
   );

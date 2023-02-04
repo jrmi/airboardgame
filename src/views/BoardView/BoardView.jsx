@@ -5,6 +5,7 @@ import { Board, useUsers, useBoardConfig } from "react-sync-board";
 import { SHOW_WELCOME } from "../../utils/settings";
 import WelcomeModal from "./WelcomeModal";
 import NavBar from "./NavBar";
+import styled from "styled-components";
 import BoardForm from "./BoardForm";
 import SelectedItemsPane from "./SelectedItemsPane";
 
@@ -20,6 +21,26 @@ import flipAudio from "../../media/audio/flip.wav?url";
 import rollAudio from "../../media/audio/roll.wav?url";
 import shuffleAudio from "../../media/audio/shuffle.wav?url";
 import { preloadAudio } from "../../utils";
+import lockIcon from "../../media/images/lock.svg";
+
+const StyledBoard = styled.div`
+  & .item.locked::after {
+    content: "";
+    position: absolute;
+    width: 24px;
+    height: 30px;
+    top: 4px;
+    right: 4px;
+    opacity: 0.1;
+    background-image: url("${lockIcon}");
+    background-size: cover;
+    user-select: none;
+  }
+
+  & .item.locked:hover::after {
+    opacity: 0.3;
+  }
+`;
 
 export const BoardView = ({
   mediaLibraries,
@@ -49,12 +70,14 @@ export const BoardView = ({
   return (
     <MediaLibraryProvider libraries={mediaLibraries}>
       <ImageDropNPaste>
-        <Board
-          moveFirst={moveFirst}
-          style={style}
-          itemTemplates={itemTemplates}
-          showResizeHandle={editItem}
-        />
+        <StyledBoard>
+          <Board
+            moveFirst={moveFirst}
+            style={style}
+            itemTemplates={itemTemplates}
+            showResizeHandle={editItem}
+          />
+        </StyledBoard>
         <NavBar editMode={editMode} />
         <ActionBar
           editMode={editMode}

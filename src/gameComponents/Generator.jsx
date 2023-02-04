@@ -78,10 +78,11 @@ const Generator = ({ color = "#ccc", item, id, currentItemId, setState }) => {
     /**
      * Add new generated item
      */
-    const [thisItem] = await getItems([id]);
+    const newItemId = uid();
+    currentItemRef.current = newItemId;
+    const [thisItem] = getItems([id]);
     const { item } = thisItem || {}; // Inside item library, thisItem is not defined
     if (item?.type) {
-      const newItemId = uid();
       await pushItem({
         ...item,
         x: thisItem.x + centerRef.current.left + 3,
@@ -90,7 +91,6 @@ const Generator = ({ color = "#ccc", item, id, currentItemId, setState }) => {
         editable: false,
         id: newItemId,
       });
-      currentItemRef.current = newItemId;
       setState((prev) => ({ ...prev, currentItemId: newItemId }));
     }
   }, [getItems, id, pushItem, setState]);
@@ -227,7 +227,7 @@ const Generator = ({ color = "#ccc", item, id, currentItemId, setState }) => {
     /**
      * Add item if missing
      */
-    if (isMaster && !currentItemId && item?.type) {
+    if (isMaster && !currentItemId && !currentItemRef.current && item?.type) {
       addItem();
     }
   }, [addItem, currentItemId, isMaster, item?.type]);

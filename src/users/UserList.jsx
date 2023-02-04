@@ -41,7 +41,7 @@ const UserListItem = styled.li`
 
 export const Users = () => {
   const { t } = useTranslation();
-  const { currentUser, setCurrentUser, localUsers: users } = useUsers();
+  const { currentUser, updateCurrentUser, localUsers: users } = useUsers();
   const [openUserlist, setOpenUserList] = React.useState(false);
 
   const firstUsers = users.slice(0, 3);
@@ -53,7 +53,7 @@ export const Users = () => {
           <UserConfig
             index={index + 1}
             user={u}
-            setUser={setCurrentUser}
+            updateCurrentUser={updateCurrentUser}
             editable={currentUser.id === u.id}
           />
         </InlineUserListItem>
@@ -75,7 +75,7 @@ export const Users = () => {
                     <UserConfig
                       index={index + 1}
                       user={u}
-                      setUser={setCurrentUser}
+                      updateCurrentUser={updateCurrentUser}
                       editable={currentUser.id === u.id}
                     />
                     <div className="name">{u.name}</div>

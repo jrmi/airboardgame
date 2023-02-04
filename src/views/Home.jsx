@@ -1,5 +1,5 @@
 import React from "react";
-import { Switch, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import CookieNotice, { useCookieConsent } from "./CookieNotice";
@@ -50,14 +50,10 @@ const Home = () => {
     <>
       <StyledHome>
         <HomeNav cookieConsent={cookieConsent} />
-        <Switch>
-          <Route exact path="/games">
-            <GameListView />
-          </Route>
-          <Route path="/studio">
-            <GameStudio />
-          </Route>
-        </Switch>
+        <Routes>
+          <Route path="games" element={<GameListView />} />
+          <Route path="studio" element={<GameStudio />} />
+        </Routes>
         <footer>
           <button
             className="button clear"

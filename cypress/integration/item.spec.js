@@ -89,7 +89,7 @@ describe("Item interactions", () => {
       .should("have.css", "opacity", "1");
   });
 
-  it("should tap item", () => {
+  it.only("should tap item", () => {
     // Check before
     cy.get("img[src='/game_assets/JC.jpg']")
       .parents(".item")

@@ -16,7 +16,7 @@ const StyledInputName = styled.input`
 const emptyStyle = {};
 const emptyColors = [];
 
-const UserConfig = ({ user, setUser, editable, index }) => {
+const UserConfig = ({ user, updateCurrentUser, editable, index }) => {
   const { t } = useTranslation();
 
   const [name, setName] = React.useState(user.name);
@@ -26,9 +26,9 @@ const UserConfig = ({ user, setUser, editable, index }) => {
   const handleChange = React.useCallback(
     (e) => {
       setName(e.target.value);
-      setUser((prevUser) => ({ ...prevUser, name: e.target.value }));
+      updateCurrentUser({ name: e.target.value });
     },
-    [setUser]
+    [updateCurrentUser]
   );
 
   const handleChangecolor = React.useCallback((newColor) => {
@@ -38,9 +38,9 @@ const UserConfig = ({ user, setUser, editable, index }) => {
   const handleChangecolorComplete = React.useCallback(
     (newColor) => {
       setColor(newColor.hex);
-      setUser((prevUser) => ({ ...prevUser, color: newColor.hex }));
+      updateCurrentUser({ color: newColor.hex });
     },
-    [setUser]
+    [updateCurrentUser]
   );
 
   return (
