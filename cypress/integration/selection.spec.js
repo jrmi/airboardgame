@@ -46,8 +46,8 @@ describe("Selection action", () => {
         pointerId: 1,
         isPrimary: true,
         scrollBehavior: false,
-        clientX: posInit.clientX + 300,
-        clientY: posInit.clientY + 250,
+        clientX: posInit.clientX + 310,
+        clientY: posInit.clientY + 260,
       });
 
     cy.get(".selection").should(

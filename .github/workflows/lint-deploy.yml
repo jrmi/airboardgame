@@ -29,7 +29,7 @@ jobs:
         env:
           VITE_API_ENDPOINT: /api
           VITE_SOCKET_URL: https://public.jeremiez.net/
-          VITE_SOCKET_PATH: /wamp/socket.io
+          VITE_SOCKET_PATH: /wamp2/socket.io
           VITE_RICOCHET_SITEID: airboardgame
           VITE_USE_PROXY: 0
           VITE_WEBCONFERENCE: audio

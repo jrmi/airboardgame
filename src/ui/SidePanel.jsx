@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { useTranslation } from "react-i18next";
-import usePortal from "react-useportal";
+import { createPortal } from "react-dom";
 
 const Overlay = styled.div`
   position: fixed;
@@ -109,14 +109,7 @@ const SidePanel = ({
 }) => {
   const { t } = useTranslation();
 
-  const [bindTo] = React.useState(() =>
-    document.getElementById(modal ? "modal-container" : "panel-container")
-  );
-
-  const { ref, Portal, openPortal, closePortal, isOpen } = usePortal({
-    closeOnOutsideClick: modal,
-    bindTo,
-  });
+  const [isOpen, setIsOpen] = React.useState(false);
 
   const onAnimationEnd = React.useCallback(() => {
     if (!isOpen) {
@@ -126,11 +119,15 @@ const SidePanel = ({
 
   React.useEffect(() => {
     if (open) {
-      openPortal();
+      setIsOpen(true);
     } else {
-      closePortal();
+      setIsOpen(false);
     }
-  }, [openPortal, closePortal, open]);
+  }, [open]);
+
+  const [bindTo] = React.useState(() =>
+    document.getElementById(modal ? "modal-container" : "panel-container")
+  );
 
   React.useEffect(() => {
     if (isOpen && modal) {
@@ -140,15 +137,14 @@ const SidePanel = ({
     }
   }, [isOpen, modal]);
 
-  return (
-    <Portal>
-      {modal && isOpen && <Overlay onClick={closePortal} />}
+  return createPortal(
+    <>
+      {modal && isOpen && <Overlay onClick={() => setIsOpen(false)} />}
       <StyledSidePanel
         position={position}
         open={isOpen}
         onTransitionEnd={onAnimationEnd}
         noMargin={noMargin}
-        ref={ref}
         width={width}
         modal={modal}
         className={isOpen ? "side-panel open" : "side-panel"}
@@ -158,7 +154,7 @@ const SidePanel = ({
           {title && <h2 className="title">{title}</h2>}
           <button
             className="button clear icon-only close"
-            onClick={closePortal}
+            onClick={() => setIsOpen(false)}
           >
             <img
               src="https://icongr.am/feather/x.svg?size=42&color=ffffff"
@@ -169,7 +165,8 @@ const SidePanel = ({
         <div className="content">{open && children}</div>
         {footer && <footer>{footer}</footer>}
       </StyledSidePanel>
-    </Portal>
+    </>,
+    bindTo
   );
 };
 

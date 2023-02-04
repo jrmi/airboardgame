@@ -28,8 +28,8 @@ const StyledChevron = styled.span`
   }}
 `;
 
-const Spinner = ({ size = 14, orientation = "right", color = "#fff" }) => (
+const Chevron = ({ size = 14, orientation = "right", color = "#fff" }) => (
   <StyledChevron size={size} orientation={orientation} color={color} />
 );
 
-export default Spinner;
+export default Chevron;

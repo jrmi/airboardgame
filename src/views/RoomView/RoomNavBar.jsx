@@ -10,7 +10,7 @@ import WebConferenceButton from "../../webconf/WebConferenceButton";
 import InviteModal from "./InviteModal";
 
 import Brand from "../Brand";
-import { useLocation } from "react-router";
+import { useLocation } from "react-router-dom";
 
 const StyledNavBar = styled.div.attrs(() => ({ className: "nav" }))`
   position: fixed;
@@ -31,15 +31,12 @@ const StyledNavBar = styled.div.attrs(() => ({ className: "nav" }))`
       margin: 0;
       padding: 0 2em;
 
-      background-color: var(--color-blueGrey);
-      box-shadow: 0px 3px 6px #00000029;
+      background-color: transparent;
 
-      line-height: 90px;
+      line-height: 6rem;
       letter-spacing: 0px;
       font-size: 24px;
       text-transform: uppercase;
-
-      transform: perspective(280px) rotateX(-20deg);
     }
   }
 
@@ -119,8 +116,11 @@ const StyledNavBar = styled.div.attrs(() => ({ className: "nav" }))`
 const RoomNavBar = () => {
   const { t } = useTranslation();
   const { room } = useWire("room");
-  const { state: { showInvite: initialShowInvite } = {} } = useLocation();
-  const [showInvite, setShowInvite] = React.useState(initialShowInvite);
+  const { state } = useLocation();
+
+  const [showInvite, setShowInvite] = React.useState(
+    state ? state.showInvite : undefined
+  );
 
   return (
     <StyledNavBar>

@@ -11,13 +11,13 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: 18
 
       - name: Checkout
         uses: actions/checkout@v3
 
       - name: Cypress run
-        uses: cypress-io/github-action@v2
+        uses: cypress-io/github-action@v5
         with:
           build: npm run build
           start: npm run serve
@@ -28,7 +28,7 @@ jobs:
           VITE_NO_WELCOME: 1
           VITE_CI: 1
           VITE_SOCKET_URL: https://public.jeremiez.net/
-          VITE_SOCKET_PATH: /wamp/socket.io
+          VITE_SOCKET_PATH: /wamp2/socket.io
           VITE_API_ENDPOINT: https://ricochetjs-deploy-production.up.railway.app/
           VITE_RICOCHET_SITEID: airboardgame
           ACTIONS_ALLOW_UNSECURE_COMMANDS: true

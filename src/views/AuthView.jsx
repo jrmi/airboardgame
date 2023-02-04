@@ -1,5 +1,5 @@
 import React from "react";
-import { useParams, Redirect } from "react-router-dom";
+import { useParams, Navigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 
 const AuthView = () => {
@@ -25,7 +25,7 @@ const AuthView = () => {
   }, [login, token, userHash]);
 
   if (logged) {
-    return <Redirect to="/games" />;
+    return <Navigate to="/games" />;
   }
 
   return (

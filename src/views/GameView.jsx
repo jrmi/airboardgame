@@ -13,6 +13,7 @@ import { uid } from "../utils";
 
 import useGame, { GameProvider } from "../hooks/useGame";
 import { GlobalConfProvider } from "../hooks/useGlobalConf";
+import Spinner from "../ui/Spinner";
 
 // Keep compatibility with previous availableItems shape
 const migrateAvailableItemList = (old) => {
@@ -124,7 +125,7 @@ export const GameView = ({ create = false }) => {
   }, [gameId, t]);
 
   if (!gameLoaded) {
-    return <Waiter message={t("Session loading...")} />;
+    return <Waiter />;
   }
 
   return (
@@ -154,6 +155,7 @@ const ConnectedGameView = ({ gameId }) => {
         overflow: "hidden",
       }}
       socket={socket}
+      LoadingComponent={() => <Waiter />}
     >
       <GameProvider gameId={realGameId} create={!gameId}>
         <GameView create={!gameId} />

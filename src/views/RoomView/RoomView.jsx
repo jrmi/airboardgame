@@ -4,7 +4,7 @@ import styled from "styled-components";
 
 import { RoomWrapper, useWire, useUsers } from "react-sync-board";
 
-import { Switch, Route, Link } from "react-router-dom";
+import { Routes, Route, Link, useParams } from "react-router-dom";
 import Session from "../Session";
 import UserCircle from "../../users/UserCircle";
 
@@ -13,6 +13,8 @@ import RoomNavBar from "./RoomNavBar";
 import table from "../../media/images/table.png";
 import { useTranslation } from "react-i18next";
 import { useSocket } from "@scripters/use-socket.io";
+import Spinner from "../../ui/Spinner";
+import Waiter from "../../ui/Waiter";
 
 const StyledPlayer = styled.li`
   position: absolute;
@@ -96,7 +98,7 @@ const StyledTable = styled.li`
 
 const Room = ({ roomId, room, setRoom }) => {
   const { t } = useTranslation();
-  const { users, setCurrentUser } = useUsers();
+  const { users, joinSpace } = useUsers();
 
   const { isMaster } = useWire("room");
 
@@ -115,8 +117,8 @@ const Room = ({ roomId, room, setRoom }) => {
   };
 
   React.useEffect(() => {
-    setCurrentUser((prev) => ({ ...prev, space: roomId }));
-  }, [roomId, setCurrentUser]);
+    joinSpace(roomId);
+  }, [joinSpace, roomId]);
 
   const usersBySpace = React.useMemo(
     () =>
@@ -180,15 +182,12 @@ const SubscribeRoomEvents = ({ room, setRoom }) => {
     const unsub = [];
     // Master register getRoom for peers
     if (isMaster) {
-      wire
-        .register("getRoom", () => {
-          return roomRef.current;
-        })
-        .then((unregister) => {
-          unsub.push(unregister);
-        });
+      const registerPromise = wire.register("getRoom", () => {
+        return roomRef.current;
+      });
+      unsub.push(() => registerPromise.then((unregister) => unregister()));
     } else {
-      // Others register roomUpdate
+      // Others subscribe to roomUpdate
       unsub.push(
         wire.subscribe("roomUpdate", (newRoom) => {
           setRoom(newRoom);
@@ -226,6 +225,11 @@ const SubscribeRoomEvents = ({ room, setRoom }) => {
   return null;
 };
 
+const StartSession = () => {
+  const { sessionId } = useParams();
+  return <Session sessionId={sessionId} />;
+};
+
 const RoomView = ({ roomId }) => {
   const [room, setRoom] = React.useState(() => ({
     sessions: [{ id: nanoid() }, { id: nanoid() }, { id: nanoid() }],
@@ -233,20 +237,13 @@ const RoomView = ({ roomId }) => {
 
   return (
     <>
-      <Switch>
-        <Route path="/room/:roomId/" exact>
-          <Room roomId={roomId} room={room} setRoom={setRoom} />
-        </Route>
-        <Route path="/room/:roomId/session/:sessionId">
-          {({
-            match: {
-              params: { sessionId },
-            },
-          }) => {
-            return <Session sessionId={sessionId} />;
-          }}
-        </Route>
-      </Switch>
+      <Routes>
+        <Route
+          path=""
+          element={<Room roomId={roomId} room={room} setRoom={setRoom} />}
+        />
+        <Route path="session/:sessionId" element={<StartSession />} />
+      </Routes>
       <SubscribeRoomEvents room={room} setRoom={setRoom} />
     </>
   );
@@ -255,7 +252,7 @@ const RoomView = ({ roomId }) => {
 const ConnectedRoomView = (props) => {
   const socket = useSocket();
   return (
-    <RoomWrapper room={props.roomId} socket={socket}>
+    <RoomWrapper room={props.roomId} socket={socket} LoadingComponent={Waiter}>
       <RoomView {...props} />
     </RoomWrapper>
   );

@@ -17,7 +17,7 @@ const queryClient = new QueryClient();
 
 const App = () => {
   return (
-    <Suspense fallback={<Waiter message={"Loading…"} />}>
+    <Suspense fallback={<Waiter />}>
       <RecoilRoot>
         <QueryClientProvider client={queryClient}>
           <Router>

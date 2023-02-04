@@ -12,6 +12,7 @@ import {
   playAudio,
 } from "../utils";
 
+import itemTemplates from "./itemTemplates";
 import RotateActionForm from "./forms/RotateActionForm";
 import RandomlyRotateActionForm from "./forms/RandomlyRotateActionForm";
 
@@ -301,17 +302,19 @@ export const useGameItemActions = () => {
     async (itemIds) => {
       const [ids, items] = await getItemListOrSelected(itemIds);
 
-      const tappedCount = items.filter(({ rotation }) => rotation === 90)
-        .length;
+      const tappedCount = items.filter(({ tapped, rotation }) =>
+        tapped !== undefined ? tapped : rotation === 90
+      ).length;
 
-      let untap = false;
+      let tap = true;
       if (tappedCount > ids.length / 2) {
-        untap = true;
+        tap = false;
       }
 
       batchUpdateItems(ids, (item) => ({
         ...item,
-        rotation: untap ? 0 : 90,
+        tapped: tap,
+        rotation: tap ? (item.rotation || 0) + 90 : (item.rotation || 0) - 90,
       }));
     },
     [getItemListOrSelected, batchUpdateItems]
@@ -342,7 +345,23 @@ export const useGameItemActions = () => {
   // Flip or reveal items
   const setFlip = React.useCallback(
     async (itemIds, { flip = true, reverseOrder = true } = {}) => {
-      batchUpdateItems(itemIds, (item) => ({
+      const items = getItems(itemIds);
+
+      // Filter non flipped things
+      const itemIdsToFlip = items
+        .filter((item) => {
+          const { flipped, type } = item;
+          const { availableActions } = itemTemplates[type];
+          let actions = availableActions;
+          if (typeof availableActions === "function") {
+            actions = availableActions(item);
+          }
+
+          return flipped !== flip && actions.includes("flip");
+        })
+        .map(({ id }) => id);
+
+      batchUpdateItems(itemIdsToFlip, (item) => ({
         ...item,
         flipped: flip,
         unflippedFor:
@@ -351,11 +370,13 @@ export const useGameItemActions = () => {
             : item.unflippedFor,
       }));
       if (reverseOrder) {
-        reverseItemsOrder(itemIds);
+        reverseItemsOrder(itemIdsToFlip);
       }
-      playAudio(flipAudio, 0.2);
+      if (itemIdsToFlip.length) {
+        playAudio(flipAudio, 0.2);
+      }
     },
-    [batchUpdateItems, reverseItemsOrder]
+    [batchUpdateItems, getItems, reverseItemsOrder]
   );
 
   // Toggle flip state
@@ -389,17 +410,38 @@ export const useGameItemActions = () => {
   // Reveal for player only
   const setFlipSelf = React.useCallback(
     async (itemIds, { flipSelf = true } = {}) => {
-      batchUpdateItems(itemIds, (item) => {
+      const items = getItems(itemIds);
+
+      // Filter non already flipped for self items
+      const itemIdsToFlip = items
+        .filter((item) => {
+          const { unflippedFor, type } = item;
+
+          const { availableActions } = itemTemplates[type];
+          let actions = availableActions;
+          if (typeof availableActions === "function") {
+            actions = availableActions(item);
+          }
+          const isFlippedFor =
+            Array.isArray(unflippedFor) &&
+            unflippedFor.includes(currentUser.uid);
+
+          return actions.includes("flip") && flipSelf !== isFlippedFor;
+        })
+        .map(({ id }) => id);
+
+      batchUpdateItems(itemIdsToFlip, (item) => {
         let { unflippedFor = [] } = item;
 
         if (!Array.isArray(item.unflippedFor)) {
           unflippedFor = [];
         }
+        const isFlippedFor = unflippedFor.includes(currentUser.uid);
 
-        if (flipSelf && !unflippedFor.includes(currentUser.uid)) {
+        if (flipSelf && !isFlippedFor) {
           unflippedFor = [...unflippedFor, currentUser.uid];
         }
-        if (!flipSelf && unflippedFor.includes(currentUser.uid)) {
+        if (!flipSelf && isFlippedFor) {
           unflippedFor = unflippedFor.filter((id) => id !== currentUser.uid);
         }
         return {
@@ -408,8 +450,12 @@ export const useGameItemActions = () => {
           unflippedFor,
         };
       });
+
+      if (itemIdsToFlip.length) {
+        playAudio(flipAudio, 0.2);
+      }
     },
-    [batchUpdateItems, currentUser.uid]
+    [batchUpdateItems, currentUser.uid, getItems]
   );
 
   // Reveal for player only

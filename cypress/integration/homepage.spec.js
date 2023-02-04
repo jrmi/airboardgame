@@ -7,7 +7,7 @@ describe("Homepage", () => {
       },
       "[]"
     );
-    cy.visit("/games");
+    cy.visit("/");
   });
 
   it("should show all available games by default", () => {
