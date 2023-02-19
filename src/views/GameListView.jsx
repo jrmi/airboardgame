@@ -286,6 +286,12 @@ const GameListView = () => {
             {t("Or")}{" "}
             <NavLink to={"/room/"}>{t("start a multi room session")}</NavLink>
           </h3>
+          <h3 className="subincentive">
+            {t("Or")}{" "}
+            <NavLink to={"/playvassalgame/"}>
+              {t("Load a Vassal module")}
+            </NavLink>
+          </h3>
           <input
             type="search"
             id="game-search"

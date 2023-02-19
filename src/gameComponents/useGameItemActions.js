@@ -245,11 +245,23 @@ export const useGameItemActions = () => {
         elem.firstChild.className = "hvr-wobble-horizontal";
       });
 
+      const getSideCount = (item) => {
+        switch (item.type) {
+          case "dice":
+            return item.side || 6;
+          case "diceImage":
+            return item.images.length;
+
+          default:
+            return 6;
+        }
+      };
+
       const simulateRoll = (nextTimeout) => {
         batchUpdateItems(ids, (item) => {
           return {
             ...item,
-            value: randInt(0, (item.side || 6) - 1),
+            value: randInt(0, getSideCount(item) - 1),
           };
         });
         if (nextTimeout < 300) {

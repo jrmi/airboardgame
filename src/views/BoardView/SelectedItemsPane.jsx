@@ -131,7 +131,7 @@ const SelectedItemsPane = ({ hideMenu = false, showEdit, setShowEdit }) => {
         ({ disableDblclick }) => !disableDblclick
       );
 
-      if (e.ctrlKey && filteredActions.length > 1) {
+      if (e.altKey && filteredActions.length > 1) {
         // Use second action
         filteredActions[1].action();
       } else if (filteredActions.length > 0) {

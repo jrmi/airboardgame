@@ -51,6 +51,7 @@ if (useProxy) {
   console.log("Proxy backend...");
   proxy = {
     server: {
+      port: 3001,
       proxy: {
         "/socket.io": socketServer
           .replace("https", "wss")
@@ -70,6 +71,9 @@ export default defineConfig({
   ],
   build: {
     sourcemap: "inline",
+  },
+  server: {
+    port: 3001,
   },
   ...proxy,
 });

@@ -26,7 +26,7 @@ const defaultDiceImages = [
 const Dice = ({
   id,
   value = 0,
-  images = defaultDiceImages,
+  images,
   width = 50,
   height = 50,
   rollOnDblClick = false,

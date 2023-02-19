@@ -19,6 +19,7 @@ import ChangeGameModal from "./ChangeGameModal";
 import ExportModal from "./ExportModal";
 import SaveExportModal from "./SaveExportModal";
 import WelcomeModal from "./WelcomeModal";
+import LoadVassalModuleGameModal from "./LoadVassalModuleGameModal";
 
 import useSession from "../../hooks/useSession";
 
@@ -131,7 +132,7 @@ const StyledNavBar = styled.div.attrs(() => ({ className: "nav" }))`
 
 const NavBar = ({ editMode, title }) => {
   const { t, i18n } = useTranslation();
-  const { sessionId: room } = useSession();
+  const { sessionId: room, isVassalSession } = useSession();
   const [boardConfig] = useBoardConfig();
 
   const { isSpaceMaster: isMaster } = useUsers();
@@ -256,12 +257,26 @@ const NavBar = ({ editMode, title }) => {
             </>
           )}
           <div className="spacer" />
-          {(isMaster || editMode) && (
+          {(isMaster || editMode) && !isVassalSession && (
             <div className="hide-mobile">
               <Touch
                 onClick={() => setShowLoadGameModal((prev) => !prev)}
                 alt={editMode ? t("Load game") : t("Load session")}
                 title={editMode ? t("Load game") : t("Load session")}
+                icon={"upload-to-cloud"}
+              />
+            </div>
+          )}
+          {isMaster && isVassalSession && (
+            <div className="hide-mobile">
+              <Touch
+                onClick={() => setShowLoadGameModal((prev) => !prev)}
+                alt={
+                  editMode ? t("Load Vassal module") : t("Load Vassal module")
+                }
+                title={
+                  editMode ? t("Load Vassal module") : t("Load Vassale module")
+                }
                 icon={"upload-to-cloud"}
               />
             </div>
@@ -288,8 +303,15 @@ const NavBar = ({ editMode, title }) => {
       {!editMode && (
         <WelcomeModal show={showLink} setShow={setShowLink} welcome={false} />
       )}
-      {!editMode && (
+      {!editMode && !isVassalSession && (
         <LoadSessionModal
+          show={showLoadGameModal}
+          setShow={setShowLoadGameModal}
+          edit={editMode}
+        />
+      )}
+      {!editMode && isVassalSession && (
+        <LoadVassalModuleGameModal
           show={showLoadGameModal}
           setShow={setShowLoadGameModal}
           edit={editMode}

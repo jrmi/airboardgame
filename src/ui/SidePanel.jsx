@@ -137,6 +137,10 @@ const SidePanel = ({
     }
   }, [isOpen, modal]);
 
+  if (!bindTo) {
+    return null;
+  }
+
   return createPortal(
     <>
       {modal && isOpen && <Overlay onClick={() => setIsOpen(false)} />}

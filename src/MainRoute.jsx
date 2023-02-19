@@ -41,12 +41,20 @@ const RedirectToSession = () => {
   );
 };
 
-const StartSession = () => {
+const RedirectToVassalSession = () => {
+  return <Navigate to={`/vassal-session/${uid()}/`} replace />;
+};
+
+const StartSession = ({ isVassalSession }) => {
   const { sessionId } = useParams();
   const { state } = useLocation();
   return (
     <WithSocketIO>
-      <Session sessionId={sessionId} fromGame={state ? state.fromGame : null} />
+      <Session
+        sessionId={sessionId}
+        fromGame={state ? state.fromGame : null}
+        isVassalSession={isVassalSession}
+      />
     </WithSocketIO>
   );
 };
@@ -102,6 +110,11 @@ const MainRoute = () => {
       {/* Start a new session from this game */}
       <Route path="/playgame/:gameId" element={<RedirectToSession />} />
       <Route path="/session/:sessionId" element={<StartSession />} />
+      <Route path="/playvassalgame/" element={<RedirectToVassalSession />} />
+      <Route
+        path="/vassal-session/:sessionId"
+        element={<StartSession isVassalSession={true} />}
+      />
       {/* Game edition */}
       <Route path="/game/:gameId?/*" element={<StartStudio />} />
       {/*Room routes*/}

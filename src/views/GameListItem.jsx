@@ -177,7 +177,7 @@ const GameListItem = ({
       published,
       imageUrl,
       keepTitle,
-    },
+    } = {},
   },
   game,
   userId,

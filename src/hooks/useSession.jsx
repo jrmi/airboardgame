@@ -36,7 +36,12 @@ const emtpyBoard = {
   },
 };
 
-export const SessionProvider = ({ sessionId, fromGameId, children }) => {
+export const SessionProvider = ({
+  sessionId,
+  fromGameId,
+  isVassalSession,
+  children,
+}) => {
   const { i18n } = useTranslation();
   const { messages, setMessages } = useMessage();
   const { setItemList, getItemList } = useItemActions();
@@ -137,17 +142,20 @@ export const SessionProvider = ({ sessionId, fromGameId, children }) => {
     [getCurrentSession, setSession]
   );
 
-  const saveSession = React.useCallback(async () => {
-    const currentSession = await getCurrentSession();
+  const saveSession = React.useCallback(
+    async (force) => {
+      const currentSession = await getCurrentSession();
 
-    if (currentSession.items.length) {
-      try {
-        return await updateSession(sessionId, currentSession);
-      } catch (e) {
-        console.log(e);
+      if (currentSession.items.length || force) {
+        try {
+          return await updateSession(sessionId, currentSession);
+        } catch (e) {
+          console.log(e);
+        }
       }
-    }
-  }, [getCurrentSession, sessionId]);
+    },
+    [getCurrentSession, sessionId]
+  );
 
   return (
     <SessionContext.Provider
@@ -164,6 +172,7 @@ export const SessionProvider = ({ sessionId, fromGameId, children }) => {
         boardConfig,
         messages,
         setSessionLoaded,
+        isVassalSession,
       }}
     >
       {children}
