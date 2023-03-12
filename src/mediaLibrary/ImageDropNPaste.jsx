@@ -82,7 +82,7 @@ const ImageDropNPaste = ({ children }) => {
   }, [onPaste]);
 
   return (
-    <div {...getRootProps()}>
+    <div {...getRootProps()} style={{ overflow: "hidden" }}>
       {children}
       {uploading && <Waiter message={t("Uploading image(s)...")} />}
     </div>

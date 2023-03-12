@@ -35,6 +35,7 @@ const StyledBoard = styled.div`
     background-image: url("${lockIcon}");
     background-size: cover;
     user-select: none;
+    overflow: hidden;
   }
 
   & .item.locked:hover::after {

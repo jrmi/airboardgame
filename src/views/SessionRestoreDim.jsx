@@ -24,14 +24,17 @@ export const SessionRestoreDim = () => {
   useAsyncEffect(
     async (isMounted) => {
       if (sessionLoaded) {
-        if (sessionDimensions[sessionId]) {
+        const { translateX, translateY, scale } =
+          sessionDimensions[sessionId] || {};
+
+        if (!isNaN(translateX) && !isNaN(translateY) && !isNaN(scale)) {
           const { translateX, translateY, scale } = sessionDimensions[
             sessionId
           ];
           const dim = {
-            translateX: translateX || -1500,
-            translateY: translateY || -1500,
-            scale: scale || 1,
+            translateX,
+            translateY,
+            scale,
           };
           setTimeout(() => {
             if (isMounted) {
@@ -51,6 +54,7 @@ export const SessionRestoreDim = () => {
 
         const now = Date.now();
 
+        // Clean expired entries
         const newDim = Object.fromEntries(
           Object.entries(sessionDimensions).filter(([, { timestamp }]) => {
             return timestamp && now - timestamp < MAX_SESSION_DIM_RETENTION;
@@ -68,10 +72,21 @@ export const SessionRestoreDim = () => {
    */
   useIntervalEffect(async () => {
     const currentDim = getDim();
-    setSessionDimensions((prev) => ({
-      ...prev,
-      [sessionId]: { ...currentDim, timestamp: Date.now() },
-    }));
+    setSessionDimensions((prev) => {
+      const prevDim = prev[sessionId] || {};
+      if (
+        currentDim.translateX !== prevDim?.translateX ||
+        currentDim.translateY !== prevDim?.translateY ||
+        currentDim.scale !== prevDim?.scale
+      ) {
+        return {
+          ...prev,
+          [sessionId]: { ...currentDim, timestamp: Date.now() },
+        };
+      } else {
+        return prev;
+      }
+    });
   }, 2000);
 
   return null;
