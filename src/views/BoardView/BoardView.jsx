@@ -16,6 +16,7 @@ import ActionBar from "./ActionBar";
 import { MediaLibraryProvider, ImageDropNPaste } from "../../mediaLibrary";
 import HintOnLockedItem from "./HintOnLockedItem";
 import useGlobalConf from "../../hooks/useGlobalConf";
+import useSession from "../../hooks/useSession";
 
 import flipAudio from "../../media/audio/flip.wav?url";
 import rollAudio from "../../media/audio/roll.wav?url";
@@ -49,8 +50,9 @@ export const BoardView = ({
   itemLibraries,
 }) => {
   const { isSpaceMaster: isMaster } = useUsers();
+  const { isVassalSession } = useSession();
   const [showWelcomeModal, setShowWelcomeModal] = React.useState(
-    SHOW_WELCOME && !editMode && isMaster
+    SHOW_WELCOME && !editMode && isMaster && !isVassalSession
   );
 
   const [boardConfig] = useBoardConfig();

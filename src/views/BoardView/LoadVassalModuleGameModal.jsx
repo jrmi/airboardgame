@@ -1,31 +1,40 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 
-import useSession from "../../hooks/useSession";
-
 import Modal from "../../ui/Modal";
 
 import LoadVassalModule from "./LoadVassalModule";
 
 const LoadVassalGameModal = ({ show, setShow }) => {
   const { t } = useTranslation();
-  const { setSession } = useSession();
+  const [canClose, setCanClose] = React.useState(true);
+
+  const onStart = React.useCallback(() => {
+    setCanClose(false);
+  }, []);
 
   const onLoad = React.useCallback(
-    (newSession) => {
-      setSession(newSession);
-      setShow(false);
+    (err) => {
+      setCanClose(true);
+      if (!err) {
+        setShow(false);
+      }
     },
-    [setSession, setShow]
+    [setShow]
   );
 
   return (
-    <Modal title={t("Load Vassal module")} setShow={setShow} show={show}>
+    <Modal
+      title={t("Load a Vassal module")}
+      setShow={setShow}
+      show={show}
+      canClose={canClose}
+    >
       <header>
         <h3>{t("Load a Vassal module?")}</h3>
       </header>
       <section>
-        <LoadVassalModule onLoad={onLoad} />
+        <LoadVassalModule onStart={onStart} onLoad={onLoad} />
       </section>
     </Modal>
   );

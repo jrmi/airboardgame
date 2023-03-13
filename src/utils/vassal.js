@@ -1,5 +1,7 @@
 import { ZipReader, BlobReader, TextWriter, BlobWriter } from "@zip.js/zip.js";
 import X2JS from "x2js";
+import pLimit from "p-limit";
+
 import {
   uploadResourceImage as uploadMedia,
   createGame,
@@ -7,6 +9,7 @@ import {
 } from "../utils/api";
 import { uid } from ".";
 import { itemTemplates } from "../gameComponents";
+
 class Decoder {
   constructor(value, delimiter) {
     this.val = value;
@@ -138,6 +141,7 @@ class FileHandler {
     this.entryMap = entryMap;
     this.fileCache = {};
     this.log = log;
+    this.queue = pLimit(3);
   }
 
   getRealPath(main, alternative = "") {
@@ -202,6 +206,15 @@ class FileHandler {
   }
 
   async uploadFile(fileName, uploadHandler, retry = 0) {
+    return await this.queue(
+      this.uploadFileWithoutQueue.bind(this),
+      fileName,
+      uploadHandler,
+      retry
+    );
+  }
+
+  async uploadFileWithoutQueue(fileName, uploadHandler, retry = 0) {
     const file = await this.getFile(fileName);
     if (!file) {
       this.log("Missing file:", fileName);
@@ -217,7 +230,11 @@ class FileHandler {
     } catch (e) {
       if (retry < 5) {
         this.log(`Upload failed for ${fileName}. Retrying`);
-        return await this.uploadFile(fileName, uploadHandler, retry + 1);
+        return await this.uploadFileWithoutQueue(
+          fileName,
+          uploadHandler,
+          retry + 1
+        );
       } else {
         this.log(`Upload failed for ${fileName}!`);
         this.log("File upload error:", e);
@@ -324,6 +341,9 @@ class VassalModuleLoader {
         if (realPath) {
           result.backContent = realPath;
         }
+      }
+      if (commandName === "immob") {
+        result.locked = true;
       }
       if (commandName === "prototype") {
         const prototype = this.prototypes[rest[0]];
@@ -452,12 +472,12 @@ class VassalModuleLoader {
 
     const searchMapWidget = (widget) => {
       if (widget["VASSAL.build.widget.MapWidget"]) {
-        mapWidgets.push(
-          getList(
-            widget["VASSAL.build.widget.MapWidget"][
-              "VASSAL.build.widget.WidgetMap"
-            ]
-          )
+        getList(widget["VASSAL.build.widget.MapWidget"]).forEach(
+          (mapWidget) => {
+            mapWidgets.push(
+              getList(mapWidget["VASSAL.build.widget.WidgetMap"])
+            );
+          }
         );
       }
       if (widget["VASSAL.build.widget.PanelWidget"]) {
@@ -645,7 +665,6 @@ class VassalModuleLoader {
   }
 
   async loadPieceWindow() {
-    // TODO merge same elements and remove group with 1 child
     return getList(this.buildFile["VASSAL.build.module.PieceWindow"])
       .map((pieceWindow) => {
         const { items } = this.exploreWidgetElement(pieceWindow);
@@ -1042,9 +1061,9 @@ export const loadVassalModuleInSession = async (
   };
 
   // Early quit
-  /*if (this.buildFile) {
-      return;
-    }*/
+  /*if (moduleLoader) {
+    throw Error("Interrupted");
+  }*/
 
   const { items, availableItems } = await moduleLoader.uploadFiles(
     uploadHandler

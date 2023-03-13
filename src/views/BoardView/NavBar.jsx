@@ -142,7 +142,9 @@ const NavBar = ({ editMode, title }) => {
   const insideASession = useMatch("/session/:sessionId");
   const insideARoom = useMatch("/room/:roomId/session/:sessionId");
 
-  const [showLoadGameModal, setShowLoadGameModal] = React.useState(false);
+  const [showLoadGameModal, setShowLoadGameModal] = React.useState(
+    isMaster && isVassalSession
+  );
   const [showSaveGameModal, setShowSaveGameModal] = React.useState(false);
   const [showChangeGameModal, setShowChangeGameModal] = React.useState(false);
   const [showInfoModal, setShowInfoModal] = React.useState(false);

@@ -105,6 +105,7 @@ const SidePanel = ({
   open = show,
   modal = false,
   width,
+  canClose = true,
   layer = 0,
 }) => {
   const { t } = useTranslation();
@@ -143,7 +144,9 @@ const SidePanel = ({
 
   return createPortal(
     <>
-      {modal && isOpen && <Overlay onClick={() => setIsOpen(false)} />}
+      {modal && isOpen && (
+        <Overlay onClick={() => canClose && setIsOpen(false)} />
+      )}
       <StyledSidePanel
         position={position}
         open={isOpen}
@@ -158,7 +161,7 @@ const SidePanel = ({
           {title && <h2 className="title">{title}</h2>}
           <button
             className="button clear icon-only close"
-            onClick={() => setIsOpen(false)}
+            onClick={() => canClose && setIsOpen(false)}
           >
             <img
               src="https://icongr.am/feather/x.svg?size=42&color=ffffff"
