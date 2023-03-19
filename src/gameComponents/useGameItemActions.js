@@ -29,6 +29,8 @@ import rotateIcon from "../media/images/rotate.svg";
 import shuffleIcon from "../media/images/shuffle.svg";
 import tapIcon from "../media/images/tap.svg";
 import rollIcon from "../media/images/rolling-dices.svg";
+import arrowLeftIcon from "../media/images/arrowLeft.svg";
+import arrowRightIcon from "../media/images/arrowRight.svg";
 
 import flipAudio from "../media/audio/flip.wav?url";
 import rollAudio from "../media/audio/roll.wav?url";
@@ -250,8 +252,8 @@ export const useGameItemActions = () => {
           case "dice":
             return item.side || 6;
           case "diceImage":
+          case "imageSequence":
             return item.images.length;
-
           default:
             return 6;
         }
@@ -274,6 +276,28 @@ export const useGameItemActions = () => {
       simulateRoll(100);
 
       playAudio(rollAudio, 0.4);
+    },
+    [batchUpdateItems, getItemListOrSelected]
+  );
+
+  const changeImage = React.useCallback(
+    async (itemIds, { step = 1 }) => {
+      const [ids] = await getItemListOrSelected(itemIds);
+      batchUpdateItems(ids, (item) => {
+        const { value = 0, images } = item;
+        if (step > 0) {
+          return {
+            ...item,
+            value: (value + step) % images.length,
+          };
+        } else {
+          const newValue = value + step;
+          return {
+            ...item,
+            value: newValue >= 0 ? newValue : images.length + newValue,
+          };
+        }
+      });
     },
     [batchUpdateItems, getItemListOrSelected]
   );
@@ -583,6 +607,18 @@ export const useGameItemActions = () => {
         shortcut: "r",
         icon: rollIcon,
       },
+      nextImage: {
+        action: () => (itemIds) => changeImage(itemIds, { step: 1 }),
+        label: t("Next"),
+        shortcut: "n",
+        icon: arrowRightIcon,
+      },
+      prevImage: {
+        action: () => (itemIds) => changeImage(itemIds, { step: -1 }),
+        label: t("Previous"),
+        shortcut: "b",
+        icon: arrowLeftIcon,
+      },
       shuffle: {
         action: () => shuffleItems,
         label: t("Shuffle"),
@@ -734,6 +770,7 @@ export const useGameItemActions = () => {
     alignAsLine,
     alignAsSquare,
     cloneItem,
+    changeImage,
     randomlyRotateSelectedItems,
     remove,
     roll,
@@ -754,6 +791,7 @@ export const useGameItemActions = () => {
     randomlyRotate: randomlyRotateSelectedItems,
     remove,
     roll,
+    changeImage,
     rotate,
     stack: stackToTopLeft,
     setFlip,

@@ -321,7 +321,7 @@ class VassalModuleLoader {
 
   readSlot(slot) {
     const commands = getCommands(slot.__text);
-    const result = { name: slot._entryName || slot._name };
+    const result = { name: slot._entryName || slot._name, altImages: [] };
     if (slot._width) {
       result.with = slot._width;
     }
@@ -347,18 +347,48 @@ class VassalModuleLoader {
       }
       if (commandName === "prototype") {
         const prototype = this.prototypes[rest[0]];
-        Object.assign(result, prototype);
+        const { altImages, ...restProto } = prototype;
+
+        Object.assign(result, restProto);
+        result.altImages.concat(altImages);
       }
       if (commandName === "emb2") {
-        this.log(
+        /*this.log(
           "Emb2 images",
           rest[15].split(",").map((main) => this.fileHandler.getRealPath(main))
-        );
+        );*/
         result.altImages = rest[15]
           .split(",")
           .map((main) => this.fileHandler.getRealPath(main));
       }
+      if (commandName === "emb") {
+        const imagesText = rest.slice(8);
+
+        result.altImages = imagesText.map((im) => {
+          const dec = new Decoder(im, ",");
+          return this.fileHandler.getRealPath(dec.nextToken());
+        });
+        // this.log("Emb images", result.altImages);
+      }
     }
+
+    result.altImages = result.altImages.filter((im) => im);
+
+    if (!result.content) {
+      const [first, second] = result.altImages || [];
+      switch (result.altImages.length) {
+        case 1:
+          result.content = first;
+          result.altImages = [];
+          break;
+        case 2:
+          result.content = first;
+          result.backContent = second;
+          result.altImages = [];
+          break;
+      }
+    }
+
     return result;
   }
 
@@ -375,6 +405,46 @@ class VassalModuleLoader {
       });
     }
     this.log("Game prototypes", this.prototypes);
+  }
+
+  async itemFromSlot(slot, groupId, position) {
+    if (slot.altImages.length > 1) {
+      const images = slot.altImages.filter((img) => img);
+      let imageSize;
+      if (slot.content) {
+        imageSize = await this.fileHandler.getImageSize(slot.content);
+      } else {
+        imageSize = await this.fileHandler.getImageSize(images[0]);
+      }
+      return {
+        type: "imageSequence",
+        groupId,
+        label: slot.name,
+        x: position.x - imageSize.width / 2,
+        y: position.y - imageSize.height / 2,
+        width: imageSize.width,
+        height: imageSize.height,
+        imageCount: images.length,
+        images,
+      };
+    }
+    if (slot.content) {
+      const imageSize = await this.fileHandler.getImageSize(slot.content);
+      const newItem = {
+        type: "image",
+        groupId,
+        label: slot.name,
+        content: slot.content,
+        x: position.x - imageSize.width / 2,
+        y: position.y - imageSize.height / 2,
+        width: imageSize.width,
+        height: imageSize.height,
+      };
+      if (slot.backContent) {
+        newItem.backContent = slot.backContent;
+      }
+      return newItem;
+    }
   }
 
   async loadMapDrawPileElement(drawPile) {
@@ -394,27 +464,15 @@ class VassalModuleLoader {
         getList(drawPile["VASSAL.build.widget.CardSlot"]).map(
           async (cardSlot, index) => {
             const slot = this.readSlot(cardSlot);
+            const newItem = await this.itemFromSlot(slot, pileName, {
+              x: x + index + offset.x,
+              y: y - index + offset.y,
+            });
 
-            if (slot.content) {
-              const imageSize = await this.fileHandler.getImageSize(
-                slot.content
-              );
-              const newItem = {
-                type: "image",
-                groupId: pileName,
-                label: slot.name,
-                content: slot.content,
-                x: x + index - imageSize.width / 2 + offset.x,
-                y: y - index - imageSize.height / 2 + offset.y,
-                width: imageSize.width,
-                height: imageSize.height,
-              };
-              if (slot.backContent) {
-                newItem.backContent = slot.backContent;
-                newItem.flipped = true;
-              }
-              return newItem;
+            if (newItem && newItem.backContent) {
+              newItem.flipped = true;
             }
+            return newItem;
           }
         )
       )
@@ -439,23 +497,10 @@ class VassalModuleLoader {
       await Promise.all(
         pieceSlots.map(async (pieceSlot) => {
           const slot = this.readSlot(pieceSlot);
-          if (slot.content) {
-            const imageSize = await this.fileHandler.getImageSize(slot.content);
-            const newItem = {
-              type: "image",
-              groupId: stackName,
-              label: slot.name,
-              content: slot.content,
-              x: x - imageSize.width / 2 + offset.x,
-              y: y - imageSize.height / 2 + offset.y,
-              width: imageSize.width,
-              height: imageSize.height,
-            };
-            if (slot.backContent) {
-              newItem.backContent = slot.backContent;
-            }
-            return newItem;
-          }
+          return await this.itemFromSlot(slot, stackName, {
+            x: x + offset.x,
+            y: y + offset.y,
+          });
         })
       )
     ).filter((item) => item);
@@ -619,42 +664,51 @@ class VassalModuleLoader {
     return [size, [...boardItems, ...drawPileItems, ...stackItems]];
   }
 
-  exploreWidgetElement(widget) {
+  async exploreWidgetElement(widget) {
     const groupName = widget._entryName;
 
-    const pieceItems = getList(widget["VASSAL.build.widget.PieceSlot"])
-      .map((pieceSlot) => {
-        const slot = this.readSlot(pieceSlot);
-        if (slot.content) {
-          const newItem = {
-            type: "image",
-            groupId: groupName,
-            label: slot.name,
-            content: slot.content,
-          };
-          if (slot.backContent) {
-            newItem.backContent = slot.backContent;
+    const pieceItems = (
+      await Promise.all(
+        getList(widget["VASSAL.build.widget.PieceSlot"]).map(
+          async (pieceSlot) => {
+            const slot = this.readSlot(pieceSlot);
+            const newItem = await this.itemFromSlot(slot, groupName, {
+              x: 0,
+              y: 0,
+            });
+            if (newItem) {
+              delete newItem.x;
+              delete newItem.y;
+            }
+            return newItem;
           }
-          return newItem;
-        }
-      })
-      .filter((item) => item);
+        )
+      )
+    ).filter((item) => item);
 
-    const panelItems = getList(
-      widget["VASSAL.build.widget.PanelWidget"]
-    ).map((subWidget) => this.exploreWidgetElement(subWidget));
+    const panelItems = await Promise.all(
+      getList(widget["VASSAL.build.widget.PanelWidget"]).map((subWidget) =>
+        this.exploreWidgetElement(subWidget)
+      )
+    );
 
-    const listItems = getList(
-      widget["VASSAL.build.widget.ListWidget"]
-    ).map((subWidget) => this.exploreWidgetElement(subWidget));
+    const listItems = await Promise.all(
+      getList(widget["VASSAL.build.widget.ListWidget"]).map((subWidget) =>
+        this.exploreWidgetElement(subWidget)
+      )
+    );
 
-    const boxItems = getList(
-      widget["VASSAL.build.widget.BoxWidget"]
-    ).map((subWidget) => this.exploreWidgetElement(subWidget));
+    const boxItems = await Promise.all(
+      getList(widget["VASSAL.build.widget.BoxWidget"]).map((subWidget) =>
+        this.exploreWidgetElement(subWidget)
+      )
+    );
 
-    const tabItems = getList(
-      widget["VASSAL.build.widget.TabWidget"]
-    ).map((subWidget) => this.exploreWidgetElement(subWidget));
+    const tabItems = await Promise.all(
+      getList(widget["VASSAL.build.widget.TabWidget"]).map((subWidget) =>
+        this.exploreWidgetElement(subWidget)
+      )
+    );
 
     const subItems = [...panelItems, ...listItems, ...boxItems, ...tabItems];
 
@@ -665,11 +719,16 @@ class VassalModuleLoader {
   }
 
   async loadPieceWindow() {
-    return getList(this.buildFile["VASSAL.build.module.PieceWindow"])
-      .map((pieceWindow) => {
-        const { items } = this.exploreWidgetElement(pieceWindow);
-        return items;
-      })
+    return (
+      await Promise.all(
+        getList(this.buildFile["VASSAL.build.module.PieceWindow"]).map(
+          async (pieceWindow) => {
+            const { items } = await this.exploreWidgetElement(pieceWindow);
+            return items;
+          }
+        )
+      )
+    )
       .flat()
       .filter((item) => item);
   }
@@ -835,6 +894,27 @@ class VassalModuleLoader {
           return item;
         }
       }
+      case "imageSequence": {
+        const newItem = { ...item };
+        if (item.images) {
+          const images = await Promise.all(
+            item.images.map((imageName) => {
+              if (typeof imageName === "string") {
+                return this.uploadOneFile(imageName, uploadHandler);
+              }
+              return imageName;
+            })
+          );
+          newItem.images = images;
+        }
+        if (item.backgroundImage) {
+          newItem.backgroundImage = await this.uploadOneFile(
+            item.backgroundImage,
+            uploadHandler
+          );
+        }
+        return newItem;
+      }
       default:
         return item;
     }
@@ -854,7 +934,7 @@ class VassalModuleLoader {
     this.fileCount = 0;
     this.fileLoaded = 0;
 
-    const itemsWithFile = await Promise.all(
+    const itemsWithFile = Promise.all(
       this.items.map((item) => {
         return this.uploadItemFiles(item, uploadHandler);
       })
@@ -878,11 +958,11 @@ class VassalModuleLoader {
       );
     };
 
-    const availableItemsWithImage = await recursiveUploadItemFiles(
+    const availableItemsWithImage = recursiveUploadItemFiles(
       this.availableItems
     );
 
-    return [itemsWithFile, availableItemsWithImage];
+    return [await itemsWithFile, await availableItemsWithImage];
   }
 
   async loadVassalModuleInGame() {

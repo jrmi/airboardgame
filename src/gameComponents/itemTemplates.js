@@ -39,6 +39,8 @@ import CheckerBoardFormFields from "./forms/CheckerBoardFormFields";
 import CylinderFormFields from "./forms/CylinderFormFields";
 import GeneratorFormFields from "./forms/GeneratorFormFields";
 import AnchorFormFields from "./forms/AnchorFormFields";
+import ImageSequenceFormFields from "./forms/ImageSequenceFormFields";
+import ImageSequence from "./ImageSequence";
 
 const defaultDiceImages = () => [
   {
@@ -294,6 +296,26 @@ const itemTemplates = {
     form: ImageFormFields,
     name: i18n.t("Image"),
     template: {},
+  },
+  imageSequence: {
+    component: ImageSequence,
+    defaultActions: ["nextImage", "clone", "lock", "remove"],
+    availableActions: [
+      "prevImage",
+      "nextImage",
+      "roll",
+      "clone",
+      "lock",
+      "remove",
+      "alignAsLine",
+      "alignAsSquare",
+    ],
+    form: ImageSequenceFormFields,
+    name: i18n.t("Image sequence"),
+    template: () => ({
+      images: ["/default.png"],
+      currentImage: 0,
+    }),
   },
   counter: {
     component: Counter,

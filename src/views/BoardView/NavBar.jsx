@@ -23,6 +23,9 @@ import LoadVassalModuleGameModal from "./LoadVassalModuleGameModal";
 
 import useSession from "../../hooks/useSession";
 
+import vassalIconUrl from "../../media/images/vassal.svg?url";
+
+console.log(vassalIconUrl);
 const StyledNavBar = styled.div.attrs(() => ({ className: "nav" }))`
   position: fixed;
   top: 0;
@@ -279,7 +282,7 @@ const NavBar = ({ editMode, title }) => {
                 title={
                   editMode ? t("Load Vassal module") : t("Load Vassale module")
                 }
-                icon={"upload-to-cloud"}
+                icon={vassalIconUrl}
               />
             </div>
           )}
