@@ -11,6 +11,8 @@ const ImagePane = styled.div`
       height ? `height: ${height}px;` : ""}
     pointer-events: none;
   }
+  background-repeat: no-repeat;
+  background-position: center;
   ${({ background }) =>
     background ? `background-image: url(${background});` : ""}
 `;
@@ -26,9 +28,6 @@ const ImageSequence = ({
 
   return (
     <ImagePane width={width} height={height} background={backgroundUrl}>
-      {backgroundImage && (
-        <img className="bg-image" src={media2Url(images[value])} />
-      )}
       {images[value] && <img src={media2Url(images[value])} />}
     </ImagePane>
   );

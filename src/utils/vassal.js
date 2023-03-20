@@ -323,10 +323,10 @@ class VassalModuleLoader {
     const commands = getCommands(slot.__text);
     const result = { name: slot._entryName || slot._name, altImages: [] };
     if (slot._width) {
-      result.with = slot._width;
+      result.width = parseInt(slot._width);
     }
     if (slot._height) {
-      result.height = slot._height;
+      result.height = parseInt(slot._height);
     }
 
     for (const [commandName, ...rest] of commands) {
@@ -350,31 +350,35 @@ class VassalModuleLoader {
         const { altImages, ...restProto } = prototype;
 
         Object.assign(result, restProto);
-        result.altImages.concat(altImages);
+        result.altImages = result.altImages.concat(altImages);
       }
       if (commandName === "emb2") {
         /*this.log(
           "Emb2 images",
           rest[15].split(",").map((main) => this.fileHandler.getRealPath(main))
         );*/
-        result.altImages = rest[15]
-          .split(",")
-          .map((main) => this.fileHandler.getRealPath(main));
+        result.altImages = result.altImages.concat(
+          rest[15].split(",").map((main) => this.fileHandler.getRealPath(main))
+        );
       }
       if (commandName === "emb") {
         const imagesText = rest.slice(8);
 
-        result.altImages = imagesText.map((im) => {
-          const dec = new Decoder(im, ",");
-          return this.fileHandler.getRealPath(dec.nextToken());
-        });
+        result.altImages = result.altImages.concat(
+          imagesText.map((im) => {
+            const dec = new Decoder(im, ",");
+            return this.fileHandler.getRealPath(dec.nextToken());
+          })
+        );
         // this.log("Emb images", result.altImages);
       }
     }
 
+    console.log(slot, result);
+
     result.altImages = result.altImages.filter((im) => im);
 
-    if (!result.content) {
+    /*if (!result.content) {
       const [first, second] = result.altImages || [];
       switch (result.altImages.length) {
         case 1:
@@ -387,7 +391,7 @@ class VassalModuleLoader {
           result.altImages = [];
           break;
       }
-    }
+    }*/
 
     return result;
   }
@@ -407,44 +411,93 @@ class VassalModuleLoader {
     this.log("Game prototypes", this.prototypes);
   }
 
-  async itemFromSlot(slot, groupId, position) {
-    if (slot.altImages.length > 1) {
-      const images = slot.altImages.filter((img) => img);
-      let imageSize;
-      if (slot.content) {
-        imageSize = await this.fileHandler.getImageSize(slot.content);
-      } else {
-        imageSize = await this.fileHandler.getImageSize(images[0]);
-      }
-      return {
-        type: "imageSequence",
-        groupId,
-        label: slot.name,
-        x: position.x - imageSize.width / 2,
-        y: position.y - imageSize.height / 2,
-        width: imageSize.width,
-        height: imageSize.height,
-        imageCount: images.length,
-        images,
-      };
+  async makeCardFromSlot(slot) {
+    let { width, height } = slot;
+    const imageSize = await this.fileHandler.getImageSize(slot.content);
+    (width = imageSize.width), (height = imageSize.height);
+
+    const newItem = {
+      type: "image",
+      label: slot.name,
+      content: slot.content,
+      x: -width / 2,
+      y: -height / 2,
+      width,
+      height,
+    };
+    if (slot.backContent) {
+      newItem.backContent = slot.backContent;
+    } else if (slot.altImages.length > 0) {
+      newItem.backContent = slot.altImages[0];
     }
-    if (slot.content) {
+    return newItem;
+  }
+  async makeImageFromSlot(slot) {
+    let { width, height } = slot;
+    if (!width || !height) {
       const imageSize = await this.fileHandler.getImageSize(slot.content);
-      const newItem = {
-        type: "image",
-        groupId,
-        label: slot.name,
-        content: slot.content,
-        x: position.x - imageSize.width / 2,
-        y: position.y - imageSize.height / 2,
-        width: imageSize.width,
-        height: imageSize.height,
-      };
-      if (slot.backContent) {
-        newItem.backContent = slot.backContent;
-      }
-      return newItem;
+      (width = imageSize.width), (height = imageSize.height);
     }
+    const newItem = {
+      type: "image",
+      label: slot.name,
+      content: slot.content,
+      x: -width / 2,
+      y: -height / 2,
+      width,
+      height,
+    };
+    if (slot.backContent) {
+      newItem.backContent = slot.backContent;
+    }
+    return newItem;
+  }
+
+  async makeImageSequenceFromSlot(slot) {
+    let { width, height } = slot;
+    const images = slot.altImages;
+    const newItem = {
+      label: slot.name,
+    };
+    let imageSize;
+    if (slot.content) {
+      imageSize = await this.fileHandler.getImageSize(slot.content);
+      newItem.backgroundImage = slot.content;
+    } else {
+      imageSize = await this.fileHandler.getImageSize(images[0]);
+    }
+    (width = imageSize.width), (height = imageSize.height);
+
+    Object.assign(newItem, {
+      type: "imageSequence",
+      x: -width / 2,
+      y: -height / 2,
+      width,
+      height,
+      imageCount: images.length,
+      images,
+    });
+    return newItem;
+  }
+
+  async itemFromSlot(slot, groupId, position) {
+    let newItem = null;
+    /*if (forceType === "card") {
+      newItem = await this.makeCardFromSlot(slot);
+    } else */ if (
+      slot.altImages.length > 0
+    ) {
+      newItem = await this.makeImageSequenceFromSlot(slot);
+    } else if (slot.content) {
+      newItem = await this.makeImageFromSlot(slot);
+    }
+    if (newItem) {
+      newItem.x = newItem.x + position.x;
+      newItem.y = newItem.y + position.y;
+      newItem.groupId = groupId;
+    }
+    console.log(groupId, slot, newItem);
+    return newItem;
   }
 
   async loadMapDrawPileElement(drawPile) {
