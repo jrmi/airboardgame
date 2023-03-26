@@ -137,11 +137,12 @@ const getList = (value) => {
 };
 
 class FileHandler {
-  constructor(entryMap, log = () => {}) {
+  constructor(entryMap, log = () => {}, fake) {
     this.entryMap = entryMap;
     this.fileCache = {};
     this.log = log;
     this.queue = pLimit(3);
+    this.fake = fake;
   }
 
   getRealPath(main, alternative = "") {
@@ -220,6 +221,9 @@ class FileHandler {
       this.log("Missing file:", fileName);
       return { type: "external", content: "/default.png" };
     }
+    if (this.fake) {
+      return { type: "external", content: "/default.png" };
+    }
     try {
       const filePath = await uploadHandler(file);
       this.log(`File ${fileName} uploaded!`);
@@ -269,7 +273,7 @@ class FileHandler {
 }
 
 class VassalModuleLoader {
-  constructor(file, onProgress, debug = false) {
+  constructor(file, onProgress, debug = false, fake = false) {
     this.file = file;
     this.onProgress = onProgress;
     if (debug) {
@@ -279,6 +283,7 @@ class VassalModuleLoader {
     }
     this.prototypes = {};
     this.progressAmount = 0;
+    this.fake = fake;
   }
 
   async init() {
@@ -288,7 +293,7 @@ class VassalModuleLoader {
       entries.map((entry) => [entry.filename, entry])
     );
     this.log("Files in archive", Object.keys(this.entryMap));
-    this.fileHandler = new FileHandler(this.entryMap, this.log);
+    this.fileHandler = new FileHandler(this.entryMap, this.log, this.fake);
     this.fileCache = {};
     this.createdGame = null;
     this.boardByName = {};
@@ -319,15 +324,9 @@ class VassalModuleLoader {
     this.log("Build file content", this.buildFile);
   }
 
-  readSlot(slot) {
+  readSlot(slot, ignoreMissingProto = true) {
     const commands = getCommands(slot.__text);
     const result = { name: slot._entryName || slot._name, altImages: [] };
-    if (slot._width) {
-      result.width = parseInt(slot._width);
-    }
-    if (slot._height) {
-      result.height = parseInt(slot._height);
-    }
 
     for (const [commandName, ...rest] of commands) {
       if (commandName === "piece") {
@@ -347,51 +346,35 @@ class VassalModuleLoader {
       }
       if (commandName === "prototype") {
         const prototype = this.prototypes[rest[0]];
-        const { altImages, ...restProto } = prototype;
+        if (ignoreMissingProto && !prototype) {
+          this.log("Ignore missing proto", rest[0]);
+        } else {
+          const { altImages, ...restProto } = prototype;
 
-        Object.assign(result, restProto);
-        result.altImages = result.altImages.concat(altImages);
+          Object.assign(result, restProto);
+          result.altImages = result.altImages.concat(altImages);
+        }
       }
       if (commandName === "emb2") {
-        /*this.log(
-          "Emb2 images",
-          rest[15].split(",").map((main) => this.fileHandler.getRealPath(main))
-        );*/
-        result.altImages = result.altImages.concat(
-          rest[15].split(",").map((main) => this.fileHandler.getRealPath(main))
-        );
+        const images = rest[15]
+          .split(",")
+          .map((main) => this.fileHandler.getRealPath(main));
+        if (rest[25] === "false") {
+          images.unshift(null);
+        }
+        result.altImages.unshift(images);
       }
       if (commandName === "emb") {
         const imagesText = rest.slice(8);
 
-        result.altImages = result.altImages.concat(
+        result.altImages.unshift(
           imagesText.map((im) => {
             const dec = new Decoder(im, ",");
             return this.fileHandler.getRealPath(dec.nextToken());
           })
         );
-        // this.log("Emb images", result.altImages);
       }
     }
-
-    console.log(slot, result);
-
-    result.altImages = result.altImages.filter((im) => im);
-
-    /*if (!result.content) {
-      const [first, second] = result.altImages || [];
-      switch (result.altImages.length) {
-        case 1:
-          result.content = first;
-          result.altImages = [];
-          break;
-        case 2:
-          result.content = first;
-          result.backContent = second;
-          result.altImages = [];
-          break;
-      }
-    }*/
 
     return result;
   }
@@ -403,9 +386,31 @@ class VassalModuleLoader {
           "VASSAL.build.module.PrototypeDefinition"
         ]
       );
+      let allLoaded = false;
+      let attempt = prototypeElements.length;
+      while (!allLoaded) {
+        allLoaded = true;
+        prototypeElements.forEach((proto) => {
+          if (!this.prototypes[proto._name]) {
+            try {
+              const { name, ...rest } = this.readSlot(proto, false);
+              this.prototypes[name] = rest;
+            } catch (e) {
+              if (attempt > 0) {
+                allLoaded = false;
+              }
+            }
+          }
+        });
+        attempt -= 1;
+      }
+
+      // One last time ignoring missing proto
       prototypeElements.forEach((proto) => {
-        const { name, ...rest } = this.readSlot(proto);
-        this.prototypes[name] = rest;
+        if (!this.prototypes[proto._name]) {
+          const { name, ...rest } = this.readSlot(proto);
+          this.prototypes[name] = rest;
+        }
       });
     }
     this.log("Game prototypes", this.prototypes);
@@ -453,41 +458,52 @@ class VassalModuleLoader {
     return newItem;
   }
 
-  async makeImageSequenceFromSlot(slot) {
+  async makeAdvancedImageFromSlot(slot) {
     let { width, height } = slot;
-    const images = slot.altImages;
     const newItem = {
+      type: "advancedImage",
       label: slot.name,
     };
     let imageSize;
     if (slot.content) {
       imageSize = await this.fileHandler.getImageSize(slot.content);
-      newItem.backgroundImage = slot.content;
+      newItem.front = slot.content;
     } else {
-      imageSize = await this.fileHandler.getImageSize(images[0]);
+      const firstImage = slot.altImages[0].find((im) => im);
+      if (firstImage) {
+        imageSize = await this.fileHandler.getImageSize(firstImage);
+      } else {
+        imageSize = { width: 50, height: 50 };
+      }
+      newItem.front = null;
     }
     (width = imageSize.width), (height = imageSize.height);
 
+    if (slot.backContent) {
+      newItem.back = slot.backContent;
+    }
+
+    const layers = slot.altImages.map((images) => ({
+      value: 0,
+      side: "front",
+      uid: uid(),
+      images,
+    }));
+
     Object.assign(newItem, {
-      type: "imageSequence",
       x: -width / 2,
       y: -height / 2,
       width,
       height,
-      imageCount: images.length,
-      images,
+      layers,
     });
     return newItem;
   }
 
   async itemFromSlot(slot, groupId, position) {
     let newItem = null;
-    /*if (forceType === "card") {
-      newItem = await this.makeCardFromSlot(slot);
-    } else */ if (
-      slot.altImages.length > 0
-    ) {
-      newItem = await this.makeImageSequenceFromSlot(slot);
+    if (slot.altImages.length > 0) {
+      newItem = await this.makeAdvancedImageFromSlot(slot);
     } else if (slot.content) {
       newItem = await this.makeImageFromSlot(slot);
     }
@@ -496,7 +512,7 @@ class VassalModuleLoader {
       newItem.y = newItem.y + position.y;
       newItem.groupId = groupId;
     }
-    console.log(groupId, slot, newItem);
+
     return newItem;
   }
 
@@ -506,7 +522,7 @@ class VassalModuleLoader {
     const pileName = drawPile._name;
     const owningBoard = drawPile._owningBoard;
     let offset = { x: 0, y: 0 };
-    if (owningBoard) {
+    if (owningBoard && this.boardByName[owningBoard]) {
       offset = {
         x: this.boardByName[owningBoard].x,
         y: this.boardByName[owningBoard].y,
@@ -538,8 +554,9 @@ class VassalModuleLoader {
     const y = parseInt(setupStack._y) || 0;
     //const useGridLocation = setupStack._useGridLocation;
     const owningBoard = setupStack._owningBoard;
+
     let offset = { x: 0, y: 0 };
-    if (owningBoard) {
+    if (owningBoard && this.boardByName[owningBoard]) {
       offset = {
         x: this.boardByName[owningBoard].x,
         y: this.boardByName[owningBoard].y,
@@ -739,6 +756,28 @@ class VassalModuleLoader {
       )
     ).filter((item) => item);
 
+    const chartItems = await Promise.all(
+      getList(widget["VASSAL.build.widget.Chart"]).map(async (chart) => {
+        const newItem = await this.itemFromSlot(
+          {
+            content: this.fileHandler.getRealPath(
+              chart._fileName,
+              chart._chartName
+            ),
+            name: chart._chartName,
+            altImages: [],
+          },
+          groupName,
+          { x: 0, y: 0 }
+        );
+        if (newItem) {
+          delete newItem.x;
+          delete newItem.y;
+        }
+        return newItem;
+      })
+    );
+
     const panelItems = await Promise.all(
       getList(widget["VASSAL.build.widget.PanelWidget"]).map((subWidget) =>
         this.exploreWidgetElement(subWidget)
@@ -767,19 +806,20 @@ class VassalModuleLoader {
 
     return {
       name: groupName,
-      items: [...pieceItems, ...subItems],
+      items: [...pieceItems, ...chartItems, ...subItems],
     };
   }
 
   async loadPieceWindow() {
+    const windows = getList(
+      this.buildFile["VASSAL.build.module.PieceWindow"]
+    ).concat(getList(this.buildFile["VASSAL.build.module.ChartWindow"]));
     return (
       await Promise.all(
-        getList(this.buildFile["VASSAL.build.module.PieceWindow"]).map(
-          async (pieceWindow) => {
-            const { items } = await this.exploreWidgetElement(pieceWindow);
-            return items;
-          }
-        )
+        windows.map(async (pieceWindow) => {
+          const { items } = await this.exploreWidgetElement(pieceWindow);
+          return items;
+        })
       )
     )
       .flat()
@@ -897,7 +937,7 @@ class VassalModuleLoader {
   }
 
   async uploadOneFile(fileName, uploadHandler) {
-    if (!this.fileCache[fileName]) {
+    if (fileName && !this.fileCache[fileName]) {
       this.fileCount += 1;
       this.fileCache[fileName] = this.fileHandler
         .uploadFile(fileName, uploadHandler)
@@ -968,9 +1008,47 @@ class VassalModuleLoader {
         }
         return newItem;
       }
+      case "advancedImage": {
+        const newItem = { ...item };
+
+        newItem.front = await this.uploadOneFile(item.front, uploadHandler);
+
+        if (item.back) {
+          newItem.back = await this.uploadOneFile(item.back, uploadHandler);
+        }
+
+        newItem.layers = await Promise.all(
+          item.layers.map(async (layer) => ({
+            ...layer,
+            images: await Promise.all(
+              layer.images.map(async (imageName) => {
+                if (typeof imageName === "string") {
+                  return {
+                    ...(await this.uploadOneFile(imageName, uploadHandler)),
+                    uid: uid(),
+                  };
+                }
+                return { type: "empty", content: null, uid: uid() };
+              })
+            ),
+          }))
+        );
+
+        return newItem;
+      }
       default:
         return item;
     }
+  }
+
+  showStats() {
+    const uploadedFileList = new Set(Object.keys(this.fileCache));
+    const existingFiles = Object.keys(this.entryMap);
+
+    this.log(
+      "Remaining files",
+      existingFiles.filter((x) => !uploadedFileList.has(x))
+    );
   }
 
   /**
@@ -1180,27 +1258,31 @@ export const createGameFromVassalModule = async (file) => {
   this.log("Game created", this.createdGame._id);
 };
 
+const fake = false;
+
 export const loadVassalModuleInSession = async (
   file,
   sessionId,
   progressCallback = () => {},
   debug = false
 ) => {
-  const moduleLoader = new VassalModuleLoader(file, progressCallback, debug);
+  const moduleLoader = new VassalModuleLoader(
+    file,
+    progressCallback,
+    debug,
+    fake
+  );
   const { name, description } = await moduleLoader.loadVassalModule();
 
   const uploadHandler = (file) => {
     return uploadMedia("session", sessionId, file);
   };
 
-  // Early quit
-  /*if (moduleLoader) {
-    throw Error("Interrupted");
-  }*/
-
   const { items, availableItems } = await moduleLoader.uploadFiles(
     uploadHandler
   );
+
+  moduleLoader.showStats();
 
   return {
     items: items.map((item) => ({

@@ -25,7 +25,6 @@ import useSession from "../../hooks/useSession";
 
 import vassalIconUrl from "../../media/images/vassal.svg?url";
 
-console.log(vassalIconUrl);
 const StyledNavBar = styled.div.attrs(() => ({ className: "nav" }))`
   position: fixed;
   top: 0;

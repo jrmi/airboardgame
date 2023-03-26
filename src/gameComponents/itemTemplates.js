@@ -7,6 +7,7 @@ import Cube from "./Cube";
 import Round from "./Round";
 import Token from "./Token";
 import Image from "./Image";
+import AdvancedImage from "./AdvancedImage";
 import Counter from "./Counter";
 import Dice from "./Dice";
 import DiceImage from "./DiceImage";
@@ -22,6 +23,7 @@ import Generator from "./Generator";
 import Anchor from "./Anchor";
 
 import ImageFormFields from "./forms/ImageFormFields";
+import AdvancedImageFormFields from "./forms/AdvancedImageFormFields";
 import CounterFormFields from "./forms/CounterFormFields";
 import RectFormFields from "./forms/RectFormFields";
 import CubeFormFields from "./forms/CubeFormFields";
@@ -296,6 +298,49 @@ const itemTemplates = {
     form: ImageFormFields,
     name: i18n.t("Image"),
     template: {},
+  },
+  advancedImage: {
+    component: AdvancedImage,
+    defaultActions: (item) => {
+      let actions = ["stack", "shuffle", "clone", "lock", "remove"];
+      if (item.layers.length) {
+        actions = ["nextImage"].concat(actions);
+      }
+      if (item.back) {
+        return ["flip", "flipSelf"].concat(actions);
+      } else {
+        return actions;
+      }
+    },
+    availableActions: (item) => {
+      let actions = [
+        "tap",
+        "rotate",
+        "randomlyRotate",
+        "stack",
+        "alignAsLine",
+        "alignAsSquare",
+        "shuffle",
+        "clone",
+        "lock",
+        "remove",
+      ];
+      if (item.layers.length) {
+        actions = [
+          "prevImageForLayer",
+          "nextImageForLayer",
+          "rollLayer",
+        ].concat(actions);
+      }
+      if (item.back) {
+        return ["flip", "flipSelf"].concat(actions);
+      } else {
+        return actions;
+      }
+    },
+    form: AdvancedImageFormFields,
+    name: i18n.t("Advanced Image"),
+    template: { layers: [], front: "/default.png" },
   },
   imageSequence: {
     component: ImageSequence,

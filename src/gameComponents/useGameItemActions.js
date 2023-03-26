@@ -13,8 +13,10 @@ import {
 } from "../utils";
 
 import itemTemplates from "./itemTemplates";
-import RotateActionForm from "./forms/RotateActionForm";
-import RandomlyRotateActionForm from "./forms/RandomlyRotateActionForm";
+import ActionRotateForm from "./forms/ActionRotateForm";
+import ActionRandomlyRotateForm from "./forms/ActionRandomlyRotateForm";
+import ActionRollLayerForm from "./forms/ActionRollLayerForm";
+import ActionChangeImageLayerForm from "./forms/ActionChangeImageLayerForm";
 
 import deleteIcon from "../media/images/delete.svg";
 import stackToCenterIcon from "../media/images/stackToCenter.svg";
@@ -240,31 +242,43 @@ export const useGameItemActions = () => {
   );
 
   const roll = React.useCallback(
-    async (itemIds) => {
+    async (itemIds, { layer: layerToRoll = 0 }) => {
       const [ids] = await getItemListOrSelected(itemIds);
       ids.forEach((itemId) => {
         const elem = getItemElement(itemId);
         elem.firstChild.className = "hvr-wobble-horizontal";
       });
 
-      const getSideCount = (item) => {
+      const randomizeValue = (item) => {
         switch (item.type) {
           case "dice":
-            return item.side || 6;
+            return {
+              ...item,
+              value: randInt(0, (item.side || 6) - 1),
+            };
           case "diceImage":
           case "imageSequence":
-            return item.images.length;
+            return {
+              ...item,
+              value: randInt(0, item.images.length - 1),
+            };
+          case "advancedImage": {
+            const newLayers = item.layers.map((layer, index) => {
+              if (index === layerToRoll) {
+                return { ...layer, value: randInt(0, layer.images.length - 1) };
+              }
+              return layer;
+            });
+            return { ...item, layers: newLayers };
+          }
           default:
-            return 6;
+            return itemTemplates;
         }
       };
 
       const simulateRoll = (nextTimeout) => {
         batchUpdateItems(ids, (item) => {
-          return {
-            ...item,
-            value: randInt(0, getSideCount(item) - 1),
-          };
+          return randomizeValue(item);
         });
         if (nextTimeout < 300) {
           setTimeout(
@@ -273,6 +287,7 @@ export const useGameItemActions = () => {
           );
         }
       };
+
       simulateRoll(100);
 
       playAudio(rollAudio, 0.4);
@@ -280,10 +295,11 @@ export const useGameItemActions = () => {
     [batchUpdateItems, getItemListOrSelected]
   );
 
-  const changeImage = React.useCallback(
-    async (itemIds, { step = 1 }) => {
+  const changeValue = React.useCallback(
+    async (itemIds, { step = 1, layer: layerToUpdate = 0 }) => {
       const [ids] = await getItemListOrSelected(itemIds);
-      batchUpdateItems(ids, (item) => {
+
+      const stepItem = (item) => {
         const { value = 0, images } = item;
         if (step > 0) {
           return {
@@ -296,6 +312,26 @@ export const useGameItemActions = () => {
             ...item,
             value: newValue >= 0 ? newValue : images.length + newValue,
           };
+        }
+      };
+
+      batchUpdateItems(ids, (item) => {
+        switch (item.type) {
+          case "dice":
+            return item.side || 6;
+          case "diceImage":
+          case "imageSequence":
+            return stepItem(item);
+          case "advancedImage":
+            return {
+              ...item,
+              layers: item.layers.map((layer, index) => {
+                if (index === layerToUpdate) {
+                  return stepItem(layer);
+                }
+                return layer;
+              }),
+            };
         }
       });
     },
@@ -607,17 +643,41 @@ export const useGameItemActions = () => {
         shortcut: "r",
         icon: rollIcon,
       },
+      rollLayer: {
+        action: ({ layer = 0 } = {}) => (itemIds) =>
+          roll(itemIds, { layer: layer }),
+        label: t("Roll"),
+        shortcut: "r",
+        icon: rollIcon,
+        form: ActionRollLayerForm,
+      },
       nextImage: {
-        action: () => (itemIds) => changeImage(itemIds, { step: 1 }),
+        action: () => (itemIds) => changeValue(itemIds, { step: 1 }),
         label: t("Next"),
         shortcut: "n",
         icon: arrowRightIcon,
       },
       prevImage: {
-        action: () => (itemIds) => changeImage(itemIds, { step: -1 }),
+        action: () => (itemIds) => changeValue(itemIds, { step: -1 }),
         label: t("Previous"),
-        shortcut: "b",
+        shortcut: "p",
         icon: arrowLeftIcon,
+      },
+      nextImageForLayer: {
+        action: ({ step = 1, layer = 0 } = {}) => (itemIds) =>
+          changeValue(itemIds, { step, layer }),
+        label: t("Next"),
+        shortcut: "n",
+        icon: arrowRightIcon,
+        form: ActionChangeImageLayerForm,
+      },
+      prevImageForLayer: {
+        action: ({ step = -1, layer = 0 } = {}) => (itemIds) =>
+          changeValue(itemIds, { step, layer }),
+        label: t("Previous"),
+        shortcut: "p",
+        icon: arrowLeftIcon,
+        form: ActionChangeImageLayerForm,
       },
       shuffle: {
         action: () => shuffleItems,
@@ -637,7 +697,7 @@ export const useGameItemActions = () => {
         genericLabel: t("Rotate randomly"),
         multiple: false,
         icon: rotateIcon,
-        form: RandomlyRotateActionForm,
+        form: ActionRandomlyRotateForm,
       },
       randomlyRotate30: {
         action: () => (itemIds) =>
@@ -700,7 +760,7 @@ export const useGameItemActions = () => {
         genericLabel: t("Rotate"),
         shortcut: "r",
         icon: rotateIcon,
-        form: RotateActionForm,
+        form: ActionRotateForm,
       },
       rotate30: {
         action: () => (itemIds) => rotate(itemIds, { angle: 30 }),
@@ -769,8 +829,8 @@ export const useGameItemActions = () => {
   }, [
     alignAsLine,
     alignAsSquare,
+    changeValue,
     cloneItem,
-    changeImage,
     randomlyRotateSelectedItems,
     remove,
     roll,
@@ -791,7 +851,7 @@ export const useGameItemActions = () => {
     randomlyRotate: randomlyRotateSelectedItems,
     remove,
     roll,
-    changeImage,
+    changeValue,
     rotate,
     stack: stackToTopLeft,
     setFlip,
