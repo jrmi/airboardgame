@@ -242,7 +242,7 @@ export const useGameItemActions = () => {
   );
 
   const roll = React.useCallback(
-    async (itemIds, { layer: layerToRoll = 0 }) => {
+    async (itemIds, { layer: layerToRoll = 0 } = {}) => {
       const [ids] = await getItemListOrSelected(itemIds);
       ids.forEach((itemId) => {
         const elem = getItemElement(itemId);

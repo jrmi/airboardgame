@@ -277,7 +277,7 @@ class VassalModuleLoader {
     this.file = file;
     this.onProgress = onProgress;
     if (debug) {
-      this.log = console.log;
+      this.log = (...args) => console.log(...args);
     } else {
       this.log = () => {};
     }
@@ -356,25 +356,144 @@ class VassalModuleLoader {
         }
       }
       if (commandName === "emb2") {
-        const images = rest[15]
+        const [
+          activateCommand,
+          ,
+          activateKey,
+          upCommand,
+          ,
+          upKey,
+          downCommand,
+          ,
+          downKey,
+          ,
+          ,
+          ,
+          drawUnderneath,
+          xOff,
+          yOff,
+          imageNames,
+          ,
+          ,
+          name,
+          rndKey,
+          rndText,
+          ,
+          ,
+          firstLevelValueRaw,
+          versionRaw,
+          alwaysActiveRaw,
+          ,
+          incKey,
+          decKey,
+          description,
+          scale,
+        ] = rest;
+
+        const version = versionRaw || 0;
+        const firstLevelValue = parseInt(firstLevelValueRaw, 10);
+        const alwaysActive =
+          version === 0 ? activateKey === "" : alwaysActiveRaw === "true";
+
+        const images = imageNames
           .split(",")
           .map((main) => this.fileHandler.getRealPath(main));
-        if (rest[25] === "false") {
+
+        /*console.log({
+          activateCommand,
+          activateKey,
+          upCommand,
+          upKey,
+          downKey,
+          downCommand,
+          drawUnderneath,
+          xOff,
+          yOff,
+          name,
+          rndKey,
+          rndText,
+          firstLevelValue,
+          version,
+          alwaysActive,
+          incKey,
+          decKey,
+          description,
+          scale,
+          imageNames,
+        });*/
+
+        if (!alwaysActive) {
           images.unshift(null);
         }
-        result.altImages.unshift(images);
+
+        const layer = {
+          images,
+          scale: scale || 1,
+          offsetX: parseInt(xOff, 10),
+          offsetY: parseInt(yOff, 10),
+        };
+
+        result.altImages.unshift(layer);
       }
       if (commandName === "emb") {
-        const imagesText = rest.slice(8);
+        const [
+          st2,
+          activateCommandRaw,
+          upKey,
+          upCommand,
+          ,
+          downKey,
+          downCommand,
+          ,
+          xOff,
+          yOff,
+          ...imagesText
+        ] = rest;
 
-        result.altImages.unshift(
-          imagesText.map((im) => {
-            const dec = new Decoder(im, ",");
-            return this.fileHandler.getRealPath(dec.nextToken());
-          })
-        );
+        const st2Decoder = new Decoder(st2, ";");
+
+        const [activateKey] = st2Decoder.nextToken();
+
+        const alwaysActive = activateKey === "";
+
+        const drawUnderneath = activateCommandRaw.startsWith("_");
+        let activateCommand = activateCommandRaw;
+        if (drawUnderneath) {
+          activateCommand = activateCommandRaw.substring(1);
+        }
+
+        /*console.log(
+          st2,
+          activateKey,
+          activateCommand,
+          upKey,
+          upCommand,
+          downKey,
+          downCommand,
+          xOff,
+          yOff
+        );*/
+
+        const images = imagesText.map((im) => {
+          const dec = new Decoder(im, ",");
+          return this.fileHandler.getRealPath(dec.nextToken());
+        });
+
+        if (!alwaysActive) {
+          images.unshift(null);
+        }
+
+        result.altImages.unshift({
+          images,
+          scale: 1,
+          offsetX: parseInt(xOff, 10),
+          offsetY: parseInt(yOff, 10),
+        });
       }
     }
+
+    if (result.name === "Vincent Lee") console.log(commands, result);
+    if (result.name === "InvPiece") console.log(commands, result);
 
     return result;
   }
@@ -433,7 +552,7 @@ class VassalModuleLoader {
     if (slot.backContent) {
       newItem.backContent = slot.backContent;
     } else if (slot.altImages.length > 0) {
-      newItem.backContent = slot.altImages[0];
+      newItem.backContent = slot.altImages.images[0];
     }
     return newItem;
   }
@@ -469,7 +588,7 @@ class VassalModuleLoader {
       imageSize = await this.fileHandler.getImageSize(slot.content);
       newItem.front = slot.content;
     } else {
-      const firstImage = slot.altImages[0].find((im) => im);
+      const firstImage = slot.altImages[0].images.find((im) => im);
       if (firstImage) {
         imageSize = await this.fileHandler.getImageSize(firstImage);
       } else {
@@ -483,12 +602,17 @@ class VassalModuleLoader {
       newItem.back = slot.backContent;
     }
 
-    const layers = slot.altImages.map((images) => ({
-      value: 0,
-      side: "front",
-      uid: uid(),
-      images,
-    }));
+    const layers = slot.altImages.map(
+      ({ images, scale, offsetX, offsetY }) => ({
+        value: 0,
+        side: "front",
+        uid: uid(),
+        scale,
+        offsetX,
+        offsetY,
+        images,
+      })
+    );
 
     Object.assign(newItem, {
       x: -width / 2,

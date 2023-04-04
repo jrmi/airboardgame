@@ -60,41 +60,54 @@ const AdvancedImage = ({
   const frontUrl = media2Url(front);
   const backUrl = media2Url(back);
 
-  const loadImage = React.useCallback(async (name, url) => {
+  const loadImage = React.useCallback(async (name, url, imageBitmapsParam) => {
     if (url) {
-      const imageBlob = await (await fetch(url)).blob();
-      const imageBitmapOriginal = await createImageBitmap(imageBlob);
-      const imageBitmap = structuredClone(imageBitmapOriginal);
-      setImageBitmaps((prev) => ({
-        ...prev,
-        [name]: imageBitmap,
-      }));
+      if (imageBitmapsParam[name]?.url !== url) {
+        const img = new Image();
+        img.onload = () => {
+          setImageBitmaps((prev) => ({
+            ...prev,
+            [name]: { image: img, url },
+          }));
+        };
+        img.src = url;
+
+        setImageBitmaps((prev) => ({
+          ...prev,
+          [name]: { url },
+        }));
+      }
     } else {
-      setImageBitmaps((prev) => ({
-        ...prev,
-        [name]: undefined,
-      }));
+      setImageBitmaps((prev) => {
+        if (prev[name]) {
+          const next = { ...prev };
+          delete next[name];
+          return next;
+        } else {
+          return prev;
+        }
+      });
     }
   }, []);
 
   React.useEffect(() => {
-    loadImage("front", frontUrl);
-  }, [frontUrl, loadImage]);
+    loadImage("front", frontUrl, imageBitmaps);
+  }, [frontUrl, imageBitmaps, loadImage]);
 
   React.useEffect(() => {
-    loadImage("back", backUrl);
-  }, [backUrl, loadImage]);
+    loadImage("back", backUrl, imageBitmaps);
+  }, [backUrl, imageBitmaps, loadImage]);
 
   React.useEffect(() => {
     if (Array.isArray(layers)) {
       layers.forEach((layer) => {
         layer.images.forEach((image, index) => {
           const imageUrl = media2Url(image);
-          loadImage(`${layer.uid}__${index}`, imageUrl);
+          loadImage(`${layer.uid}__${index}`, imageUrl, imageBitmaps);
         });
       });
     }
-  }, [layers, loadImage]);
+  }, [imageBitmaps, layers, loadImage]);
 
   const unflippedForUsers = React.useMemo(() => {
     if (Array.isArray(unflippedFor)) {
@@ -114,8 +127,8 @@ const AdvancedImage = ({
 
   const size = { width, height };
   if (imageBitmaps["front"]) {
-    size.width = size.width || imageBitmaps["front"].width;
-    size.height = size.height || imageBitmaps["front"].height;
+    size.width = size.width || imageBitmaps["front"].image.width;
+    size.height = size.height || imageBitmaps["front"].image.height;
   } else {
     size.width = size.width || 50;
     size.height = size.height || 50;
@@ -131,32 +144,41 @@ const AdvancedImage = ({
         const context = canvasRef.current.getContext("2d");
         // Clear canvas
         context.clearRect(0, 0, size.width, size.height);
-        if (imageBitmaps[imageToDraw]) {
+        let ratioWidth = 1,
+          ratioHeight = 1;
+        if (imageBitmaps[imageToDraw]?.image) {
+          const { image } = imageBitmaps[imageToDraw];
           // Draw main image
-          context.drawImage(
-            imageBitmaps[imageToDraw],
-            0,
-            0,
-            size.width,
-            size.height
-          );
+          context.drawImage(image, 0, 0, size.width, size.height);
+          ratioWidth = size.width / image.width;
+          ratioHeight = size.height / image.height;
         }
+
+        const center = { x: size.width / 2, y: size.height / 2 };
         // Draw layers
-        layers?.forEach(({ uid, value = 0, side }) => {
-          const imageName = `${uid}__${value}`;
-          if (
-            imageBitmaps[imageName] &&
-            (side === "both" || side === imageToDraw)
-          ) {
-            context.drawImage(
-              imageBitmaps[imageName],
-              0,
-              0,
-              size.width,
-              size.height
-            );
+        layers?.forEach(
+          ({ uid, value = 0, side, offsetX = 0, offsetY = 0 }) => {
+            const imageName = `${uid}__${value}`;
+            if (
+              imageBitmaps[imageName]?.image &&
+              (side === "both" || side === imageToDraw)
+            ) {
+              const { image } = imageBitmaps[imageName];
+              const { width: w, height: h } = image;
+              const [halfWidth, halfHeight] = [
+                (w / 2) * ratioWidth,
+                (h / 2) * ratioHeight,
+              ];
+              context.drawImage(
+                image,
+                center.x - halfWidth + offsetX * ratioWidth,
+                center.y - halfHeight + offsetY * ratioHeight,
+                w * ratioWidth,
+                h * ratioHeight
+              );
+            }
           }
-        });
+        );
       }
     };
     paint();

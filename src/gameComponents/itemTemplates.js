@@ -342,7 +342,7 @@ const itemTemplates = {
     name: i18n.t("Advanced Image"),
     template: { layers: [], front: "/default.png" },
   },
-  imageSequence: {
+  /*imageSequence: {
     component: ImageSequence,
     defaultActions: ["nextImage", "clone", "lock", "remove"],
     availableActions: [
@@ -361,7 +361,7 @@ const itemTemplates = {
       images: ["/default.png"],
       currentImage: 0,
     }),
-  },
+  },*/
   counter: {
     component: Counter,
     defaultActions: ["clone", "lock", "remove"],
