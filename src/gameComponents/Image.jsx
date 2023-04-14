@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { media2Url } from "../mediaLibrary";
 
 import eye from "../media/images/eye.svg";
+import Canvas from "./Canvas";
 
 const UnflippedFor = styled.div`
   position: absolute;
@@ -43,25 +44,6 @@ const Wrapper = styled.div`
   user-select: none;
   position: relative;
   line-height: 0em;
-`;
-
-const FrontImage = styled.img`
-  transition: opacity 300ms;
-  pointer-events: none;
-  opacity: ${({ visible }) => (visible ? 1 : 0)};
-`;
-
-const BackImage = styled(FrontImage)`
-  position: absolute;
-  top: 0;
-  left: 0;
-`;
-
-const OverlayImage = styled.img`
-  pointer-events: none;
-  position: absolute;
-  top: 0;
-  left: 0;
 `;
 
 // See https://stackoverflow.com/questions/3680429/click-through-div-to-underlying-elements
@@ -108,6 +90,19 @@ const Image = ({
 
   const flippable = Boolean(backContent);
 
+  const layers = React.useMemo(() => {
+    const result = [];
+    if (!flippedForMe) {
+      result.push({ url: imageContent });
+    } else {
+      result.push({ url: backContent });
+    }
+    if (overlayContent) {
+      result.push({ url: overlayContent });
+    }
+    return result;
+  }, [backContent, flippedForMe, imageContent, overlayContent]);
+
   return (
     <Wrapper
       onMouseEnter={(e) => {
@@ -119,32 +114,16 @@ const Image = ({
         e.target.classList.remove("hovered");
       }}
     >
-      <UnflippedFor>
-        {unflippedForUsers &&
-          unflippedForUsers.map(({ color, id }) => {
+      {unflippedForUsers && (
+        <UnflippedFor>
+          {unflippedForUsers.map(({ color, id }) => {
             return <UnflippedForUser key={id} src={eye} color={color} />;
           })}
-      </UnflippedFor>
-
-      <FrontImage
-        visible={!flippedForMe}
-        src={imageContent}
-        alt=""
-        draggable={false}
-        {...size}
-      />
-
-      <BackImage
-        visible={flippedForMe}
-        src={backContent}
-        alt=""
-        draggable={false}
-        {...size}
-      />
-
-      {overlayContent && (
-        <OverlayImage src={overlayContent} draggable={false} alt="" {...size} />
+        </UnflippedFor>
       )}
+
+      <Canvas layers={layers} width={width} height={height} />
+
       {flippedForMe && backText && <Label>{backText}</Label>}
       {(!flippedForMe || !backText) && text && <Label>{text}</Label>}
     </Wrapper>

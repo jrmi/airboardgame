@@ -83,11 +83,13 @@ const SelectedItemsPane = ({ hideMenu = false, showEdit, setShowEdit }) => {
           action.action = action.action(args);
           action.label = action.label(args);
           action.uid = smallUid();
+          action.args = args;
           return action;
         })
         .filter(({ multiple }) => !multiple || selectedItems.length > 1),
     [actionMap, availableActions, selectedItems]
   );
+  console.log(parsedAvailableActions);
 
   React.useEffect(() => {
     const onKeyUp = (e) => {

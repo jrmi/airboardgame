@@ -3,7 +3,9 @@ import { FieldArray } from "react-final-form-arrays";
 import { useField } from "react-final-form";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
+import { Field } from "react-final-form";
 
+import Label from "../ui/formUtils/Label";
 import { smallUid } from "../utils";
 import useGameItemActions from "./useGameItemActions";
 
@@ -49,10 +51,12 @@ const Action = ({ name, onUp, onDown, onRemove }) => {
 
   const hasForm = Boolean(ActionForm);
 
+  const computedLabel = value.args?.customLabel || label(value.args);
+
   return (
     <li>
       <div className="action-desc">
-        <span>{label(value.args)}</span>
+        <span>{computedLabel}</span>
         <div className="action-actions">
           {hasForm && (
             <button
@@ -91,6 +95,14 @@ const Action = ({ name, onUp, onDown, onRemove }) => {
       </div>
       {hasForm && showForm && (
         <div className="action-form">
+          <Label>
+            {t("Step")}
+            <Field
+              name={`${name}.args.customLabel`}
+              component="input"
+              initialValue={value.args?.customLabel}
+            />
+          </Label>
           <ActionForm name={`${name}.args`} initialValues={value.args} />
         </div>
       )}

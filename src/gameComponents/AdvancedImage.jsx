@@ -5,6 +5,8 @@ import { media2Url } from "../mediaLibrary";
 
 import eye from "../media/images/eye.svg";
 
+import Canvas from "./Canvas";
+
 const UnflippedFor = styled.div`
   position: absolute;
   top: -34px;
@@ -54,60 +56,9 @@ const AdvancedImage = ({
   layers,
 }) => {
   const { currentUser, localUsers: users } = useUsers();
-  const canvasRef = React.useRef(null);
-  const [imageBitmaps, setImageBitmaps] = React.useState({});
 
   const frontUrl = media2Url(front);
   const backUrl = media2Url(back);
-
-  const loadImage = React.useCallback(async (name, url, imageBitmapsParam) => {
-    if (url) {
-      if (imageBitmapsParam[name]?.url !== url) {
-        const img = new Image();
-        img.onload = () => {
-          setImageBitmaps((prev) => ({
-            ...prev,
-            [name]: { image: img, url },
-          }));
-        };
-        img.src = url;
-
-        setImageBitmaps((prev) => ({
-          ...prev,
-          [name]: { url },
-        }));
-      }
-    } else {
-      setImageBitmaps((prev) => {
-        if (prev[name]) {
-          const next = { ...prev };
-          delete next[name];
-          return next;
-        } else {
-          return prev;
-        }
-      });
-    }
-  }, []);
-
-  React.useEffect(() => {
-    loadImage("front", frontUrl, imageBitmaps);
-  }, [frontUrl, imageBitmaps, loadImage]);
-
-  React.useEffect(() => {
-    loadImage("back", backUrl, imageBitmaps);
-  }, [backUrl, imageBitmaps, loadImage]);
-
-  React.useEffect(() => {
-    if (Array.isArray(layers)) {
-      layers.forEach((layer) => {
-        layer.images.forEach((image, index) => {
-          const imageUrl = media2Url(image);
-          loadImage(`${layer.uid}__${index}`, imageUrl, imageBitmaps);
-        });
-      });
-    }
-  }, [imageBitmaps, layers, loadImage]);
 
   const unflippedForUsers = React.useMemo(() => {
     if (Array.isArray(unflippedFor)) {
@@ -125,64 +76,26 @@ const AdvancedImage = ({
 
   const flippable = Boolean(backUrl);
 
-  const size = { width, height };
-  if (imageBitmaps["front"]) {
-    size.width = size.width || imageBitmaps["front"].image.width;
-    size.height = size.height || imageBitmaps["front"].image.height;
-  } else {
-    size.width = size.width || 50;
-    size.height = size.height || 50;
-  }
-
-  React.useEffect(() => {
-    const paint = async () => {
-      let imageToDraw = "front";
-      if (flippedForMe) {
-        imageToDraw = "back";
+  const canvasLayers = React.useMemo(() => {
+    const result = [];
+    if (flippedForMe) {
+      result.push({ url: backUrl });
+    } else {
+      result.push({ url: frontUrl });
+    }
+    layers?.forEach(({ value = 0, images, side, offsetX = 0, offsetY = 0 }) => {
+      if (
+        side === "both" ||
+        (side === "front" && !flippedForMe) ||
+        (side === "back" && flippedForMe)
+      ) {
+        const currentImage = images[value];
+        const url = media2Url(currentImage);
+        result.push({ url, offsetX, offsetY });
       }
-      if (canvasRef.current) {
-        const context = canvasRef.current.getContext("2d");
-        // Clear canvas
-        context.clearRect(0, 0, size.width, size.height);
-        let ratioWidth = 1,
-          ratioHeight = 1;
-        if (imageBitmaps[imageToDraw]?.image) {
-          const { image } = imageBitmaps[imageToDraw];
-          // Draw main image
-          context.drawImage(image, 0, 0, size.width, size.height);
-          ratioWidth = size.width / image.width;
-          ratioHeight = size.height / image.height;
-        }
-
-        const center = { x: size.width / 2, y: size.height / 2 };
-        // Draw layers
-        layers?.forEach(
-          ({ uid, value = 0, side, offsetX = 0, offsetY = 0 }) => {
-            const imageName = `${uid}__${value}`;
-            if (
-              imageBitmaps[imageName]?.image &&
-              (side === "both" || side === imageToDraw)
-            ) {
-              const { image } = imageBitmaps[imageName];
-              const { width: w, height: h } = image;
-              const [halfWidth, halfHeight] = [
-                (w / 2) * ratioWidth,
-                (h / 2) * ratioHeight,
-              ];
-              context.drawImage(
-                image,
-                center.x - halfWidth + offsetX * ratioWidth,
-                center.y - halfHeight + offsetY * ratioHeight,
-                w * ratioWidth,
-                h * ratioHeight
-              );
-            }
-          }
-        );
-      }
-    };
-    paint();
-  }, [flippedForMe, imageBitmaps, layers, size.height, size.width]);
+    });
+    return result;
+  }, [backUrl, flippedForMe, frontUrl, layers]);
 
   return (
     <Wrapper
@@ -201,7 +114,7 @@ const AdvancedImage = ({
             return <UnflippedForUser key={id} src={eye} color={color} />;
           })}
       </UnflippedFor>
-      <canvas {...size} ref={canvasRef}></canvas>
+      <Canvas layers={canvasLayers} width={width} height={height} />
     </Wrapper>
   );
 };
