@@ -81,8 +81,7 @@ export const BoardView = ({
             showResizeHandle={editItem}
           />
         </StyledBoard>
-        <NavBar editMode={editMode} />
-        <ActionBar
+        <NavBar
           editMode={editMode}
           BoardFormComponent={BoardForm}
           itemLibraries={itemLibraries}
@@ -91,6 +90,15 @@ export const BoardView = ({
           hideMenu={hideMenu}
           setHideMenu={setHideMenu}
         />
+        {/*<ActionBar
+          editMode={editMode}
+          BoardFormComponent={BoardForm}
+          itemLibraries={itemLibraries}
+          moveFirst={moveFirst}
+          setMoveFirst={setMoveFirst}
+          hideMenu={hideMenu}
+          setHideMenu={setHideMenu}
+  />*/}
         <WelcomeModal show={showWelcomeModal} setShow={setShowWelcomeModal} />
       </ImageDropNPaste>
       <SelectedItemsPane

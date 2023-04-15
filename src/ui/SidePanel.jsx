@@ -15,9 +15,12 @@ const Overlay = styled.div`
 const StyledSidePanel = styled.div`
   position: fixed;
   ${({ position }) => (position === "right" ? "right: 0;" : "left: 0;")}
+
+  ${({ open, position }) =>
+    position !== "right" && open ? "margin-left: 51px;" : ""}
   top: 0;
   bottom: 0;
-  z-index: ${({ modal, layer }) => (modal ? 290 : 280) + layer};
+  z-index: ${({ modal, layer }) => (modal ? 290 : 203) + layer};
   display: flex;
   flex-direction: column;
   height: 100%;

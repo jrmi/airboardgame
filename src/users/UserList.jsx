@@ -13,13 +13,14 @@ const InlineUserList = styled.ul.attrs(() => ({ className: "uk-card" }))`
   margin: 0;
   padding: 0;
   display: flex;
+  flex-direction: column;
 `;
 
 const InlineUserListItem = styled.li`
   display: flex;
+  flex-direction: column;
   align-items: center;
   position: relative;
-  margin-right: 3px;
 `;
 
 const UserList = styled.ul.attrs(() => {})`
@@ -60,7 +61,7 @@ export const Users = () => {
       ))}
       {users.length > 3 && (
         <InlineUserListItem key="last">
-          <div style={{ display: "inline" }}>
+          <div>
             <Touch
               onClick={() => {
                 setOpenUserList((prev) => !prev);

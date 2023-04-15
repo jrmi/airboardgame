@@ -89,7 +89,6 @@ const SelectedItemsPane = ({ hideMenu = false, showEdit, setShowEdit }) => {
         .filter(({ multiple }) => !multiple || selectedItems.length > 1),
     [actionMap, availableActions, selectedItems]
   );
-  console.log(parsedAvailableActions);
 
   React.useEffect(() => {
     const onKeyUp = (e) => {
@@ -149,6 +148,17 @@ const SelectedItemsPane = ({ hideMenu = false, showEdit, setShowEdit }) => {
       document.removeEventListener("dblclick", onDblClick);
     };
   }, [onDblClick]);
+
+  React.useEffect(() => {
+    if (boardState.movingItems || boardState.zooming || boardState.panning) {
+      setShowEdit(false);
+    }
+  }, [
+    boardState.movingItems,
+    boardState.panning,
+    boardState.zooming,
+    setShowEdit,
+  ]);
 
   if (
     hideMenu ||

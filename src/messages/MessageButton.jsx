@@ -87,7 +87,6 @@ export const MessageButton = () => {
           onClick={() => setShowPanelRef(!showPanelRef.current)}
           alt={t("Chat")}
           title={t("Chat")}
-          label={t("Chat")}
           icon={"message"}
           active={showPanel}
         />

@@ -13,7 +13,7 @@ const AddItemPanel = ({ itemLibraries, open, onClose }) => {
   }, [itemLibraries]);
 
   return (
-    <SidePanel open={open} onClose={onClose} position="right" width="33%">
+    <SidePanel open={open} onClose={onClose} width="33%">
       <nav className="tabs">
         {itemLibraries.map(({ name, key }) => (
           <a
@@ -44,7 +44,6 @@ const AddItemButton = ({ itemLibraries, showAddPanel, setShowAddPanel }) => {
         onClick={() => setShowAddPanel((prev) => !prev)}
         alt={t("Add item")}
         title={t("Add item")}
-        label={t("Add")}
         icon={showAddPanel ? "cross" : "plus"}
       />
       <AddItemPanel

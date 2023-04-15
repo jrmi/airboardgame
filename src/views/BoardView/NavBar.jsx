@@ -20,16 +20,24 @@ import ExportModal from "./ExportModal";
 import SaveExportModal from "./SaveExportModal";
 import WelcomeModal from "./WelcomeModal";
 import LoadVassalModuleGameModal from "./LoadVassalModuleGameModal";
+import MessageButton from "../../messages/MessageButton";
+import EditInfoButton from "./EditInfoButton";
+import AddItemButton from "./AddItemButton";
 
 import useSession from "../../hooks/useSession";
 
 import vassalIconUrl from "../../media/images/vassal.svg?url";
+import target from "../../media/images/target.svg";
 
 const StyledNavBar = styled.div.attrs(() => ({ className: "nav" }))`
   position: fixed;
   top: 0;
-  width: 100%;
+  left: 0;
+  height: 100%;
   z-index: 205;
+  flex-direction: column;
+  padding: 10px 0;
+  width: 50px;
 
   background-color: #19202ce0;
   box-shadow: 0px 3px 6px #00000029;
@@ -58,20 +66,7 @@ const StyledNavBar = styled.div.attrs(() => ({ className: "nav" }))`
   & .nav-center,
   & .nav-left {
     align-items: center;
-  }
-
-  & .nav-left {
-    & > div {
-      padding-right: 1em;
-    }
-    padding-left: 40px;
-    justify-content: flex-start;
-  }
-
-  & .nav-right {
-    justify-content: flex-end;
-    padding-right: 1em;
-    gap: 1em;
+    flex-direction: column;
   }
 
   & .spacer {
@@ -132,7 +127,15 @@ const StyledNavBar = styled.div.attrs(() => ({ className: "nav" }))`
   }
 `;
 
-const NavBar = ({ editMode, title }) => {
+const NavBar = ({
+  editMode,
+  BoardFormComponent,
+  itemLibraries,
+  moveFirst,
+  setMoveFirst,
+  hideMenu,
+  setHideMenu,
+}) => {
   const { t, i18n } = useTranslation();
   const { sessionId: room, isVassalSession } = useSession();
   const [boardConfig] = useBoardConfig();
@@ -151,6 +154,7 @@ const NavBar = ({ editMode, title }) => {
   const [showChangeGameModal, setShowChangeGameModal] = React.useState(false);
   const [showInfoModal, setShowInfoModal] = React.useState(false);
   const [showLink, setShowLink] = React.useState(false);
+  const [showAddPanel, setShowAddPanel] = React.useState(false);
 
   const translation = React.useMemo(
     () => getBestTranslationFromConfig(boardConfig, i18n.languages),
@@ -197,110 +201,147 @@ const NavBar = ({ editMode, title }) => {
   return (
     <>
       <StyledNavBar edit={editMode}>
-        <div className="nav-left">
-          {!editMode && (
-            <>
-              <Touch
-                onClick={handleBack}
-                alt={t("Go back")}
-                title={t("Go back")}
-                icon={"chevron-left"}
-                style={{ display: "inline" }}
-              />
-              {isMaster && (
-                <div className="hide-mobile">
-                  <Touch
-                    onClick={() => setShowChangeGameModal((prev) => !prev)}
-                    alt={t("Change game")}
-                    title={t("Change game")}
-                    icon="https://icongr.am/material/cards-playing-outline.svg?size=24&color=f9fbfa"
-                  />
-                  <ChangeGameModal
-                    show={showChangeGameModal}
-                    setShow={setShowChangeGameModal}
-                  />
-                </div>
-              )}
-            </>
-          )}
-          {editMode && (
+        {!editMode && (
+          <>
             <Touch
-              onClick={handleBackWithConfirm}
-              alt={t("Go back to studio")}
-              title={t("Go back to studio")}
+              onClick={handleBack}
+              alt={t("Go back")}
+              title={t("Go back")}
               icon={"chevron-left"}
-              style={{ display: "inline" }}
             />
-          )}
-        </div>
-
-        <div className="nav-center">
-          <h3>
-            {translation.name ? translation.name : title || "Air Board Game"}
-          </h3>
-        </div>
-
-        <div className="nav-right">
-          {!editMode && (
-            <>
-              <div className="hide-mobile">
-                <UserList />
-              </div>
+            {isMaster && (
               <div className="hide-mobile">
                 <Touch
-                  onClick={() => {
-                    setShowLink(true);
-                  }}
-                  icon="add-user"
-                  title={t("Invite more player")}
+                  onClick={() => setShowChangeGameModal((prev) => !prev)}
+                  alt={t("Change game")}
+                  title={t("Change game")}
+                  icon="https://icongr.am/material/cards-playing-outline.svg?size=24&color=f9fbfa"
+                />
+                <ChangeGameModal
+                  show={showChangeGameModal}
+                  setShow={setShowChangeGameModal}
                 />
               </div>
-              <div className="hide-mobile">
-                <WebConferenceButton room={room} />
-              </div>
-            </>
-          )}
-          <div className="spacer" />
-          {(isMaster || editMode) && !isVassalSession && (
+            )}
+          </>
+        )}
+        {editMode && (
+          <Touch
+            onClick={handleBackWithConfirm}
+            alt={t("Go back to studio")}
+            title={t("Go back to studio")}
+            icon={"chevron-left"}
+            style={{ display: "inline" }}
+          />
+        )}
+        {!editMode && (
+          <>
+            <div className="spacer" />
+            <div className="hide-mobile">
+              <UserList />
+            </div>
             <div className="hide-mobile">
               <Touch
-                onClick={() => setShowLoadGameModal((prev) => !prev)}
-                alt={editMode ? t("Load game") : t("Load session")}
-                title={editMode ? t("Load game") : t("Load session")}
-                icon={"upload-to-cloud"}
+                onClick={() => {
+                  setShowLink(true);
+                }}
+                icon="add-user"
+                title={t("Invite more player")}
               />
             </div>
-          )}
-          {isMaster && isVassalSession && (
+            {!editMode && <MessageButton />}
             <div className="hide-mobile">
-              <Touch
-                onClick={() => setShowLoadGameModal((prev) => !prev)}
-                alt={
-                  editMode ? t("Load Vassal module") : t("Load Vassal module")
-                }
-                title={
-                  editMode ? t("Load Vassal module") : t("Load Vassale module")
-                }
-                icon={vassalIconUrl}
-              />
+              <WebConferenceButton room={room} />
             </div>
-          )}
+          </>
+        )}
+        <div className="spacer" />
+        {(isMaster || editMode) && !isVassalSession && (
           <div className="hide-mobile">
             <Touch
-              onClick={() => setShowSaveGameModal((prev) => !prev)}
-              alt={t("Save")}
-              title={editMode ? t("Save game") : t("Save session")}
-              icon={editMode ? "save" : "download"}
+              onClick={() => setShowLoadGameModal((prev) => !prev)}
+              alt={editMode ? t("Load game") : t("Load session")}
+              title={editMode ? t("Load game") : t("Load session")}
+              icon={"upload-to-cloud"}
             />
           </div>
-          <div className="spacer" />
+        )}
+        {isMaster && isVassalSession && (
+          <div className="hide-mobile">
+            <Touch
+              onClick={() => setShowLoadGameModal((prev) => !prev)}
+              alt={editMode ? t("Load Vassal module") : t("Load Vassal module")}
+              title={
+                editMode ? t("Load Vassal module") : t("Load Vassale module")
+              }
+              icon={vassalIconUrl}
+            />
+          </div>
+        )}
+        <div className="hide-mobile">
           <Touch
-            onClick={() => setShowInfoModal((prev) => !prev)}
-            alt={t("Help & info")}
-            title={t("Help & info")}
-            icon={"help"}
+            onClick={() => setShowSaveGameModal((prev) => !prev)}
+            alt={t("Save")}
+            title={editMode ? t("Save game") : t("Save session")}
+            icon={editMode ? "save" : "download"}
           />
         </div>
+        <div className="spacer" />
+        <AddItemButton
+          itemLibraries={itemLibraries}
+          setShowAddPanel={setShowAddPanel}
+          showAddPanel={showAddPanel}
+        />
+        <div className="spacer" />
+
+        {!moveFirst && (
+          <Touch
+            onClick={() => setMoveFirst(true)}
+            alt={t("Move mode")}
+            title={t("Switch to move mode")}
+            icon={"hand"}
+          />
+        )}
+
+        {moveFirst && (
+          <Touch
+            onClick={() => setMoveFirst(false)}
+            alt={t("Select mode")}
+            title={t("Switch to select mode")}
+            icon={"mouse-pointer"}
+          />
+        )}
+
+        <Touch
+          onClick={() => setHideMenu((prev) => !prev)}
+          alt={hideMenu ? t("Show menu") : t("Hide menu")}
+          title={hideMenu ? t("Show action menu") : t("Hide action menu")}
+          icon={hideMenu ? "eye-with-line" : "eye"}
+        />
+
+        <div className="spacer" />
+
+        {editMode && <EditInfoButton BoardFormComponent={BoardFormComponent} />}
+        <Touch
+          onClick={() => setShowInfoModal((prev) => !prev)}
+          alt={t("Help & info")}
+          title={t("Help & info")}
+          icon={"help"}
+        />
+        {showAddPanel && (
+          <img
+            style={{
+              position: "absolute",
+              width: "60px",
+              height: "60px",
+              left: "calc(50% - 30px)",
+              top: "calc(50% - 30px)",
+              pointerEvents: "none",
+              opacity: 0.3,
+            }}
+            src={target}
+          />
+        )}
       </StyledNavBar>
       <InfoModal show={showInfoModal} setShow={setShowInfoModal} />
 
