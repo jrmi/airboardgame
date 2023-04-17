@@ -62,13 +62,13 @@ const EditItemButton = ({ showEdit, setShowEdit }) => {
       >
         {!showEdit && (
           <img
-            src="https://icongr.am/feather/edit.svg?size=32&color=ffffff"
+            src="https://icongr.am/feather/edit.svg?size=24&color=ffffff"
             alt={t("Edit")}
           />
         )}
         {showEdit && (
           <img
-            src="https://icongr.am/feather/edit.svg?size=32&color=db5034"
+            src="https://icongr.am/feather/edit.svg?size=24&color=db5034"
             alt={t("Edit")}
           />
         )}

@@ -4,17 +4,15 @@ import styled from "styled-components";
 
 const StyledUserCircle = styled.div`
   background-color: ${({ color }) => color};
-  width: 38px;
-  min-width: 38px;
-  height: 38px;
+  width: 30px;
+  min-width: 30px;
+  height: 30px;
   margin: 2px;
   border-radius: 100%;
   text-align: center;
-  line-height: 38px;
+  line-height: 30px;
   text-transform: capitalize;
   ${({ isSelf }) => (isSelf ? "text-decoration: underline;" : "")};
-  ${({ isSelf }) =>
-    isSelf ? "border: 3px solid #777; line-height: 32px;" : ""};
   cursor: ${({ isSelf }) => (isSelf ? "pointer" : "default")};
 
   &:hover {

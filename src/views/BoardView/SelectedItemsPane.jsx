@@ -6,39 +6,36 @@ import { smallUid } from "../../utils";
 import EditItemButton from "./EditItemButton";
 import {
   useAvailableActions,
-  useSelectionBox,
   useSelectedItems,
   useBoardState,
   useItemActions,
 } from "react-sync-board";
 import useGameItemActions from "../../gameComponents/useGameItemActions";
 
-const ActionPane = styled.div.attrs(({ top, left, height }) => {
-  if (top < 120) {
-    return {
-      style: {
-        transform: `translate(${left}px, ${top + height + 5}px)`,
-      },
-    };
-  }
-  return {
-    style: {
-      transform: `translate(${left}px, ${top - 60}px)`,
-    },
-  };
-})`
-  top: 0;
-  left: 0;
+const ActionPaneWrapper = styled.div`
+  pointer-events: none;
+  position: fixed;
+  bottom: 0;
+  left: 50px;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const ActionPane = styled.div`
+  pointer-events: all;
   user-select: none;
   touch-action: none;
-  position: absolute;
   display: flex;
   background-color: var(--color-blueGrey);
   justify-content: center;
   align-items: center;
-  border-radius: 4px;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
   padding: 0.1em 0.5em;
-  
+  height: 50px;
+
   box-shadow: 2px 2px 10px 0.3px rgba(0, 0, 0, 0.5);
   
   & button{
@@ -73,7 +70,6 @@ const SelectedItemsPane = ({ hideMenu = false, showEdit, setShowEdit }) => {
   const { availableActions } = useAvailableActions();
   const selectedItems = useSelectedItems();
   const boardState = useBoardState();
-  const selectionBox = useSelectionBox();
 
   const parsedAvailableActions = React.useMemo(
     () =>
@@ -160,49 +156,45 @@ const SelectedItemsPane = ({ hideMenu = false, showEdit, setShowEdit }) => {
     setShowEdit,
   ]);
 
-  if (
-    hideMenu ||
-    selectedItems.length === 0 ||
-    boardState.zooming ||
-    boardState.panning ||
-    boardState.movingItems
-  ) {
+  if (hideMenu || selectedItems.length === 0 || boardState.movingItems) {
     return null;
   }
 
   return (
-    <ActionPane {...selectionBox}>
-      {(selectedItems.length > 1 || boardState.selecting) && (
-        <div className="count">
-          <span className="number">{selectedItems.length}</span>
-          <span>{t("Items")}</span>
-        </div>
-      )}
-      {!boardState.selecting &&
-        parsedAvailableActions.map(
-          ({ label, action, edit: onlyEdit, shortcut, icon, uid }) => {
-            if (onlyEdit && !showEdit) return null;
-            return (
-              <button
-                className="button clear icon-only"
-                key={uid}
-                onClick={() => action()}
-                title={label + (shortcut ? ` (${shortcut})` : "")}
-              >
-                <img
-                  src={icon}
-                  style={{ width: "32px", height: "32px" }}
-                  alt={label}
-                />
-              </button>
-            );
-          }
+    <ActionPaneWrapper>
+      <ActionPane>
+        {(selectedItems.length > 1 || boardState.selecting) && (
+          <div className="count">
+            <span className="number">{selectedItems.length}</span>
+            <span>{t("Items")}</span>
+          </div>
         )}
+        {!boardState.selecting &&
+          parsedAvailableActions.map(
+            ({ label, action, edit: onlyEdit, shortcut, icon, uid }) => {
+              if (onlyEdit && !showEdit) return null;
+              return (
+                <button
+                  className="button clear icon-only"
+                  key={uid}
+                  onClick={() => action()}
+                  title={label + (shortcut ? ` (${shortcut})` : "")}
+                >
+                  <img
+                    src={icon}
+                    style={{ width: "24px", height: "24px" }}
+                    alt={label}
+                  />
+                </button>
+              );
+            }
+          )}
 
-      {!boardState.selecting && (
-        <EditItemButton showEdit={showEdit} setShowEdit={setShowEdit} />
-      )}
-    </ActionPane>
+        {!boardState.selecting && (
+          <EditItemButton showEdit={showEdit} setShowEdit={setShowEdit} />
+        )}
+      </ActionPane>
+    </ActionPaneWrapper>
   );
 };
 

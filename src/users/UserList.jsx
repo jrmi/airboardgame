@@ -4,9 +4,11 @@ import styled from "styled-components";
 
 import { useTranslation } from "react-i18next";
 
-import Touch from "../ui/Touch";
+import { FiMoreHorizontal } from "react-icons/fi";
+
 import DropDown from "../ui/DropDown";
 import UserConfig from "./UserConfig";
+import NavButton from "../ui/NavButton";
 
 const InlineUserList = styled.ul.attrs(() => ({ className: "uk-card" }))`
   list-style: none;
@@ -62,11 +64,11 @@ export const Users = () => {
       {users.length > 3 && (
         <InlineUserListItem key="last">
           <div>
-            <Touch
+            <NavButton
               onClick={() => {
                 setOpenUserList((prev) => !prev);
               }}
-              icon="dots-three-horizontal"
+              Icon={FiMoreHorizontal}
               title={t("All players")}
             />
             <DropDown open={openUserlist}>

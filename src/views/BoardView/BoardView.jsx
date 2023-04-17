@@ -11,8 +11,6 @@ import SelectedItemsPane from "./SelectedItemsPane";
 
 import { itemTemplates, backgrounds } from "../../gameComponents";
 
-import ActionBar from "./ActionBar";
-
 import { MediaLibraryProvider, ImageDropNPaste } from "../../mediaLibrary";
 import HintOnLockedItem from "./HintOnLockedItem";
 import useGlobalConf from "../../hooks/useGlobalConf";
@@ -23,6 +21,7 @@ import rollAudio from "../../media/audio/roll.wav?url";
 import shuffleAudio from "../../media/audio/shuffle.wav?url";
 import { preloadAudio } from "../../utils";
 import lockIcon from "../../media/images/lock.svg";
+import UserBar from "./UserBar";
 
 const StyledBoard = styled.div`
   & .item.locked::after {
@@ -90,15 +89,7 @@ export const BoardView = ({
           hideMenu={hideMenu}
           setHideMenu={setHideMenu}
         />
-        {/*<ActionBar
-          editMode={editMode}
-          BoardFormComponent={BoardForm}
-          itemLibraries={itemLibraries}
-          moveFirst={moveFirst}
-          setMoveFirst={setMoveFirst}
-          hideMenu={hideMenu}
-          setHideMenu={setHideMenu}
-  />*/}
+        {!editMode && <UserBar />}
         <WelcomeModal show={showWelcomeModal} setShow={setShowWelcomeModal} />
       </ImageDropNPaste>
       <SelectedItemsPane
