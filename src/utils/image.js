@@ -11,7 +11,7 @@ export const getImage = async (url) => {
         resolve(img);
       };
       img.onerror = () => {
-        reject(new Error("Failed to load", url));
+        reject(new Error(`Failed to load: <${url}>`));
       };
       img.src = url;
     });

@@ -114,7 +114,12 @@ const AdvancedImage = ({
             return <UnflippedForUser key={id} src={eye} color={color} />;
           })}
       </UnflippedFor>
-      <Canvas layers={canvasLayers} width={width} height={height} />
+      <Canvas
+        layers={canvasLayers}
+        width={width}
+        height={height}
+        useCanvas={true}
+      />
     </Wrapper>
   );
 };

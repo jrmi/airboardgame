@@ -17,18 +17,41 @@ const paint = async ({
 
     const firstImage = images.find((image) => image);
 
-    const width = isNaN(givenWidth) ? firstImage.width : givenWidth;
-    const height = isNaN(givenHeight) ? firstImage.height : givenHeight;
-
-    canvas.width = width;
-    canvas.height = height;
-
+    let width, height;
     let ratioWidth = 1,
       ratioHeight = 1;
-    const center = { x: width / 2, y: height / 2 };
+
+    if (isNaN(givenWidth) && isNaN(givenHeight)) {
+      width = firstImage.width;
+      height = firstImage.height;
+    } else if (isNaN(givenWidth)) {
+      // Height is set
+      height = givenHeight;
+      ratioHeight = ratioWidth = givenHeight / firstImage.height;
+      width = ratioWidth * firstImage.width;
+    } else if (isNaN(givenHeight)) {
+      width = givenWidth;
+      ratioWidth = ratioHeight = givenWidth / firstImage.width;
+      height = ratioHeight * firstImage.height;
+    } else {
+      ratioWidth = givenWidth / firstImage.width;
+      ratioHeight = givenHeight / firstImage.height;
+      width = firstImage.width * ratioWidth;
+      height = firstImage.height * ratioHeight;
+    }
+
+    const originalHeigh = firstImage.height;
+    const originalWidth = firstImage.width;
+
+    canvas.width = originalWidth;
+    canvas.height = originalHeigh;
+    canvas.style.width = width + "px";
+    canvas.style.height = height + "px";
+
+    const center = { x: originalWidth / 2, y: originalHeigh / 2 };
 
     // Clear canvas
-    context.clearRect(0, 0, width, height);
+    context.clearRect(0, 0, originalWidth, originalHeigh);
 
     // Draw layers
     layers.forEach(({ offsetX = 0, offsetY = 0 }, index) => {
@@ -36,21 +59,16 @@ const paint = async ({
       if (image) {
         if (index === 0) {
           // Draw main image
-          context.drawImage(image, 0, 0, width, height);
-          ratioWidth = width / image.width;
-          ratioHeight = height / image.height;
+          context.drawImage(image, 0, 0, originalWidth, originalHeigh);
         } else {
           const { width: w, height: h } = image;
-          const [halfWidth, halfHeight] = [
-            (w / 2) * ratioWidth,
-            (h / 2) * ratioHeight,
-          ];
+          const [halfWidth, halfHeight] = [w / 2, h / 2];
           context.drawImage(
             image,
-            center.x - halfWidth + offsetX * ratioWidth,
-            center.y - halfHeight + offsetY * ratioHeight,
-            w * ratioWidth,
-            h * ratioHeight
+            center.x - halfWidth + offsetX,
+            center.y - halfHeight + offsetY,
+            w,
+            h
           );
         }
       }
@@ -108,13 +126,11 @@ const NoCanvas = ({ layers, width, height }) => {
   );
 };
 
-const ChooseCanvas = (props) => {
-  const useCanvas = true;
-
+const ChooseCanvas = ({ useCanvas = false, ...rest }) => {
   if (useCanvas) {
-    return <Canvas {...props} />;
+    return <Canvas {...rest} />;
   } else {
-    return <NoCanvas {...props} />;
+    return <NoCanvas {...rest} />;
   }
 };
 
