@@ -49,7 +49,6 @@ const NavBar = ({
 
   const navigate = useNavigate();
   const params = useParams();
-  const insideASession = useMatch("/session/:sessionId");
   const insideARoom = useMatch("/room/:roomId/session/:sessionId");
 
   const [showLoadGameModal, setShowLoadGameModal] = React.useState(
@@ -62,14 +61,6 @@ const NavBar = ({
   const [showAddPanel, setShowAddPanel] = React.useState(false);
 
   const handleBack = React.useCallback(() => {
-    // If inside session
-    if (insideASession) {
-      // Go to previous if exists
-      // Previous can be home or studio
-      // Yes history should be greater than 2 for some reason...
-      navigate(-1);
-      return;
-    }
     // If inside room, go back to that room
     if (insideARoom) {
       navigate(`/room/${params.roomId}`);
@@ -77,7 +68,7 @@ const NavBar = ({
     }
     // Otherwise, go back to home
     navigate("/games");
-  }, [insideASession, navigate, insideARoom, params.roomId]);
+  }, [navigate, insideARoom, params.roomId]);
 
   const handleBackWithConfirm = React.useCallback(() => {
     confirmAlert({

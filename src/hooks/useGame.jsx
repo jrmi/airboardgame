@@ -27,7 +27,7 @@ export const GameProvider = ({ gameId, game, children }) => {
 
   const getCurrentGame = React.useCallback(async () => {
     const currentGame = {
-      items: await getItemList(),
+      items: getItemList(),
       board: boardConfig,
       availableItems,
     };
