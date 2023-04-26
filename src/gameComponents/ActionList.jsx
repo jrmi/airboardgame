@@ -60,19 +60,17 @@ const Action = ({ name, onUp, onDown, onRemove }) => {
       <div className="action-desc">
         <span>{computedLabel}</span>
         <div className="action-actions">
-          {hasForm && (
-            <button
-              onClick={() => setShowForm((prev) => !prev)}
-              className={showForm ? "button primary" : ""}
-            >
-              <FiEdit
-                size="20"
-                color="white"
-                alt={t("Edit action")}
-                title={t("Edit action")}
-              />
-            </button>
-          )}
+          <button
+            onClick={() => setShowForm((prev) => !prev)}
+            className={showForm ? "button primary" : ""}
+          >
+            <FiEdit
+              size="20"
+              color="white"
+              alt={t("Edit action")}
+              title={t("Edit action")}
+            />
+          </button>
           <button onClick={onUp} disabled={!onUp}>
             <FiArrowUp
               size="20"
@@ -99,7 +97,7 @@ const Action = ({ name, onUp, onDown, onRemove }) => {
           </button>
         </div>
       </div>
-      {hasForm && showForm && (
+      {showForm && (
         <div className="action-form">
           <Label>
             {t("Custom label")}
@@ -109,7 +107,17 @@ const Action = ({ name, onUp, onDown, onRemove }) => {
               initialValue={value.args?.customLabel}
             />
           </Label>
-          <ActionForm name={`${name}.args`} initialValues={value.args} />
+          <Label>
+            {t("Custom shortcut")}
+            <Field
+              name={`${name}.args.customShortcut`}
+              component="input"
+              initialValue={value.args?.customShortcut}
+            />
+          </Label>
+          {hasForm && (
+            <ActionForm name={`${name}.args`} initialValues={value.args} />
+          )}
         </div>
       )}
     </li>
