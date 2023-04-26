@@ -377,7 +377,7 @@ class VassalModuleLoader {
           ,
           name,
           rndKey,
-          rndText,
+          rndCommand,
           ,
           ,
           firstLevelValueRaw,
@@ -393,7 +393,7 @@ class VassalModuleLoader {
         const version = versionRaw || 0;
         const firstLevelValue = parseInt(firstLevelValueRaw, 10);
         const alwaysActive =
-          version === 0 ? activateKey === "" : alwaysActiveRaw === "true";
+          version === "0" ? activateKey === "" : alwaysActiveRaw === "true";
 
         const images = imageNames
           .split(",")
@@ -431,6 +431,10 @@ class VassalModuleLoader {
           scale: scale || 1,
           offsetX: parseInt(xOff, 10),
           offsetY: parseInt(yOff, 10),
+          upCommand,
+          downCommand,
+          activateCommand,
+          rndCommand,
         };
 
         result.altImages.unshift(layer);
@@ -488,12 +492,14 @@ class VassalModuleLoader {
           scale: 1,
           offsetX: parseInt(xOff, 10),
           offsetY: parseInt(yOff, 10),
+          upCommand,
+          downCommand,
+          activateCommand,
         });
       }
     }
 
-    if (result.name === "Vincent Lee") console.log(commands, result);
-    if (result.name === "InvPiece") console.log(commands, result);
+    //if (result.altImages.length) console.log(commands, result);
 
     return result;
   }
@@ -574,6 +580,17 @@ class VassalModuleLoader {
     if (slot.backContent) {
       newItem.backContent = slot.backContent;
     }
+
+    const actions = [];
+
+    if (slot.backContent) {
+      actions.push("flip", "flipSelf");
+    }
+
+    actions.push("stack", "shuffle");
+    actions.push("clone", "lock", "remove");
+
+    newItem.actions = actions;
     return newItem;
   }
 
@@ -614,12 +631,62 @@ class VassalModuleLoader {
       })
     );
 
+    const actions = [];
+
+    if (slot.backContent) {
+      actions.push("flip", "flipSelf");
+    }
+
+    actions.push("stack", "shuffle");
+
+    slot.altImages.forEach(
+      ({ activateCommand, upCommand, downCommand, rndCommand }, index) => {
+        if (downCommand) {
+          actions.push({
+            name: "prevImageForLayer",
+            args: {
+              customLabel: downCommand,
+              layer: index,
+            },
+          });
+        }
+        if (upCommand) {
+          actions.push({
+            name: "nextImageForLayer",
+            args: { customLabel: upCommand, layer: index },
+          });
+        } else if (activateCommand) {
+          actions.push({
+            name: "nextImageForLayer",
+            args: {
+              customLabel: activateCommand,
+              layer: index,
+            },
+          });
+        }
+        if (rndCommand) {
+          actions.push({
+            name: "rollLayer",
+            args: {
+              customLabel: rndCommand,
+              layer: index,
+            },
+          });
+        }
+      }
+    );
+
+    actions.push("clone", "lock", "remove");
+
+    console.log(slot, actions);
+
     Object.assign(newItem, {
       x: -width / 2,
       y: -height / 2,
       width,
       height,
       layers,
+      actions,
     });
     return newItem;
   }

@@ -84,6 +84,7 @@ const LayerForm = ({ value, index, onChange, onRemove }) => {
                 value={value.images[index]}
                 onChange={setImage(index)}
               />
+              {/* TODO add offset */}
             </Label>
           </div>
         );
