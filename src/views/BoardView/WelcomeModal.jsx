@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import Modal from "../../ui/Modal";
 
 import GameInformation from "./GameInformation";
+import { FiCopy } from "react-icons/fi";
 
 const StyledUrl = styled.div`
   background-color: var(--color-midGrey);
@@ -22,7 +23,7 @@ const StyledUrl = styled.div`
     text-overflow: ellipsis;
   }
 
-  & img {
+  & svg {
     margin-left: 1em;
     cursor: pointer;
   }
@@ -49,11 +50,12 @@ const WelcomeModal = ({ show, setShow, welcome = true }) => {
       <section>
         <StyledUrl>
           <span>{currentUrl}</span>
-          <img
+          <FiCopy
             className="copy"
-            src="https://icongr.am/entypo/copy.svg?size=22&color=888886"
             alt={t("Copy")}
             onClick={handleCopy}
+            size="22"
+            color="#888886"
           />
         </StyledUrl>
         <p>

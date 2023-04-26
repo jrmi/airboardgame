@@ -110,7 +110,7 @@ const NoCanvas = ({ layers, width, height }) => {
         width={width}
         height={height}
       />
-      {rest.map(({ url, offsetX, offsetY }) => {
+      {rest.map(({ url, offsetX = 0, offsetY = 0 }) => {
         return (
           <ImageWrapper key={url}>
             <ImageElm

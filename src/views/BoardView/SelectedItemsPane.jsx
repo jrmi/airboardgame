@@ -78,7 +78,7 @@ const SelectedItemsPane = ({ hideMenu = false, showEdit, setShowEdit }) => {
         .map(({ name, args }) => {
           const action = { ...actionMap[name] };
           action.action = action.action(args);
-          action.label = action.label(args);
+          action.label = args?.customLabel || action.label(args);
           action.uid = smallUid();
           action.args = args;
           return action;
@@ -172,7 +172,7 @@ const SelectedItemsPane = ({ hideMenu = false, showEdit, setShowEdit }) => {
         )}
         {!boardState.selecting &&
           parsedAvailableActions.map(
-            ({ label, action, edit: onlyEdit, shortcut, icon, uid }) => {
+            ({ label, action, edit: onlyEdit, shortcut, icon: Icon, uid }) => {
               if (onlyEdit && !showEdit) return null;
               return (
                 <button
@@ -181,11 +181,12 @@ const SelectedItemsPane = ({ hideMenu = false, showEdit, setShowEdit }) => {
                   onClick={() => action()}
                   title={label + (shortcut ? ` (${shortcut})` : "")}
                 >
-                  <img
+                  {/*<img
                     src={icon}
                     style={{ width: "24px", height: "24px" }}
                     alt={label}
-                  />
+              />*/}
+                  <Icon size="24" alt={label} color="#FFFFFF" />
                 </button>
               );
             }

@@ -20,7 +20,6 @@ import flipAudio from "../../media/audio/flip.wav?url";
 import rollAudio from "../../media/audio/roll.wav?url";
 import shuffleAudio from "../../media/audio/shuffle.wav?url";
 import { preloadAudio } from "../../utils";
-import lockIcon from "../../media/images/lock.svg";
 import UserBar from "./UserBar";
 
 const StyledBoard = styled.div`
@@ -32,8 +31,6 @@ const StyledBoard = styled.div`
     top: 4px;
     right: 4px;
     opacity: 0.1;
-    background-image: url("${lockIcon}");
-    background-size: cover;
     user-select: none;
     overflow: hidden;
   }

@@ -7,6 +7,7 @@ import { confirmAlert } from "react-confirm-alert";
 import { toast } from "react-toastify";
 import { useMutation, useQueryClient } from "react-query";
 import { media2Url } from "../mediaLibrary";
+import { FiDelete, FiEdit, FiEyeOff, FiShare2, FiTrash2 } from "react-icons/fi";
 
 const Game = styled.li`
   position: relative;
@@ -326,10 +327,11 @@ const GameListItem = ({
           className="button edit icon-only success"
           onClick={onShare}
         >
-          <img
-            src="https://icongr.am/feather/share-2.svg?size=16&color=ffffff"
+          <FiShare2
             alt={t("Share game link")}
             title={t("Share game link")}
+            size="16"
+            color="white"
           />
         </a>
         {(owned || isAdmin) && (
@@ -338,27 +340,30 @@ const GameListItem = ({
               onClick={deleteGameHandler}
               className="button edit icon-only error"
             >
-              <img
-                src="https://icongr.am/feather/trash.svg?size=16&color=ffffff"
+              <FiTrash2
                 alt={t("Delete")}
                 title={t("Delete")}
+                size="16"
+                color="white"
               />
             </button>
             <Link to={`/game/${id}/edit`} className="button edit icon-only ">
-              <img
-                src="https://icongr.am/feather/edit.svg?size=16&color=ffffff"
+              <FiEdit
                 alt={t("Edit")}
                 title={t("Edit")}
+                size="16"
+                color="white"
               />
             </Link>
           </>
         )}
       </span>
       {!published && (
-        <img
+        <FiEyeOff
           className="unpublished"
-          src="https://icongr.am/entypo/eye-with-line.svg?size=32&color=888886"
           alt={t("Unpublished")}
+          size="16"
+          color="white"
         />
       )}
       <div className="details">

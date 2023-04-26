@@ -5,6 +5,8 @@ import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import { Field } from "react-final-form";
 
+import { FiEdit, FiArrowDown, FiArrowUp, FiX } from "react-icons/fi";
+
 import Label from "../ui/formUtils/Label";
 import { smallUid } from "../utils";
 import useGameItemActions from "./useGameItemActions";
@@ -63,30 +65,34 @@ const Action = ({ name, onUp, onDown, onRemove }) => {
               onClick={() => setShowForm((prev) => !prev)}
               className={showForm ? "button primary" : ""}
             >
-              <img
-                src="https://icongr.am/feather/edit.svg?size=20&color=FFFFFF"
+              <FiEdit
+                size="20"
+                color="white"
                 alt={t("Edit action")}
                 title={t("Edit action")}
               />
             </button>
           )}
           <button onClick={onUp} disabled={!onUp}>
-            <img
-              src="https://icongr.am/feather/arrow-up.svg?size=20&color=FFFFFF"
+            <FiArrowUp
+              size="20"
+              color="white"
               alt={t("Move up")}
               title={t("Move up")}
             />
           </button>
           <button onClick={onDown} disabled={!onDown}>
-            <img
-              src="https://icongr.am/feather/arrow-down.svg?size=20&color=FFFFFF"
+            <FiArrowDown
+              size="20"
+              color="white"
               alt={t("Move down")}
               title={t("Move down")}
             />
           </button>
           <button onClick={onRemove}>
-            <img
-              src="https://icongr.am/feather/x.svg?size=20&color=FFFFFF"
+            <FiX
+              size="20"
+              color="white"
               alt={t("Remove")}
               title={t("Remove")}
             />
@@ -96,7 +102,7 @@ const Action = ({ name, onUp, onDown, onRemove }) => {
       {hasForm && showForm && (
         <div className="action-form">
           <Label>
-            {t("Step")}
+            {t("Custom label")}
             <Field
               name={`${name}.args.customLabel`}
               component="input"

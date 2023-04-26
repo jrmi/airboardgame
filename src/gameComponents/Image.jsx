@@ -3,12 +3,12 @@ import { useUsers } from "react-sync-board";
 import styled from "styled-components";
 import { media2Url } from "../mediaLibrary";
 
-import eye from "../media/images/eye.svg";
+import { FiEye } from "react-icons/fi";
 import Canvas from "./Canvas";
 
 const UnflippedFor = styled.div`
   position: absolute;
-  top: -34px;
+  top: 2px;
   right: 2px;
   color: #555;
   font-size: 0.6em;
@@ -17,14 +17,16 @@ const UnflippedFor = styled.div`
   align-items: center;
 
   pointer-events: none;
-  line-height: 1.5em;
+  line-height: 0;
+  opacity: 0.6;
 `;
 
-const UnflippedForUser = styled.img`
+const UnflippedForUser = styled.div`
   background-color: ${({ color }) => color};
-  border-radius: 2px;
-  padding: 2px;
-  margin: 2px;
+  color: white;
+  border-radius: 3px;
+  padding: 4px;
+  margin: 4px;
 `;
 
 const Label = styled.div`
@@ -114,18 +116,21 @@ const Image = ({
         e.target.classList.remove("hovered");
       }}
     >
-      {unflippedForUsers && (
-        <UnflippedFor>
-          {unflippedForUsers.map(({ color, id }) => {
-            return <UnflippedForUser key={id} src={eye} color={color} />;
-          })}
-        </UnflippedFor>
-      )}
-
       <Canvas layers={layers} width={width} height={height} />
 
       {flippedForMe && backText && <Label>{backText}</Label>}
       {(!flippedForMe || !backText) && text && <Label>{text}</Label>}
+      {unflippedForUsers && (
+        <UnflippedFor>
+          {unflippedForUsers.map(({ color, id }) => {
+            return (
+              <UnflippedForUser key={id} color={color}>
+                <FiEye color="white" size="32" />
+              </UnflippedForUser>
+            );
+          })}
+        </UnflippedFor>
+      )}
     </Wrapper>
   );
 };

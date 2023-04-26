@@ -2,6 +2,8 @@ import React from "react";
 import styled from "styled-components";
 import { useTranslation } from "react-i18next";
 
+import { FiEdit } from "react-icons/fi";
+
 import SidePanel from "../../ui/SidePanel";
 import ItemFormFactory from "./ItemFormFactory";
 import {
@@ -60,18 +62,11 @@ const EditItemButton = ({ showEdit, setShowEdit }) => {
         onClick={() => setShowEdit((prev) => !prev)}
         title={t("Edit")}
       >
-        {!showEdit && (
-          <img
-            src="https://icongr.am/feather/edit.svg?size=24&color=ffffff"
-            alt={t("Edit")}
-          />
-        )}
-        {showEdit && (
-          <img
-            src="https://icongr.am/feather/edit.svg?size=24&color=db5034"
-            alt={t("Edit")}
-          />
-        )}
+        <FiEdit
+          size="24"
+          color={showEdit ? "#db5034" : "white"}
+          alt={t("Edit")}
+        />
       </button>
       <SidePanel
         key={selectedItems[0]}

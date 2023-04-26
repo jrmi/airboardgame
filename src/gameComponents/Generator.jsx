@@ -1,6 +1,7 @@
 import React, { memo } from "react";
 import styled, { css } from "styled-components";
 import { useItemActions, useItemInteraction, useUsers } from "react-sync-board";
+import { FiMove } from "react-icons/fi";
 
 import { uid, getItemElement } from "../utils";
 import itemTemplates from "./itemTemplates";
@@ -293,7 +294,7 @@ const Generator = ({ color = "#ccc", item, id, currentItemId, setState }) => {
   return (
     <StyledShape color={color} center={center}>
       <div className="handle">
-        <img src="https://icongr.am/clarity/cursor-move.svg?size=20&color=ffffff" />
+        <FiMove size="20" color="white" />
       </div>
       <div className="wrapper" style={dimension}>
         <div
