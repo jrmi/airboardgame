@@ -11,6 +11,7 @@ const StyledNavBar = styled.div`
   align-items: center;
   padding: 10px 0;
   width: 40px;
+  z-index: 280;
 
   background-color: #19202ce0;
 

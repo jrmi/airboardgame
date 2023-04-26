@@ -49,7 +49,7 @@ const StyledModalWrapper = styled.div`
     box-shadow: rgba(0, 0, 0, 0.5) 0px 0px 30px;
     margin: 2em;
     max-width: 33%;
-    min-width: 300px;
+    min-width: 290px;
   }
 
   .modal__content {

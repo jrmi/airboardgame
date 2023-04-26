@@ -18,7 +18,7 @@ const demos = {
   fr: demoFr,
 };
 
-const emtpyBoard = {
+const emptyBoard = {
   items: [],
   availableItems: [],
   board: {
@@ -93,7 +93,7 @@ export const SessionProvider = ({
         }
       } else {
         // Empty board
-        sessionData = emtpyBoard;
+        sessionData = emptyBoard;
       }
     }
     return sessionData;
