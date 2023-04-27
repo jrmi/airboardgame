@@ -10,7 +10,7 @@ const StyledSidePanel = styled.div`
 
   top: 0;
   bottom: 0;
-  z-index: ${({ layer }) => 203 + layer};
+  z-index: ${({ layer }) => 213 + layer};
   display: flex;
   flex-direction: column;
   height: 100%;

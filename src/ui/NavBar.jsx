@@ -11,9 +11,9 @@ const StyledNavBar = styled.div`
   align-items: center;
   padding: 10px 0;
   width: 40px;
-  z-index: 280;
+  z-index: 215;
 
-  background-color: #19202ce0;
+  background-color: #19202cf5;
 
   ${({ position = "left" }) => {
     if (position === "left") {

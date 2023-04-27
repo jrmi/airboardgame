@@ -47,8 +47,8 @@ const StyledModalWrapper = styled.div`
     border-radius: 5px;
     position: relative;
     box-shadow: rgba(0, 0, 0, 0.5) 0px 0px 30px;
-    margin: 2em;
-    max-width: 33%;
+    margin: 5px;
+    max-width: 40%;
     min-width: 290px;
   }
 
@@ -80,6 +80,18 @@ const StyledModalWrapper = styled.div`
 
   .modal__footer {
     margin-top: 1em;
+  }
+
+  @media screen and (max-width: 1024px) {
+    & .modal {
+      max-width: 70%;
+    }
+  }
+
+  @media screen and (max-width: 640px) {
+    & .modal {
+      max-width: 100%;
+    }
   }
 `;
 

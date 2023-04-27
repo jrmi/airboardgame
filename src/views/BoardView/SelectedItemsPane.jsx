@@ -16,12 +16,12 @@ const ActionPaneWrapper = styled.div`
   pointer-events: none;
   position: fixed;
   bottom: 0;
-  left: 50px;
-  right: 0;
+  left: 40px;
+  right: 40px;
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 280;
+  z-index: 212;
 `;
 
 const ActionPane = styled.div`
@@ -36,9 +36,15 @@ const ActionPane = styled.div`
   border-top-right-radius: 4px;
   padding: 0.1em 0.5em;
   height: 50px;
+  overflow-x: auto;
+  overflow-y: hidden;
 
   box-shadow: 2px 2px 10px 0.3px rgba(0, 0, 0, 0.5);
   
+
+  & img {
+    max-width: initial;
+  }
   & button{
     margin 0 4px;
     padding: 0em;

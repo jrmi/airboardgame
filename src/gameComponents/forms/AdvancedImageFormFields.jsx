@@ -45,7 +45,7 @@ const LayerForm = ({ value, index, onChange, onRemove }) => {
   };
 
   return (
-    <div>
+    <>
       <h3>
         {t("Layer")} {index}{" "}
         <a style={{ cursor: "pointer" }} title={t("Delete")} onClick={remove}>
@@ -66,33 +66,52 @@ const LayerForm = ({ value, index, onChange, onRemove }) => {
           <option value="both">{t("Both")}</option>
         </Field>
       </Label>
+      <Label>
+        {t("Offset X")}
+        <Field
+          name={`layers[${index}].offsetX`}
+          component="input"
+          parse={(value) => parseInt(value, 10) || null}
+          initialValue={value.offsetX}
+        >
+          {(props) => <input {...props.input} type="number" />}
+        </Field>
+      </Label>
+      <Label>
+        {t("Offset Y")}
+        <Field
+          name={`layers[${index}].offsetY`}
+          component="input"
+          parse={(value) => parseInt(value, 10) || null}
+          initialValue={value.offsetY}
+        >
+          {(props) => <input {...props.input} type="number" />}
+        </Field>
+      </Label>
       {(value.images || []).map(({ uid }, index) => {
         return (
-          <div key={uid}>
-            <Label>
-              {t("Image {{index}}", { index: index + 1 })}{" "}
-              {value.images.length > 1 && (
-                <a
-                  style={{ cursor: "pointer" }}
-                  title={t("Delete")}
-                  onClick={() => removeImage(uid)}
-                >
-                  {t("X")}
-                </a>
-              )}
-              <ImageField
-                value={value.images[index]}
-                onChange={setImage(index)}
-              />
-              {/* TODO add offset */}
-            </Label>
-          </div>
+          <Label key={uid}>
+            {t("Image {{index}}", { index: index + 1 })}{" "}
+            {value.images.length > 1 && (
+              <a
+                style={{ cursor: "pointer" }}
+                title={t("Delete")}
+                onClick={() => removeImage(uid)}
+              >
+                {t("X")}
+              </a>
+            )}
+            <ImageField
+              value={value.images[index]}
+              onChange={setImage(index)}
+            />
+          </Label>
         );
       })}
       <button onClick={addImage} style={{ marginTop: "0.5em" }}>
         {t("Add image")}
       </button>
-    </div>
+    </>
   );
 };
 
@@ -105,7 +124,7 @@ const LayersForm = ({ value, onChange }) => {
   const onLayerChange = (newLayerValue) => {
     const newValue = value.map((layer) => {
       if (layer.uid === newLayerValue.uid) {
-        return newLayerValue;
+        return { ...layer, ...newLayerValue };
       }
       return layer;
     });
@@ -187,14 +206,12 @@ const ImageForm = ({ initialValues }) => {
         </Field>
       </Label>
 
-      <Label>
-        {t("Layers")}
-        <Field name="layers" initialValue={initialValues.layers}>
-          {({ input: { value, onChange } }) => {
-            return <LayersForm value={value} onChange={onChange} />;
-          }}
-        </Field>
-      </Label>
+      <h3>{t("Layers")}</h3>
+      <Field name="layers" initialValue={initialValues.layers}>
+        {({ input: { value, onChange } }) => {
+          return <LayersForm value={value} onChange={onChange} />;
+        }}
+      </Field>
     </>
   );
 };

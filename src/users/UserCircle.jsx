@@ -18,15 +18,6 @@ const StyledUserCircle = styled.div`
   &:hover {
     ${({ isSelf }) => (isSelf ? "filter: brightness(125%);" : "")}
   }
-
-  @media screen and (max-width: 640px) {
-    & {
-      font-size: 0.5em;
-      width: 20px;
-      height: 20px;
-      line-height: 20px;
-    }
-  }
 `;
 
 const UserCircle = ({ name, ...rest }) => {
