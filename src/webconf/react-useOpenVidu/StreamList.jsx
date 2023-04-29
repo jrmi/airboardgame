@@ -26,6 +26,8 @@ const StreamList = ({
     [remoteStreams]
   );
 
+  const otherUsers = users.filter(({ uid }) => uid !== currentUser.uid);
+
   return (
     <div className="stream-list">
       {localStream && (
@@ -62,7 +64,7 @@ const StreamList = ({
           </div>
         </div>
       )}
-      {users.map(
+      {otherUsers.map(
         (user) =>
           streamMap[user.uid] && (
             <div key={user.uid} className="remote-stream">

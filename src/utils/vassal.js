@@ -360,67 +360,45 @@ class VassalModuleLoader {
           activateCommand,
           ,
           activateKey,
-          upCommand,
+          upCommand, // upKey
           ,
-          upKey,
-          downCommand,
           ,
-          downKey,
+          downCommand, // downKey // drawUnderneath
           ,
           ,
           ,
-          drawUnderneath,
+          ,
+          ,
+          ,
           xOff,
           yOff,
-          imageNames,
+          imageNames, // name // rndKey
           ,
           ,
-          name,
-          rndKey,
+          ,
+          ,
           rndCommand,
           ,
           ,
           firstLevelValueRaw,
           versionRaw,
-          alwaysActiveRaw,
+          alwaysActiveRaw, // incKey // decKey // description
           ,
-          incKey,
-          decKey,
-          description,
+          ,
+          ,
+          ,
           scale,
         ] = rest;
 
         const version = versionRaw || 0;
         const firstLevelValue = parseInt(firstLevelValueRaw, 10);
+
         const alwaysActive =
           version === "0" ? activateKey === "" : alwaysActiveRaw === "true";
 
         const images = imageNames
           .split(",")
           .map((main) => this.fileHandler.getRealPath(main));
-
-        /*console.log({
-          activateCommand,
-          activateKey,
-          upCommand,
-          upKey,
-          downKey,
-          downCommand,
-          drawUnderneath,
-          xOff,
-          yOff,
-          name,
-          rndKey,
-          rndText,
-          firstLevelValue,
-          version,
-          alwaysActive,
-          incKey,
-          decKey,
-          description,
-          scale,
-          imageNames,
-        });*/
 
         if (!alwaysActive) {
           images.unshift(null);
@@ -435,6 +413,7 @@ class VassalModuleLoader {
           downCommand,
           activateCommand,
           rndCommand,
+          firstLevelValue,
         };
 
         result.altImages.unshift(layer);
@@ -442,11 +421,11 @@ class VassalModuleLoader {
       if (commandName === "emb") {
         const [
           st2,
-          activateCommandRaw,
-          upKey,
-          upCommand,
+          activateCommandRaw, // upKey
           ,
-          downKey,
+          upCommand, // downKey
+          ,
+          ,
           downCommand,
           ,
           xOff,
@@ -465,18 +444,6 @@ class VassalModuleLoader {
         if (drawUnderneath) {
           activateCommand = activateCommandRaw.substring(1);
         }
-
-        /*console.log(
-          st2,
-          activateKey,
-          activateCommand,
-          upKey,
-          upCommand,
-          downKey,
-          downCommand,
-          xOff,
-          yOff
-        );*/
 
         const images = imagesText.map((im) => {
           const dec = new Decoder(im, ",");
@@ -498,8 +465,6 @@ class VassalModuleLoader {
         });
       }
     }
-
-    //if (result.altImages.length) console.log(commands, result);
 
     return result;
   }

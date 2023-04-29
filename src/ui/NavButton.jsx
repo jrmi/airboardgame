@@ -6,9 +6,10 @@ const StyledNavButton = styled.button`
   display: inline-block;
   background-color: transparent;
   padding: 0;
+  color: ${({ active }) => (active ? "var(--color-primary)" : "white")};
 `;
 
-const NavButton = ({ Icon, icon, onClick, to, alt, title }) => {
+const NavButton = ({ Icon, icon, onClick, to, alt, title, active }) => {
   const navigate = useNavigate();
   const handleClick = React.useCallback(
     (e) => {
@@ -36,7 +37,11 @@ const NavButton = ({ Icon, icon, onClick, to, alt, title }) => {
     component = <img src={iconSrc} alt={alt} title={title} width="24" />;
   }
 
-  return <StyledNavButton onClick={handleClick}>{component}</StyledNavButton>;
+  return (
+    <StyledNavButton active={active} onClick={handleClick}>
+      {component}
+    </StyledNavButton>
+  );
 };
 
 export default NavButton;

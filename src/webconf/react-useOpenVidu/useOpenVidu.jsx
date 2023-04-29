@@ -83,42 +83,74 @@ class LocalStream {
     this.video = true;
     this.uid = nanoid();
     this._OV = OV;
-    this.toggleVideo = this.toggleVideo.bind(this);
-    this.toggleAudio = this.toggleAudio.bind(this);
-    this.togglePublish = this.togglePublish.bind(this);
+    this.publishingPromiseResolve = null;
+    this.unpublishingPromiseResolve = null;
+    this.promiseQueue = new PromiseQueue();
   }
-  publish(config = {}, forceNew = false) {
-    if (this.published) {
-      return;
-    }
-    if (!this.publisher || forceNew) {
-      this.publisher = this._OV.initPublisher(undefined, {
-        audioSource: undefined, // The source of audio. If undefined default microphone
-        videoSource: undefined, // The source of video. If undefined default webcam
-        publishAudio: true, // Whether you want to start publishing with your audio unmuted or not
-        publishVideo: true, // Whether you want to start publishing with your video enabled or not
-        resolution: "320x240", // The resolution of your video
-        frameRate: 10, // The frame rate of your video
-        mirror: false, // Whether to mirror your local video or not
-        ...config,
-      });
-    }
-    this._session.publish(this.publisher);
-    this.published = true;
+
+  publish(...params) {
+    return this.promiseQueue.add(() => this._publish(...params));
   }
+
   unpublish() {
-    if (!this.published) {
-      return;
-    }
-    // We already had subscribed
-    this.published = false;
-    this._session.unpublish(this.publisher);
+    return this.promiseQueue.add(() => this._unpublish());
   }
+
+  _publish(config = {}, forceNew = false) {
+    const configWithDefault = {
+      audioSource: undefined, // The source of audio. If undefined default microphone
+      videoSource: undefined, // The source of video. If undefined default webcam
+      publishAudio: true, // Whether you want to start publishing with your audio unmuted or not
+      publishVideo: true, // Whether you want to start publishing with your video enabled or not
+      resolution: "320x240", // The resolution of your video
+      frameRate: 10, // The frame rate of your video
+      mirror: false, // Whether to mirror your local video or not
+      ...config,
+    };
+
+    this.audio = configWithDefault.publishAudio;
+    this.video = configWithDefault.publishVideo;
+
+    if (!this.publisher || forceNew) {
+      this.publisher = this._OV.initPublisher(undefined, configWithDefault);
+    }
+
+    const result = new Promise((resolve) => {
+      this.publishingPromiseResolve = resolve;
+    });
+
+    this.publisher.once("streamCreated", () => {
+      this.publishingPromiseResolve();
+      this.publishingPromiseResolve = null;
+      this.published = true;
+    });
+
+    this._session.publish(this.publisher);
+
+    return result;
+  }
+
+  _unpublish() {
+    const result = new Promise((resolve) => {
+      this.unpublishingPromiseResolve = resolve;
+    });
+
+    this.publisher.once("streamDestroyed", () => {
+      this.unpublishingPromiseResolve();
+      this.unpublishingPromiseResolve = null;
+      this.published = false;
+    });
+
+    this._session.unpublish(this.publisher);
+
+    return result;
+  }
+
   togglePublish() {
     if (this.published) {
-      this.unpublish();
+      return this.unpublish();
     } else {
-      this.publish();
+      return this.publish();
     }
   }
   enableVideo(value = true) {
@@ -151,7 +183,7 @@ class LocalStream {
     } catch (e) {
       setTimeout(() => {
         try {
-          this.publisher.publishVideo(value);
+          this.publisher.publishAudio(value);
         } catch (e) {
           console.log("Error while trying change audio publishing:", e);
         }
@@ -171,6 +203,98 @@ class LocalStream {
   }
 }
 
+class PromiseQueue {
+  constructor() {
+    this.lastPromise = Promise.resolve(true);
+  }
+
+  add(operation, ...args) {
+    return new Promise((resolve, reject) => {
+      this.lastPromise = this.lastPromise
+        .then(() => operation(...args))
+        .then(resolve)
+        .catch(reject);
+    });
+  }
+}
+
+class OpenViduConnection {
+  constructor({ parseUserData, getUserData, onStreamUpdated, getToken }) {
+    this.getToken = getToken;
+    this.getUserData = getUserData;
+    this.promiseQueue = new PromiseQueue();
+    this.streams = [];
+    this.disconnectPromise = null;
+
+    const OV = new OpenVidu();
+    OV.enableProdMode();
+
+    const session = OV.initSession();
+
+    session.on("streamCreated", (event) => {
+      const newStream = new Stream({
+        data: parseUserData(event.stream.connection.data),
+        stream: event.stream,
+        session: session,
+      });
+      this.streams = [...this.streams, newStream];
+      onStreamUpdated(this.streams);
+    });
+
+    session.on("streamDestroyed", (event) => {
+      this.streams = this.streams.filter(
+        ({ stream }) => stream !== event.stream
+      );
+
+      onStreamUpdated(this.streams);
+    });
+
+    session.on("streamPropertyChanged", () => {
+      // Just update the map to trigger the render
+      this.streams = this.streams.slice();
+      onStreamUpdated(this.streams);
+    });
+
+    session.on("sessionDisconnected", () => {
+      this.disconnectPromiseResolve();
+      this.disconnectPromiseResolve = null;
+    });
+
+    this.session = session;
+
+    this.localStream = new LocalStream({
+      session,
+      OV,
+    });
+  }
+
+  connect(room) {
+    return this.promiseQueue.add(() => this._connect(room));
+  }
+
+  disconnect() {
+    return this.promiseQueue.add(() => this._disconnect());
+  }
+
+  getLocalStream() {
+    return this.localStream;
+  }
+
+  async _connect(room) {
+    const token = await this.getToken(room);
+    const userData = this.getUserData();
+    await this.session.connect(token, userData);
+  }
+
+  async _disconnect() {
+    const result = new Promise((resolve) => {
+      this.disconnectPromiseResolve = resolve;
+    });
+    this.session.disconnect();
+    return result;
+  }
+}
+
 const defaultParseData = (d) => d;
 const defaultSetData = () => nanoid();
 
@@ -181,81 +305,68 @@ export const OpenViduProvider = ({
   parseUserData = defaultParseData,
   getUserData = defaultSetData,
 }) => {
-  const OVRef = React.useRef(new OpenVidu());
-  const instanceRef = React.useRef({});
+  const OVRef = React.useRef(null);
   const [connected, setConnected] = React.useState(false);
   const [remoteStreams, setRemoteStreams] = React.useState([]);
   const [localStream, setLocalStream] = React.useState(null);
-
-  const joinSession = React.useCallback(
-    async ({ room, parseUserData, getUserData }) => {
-      console.log("Join conf session...");
-      if (!OVRef.current) {
-        OVRef.current = new OpenVidu();
-      }
-      OVRef.current.enableProdMode();
-      const newSession = OVRef.current.initSession();
-
-      // On every new Stream received...
-      newSession.on("streamCreated", (event) => {
-        // Subscribe to the Stream to receive it. Second parameter is undefined
-        // so OpenVidu doesn't create an HTML video by its own
-        const newStream = new Stream({
-          data: parseUserData(event.stream.connection.data),
-          stream: event.stream,
-          session: newSession,
-        });
-        setRemoteStreams((prev) => [...prev, newStream]);
-      });
-
-      // On every Stream destroyed...
-      newSession.on("streamDestroyed", (event) => {
-        setRemoteStreams((prev) =>
-          prev.filter(({ stream }) => stream !== event.stream)
-        );
-      });
-
-      newSession.on("streamPropertyChanged", () => {
-        // Just update the map to trigger the render
-        setRemoteStreams((prev) => prev.slice());
-      });
-
-      const token = await getToken(room);
-
-      const userData = getUserData();
-      await newSession.connect(token, userData);
-
-      setLocalStream(
-        new LocalStream({ session: newSession, OV: OVRef.current })
-      );
-
-      setConnected(true);
-
-      instanceRef.current.session = newSession;
-    },
-    [getToken]
-  );
-
-  const onLeave = React.useCallback(() => {
-    const { session } = instanceRef.current;
-    if (session) {
-      session.disconnect();
-      instanceRef.current = {};
-      OVRef.current = null;
-    }
-  }, []);
+  const mountedRef = React.useRef(true);
 
   React.useEffect(() => {
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
+    };
+  }, []);
+
+  const joinSession = React.useCallback(
+    async ({ room, parseUserData, getUserData, getToken }) => {
+      if (!OVRef.current) {
+        OVRef.current = new OpenViduConnection({
+          parseUserData,
+          getUserData,
+          onStreamUpdated: (newValue) => {
+            setRemoteStreams(newValue);
+          },
+          getToken,
+        });
+      }
+
+      await OVRef.current.connect(room);
+    },
+    []
+  );
+
+  React.useEffect(() => {
+    let mounted = true;
+
+    const join = async () => {
+      await joinSession({ room, parseUserData, getUserData, getToken });
+
+      if (!mounted) {
+        return;
+      }
+
+      setLocalStream(OVRef.current.getLocalStream());
+      setConnected(true);
+    };
+    join();
+
+    return () => {
+      mounted = false;
+      OVRef.current.disconnect();
+    };
+  }, [getUserData, joinSession, parseUserData, room, getToken]);
+
+  React.useEffect(() => {
+    const onLeave = () => {
+      OVRef.current.disconnect();
+    };
+
     window.addEventListener("beforeunload", onLeave);
     return () => {
       window.removeEventListener("beforeunload", onLeave);
     };
-  }, [onLeave]);
-
-  React.useEffect(() => {
-    joinSession({ room, parseUserData, getUserData });
-    return onLeave;
-  }, [getUserData, joinSession, onLeave, parseUserData, room]);
+  }, []);
 
   return (
     <OpenViduContext.Provider value={{ remoteStreams, localStream }}>
