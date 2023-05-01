@@ -15,7 +15,7 @@ import useSession from "../../hooks/useSession";
 
 import { default as StyledNavBar } from "../../ui/NavBar";
 
-const UserBar = ({ editMode }) => {
+const UserBar = ({ editMode = false }) => {
   const { t } = useTranslation();
   const { sessionId: room } = useSession();
 
