@@ -41,6 +41,7 @@ import CheckerBoardFormFields from "./forms/CheckerBoardFormFields";
 import CylinderFormFields from "./forms/CylinderFormFields";
 import GeneratorFormFields from "./forms/GeneratorFormFields";
 import AnchorFormFields from "./forms/AnchorFormFields";
+
 const defaultDiceImages = () => [
   {
     id: uid(),

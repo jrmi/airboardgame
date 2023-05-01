@@ -145,10 +145,8 @@ const NavBar = ({
         {isMaster && isVassalSession && (
           <NavButton
             onClick={() => setShowLoadGameModal((prev) => !prev)}
-            alt={editMode ? t("Load Vassal module") : t("Load Vassal module")}
-            title={
-              editMode ? t("Load Vassal module") : t("Load Vassale module")
-            }
+            alt={t("Load Vassal module")}
+            title={t("Load Vassal module")}
             icon={vassalIconUrl}
           />
         )}
