@@ -1,5 +1,5 @@
 import React from "react";
-// import { OpenVidu } from "openvidu-browser";
+import { OpenVidu } from "openvidu-browser";
 import { nanoid } from "nanoid";
 
 export const OpenViduContext = React.createContext({});
@@ -226,8 +226,6 @@ class OpenViduConnection {
     this.streams = [];
     this.disconnectPromise = null;
 
-    /* OpenVidu is loaded from a CDN while it's not bundelable with vite */
-    /*global OpenVidu*/
     const OV = new OpenVidu();
     OV.enableProdMode();
 

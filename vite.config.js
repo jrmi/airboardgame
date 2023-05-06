@@ -70,7 +70,7 @@ export default defineConfig({
     analyze({ summaryOnly: true, hideDeps: true, limit: 20 }),
   ],
   build: {
-    sourcemap: "inline",
+    sourcemap: true,
   },
   server: {
     port: 3001,
