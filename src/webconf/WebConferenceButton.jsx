@@ -9,7 +9,7 @@ import NavButton from "../ui/NavButton";
 import useLocalStorage from "../hooks/useLocalStorage";
 import { WEBCONFERENCE } from "../utils/settings";
 
-import WebConference from "./WebConference";
+const WebConference = React.lazy(() => import("./WebConference.jsx"));
 
 export const WeConferenceButton = ({ room }) => {
   const { t } = useTranslation();

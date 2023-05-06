@@ -16,9 +16,9 @@ import HintOnLockedItem from "./HintOnLockedItem";
 import useGlobalConf from "../../hooks/useGlobalConf";
 import useSession from "../../hooks/useSession";
 
-import flipAudio from "../../media/audio/flip.wav?url";
-import rollAudio from "../../media/audio/roll.wav?url";
-import shuffleAudio from "../../media/audio/shuffle.wav?url";
+import flipAudio from "../../media/audio/flip.ogg?url";
+import rollAudio from "../../media/audio/roll.ogg?url";
+import shuffleAudio from "../../media/audio/shuffle.ogg?url";
 import { preloadAudio } from "../../utils";
 import UserBar from "./UserBar";
 
