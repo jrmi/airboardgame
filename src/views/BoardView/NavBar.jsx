@@ -6,12 +6,12 @@ import { confirmAlert } from "react-confirm-alert";
 import { useUsers } from "react-sync-board";
 
 import {
-  FiChevronLeft,
   FiHelpCircle,
   FiUpload,
   FiSave,
   FiMove,
   FiMousePointer,
+  FiHome,
 } from "react-icons/fi";
 import { GiPokerHand } from "react-icons/gi";
 
@@ -94,15 +94,18 @@ const NavBar = ({
 
   return (
     <>
-      <RawNavBar>
+      <RawNavBar folded={true}>
         {!editMode && (
           <>
-            <NavButton
-              Icon={FiChevronLeft}
-              onClick={handleBack}
-              alt={t("Go back")}
-              title={t("Go back")}
-            />
+            <div className="keep-folded">
+              <NavButton
+                Icon={FiHome}
+                onClick={handleBack}
+                alt={t("Go back")}
+                title={t("Go back")}
+                className="keep-folded"
+              />
+            </div>
             {isMaster && (
               <>
                 <NavButton
@@ -121,7 +124,7 @@ const NavBar = ({
         )}
         {editMode && (
           <NavButton
-            Icon={FiChevronLeft}
+            Icon={FiHome}
             onClick={handleBackWithConfirm}
             alt={t("Go back to studio")}
             title={t("Go back to studio")}
@@ -162,14 +165,16 @@ const NavBar = ({
 
         <div className="spacer" />
 
-        <NavButton
-          onClick={() => setMoveFirst(!moveFirst)}
-          alt={moveFirst ? t("Move mode") : t("Select mode")}
-          title={
-            moveFirst ? t("Switch to select mode") : t("Switch to move mode")
-          }
-          Icon={moveFirst ? FiMove : FiMousePointer}
-        />
+        <div className="keep-folded">
+          <NavButton
+            onClick={() => setMoveFirst(!moveFirst)}
+            alt={moveFirst ? t("Move mode") : t("Select mode")}
+            title={
+              moveFirst ? t("Switch to select mode") : t("Switch to move mode")
+            }
+            Icon={moveFirst ? FiMove : FiMousePointer}
+          />
+        </div>
 
         <div className="sep" />
 

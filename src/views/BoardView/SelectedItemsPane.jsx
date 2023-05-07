@@ -164,7 +164,7 @@ const SelectedItemsPane = ({
   return (
     <ActionPaneWrapper>
       <ActionPane>
-        {(selectedItems.length > 1 || selecting) && (
+        {(selectedItems.length > 0 || selecting) && (
           <div className="count">
             <span className="number">{selectedItems.length}</span>
             <span>{t("Items")}</span>

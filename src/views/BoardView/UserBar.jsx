@@ -32,9 +32,11 @@ const UserBar = ({ editMode = false }) => {
           title={t("Invite more player")}
         />
         <div className="sep" />
-        <UserList />
+        <div className="keep-folded">
+          <UserList />
+        </div>
         <div className="spacer" />
-        {!editMode && <MessageButton />}
+        <div className="keep-folded">{!editMode && <MessageButton />}</div>
         <WebConferenceButton room={room} />
       </StyledNavBar>
       <WelcomeModal show={showLink} setShow={setShowLink} welcome={false} />
