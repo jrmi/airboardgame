@@ -24,7 +24,6 @@ import ChangeGameModal from "./ChangeGameModal";
 import ExportModal from "./ExportModal";
 import SaveExportModal from "./SaveExportModal";
 import WelcomeModal from "./WelcomeModal";
-import LoadVassalModuleGameModal from "./LoadVassalModuleGameModal";
 import EditInfoButton from "./EditInfoButton";
 import AddItemButton from "./AddItemButton";
 
@@ -34,6 +33,10 @@ import vassalIconUrl from "../../media/images/vassal.svg?url";
 import target from "../../media/images/target.svg";
 
 import { default as RawNavBar } from "../../ui/NavBar";
+
+const LoadVassalModuleGameModal = React.lazy(() =>
+  import("./LoadVassalModuleGameModal.jsx")
+);
 
 const NavBar = ({
   editMode,

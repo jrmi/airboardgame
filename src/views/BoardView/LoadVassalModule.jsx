@@ -7,7 +7,7 @@ import useSession from "../../hooks/useSession";
 import useLocalStorage from "../../hooks/useLocalStorage";
 import { loadVassalModuleInSession } from "../../utils/vassal.js";
 
-const LoadGame = ({ onLoad = () => {}, onStart = () => {} }) => {
+const LoadVassalModule = ({ onLoad = () => {}, onStart = () => {} }) => {
   const { t } = useTranslation();
   const { sessionId, saveSession, setSession } = useSession();
   const [loading, setLoading] = React.useState(false);
@@ -93,4 +93,4 @@ const LoadGame = ({ onLoad = () => {}, onStart = () => {} }) => {
   }
 };
 
-export default LoadGame;
+export default LoadVassalModule;

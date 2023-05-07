@@ -70,13 +70,17 @@ const ActionPane = styled.div`
   }
 `;
 
-const SelectedItemsPane = ({ hideMenu = false, showEdit, setShowEdit }) => {
+const SelectedItemsPane = ({
+  hideMenu = false,
+  showEdit,
+  setShowEdit,
+  selecting,
+  selectedItems,
+  availableActions,
+}) => {
   const { t } = useTranslation();
   const { findElementUnderPointer } = useItemActions();
   const { actionMap } = useGameItemActions();
-  const { availableActions } = useAvailableActions();
-  const selectedItems = useSelectedItems();
-  const boardState = useBoardState();
 
   const parsedAvailableActions = React.useMemo(
     () =>
@@ -153,31 +157,20 @@ const SelectedItemsPane = ({ hideMenu = false, showEdit, setShowEdit }) => {
     };
   }, [onDblClick]);
 
-  React.useEffect(() => {
-    if (boardState.movingItems || boardState.zooming || boardState.panning) {
-      setShowEdit(false);
-    }
-  }, [
-    boardState.movingItems,
-    boardState.panning,
-    boardState.zooming,
-    setShowEdit,
-  ]);
-
-  if (hideMenu || selectedItems.length === 0 || boardState.movingItems) {
+  if (hideMenu || selectedItems.length === 0) {
     return null;
   }
 
   return (
     <ActionPaneWrapper>
       <ActionPane>
-        {(selectedItems.length > 1 || boardState.selecting) && (
+        {(selectedItems.length > 1 || selecting) && (
           <div className="count">
             <span className="number">{selectedItems.length}</span>
             <span>{t("Items")}</span>
           </div>
         )}
-        {!boardState.selecting &&
+        {!selecting &&
           parsedAvailableActions.map(
             ({ label, action, edit: onlyEdit, shortcut, icon: Icon, uid }) => {
               if (onlyEdit && !showEdit) return null;
@@ -194,7 +187,7 @@ const SelectedItemsPane = ({ hideMenu = false, showEdit, setShowEdit }) => {
             }
           )}
 
-        {!boardState.selecting && (
+        {!selecting && (
           <EditItemButton showEdit={showEdit} setShowEdit={setShowEdit} />
         )}
       </ActionPane>
@@ -202,4 +195,51 @@ const SelectedItemsPane = ({ hideMenu = false, showEdit, setShowEdit }) => {
   );
 };
 
-export default SelectedItemsPane;
+const MemoizedPanel = React.memo(SelectedItemsPane);
+
+const SlowSelectedItemsPane = ({ setShowEdit, showEdit, hideMenu }) => {
+  const [, startTransition] = React.useTransition();
+
+  const { availableActions } = useAvailableActions();
+  const selectedItems = useSelectedItems();
+  const boardState = useBoardState();
+
+  const [slowAvailableActions, setSlowAvailableActions] = React.useState([]);
+  const [slowSelectedItems, setSlowSelectedItems] = React.useState([]);
+
+  React.useEffect(() => {
+    if (boardState.movingItems || boardState.zooming || boardState.panning) {
+      setShowEdit(false);
+    }
+  }, [
+    boardState.movingItems,
+    boardState.panning,
+    boardState.zooming,
+    setShowEdit,
+  ]);
+
+  React.useEffect(() => {
+    startTransition(() => {
+      setSlowAvailableActions(availableActions);
+    });
+  }, [availableActions]);
+
+  React.useEffect(() => {
+    startTransition(() => {
+      setSlowSelectedItems(selectedItems);
+    });
+  }, [selectedItems]);
+
+  return (
+    <MemoizedPanel
+      hideMenu={hideMenu}
+      showEdit={showEdit}
+      setShowEdit={setShowEdit}
+      selecting={boardState.selecting}
+      selectedItems={slowSelectedItems}
+      availableActions={slowAvailableActions}
+    />
+  );
+};
+
+export default SlowSelectedItemsPane;
