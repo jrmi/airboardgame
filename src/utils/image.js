@@ -1,6 +1,6 @@
 const imageCache = {};
 
-export const getImage = async (url) => {
+export const getImage = async (url, retry = 0) => {
   if (!url) {
     return null;
   }
@@ -11,7 +11,13 @@ export const getImage = async (url) => {
         resolve(img);
       };
       img.onerror = () => {
-        reject(new Error(`Failed to load: <${url}>`));
+        if (retry < 2) {
+          getImage(url, retry + 1)
+            .then(resolve)
+            .catch(reject);
+        } else {
+          reject(new Error(`Failed to load: <${url}>`));
+        }
       };
       img.src = url;
     });

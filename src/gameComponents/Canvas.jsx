@@ -101,6 +101,7 @@ const ImageWrapper = styled.div`
 
 const NoCanvas = ({ layers, width, height }) => {
   const [firstImage, ...rest] = layers;
+
   return (
     <div style={{ position: "relative" }}>
       <ImageElm

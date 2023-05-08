@@ -5,6 +5,7 @@ import { media2Url } from "../mediaLibrary";
 import { FiEye } from "react-icons/fi";
 
 import Canvas from "./Canvas";
+import { getImage } from "../utils/image";
 
 const UnflippedFor = styled.div`
   position: absolute;
@@ -97,6 +98,14 @@ const AdvancedImage = ({
     });
     return result;
   }, [backUrl, flippedForMe, frontUrl, layers]);
+
+  React.useEffect(() => {
+    // preload images
+    getImage(frontUrl);
+    if (backUrl) {
+      getImage(backUrl);
+    }
+  }, [frontUrl, backUrl]);
 
   return (
     <Wrapper
