@@ -134,7 +134,7 @@ const Image = ({
           {unflippedForUsers.map(({ color, id }) => {
             return (
               <UnflippedForUser key={id} color={color}>
-                <FiEye color="white" size="32" />
+                <FiEye color="white" size="16" />
               </UnflippedForUser>
             );
           })}

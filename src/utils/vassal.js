@@ -1,6 +1,7 @@
-import { ZipReader, BlobReader, TextWriter, BlobWriter } from "@zip.js/zip.js";
+// import { ZipReader, BlobReader, TextWriter, BlobWriter } from "@zip.js/zip.js";
 import X2JS from "x2js";
 import pLimit from "p-limit";
+import JSZip from "jszip";
 
 import {
   uploadResourceImage as uploadMedia,
@@ -194,13 +195,13 @@ class FileHandler {
         this.log("Missing file:", fileName);
         return;
       } else {
-        this.fileCache[fileName] = this.entryMap[fileName]
-          .getData(new BlobWriter())
-          .then((file) => {
+        this.fileCache[fileName] = this.entryMap[fileName]("blob").then(
+          (file) => {
             return new File([file], fileName.replace("images/", ""), {
               type: file.type,
             });
-          });
+          }
+        );
       }
     }
     return this.fileCache[fileName];
@@ -286,13 +287,48 @@ class VassalModuleLoader {
     this.fake = fake;
   }
 
-  async init() {
+  async loadZip() {
+    const zip = await JSZip.loadAsync(this.file);
+    const entries = {};
+    zip.forEach(
+      (relativePath, zipEntry) =>
+        (entries[relativePath] = (type) => zipEntry.async(type))
+    );
+
+    this.entryMap = entries;
+
+    this.log("Files in archive", Object.keys(entries));
+  }
+
+  /*async _loadZip() {
     this.zipReader = new ZipReader(new BlobReader(this.file));
     const entries = await this.zipReader.getEntries();
+
+    const getFileFromEntry = (entry, type) => {
+      let writer;
+      switch (type) {
+        case "text":
+          writer = new TextWriter();
+          break;
+        case "blob":
+          writer = new BlobWriter();
+          break;
+      }
+      entry.getData(writer);
+    };
+
     this.entryMap = Object.fromEntries(
-      entries.map((entry) => [entry.filename, entry])
+      entries.map((entry) => [
+        entry.filename,
+        (type) => getFileFromEntry(entry, type),
+      ])
     );
     this.log("Files in archive", Object.keys(this.entryMap));
+  }*/
+
+  async init() {
+    await this.loadZip();
+
     this.fileHandler = new FileHandler(this.entryMap, this.log, this.fake);
     this.fileCache = {};
     this.createdGame = null;
@@ -305,6 +341,10 @@ class VassalModuleLoader {
   }
 
   async close() {
+    // Nothing to do
+  }
+
+  async _close() {
     await this.zipReader.close();
   }
 
@@ -313,9 +353,7 @@ class VassalModuleLoader {
       ? "buildFile.xml"
       : "buildFile";
 
-    const buildFileContent = await this.entryMap[buildFileName].getData(
-      new TextWriter()
-    );
+    const buildFileContent = await this.entryMap[buildFileName]("text");
     const x2js = new X2JS();
     const parsed = x2js.xml2js(buildFileContent);
     let mainKey = Object.keys(parsed)[0];
@@ -642,8 +680,6 @@ class VassalModuleLoader {
     );
 
     actions.push("clone", "lock", "remove");
-
-    console.log(slot, actions);
 
     Object.assign(newItem, {
       x: -width / 2,
