@@ -12,6 +12,7 @@ import {
   FiMove,
   FiMousePointer,
   FiHome,
+  FiMaximize,
 } from "react-icons/fi";
 import { GiPokerHand } from "react-icons/gi";
 
@@ -44,6 +45,8 @@ const NavBar = ({
   itemLibraries,
   moveFirst,
   setMoveFirst,
+  toggleFullScreen,
+  isFullScreen,
 }) => {
   const { t } = useTranslation();
   const { isVassalSession } = useSession();
@@ -103,7 +106,6 @@ const NavBar = ({
                 onClick={handleBack}
                 alt={t("Go back")}
                 title={t("Go back")}
-                className="keep-folded"
               />
             </div>
             {isMaster && (
@@ -130,15 +132,12 @@ const NavBar = ({
             title={t("Go back to studio")}
           />
         )}
-
         <div className="sep" />
-
         <AddItemButton
           itemLibraries={itemLibraries}
           setShowAddPanel={setShowAddPanel}
           showAddPanel={showAddPanel}
         />
-
         <div className="spacer" />
         {(isMaster || editMode) && !isVassalSession && (
           <NavButton
@@ -162,9 +161,7 @@ const NavBar = ({
           title={editMode ? t("Save game") : t("Save session")}
           Icon={FiSave}
         />
-
         <div className="spacer" />
-
         <div className="keep-folded">
           <NavButton
             onClick={() => setMoveFirst(!moveFirst)}
@@ -175,9 +172,14 @@ const NavBar = ({
             Icon={moveFirst ? FiMove : FiMousePointer}
           />
         </div>
-
+        <NavButton
+          Icon={FiMaximize}
+          onClick={toggleFullScreen}
+          alt={t("Fullscreen")}
+          title={t("Fullscreen")}
+          active={isFullScreen}
+        />
         <div className="sep" />
-
         {editMode && <EditInfoButton BoardFormComponent={BoardFormComponent} />}
         <NavButton
           onClick={() => setShowInfoModal((prev) => !prev)}

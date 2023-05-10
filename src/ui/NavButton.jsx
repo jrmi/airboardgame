@@ -10,6 +10,7 @@ const StyledNavButton = styled.button`
   border: none;
   line-height: 0;
   color: ${({ active }) => (active ? "var(--color-primary)" : "white")};
+  cursor: ${({ disabled }) => (disabled ? "not-allowed" : "pointer")};
 `;
 
 const NavButton = ({
@@ -20,12 +21,17 @@ const NavButton = ({
   alt,
   title,
   active,
+  disabled,
   size = 28,
 }) => {
   const navigate = useNavigate();
+
   const handleClick = React.useCallback(
     (e) => {
       e.preventDefault();
+      if (disabled) {
+        return;
+      }
       e.stopPropagation();
       if (onClick) {
         onClick(e);
@@ -34,7 +40,7 @@ const NavButton = ({
         navigate(to);
       }
     },
-    [onClick, to, navigate]
+    [disabled, onClick, to, navigate]
   );
 
   let component;
@@ -50,7 +56,7 @@ const NavButton = ({
   }
 
   return (
-    <StyledNavButton active={active} onClick={handleClick}>
+    <StyledNavButton active={active} disabled={disabled} onClick={handleClick}>
       {component}
     </StyledNavButton>
   );
