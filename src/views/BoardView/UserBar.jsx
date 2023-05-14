@@ -32,7 +32,10 @@ const UserBar = ({ editMode = false }) => {
           title={t("Invite more player")}
         />
         <div className="sep" />
-        <div className="keep-folded">
+        <div
+          className="keep-folded invisible-scrollbar"
+          style={{ overflowY: "auto" }}
+        >
           <UserList />
         </div>
         <div className="spacer" />

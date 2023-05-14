@@ -31,13 +31,13 @@ const StyledSidePanel = styled.div`
   transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
 
   &.side-panel--left {
-    margin-left: 40px;
+    padding-left: 40px;
     left: 0px;
     transform: translateX(-100%);
   }
 
   &.side-panel--right {
-    margin-right: 40px;
+    padding-right: 40px;
     right: 0;
     transform: translateX(100%);
   }

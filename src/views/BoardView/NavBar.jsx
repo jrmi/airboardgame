@@ -34,6 +34,7 @@ import vassalIconUrl from "../../media/images/vassal.svg?url";
 import target from "../../media/images/target.svg";
 
 import { default as RawNavBar } from "../../ui/NavBar";
+import useFullScreen from "../../hooks/useFullScreen";
 
 const LoadVassalModuleGameModal = React.lazy(() =>
   import("./LoadVassalModuleGameModal.jsx")
@@ -45,11 +46,11 @@ const NavBar = ({
   itemLibraries,
   moveFirst,
   setMoveFirst,
-  toggleFullScreen,
-  isFullScreen,
 }) => {
   const { t } = useTranslation();
   const { isVassalSession } = useSession();
+
+  const { toggleFullScreen, active: isFullScreen } = useFullScreen();
 
   const { isSpaceMaster: isMaster } = useUsers();
 
@@ -67,6 +68,9 @@ const NavBar = ({
   const [showAddPanel, setShowAddPanel] = React.useState(false);
 
   const handleBack = React.useCallback(() => {
+    if (isFullScreen) {
+      toggleFullScreen();
+    }
     // If inside room, go back to that room
     if (insideARoom) {
       navigate(`/room/${params.roomId}`);
@@ -74,7 +78,7 @@ const NavBar = ({
     }
     // Otherwise, go back to home
     navigate("/games");
-  }, [navigate, insideARoom, params.roomId]);
+  }, [isFullScreen, insideARoom, navigate, toggleFullScreen, params.roomId]);
 
   const handleBackWithConfirm = React.useCallback(() => {
     confirmAlert({

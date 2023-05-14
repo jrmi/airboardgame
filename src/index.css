@@ -189,3 +189,7 @@ textarea[type="text"] {
   width: 7px;
   height: 7px;
 }
+
+.invisible-scrollbar::-webkit-scrollbar {
+  display: none;
+}

@@ -44,10 +44,12 @@ const StyledNavBar = styled.div`
 
   &.nav-bar--left {
     left: 0;
+    border-right: 1px solid #3c3c42f5;
   }
 
   &.nav-bar--right {
     right: 0;
+    border-left: 1px solid #3c3c42f5;
   }
 
   .blurry & {

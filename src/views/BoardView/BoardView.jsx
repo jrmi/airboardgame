@@ -1,7 +1,6 @@
 import React from "react";
 
 import { Board, useUsers, useBoardConfig } from "react-sync-board";
-import { FullScreen, useFullScreenHandle } from "react-full-screen";
 
 import { SHOW_WELCOME } from "../../utils/settings";
 import WelcomeModal from "./WelcomeModal";
@@ -22,6 +21,7 @@ import rollAudio from "../../media/audio/roll.ogg?url";
 import shuffleAudio from "../../media/audio/shuffle.ogg?url";
 import { preloadAudio } from "../../utils";
 import UserBar from "./UserBar";
+import useFullScreen from "../../hooks/useFullScreen";
 
 const StyledBoard = styled.div`
   & .item.locked::after {
@@ -57,7 +57,6 @@ export const BoardView = ({
   const [moveFirst, setMoveFirst] = React.useState(true);
   const [hideMenu, setHideMenu] = React.useState(false);
   const { editItem, setEditItem } = useGlobalConf();
-  const handle = useFullScreenHandle();
 
   const style = React.useMemo(() => {
     const currentBackground =
@@ -68,44 +67,36 @@ export const BoardView = ({
 
   React.useEffect(() => preloadAudio([flipAudio, shuffleAudio, rollAudio]), []);
 
-  const toggleFullScreen = React.useCallback(() => {
-    handle.active ? handle.exit() : handle.enter();
-  }, [handle]);
-
   return (
-    <FullScreen handle={handle}>
-      <MediaLibraryProvider libraries={mediaLibraries}>
-        <ImageDropNPaste>
-          <StyledBoard>
-            <Board
-              moveFirst={moveFirst}
-              style={style}
-              itemTemplates={itemTemplates}
-              showResizeHandle={editItem}
-            />
-          </StyledBoard>
-          <NavBar
-            editMode={editMode}
-            BoardFormComponent={BoardForm}
-            itemLibraries={itemLibraries}
+    <MediaLibraryProvider libraries={mediaLibraries}>
+      <ImageDropNPaste>
+        <StyledBoard>
+          <Board
             moveFirst={moveFirst}
-            setMoveFirst={setMoveFirst}
-            hideMenu={hideMenu}
-            setHideMenu={setHideMenu}
-            isFullScreen={handle.active}
-            toggleFullScreen={toggleFullScreen}
+            style={style}
+            itemTemplates={itemTemplates}
+            showResizeHandle={editItem}
           />
-          {!editMode && <UserBar />}
-          <WelcomeModal show={showWelcomeModal} setShow={setShowWelcomeModal} />
-        </ImageDropNPaste>
-        <SelectedItemsPane
+        </StyledBoard>
+        <NavBar
+          editMode={editMode}
+          BoardFormComponent={BoardForm}
+          itemLibraries={itemLibraries}
+          moveFirst={moveFirst}
+          setMoveFirst={setMoveFirst}
           hideMenu={hideMenu}
-          showEdit={editItem}
-          setShowEdit={setEditItem}
+          setHideMenu={setHideMenu}
         />
-        <HintOnLockedItem />
-      </MediaLibraryProvider>
-    </FullScreen>
+        {!editMode && <UserBar />}
+        <WelcomeModal show={showWelcomeModal} setShow={setShowWelcomeModal} />
+      </ImageDropNPaste>
+      <SelectedItemsPane
+        hideMenu={hideMenu}
+        showEdit={editItem}
+        setShowEdit={setEditItem}
+      />
+      <HintOnLockedItem />
+    </MediaLibraryProvider>
   );
 };
 

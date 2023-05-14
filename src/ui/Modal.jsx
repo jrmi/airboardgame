@@ -7,10 +7,7 @@ import { FiX } from "react-icons/fi";
 
 const StyledModalWrapper = styled.div`
   position: fixed;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  inset: 0;
   justify-content: center;
   align-items: start;
 
@@ -48,6 +45,7 @@ const StyledModalWrapper = styled.div`
     position: relative;
     box-shadow: rgba(0, 0, 0, 0.5) 0px 0px 30px;
     margin: 5px;
+    margin-top: 2em;
     max-width: 40%;
     min-width: 290px;
   }
