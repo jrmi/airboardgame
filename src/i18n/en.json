@@ -326,5 +326,18 @@
   "Load a Vassal module": "Load a Vassal module",
   "Load a Vassal module?": "Load a Vassal module?",
   "Load Vassal module": "Load Vassal module",
-  "Import Vassal module": "Import Vassal module"
+  "Import Vassal module": "Import Vassal module",
+  "Secondary color": "Secondary color",
+  "Bg color": "Bg color",
+  "Line color": "Line color",
+  "Grid size": "Grid size",
+  "Line thickness": "Line thickness",
+  "Dot color": "Dot color",
+  "Dot distance": "Dot distance",
+  "Dot size": "Dot size",
+  "Square color": "Square color",
+  "Square distance": "Square distance",
+  "Square size": "Square size",
+  "Fold/Unfold": "Fold/Unfold",
+  "Fullscreen": "Fullscreen"
 }
