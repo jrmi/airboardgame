@@ -6,7 +6,6 @@ import { SHOW_WELCOME } from "../../utils/settings";
 import WelcomeModal from "./WelcomeModal";
 import NavBar from "./NavBar";
 import styled from "styled-components";
-import BoardForm from "./BoardForm";
 import SelectedItemsPane from "./SelectedItemsPane";
 
 import { itemTemplates, backgrounds } from "../../gameComponents";
@@ -21,7 +20,6 @@ import rollAudio from "../../media/audio/roll.ogg?url";
 import shuffleAudio from "../../media/audio/shuffle.ogg?url";
 import { preloadAudio } from "../../utils";
 import UserBar from "./UserBar";
-import useFullScreen from "../../hooks/useFullScreen";
 
 const StyledBoard = styled.div`
   & .item.locked::after {
@@ -80,7 +78,6 @@ export const BoardView = ({
         </StyledBoard>
         <NavBar
           editMode={editMode}
-          BoardFormComponent={BoardForm}
           itemLibraries={itemLibraries}
           moveFirst={moveFirst}
           setMoveFirst={setMoveFirst}

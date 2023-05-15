@@ -16,6 +16,8 @@ import {
 } from "react-icons/fi";
 import { GiPokerHand } from "react-icons/gi";
 
+import BoardForm from "./BoardForm";
+import SessionForm from "./SessionForm";
 import NavButton from "../../ui/NavButton";
 
 import InfoModal from "./InfoModal";
@@ -40,13 +42,7 @@ const LoadVassalModuleGameModal = React.lazy(() =>
   import("./LoadVassalModuleGameModal.jsx")
 );
 
-const NavBar = ({
-  editMode,
-  BoardFormComponent,
-  itemLibraries,
-  moveFirst,
-  setMoveFirst,
-}) => {
+const NavBar = ({ editMode, itemLibraries, moveFirst, setMoveFirst }) => {
   const { t } = useTranslation();
   const { isVassalSession } = useSession();
 
@@ -114,6 +110,7 @@ const NavBar = ({
             </div>
             {isMaster && (
               <>
+                <div className="sep" />
                 <NavButton
                   Icon={GiPokerHand}
                   onClick={() => setShowChangeGameModal((prev) => !prev)}
@@ -184,7 +181,10 @@ const NavBar = ({
           active={isFullScreen}
         />
         <div className="sep" />
-        {editMode && <EditInfoButton BoardFormComponent={BoardFormComponent} />}
+        {editMode && <EditInfoButton BoardFormComponent={BoardForm} />}
+        {!editMode && isMaster && (
+          <EditInfoButton BoardFormComponent={SessionForm} />
+        )}
         <NavButton
           onClick={() => setShowInfoModal((prev) => !prev)}
           alt={t("Help & info")}
