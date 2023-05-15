@@ -8,7 +8,7 @@ import ColorPicker from "../../ui/formUtils/ColorPicker";
 
 import ActionList from "../ActionList";
 
-const interactions = ["reveal", "hide", "revealSelf", "stack"];
+const interactions = ["reveal", "hide", "revealSelf", "stack", "rollLayer"];
 
 const Form = ({ initialValues }) => {
   const { t } = useTranslation();

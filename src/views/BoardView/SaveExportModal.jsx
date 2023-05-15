@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import DownloadLink from "./DownloadLink";
 import Modal from "../../ui/Modal";
 import useGame from "../../hooks/useGame";
+import { FiSave } from "react-icons/fi";
 
 const SaveExportGameModal = ({ show, setShow }) => {
   const { t } = useTranslation();
@@ -55,10 +56,7 @@ const SaveExportGameModal = ({ show, setShow }) => {
         </p>
         <button className="success button icon" onClick={handleSave}>
           {t("Save game")}
-          <img
-            src={"https://icongr.am/entypo/save.svg?size=24&color=f9fbfa"}
-            alt="icon"
-          />
+          <FiSave size="20" color="#f9fbfa" alt="Download" />
         </button>
       </section>
       <header>

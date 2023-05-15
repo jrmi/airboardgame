@@ -13,26 +13,32 @@ import {
 } from "../utils";
 
 import itemTemplates from "./itemTemplates";
-import RotateActionForm from "./forms/RotateActionForm";
-import RandomlyRotateActionForm from "./forms/RandomlyRotateActionForm";
+import ActionRotateForm from "./forms/ActionRotateForm";
+import ActionRandomlyRotateForm from "./forms/ActionRandomlyRotateForm";
+import ActionRollLayerForm from "./forms/ActionRollLayerForm";
+import ActionChangeImageLayerForm from "./forms/ActionChangeImageLayerForm";
 
-import deleteIcon from "../media/images/delete.svg";
 import stackToCenterIcon from "../media/images/stackToCenter.svg";
 import stackToTopLeftIcon from "../media/images/stackToTopLeft.svg";
 import alignAsLineIcon from "../media/images/alignAsLine.svg";
 import alignAsSquareIcon from "../media/images/alignAsSquare.svg";
-import duplicateIcon from "../media/images/duplicate.svg";
-import seeIcon from "../media/images/see.svg";
 import flipIcon from "../media/images/flip.svg";
-import lockIcon from "../media/images/lock.svg";
-import rotateIcon from "../media/images/rotate.svg";
 import shuffleIcon from "../media/images/shuffle.svg";
 import tapIcon from "../media/images/tap.svg";
-import rollIcon from "../media/images/rolling-dices.svg";
+import { GiRollingDices } from "react-icons/gi";
+import {
+  FiPlusCircle,
+  FiLock,
+  FiMinusCircle,
+  FiCopy,
+  FiEye,
+  FiRotateCw,
+  FiTrash2,
+} from "react-icons/fi";
 
-import flipAudio from "../media/audio/flip.wav?url";
-import rollAudio from "../media/audio/roll.wav?url";
-import shuffleAudio from "../media/audio/shuffle.wav?url";
+import flipAudio from "../media/audio/flip.ogg?url";
+import rollAudio from "../media/audio/roll.ogg?url";
+import shuffleAudio from "../media/audio/shuffle.ogg?url";
 
 import useLocalStorage from "../hooks/useLocalStorage";
 
@@ -238,19 +244,43 @@ export const useGameItemActions = () => {
   );
 
   const roll = React.useCallback(
-    async (itemIds) => {
+    async (itemIds, { layer: layerToRoll = 0 } = {}) => {
       const [ids] = await getItemListOrSelected(itemIds);
       ids.forEach((itemId) => {
         const elem = getItemElement(itemId);
         elem.firstChild.className = "hvr-wobble-horizontal";
       });
 
+      const randomizeValue = (item) => {
+        switch (item.type) {
+          case "dice":
+            return {
+              ...item,
+              value: randInt(0, (item.side || 6) - 1),
+            };
+          case "diceImage":
+          case "imageSequence":
+            return {
+              ...item,
+              value: randInt(0, item.images.length - 1),
+            };
+          case "advancedImage": {
+            const newLayers = item.layers.map((layer, index) => {
+              if (index === layerToRoll) {
+                return { ...layer, value: randInt(0, layer.images.length - 1) };
+              }
+              return layer;
+            });
+            return { ...item, layers: newLayers };
+          }
+          default:
+            return itemTemplates;
+        }
+      };
+
       const simulateRoll = (nextTimeout) => {
         batchUpdateItems(ids, (item) => {
-          return {
-            ...item,
-            value: randInt(0, (item.side || 6) - 1),
-          };
+          return randomizeValue(item);
         });
         if (nextTimeout < 300) {
           setTimeout(
@@ -259,9 +289,53 @@ export const useGameItemActions = () => {
           );
         }
       };
+
       simulateRoll(100);
 
       playAudio(rollAudio, 0.4);
+    },
+    [batchUpdateItems, getItemListOrSelected]
+  );
+
+  const changeValue = React.useCallback(
+    async (itemIds, { step = 1, layer: layerToUpdate = 0 }) => {
+      const [ids] = await getItemListOrSelected(itemIds);
+
+      const stepItem = (item) => {
+        const { value = 0, images } = item;
+        if (step > 0) {
+          return {
+            ...item,
+            value: (value + step) % images.length,
+          };
+        } else {
+          const newValue = value + step;
+          return {
+            ...item,
+            value: newValue >= 0 ? newValue : images.length + newValue,
+          };
+        }
+      };
+
+      batchUpdateItems(ids, (item) => {
+        switch (item.type) {
+          case "dice":
+            return item.side || 6;
+          case "diceImage":
+          case "imageSequence":
+            return stepItem(item);
+          case "advancedImage":
+            return {
+              ...item,
+              layers: item.layers.map((layer, index) => {
+                if (index === layerToUpdate) {
+                  return stepItem(layer);
+                }
+                return layer;
+              }),
+            };
+        }
+      });
     },
     [batchUpdateItems, getItemListOrSelected]
   );
@@ -505,78 +579,168 @@ export const useGameItemActions = () => {
         action: () => toggleFlip,
         label: t("Reveal") + "/" + t("Hide"),
         shortcut: "f",
-        icon: flipIcon,
+        icon: (props) => (
+          <img
+            {...props}
+            style={{ width: "24px", height: "24px" }}
+            src={flipIcon}
+          />
+        ),
       },
       reveal: {
         action: () => (itemIds) => setFlip(itemIds, { flip: false }),
         label: t("Reveal"),
-        icon: flipIcon,
+        icon: (props) => (
+          <img
+            {...props}
+            style={{ width: "24px", height: "24px" }}
+            src={flipIcon}
+          />
+        ),
       },
       hide: {
         action: () => (itemIds) => setFlip(itemIds, { flip: true }),
         label: t("Hide"),
-        icon: flipIcon,
+        icon: (props) => (
+          <img
+            {...props}
+            style={{ width: "24px", height: "24px" }}
+            src={flipIcon}
+          />
+        ),
       },
       flipSelf: {
         action: () => toggleFlipSelf,
         label: t("Reveal for me"),
         shortcut: "o",
-        icon: seeIcon,
+        icon: FiEye,
       },
       revealSelf: {
         action: () => (itemIds) => setFlipSelf(itemIds, { flipSelf: true }),
         label: t("Reveal for me"),
-        icon: seeIcon,
+        icon: FiEye,
       },
       hideSelf: {
         action: () => (itemIds) => setFlipSelf(itemIds, { flipSelf: false }),
         label: t("Hide for me"),
-        icon: seeIcon,
+        icon: FiEye,
       },
       tap: {
         action: () => toggleTap,
         label: t("Tap") + "/" + t("Untap"),
         shortcut: "t",
-        icon: tapIcon,
+        icon: (props) => (
+          <img
+            {...props}
+            style={{ width: "24px", height: "24px" }}
+            src={tapIcon}
+          />
+        ),
       },
       stackToCenter: {
         action: () => stackToCenter,
         label: t("Stack To Center"),
         shortcut: "c",
         multiple: true,
-        icon: stackToCenterIcon,
+        icon: (props) => (
+          <img
+            {...props}
+            style={{ width: "24px", height: "24px" }}
+            src={stackToCenterIcon}
+          />
+        ),
       },
       stack: {
         action: () => stackToTopLeft,
         label: t("Stack To Top Left"),
         shortcut: "p",
         multiple: true,
-        icon: stackToTopLeftIcon,
+        icon: (props) => (
+          <img
+            {...props}
+            style={{ width: "24px", height: "24px" }}
+            src={stackToTopLeftIcon}
+          />
+        ),
       },
       alignAsLine: {
         action: () => alignAsLine,
         label: t("Align as line"),
         multiple: true,
-        icon: alignAsLineIcon,
+        icon: (props) => (
+          <img
+            {...props}
+            style={{ width: "24px", height: "24px" }}
+            src={alignAsLineIcon}
+          />
+        ),
       },
       alignAsSquare: {
         action: () => alignAsSquare,
         label: t("Align as square"),
         multiple: true,
-        icon: alignAsSquareIcon,
+        icon: (props) => (
+          <img
+            {...props}
+            style={{ width: "24px", height: "24px" }}
+            src={alignAsSquareIcon}
+          />
+        ),
       },
       roll: {
         action: () => roll,
         label: t("Roll"),
         shortcut: "r",
-        icon: rollIcon,
+        icon: GiRollingDices,
+      },
+      rollLayer: {
+        action: ({ layer = 0 } = {}) => (itemIds) =>
+          roll(itemIds, { layer: layer }),
+        label: t("Roll"),
+        shortcut: "r",
+        icon: GiRollingDices,
+        form: ActionRollLayerForm,
+      },
+      nextImage: {
+        action: () => (itemIds) => changeValue(itemIds, { step: 1 }),
+        label: t("Next"),
+        shortcut: "n",
+        icon: FiPlusCircle,
+      },
+      prevImage: {
+        action: () => (itemIds) => changeValue(itemIds, { step: -1 }),
+        label: t("Previous"),
+        shortcut: "p",
+        icon: FiMinusCircle,
+      },
+      nextImageForLayer: {
+        action: ({ step = 1, layer = 0 } = {}) => (itemIds) =>
+          changeValue(itemIds, { step, layer }),
+        label: t("Next"),
+        shortcut: "n",
+        icon: FiPlusCircle,
+        form: ActionChangeImageLayerForm,
+      },
+      prevImageForLayer: {
+        action: ({ step = -1, layer = 0 } = {}) => (itemIds) =>
+          changeValue(itemIds, { step, layer }),
+        label: t("Previous"),
+        shortcut: "p",
+        icon: FiMinusCircle,
+        form: ActionChangeImageLayerForm,
       },
       shuffle: {
         action: () => shuffleItems,
         label: t("Shuffle"),
         shortcut: "z",
         multiple: true,
-        icon: shuffleIcon,
+        icon: (props) => (
+          <img
+            {...props}
+            style={{ width: "24px", height: "24px" }}
+            src={shuffleIcon}
+          />
+        ),
       },
       randomlyRotate: {
         action: ({ angle = 25, maxRotateCount = 0 } = {}) => (itemIds) =>
@@ -588,8 +752,8 @@ export const useGameItemActions = () => {
           t("Rotate randomly {{angle}}°", { angle }),
         genericLabel: t("Rotate randomly"),
         multiple: false,
-        icon: rotateIcon,
-        form: RandomlyRotateActionForm,
+        icon: FiRotateCw,
+        form: ActionRandomlyRotateForm,
       },
       randomlyRotate30: {
         action: () => (itemIds) =>
@@ -599,7 +763,7 @@ export const useGameItemActions = () => {
           }),
         label: t("Rotate randomly 30"),
         multiple: false,
-        icon: rotateIcon,
+        icon: FiRotateCw,
       },
       randomlyRotate45: {
         action: () => (itemIds) =>
@@ -610,7 +774,7 @@ export const useGameItemActions = () => {
         label: t("Rotate randomly 45"),
         shortcut: "",
         multiple: false,
-        icon: rotateIcon,
+        icon: FiRotateCw,
       },
       randomlyRotate60: {
         action: () => (itemIds) =>
@@ -621,7 +785,7 @@ export const useGameItemActions = () => {
         label: t("Rotate randomly 60"),
         shortcut: "",
         multiple: false,
-        icon: rotateIcon,
+        icon: FiRotateCw,
       },
       randomlyRotate90: {
         action: () => (itemIds) =>
@@ -632,7 +796,7 @@ export const useGameItemActions = () => {
         label: t("Rotate randomly 90"),
         shortcut: "",
         multiple: false,
-        icon: rotateIcon,
+        icon: FiRotateCw,
       },
       randomlyRotate180: {
         action: () => (itemIds) =>
@@ -643,7 +807,7 @@ export const useGameItemActions = () => {
         label: t("Rotate randomly 180"),
         shortcut: "",
         multiple: false,
-        icon: rotateIcon,
+        icon: FiRotateCw,
       },
       rotate: {
         action: ({ angle = 25 } = {}) => (itemIds) =>
@@ -651,45 +815,45 @@ export const useGameItemActions = () => {
         label: ({ angle = 25 } = {}) => t("Rotate {{angle}}°", { angle }),
         genericLabel: t("Rotate"),
         shortcut: "r",
-        icon: rotateIcon,
-        form: RotateActionForm,
+        icon: FiRotateCw,
+        form: ActionRotateForm,
       },
       rotate30: {
         action: () => (itemIds) => rotate(itemIds, { angle: 30 }),
         label: t("Rotate 30"),
         shortcut: "r",
-        icon: rotateIcon,
+        icon: FiRotateCw,
       },
       rotate45: {
         action: () => (itemIds) => rotate(itemIds, { angle: 45 }),
         label: t("Rotate 45"),
         shortcut: "r",
-        icon: rotateIcon,
+        icon: FiRotateCw,
       },
       rotate60: {
         action: () => (itemIds) => rotate(itemIds, { angle: 60 }),
         label: t("Rotate 60"),
         shortcut: "r",
-        icon: rotateIcon,
+        icon: FiRotateCw,
       },
       rotate90: {
         action: () => (itemIds) => rotate(itemIds, { angle: 90 }),
         label: t("Rotate 90"),
         shortcut: "r",
-        icon: rotateIcon,
+        icon: FiRotateCw,
       },
       rotate180: {
         action: () => (itemIds) => rotate(itemIds, { angle: 180 }),
         label: t("Rotate 180"),
         shortcut: "r",
-        icon: rotateIcon,
+        icon: FiRotateCw,
       },
       clone: {
         action: () => cloneItem,
         label: t("Clone"),
         shortcut: "c",
         disableDblclick: true,
-        icon: duplicateIcon,
+        icon: FiCopy,
       },
       lock: {
         action: () => toggleLock,
@@ -697,7 +861,7 @@ export const useGameItemActions = () => {
         shortcut: "l",
         disableDblclick: true,
         edit: true,
-        icon: lockIcon,
+        icon: FiLock,
       },
       remove: {
         action: () => remove,
@@ -705,7 +869,7 @@ export const useGameItemActions = () => {
         shortcut: "Delete",
         edit: true,
         disableDblclick: true,
-        icon: deleteIcon,
+        icon: FiTrash2,
       },
     };
 
@@ -721,6 +885,7 @@ export const useGameItemActions = () => {
   }, [
     alignAsLine,
     alignAsSquare,
+    changeValue,
     cloneItem,
     randomlyRotateSelectedItems,
     remove,
@@ -742,6 +907,7 @@ export const useGameItemActions = () => {
     randomlyRotate: randomlyRotateSelectedItems,
     remove,
     roll,
+    changeValue,
     rotate,
     stack: stackToTopLeft,
     setFlip,

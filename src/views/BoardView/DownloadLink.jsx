@@ -1,5 +1,6 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
+import { FiDownload } from "react-icons/fi";
 
 const generateDownloadURI = (data) => {
   return (
@@ -49,10 +50,7 @@ export const DownloadLink = ({ getData = () => {} }) => {
           download={`airboardgame_${date}.json`}
         >
           {t("Export")}
-          <img
-            src={"https://icongr.am/entypo/download.svg?size=20&color=f9fbfa"}
-            alt="icon"
-          />
+          <FiDownload size="20" color="#f9fbfa" alt="Download" />
         </a>
       )}
       {!genOnce && (

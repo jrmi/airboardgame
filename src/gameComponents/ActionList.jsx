@@ -3,7 +3,11 @@ import { FieldArray } from "react-final-form-arrays";
 import { useField } from "react-final-form";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
+import { Field } from "react-final-form";
 
+import { FiEdit, FiArrowDown, FiArrowUp, FiX } from "react-icons/fi";
+
+import Label from "../ui/formUtils/Label";
 import { smallUid } from "../utils";
 import useGameItemActions from "./useGameItemActions";
 
@@ -49,49 +53,71 @@ const Action = ({ name, onUp, onDown, onRemove }) => {
 
   const hasForm = Boolean(ActionForm);
 
+  const computedLabel = value.args?.customLabel || label(value.args);
+
   return (
     <li>
       <div className="action-desc">
-        <span>{label(value.args)}</span>
+        <span>{computedLabel}</span>
         <div className="action-actions">
-          {hasForm && (
-            <button
-              onClick={() => setShowForm((prev) => !prev)}
-              className={showForm ? "button primary" : ""}
-            >
-              <img
-                src="https://icongr.am/feather/edit.svg?size=20&color=FFFFFF"
-                alt={t("Edit action")}
-                title={t("Edit action")}
-              />
-            </button>
-          )}
+          <button
+            onClick={() => setShowForm((prev) => !prev)}
+            className={showForm ? "button primary" : ""}
+          >
+            <FiEdit
+              size="20"
+              color="white"
+              alt={t("Edit action")}
+              title={t("Edit action")}
+            />
+          </button>
           <button onClick={onUp} disabled={!onUp}>
-            <img
-              src="https://icongr.am/feather/arrow-up.svg?size=20&color=FFFFFF"
+            <FiArrowUp
+              size="20"
+              color="white"
               alt={t("Move up")}
               title={t("Move up")}
             />
           </button>
           <button onClick={onDown} disabled={!onDown}>
-            <img
-              src="https://icongr.am/feather/arrow-down.svg?size=20&color=FFFFFF"
+            <FiArrowDown
+              size="20"
+              color="white"
               alt={t("Move down")}
               title={t("Move down")}
             />
           </button>
           <button onClick={onRemove}>
-            <img
-              src="https://icongr.am/feather/x.svg?size=20&color=FFFFFF"
+            <FiX
+              size="20"
+              color="white"
               alt={t("Remove")}
               title={t("Remove")}
             />
           </button>
         </div>
       </div>
-      {hasForm && showForm && (
+      {showForm && (
         <div className="action-form">
-          <ActionForm name={`${name}.args`} initialValues={value.args} />
+          <Label>
+            {t("Custom label")}
+            <Field
+              name={`${name}.args.customLabel`}
+              component="input"
+              initialValue={value.args?.customLabel}
+            />
+          </Label>
+          <Label>
+            {t("Custom shortcut")}
+            <Field
+              name={`${name}.args.customShortcut`}
+              component="input"
+              initialValue={value.args?.customShortcut}
+            />
+          </Label>
+          {hasForm && (
+            <ActionForm name={`${name}.args`} initialValues={value.args} />
+          )}
         </div>
       )}
     </li>

@@ -2,8 +2,10 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import ItemLibrary from "./ItemLibrary";
 
-import Touch from "../../ui/Touch";
+import NavButton from "../../ui/NavButton";
 import SidePanel from "../../ui/SidePanel";
+
+import { FiPlusCircle } from "react-icons/fi";
 
 const AddItemPanel = ({ itemLibraries, open, onClose }) => {
   const [tab, setTab] = React.useState(itemLibraries[0]?.key || "standard");
@@ -13,7 +15,7 @@ const AddItemPanel = ({ itemLibraries, open, onClose }) => {
   }, [itemLibraries]);
 
   return (
-    <SidePanel open={open} onClose={onClose} position="right" width="33%">
+    <SidePanel open={open} onClose={onClose} width="33%">
       <nav className="tabs">
         {itemLibraries.map(({ name, key }) => (
           <a
@@ -40,12 +42,11 @@ const AddItemButton = ({ itemLibraries, showAddPanel, setShowAddPanel }) => {
 
   return (
     <>
-      <Touch
+      <NavButton
         onClick={() => setShowAddPanel((prev) => !prev)}
         alt={t("Add item")}
         title={t("Add item")}
-        label={t("Add")}
-        icon={showAddPanel ? "cross" : "plus"}
+        Icon={FiPlusCircle}
       />
       <AddItemPanel
         itemLibraries={itemLibraries}

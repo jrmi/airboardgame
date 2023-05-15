@@ -4,6 +4,7 @@ import useOpenVidu from "./useOpenVidu";
 
 import LocalStream from "./LocalStream";
 import RemoteStream from "./RemoteStream";
+import { FiCamera, FiCameraOff, FiMic, FiMicOff } from "react-icons/fi";
 
 const StreamList = ({
   currentUser,
@@ -25,6 +26,8 @@ const StreamList = ({
     [remoteStreams]
   );
 
+  const otherUsers = users.filter(({ uid }) => uid !== currentUser.uid);
+
   return (
     <div className="stream-list">
       {localStream && (
@@ -41,31 +44,27 @@ const StreamList = ({
                 onClick={() => setLocalVideo(!enableLocalVideo)}
                 className={enableLocalVideo ? "active" : ""}
               >
-                <img
-                  src={
-                    enableLocalVideo
-                      ? "https://icongr.am/feather/camera.svg?size=16&color=f9fbfa"
-                      : "https://icongr.am/feather/camera-off.svg?size=16&color=f9fbfa"
-                  }
-                />
+                {enableLocalVideo ? (
+                  <FiCamera size="16" color="#f9fbfa" />
+                ) : (
+                  <FiCameraOff size="16" color="#f9fbfa" />
+                )}
               </button>
             )}
             <button
               onClick={() => setLocalAudio(!enableLocalAudio)}
               className={enableLocalAudio ? "active" : ""}
             >
-              <img
-                src={
-                  enableLocalAudio
-                    ? "https://icongr.am/feather/mic.svg?size=16&color=f9fbfa"
-                    : "https://icongr.am/feather/mic-off.svg?size=16&color=f9fbfa"
-                }
-              />
+              {enableLocalAudio ? (
+                <FiMic size="16" color="#f9fbfa" />
+              ) : (
+                <FiMicOff size="16" color="#f9fbfa" />
+              )}
             </button>
           </div>
         </div>
       )}
-      {users.map(
+      {otherUsers.map(
         (user) =>
           streamMap[user.uid] && (
             <div key={user.uid} className="remote-stream">

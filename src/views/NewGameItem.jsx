@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { FiPlusSquare } from "react-icons/fi";
 
 const Game = styled.li`
   position: relative;
@@ -25,13 +26,11 @@ const Game = styled.li`
     & > span {
       background-color: var(--color-blueGrey);
       position: absolute;
-      top: 0;
-      left: 0;
-      bottom: 0;
-      right: 0;
+      inset: 0;
       overflow: hidden;
       display: flex;
       justify-content: center;
+      align-items: center;
       border-radius: 5px;
       & img {
         flex: 0;
@@ -68,10 +67,9 @@ const GameListItem = () => {
     <Game>
       <Link to={"/game/"} className="img-wrapper">
         <span>
-          <img
-            src={
-              "https://icongr.am/entypo/squared-plus.svg?size=128&color=f9fbfa"
-            }
+          <FiPlusSquare
+            color="#f9fbfa"
+            size="120"
             alt={t("Create a new game")}
             title={t("Create a new game")}
           />

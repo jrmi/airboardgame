@@ -90,7 +90,9 @@ NewItem.displayName = "NewItem";
 
 const SubItemList = ({ name, items }) => {
   const { t } = useTranslation();
-  const [open, setOpen] = React.useState(false);
+  const isDefaultOpen =
+    items.filter(({ items }) => !Array.isArray(items)).length === 0;
+  const [open, setOpen] = React.useState(isDefaultOpen);
   const { pushItems } = useItemActions();
 
   const addItems = React.useCallback(

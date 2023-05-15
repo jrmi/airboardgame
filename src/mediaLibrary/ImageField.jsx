@@ -5,17 +5,28 @@ import { MediaLibraryButton, media2Url } from "./";
 import backgroundGrid from "../media/images/background-grid.png";
 
 const StyledImageField = styled.div`
+  display: flex;
+  justify-content: center;
+  background-color: #ffffff22;
+  padding: 0.5em 0.2em;
+
   & .typeSelect {
-    padding: 0.5em;
+    padding: 0.5em 0;
+    display: flex;
+    flex-direction: column;
   }
   & .imgContainer {
-    margin: 0 1em;
+    flex: 1;
     position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
     gap: 0.5em;
+
+    input {
+      width: 130px;
+    }
   }
 `;
 

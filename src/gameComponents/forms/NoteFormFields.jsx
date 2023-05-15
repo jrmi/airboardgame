@@ -42,7 +42,7 @@ const Form = ({ initialValues }) => {
         <Field
           name="color"
           component="input"
-          initialValue={initialValues.color || "#ffc"}
+          initialValue={initialValues.color || "#FFEC27"}
         >
           {({ input: { onChange, value } }) => (
             <ColorPicker value={value} onChange={onChange} />

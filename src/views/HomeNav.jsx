@@ -7,6 +7,7 @@ import Account from "./Account";
 import useAuth from "../hooks/useAuth";
 
 import Brand from "./Brand";
+import { FiGithub } from "react-icons/fi";
 
 const Nav = styled.nav`
   background-color: var(--bg-color);
@@ -71,10 +72,11 @@ const HomeNav = () => {
           target="_blank"
           rel="noreferrer"
         >
-          <img
-            src="https://icongr.am/feather/github.svg?size=16&color=ffffff"
+          <FiGithub
             alt={t("Github")}
             title={t("Github")}
+            color="#CCCCCC"
+            size="16"
           />
         </a>
       </Nav>

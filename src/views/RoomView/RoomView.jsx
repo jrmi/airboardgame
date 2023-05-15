@@ -13,8 +13,10 @@ import RoomNavBar from "./RoomNavBar";
 import table from "../../media/images/table.png";
 import { useTranslation } from "react-i18next";
 import { useSocket } from "@scripters/use-socket.io";
-import Spinner from "../../ui/Spinner";
 import Waiter from "../../ui/Waiter";
+import NavBar from "../../ui/NavBar";
+import NavButton from "../../ui/NavButton";
+import { FiChevronLeft } from "react-icons/fi";
 
 const StyledPlayer = styled.li`
   position: absolute;
@@ -39,6 +41,10 @@ const StyledRoom = styled.div`
     justify-content: center;
     flex-wrap: wrap;
     margin: 0 10%;
+  }
+
+  h3 {
+    text-align: center;
   }
 
   & ul {
@@ -131,7 +137,20 @@ const Room = ({ roomId, room, setRoom }) => {
 
   return (
     <StyledRoom>
+      <NavBar>
+        <div className="keep-folded">
+          <NavButton
+            Icon={FiChevronLeft}
+            to="/"
+            alt={t("Go back")}
+            title={t("Go back")}
+          />
+        </div>
+        <div className="spacer" />
+      </NavBar>
       <RoomNavBar />
+
+      <h3>{t("Choose your board")}</h3>
       <ul className="tables">
         {usersBySpace.map(({ id: sessionId, users: spaceUsers }, index) => (
           <StyledTable key={sessionId}>

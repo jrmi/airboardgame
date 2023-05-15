@@ -4,6 +4,7 @@ import { useBoardPosition } from "react-sync-board";
 import useSession from "../hooks/useSession";
 
 import useLocalStorage from "../hooks/useLocalStorage";
+import { useIntervalEffect } from "@react-hookz/web/esm/useIntervalEffect";
 
 // 150 days max for session dim
 const MAX_SESSION_DIM_RETENTION = 1000 * 60 * 60 * 24 * 150;
@@ -23,10 +24,17 @@ export const SessionRestoreDim = () => {
   useAsyncEffect(
     async (isMounted) => {
       if (sessionLoaded) {
-        if (sessionDimensions[sessionId]) {
+        const { translateX, translateY, scale } =
+          sessionDimensions[sessionId] || {};
+
+        if (!isNaN(translateX) && !isNaN(translateY) && !isNaN(scale)) {
+          const { translateX, translateY, scale } = sessionDimensions[
+            sessionId
+          ];
           const dim = {
-            ...sessionDimensions[sessionId],
-            timestamp: undefined,
+            translateX,
+            translateY,
+            scale,
           };
           setTimeout(() => {
             if (isMounted) {
@@ -46,6 +54,7 @@ export const SessionRestoreDim = () => {
 
         const now = Date.now();
 
+        // Clean expired entries
         const newDim = Object.fromEntries(
           Object.entries(sessionDimensions).filter(([, { timestamp }]) => {
             return timestamp && now - timestamp < MAX_SESSION_DIM_RETENTION;
@@ -54,7 +63,6 @@ export const SessionRestoreDim = () => {
         setSessionDimensions(newDim);
       }
       // We want to set dimension only when session is loaded
-      // eslint-disable-next-line react-hooks/exhaustive-deps
     },
     [sessionLoaded]
   );
@@ -62,18 +70,24 @@ export const SessionRestoreDim = () => {
   /**
    * Save board dimension in localstorage every 2 seconds for next visit
    */
-  useAsyncEffect((isMounted) => {
-    const interval = setInterval(async () => {
-      const currentDim = await getDim();
-      if (isMounted) {
-        setSessionDimensions((prev) => ({
+  useIntervalEffect(async () => {
+    const currentDim = getDim();
+    setSessionDimensions((prev) => {
+      const prevDim = prev[sessionId] || {};
+      if (
+        currentDim.translateX !== prevDim?.translateX ||
+        currentDim.translateY !== prevDim?.translateY ||
+        currentDim.scale !== prevDim?.scale
+      ) {
+        return {
           ...prev,
           [sessionId]: { ...currentDim, timestamp: Date.now() },
-        }));
+        };
+      } else {
+        return prev;
       }
-    }, 2000);
-    return () => clearInterval(interval);
-  }, []);
+    });
+  }, 2000);
 
   return null;
 };

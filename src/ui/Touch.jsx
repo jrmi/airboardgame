@@ -57,9 +57,10 @@ const Touch = ({ onClick, to, icon, title, alt, active, label, ...rest }) => {
     [onClick, to, navigate]
   );
 
-  const iconSrc = icon.startsWith("http")
-    ? icon
-    : `https://icongr.am/entypo/${icon}.svg?size=24&color=f9fbfa`;
+  const iconSrc =
+    icon.startsWith("http") || icon.startsWith("/")
+      ? icon
+      : `https://icongr.am/entypo/${icon}.svg?size=24&color=f9fbfa`;
 
   return (
     <StyledWrapper {...rest}>

@@ -1,5 +1,6 @@
 import React from "react";
 import Stream from "./Stream";
+import { FiMicOff } from "react-icons/fi";
 
 const UserStream = ({ stream, name, color, audio, video, self = false }) => {
   return (
@@ -7,7 +8,7 @@ const UserStream = ({ stream, name, color, audio, video, self = false }) => {
       <Stream stream={stream} />
       {!self && !audio && (
         <div className="mic">
-          <img src="https://icongr.am/feather/mic-off.svg?size=16&color=ffffff" />
+          <FiMicOff size="16" color="ffffff" />
         </div>
       )}
       {!self && (

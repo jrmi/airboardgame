@@ -3,11 +3,13 @@ import { useTranslation } from "react-i18next";
 
 import { useUsers } from "react-sync-board";
 
-import Touch from "../ui/Touch";
+import { FiMic, FiVideo } from "react-icons/fi";
+
+import NavButton from "../ui/NavButton";
 import useLocalStorage from "../hooks/useLocalStorage";
 import { WEBCONFERENCE } from "../utils/settings";
 
-import WebConference from "./WebConference";
+const WebConference = React.lazy(() => import("./WebConference.jsx"));
 
 export const WeConferenceButton = ({ room }) => {
   const { t } = useTranslation();
@@ -21,18 +23,15 @@ export const WeConferenceButton = ({ room }) => {
     return null;
   }
 
-  const icon =
-    WEBCONFERENCE === "video"
-      ? "https://icongr.am/material/webcam.svg?size=24&color=f9fbfa"
-      : "https://icongr.am/material/microphone.svg?size=24&color=f9fbfa";
+  const icon = WEBCONFERENCE === "video" ? FiVideo : FiMic;
 
   return (
     <>
-      <Touch
+      <NavButton
         onClick={() => setWebConference((prev) => !prev)}
         alt={t("Web conference")}
         title={t("Web conference")}
-        icon={icon}
+        Icon={icon}
         active={webConference}
       />
       {webConference && (
