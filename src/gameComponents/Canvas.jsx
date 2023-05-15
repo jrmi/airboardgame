@@ -22,8 +22,13 @@ const paint = async ({
       ratioHeight = 1;
 
     if (isNaN(givenWidth) && isNaN(givenHeight)) {
-      width = firstImage.width;
-      height = firstImage.height;
+      if (firstImage) {
+        width = firstImage.width;
+        height = firstImage.height;
+      } else {
+        width = 50;
+        height = 50;
+      }
     } else if (isNaN(givenWidth)) {
       // Height is set
       height = givenHeight;

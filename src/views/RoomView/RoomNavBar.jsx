@@ -24,15 +24,19 @@ const RoomNavBar = () => {
   return (
     <>
       <NavBar position="right">
-        <NavButton
-          Icon={FiLink}
-          onClick={() => {
-            setShowInvite(true);
-          }}
-          title={t("Invite more player")}
-        />
+        <div className="keep-folded">
+          <NavButton
+            Icon={FiLink}
+            onClick={() => {
+              setShowInvite(true);
+            }}
+            title={t("Invite more player")}
+          />
+        </div>
         <div className="sep" />
-        <UserList />
+        <div className="keep-folded">
+          <UserList />
+        </div>
         <div className="spacer" />
         <WebConferenceButton room={room} />
       </NavBar>

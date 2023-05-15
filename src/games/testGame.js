@@ -134,7 +134,6 @@ const genGame = () => {
   items.push({
     label: "Note",
     type: "note",
-    color: "#ffc",
     x: 10,
     y: 200,
   });

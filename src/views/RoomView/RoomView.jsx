@@ -138,12 +138,15 @@ const Room = ({ roomId, room, setRoom }) => {
   return (
     <StyledRoom>
       <NavBar>
-        <NavButton
-          Icon={FiChevronLeft}
-          to="/"
-          alt={t("Go back")}
-          title={t("Go back")}
-        />
+        <div className="keep-folded">
+          <NavButton
+            Icon={FiChevronLeft}
+            to="/"
+            alt={t("Go back")}
+            title={t("Go back")}
+          />
+        </div>
+        <div className="spacer" />
       </NavBar>
       <RoomNavBar />
 
