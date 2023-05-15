@@ -1,17 +1,24 @@
 import React, { memo, useEffect } from "react";
 import styled, { css } from "styled-components";
+import { lighten } from "color2k";
+import { randInt } from "../utils";
 
 const NotePane = styled.div`
-  ${({ color, fontSize, textColor, width, height, fontFamily }) => css`
-    background-color: ${color};
+  ${({ color, fontSize, textColor, width, height, fontFamily, rotate }) => css`
+    background: linear-gradient(${color}, ${lighten(color, 0.1)});
     width: ${width}px;
     padding: 0.5em;
     text-align: center;
     display: flex;
     justify-content: space-between;
     flex-direction: column;
-    box-shadow: 5px 5px 7px rgba(33, 33, 33, 0.7);
+    box-shadow: 2px 9px 10px 3px rgba(0,0,0,0.2);
     color: ${textColor};
+    transform: rotate(${rotate}deg) skew(0);
+    z-index: 2;
+
+    border-bottom-right-radius: 50% 1%;
+    border-top-left-radius: 50% 1%;
 
     .item-library__component & {
       background-color: #ccc;
@@ -36,7 +43,6 @@ const NotePane = styled.div`
       &:focus{
         outline: none;
         box-shadow: none;
-        border: 1px solid #00000033;
       }
 
       height: ${height}px;
@@ -44,7 +50,7 @@ const NotePane = styled.div`
       padding: 0.3em;
       background-color: transparent;
       resize: none;
-      border: 1px solid #00000005;
+      border: none;
       font-size: ${fontSize}px;
       border-radius: 1px;
 
@@ -60,7 +66,7 @@ const stopPropagationIfActive = (e) =>
 
 const Note = ({
   value = "",
-  color = "#ffc",
+  color = "#FFEC27",
   label = "",
   textColor = "#000",
   fontFamily = "Roboto",
@@ -69,9 +75,10 @@ const Note = ({
   height = 200,
   setState,
 }) => {
-  // To avoid this behaviour https://github.com/facebook/react/issues/955
+  // To avoid this behavior https://github.com/facebook/react/issues/955
   // We have a local state and a use effect when incoming update occurs
   const [currentValue, setCurrentValue] = React.useState(value);
+  const [rotate] = React.useState(() => (randInt(5, 15) - 10) / 5);
 
   const setValue = (e) => {
     const value = e.target.value;
@@ -98,6 +105,7 @@ const Note = ({
       onKeyUp={stopPropagationIfActive}
       onWheel={stopPropagationIfActive}
       onPointerMove={stopPropagationIfActive}
+      rotate={rotate}
     >
       <label style={{ userSelect: "none" }}>
         <h3 className="note__title">{label}</h3>
