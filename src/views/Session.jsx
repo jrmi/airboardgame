@@ -14,7 +14,6 @@ import { GlobalConfProvider } from "../hooks/useGlobalConf";
 
 import useSession, { SessionProvider } from "../hooks/useSession";
 import AutoSaveSession from "./AutoSaveSession";
-import Spinner from "../ui/Spinner";
 
 // Keep compatibility with previous availableItems shape
 const migrateAvailableItemList = (old) => {
@@ -95,19 +94,19 @@ export const Session = () => {
 
     const libraries = [
       {
-        name: t("Standard"),
-        key: "standard",
-        items: itemLibrary,
-      },
-      {
         name: t("Premade"),
         key: "premade",
         items: premadeLibrary,
       },
+      {
+        name: t("Standard"),
+        key: "standard",
+        items: itemLibrary,
+      },
     ];
 
     if (availableItems.length) {
-      libraries.push({
+      libraries.unshift({
         name: t("Box"),
         key: "box",
         items: availableItemLibrary,
@@ -161,7 +160,7 @@ export const Session = () => {
   );
 };
 
-const ConnectedSessionView = ({ sessionId, fromGame }) => {
+const ConnectedSessionView = ({ sessionId, fromGame, isVassalSession }) => {
   const socket = useSocket();
   return (
     <BoardWrapper
@@ -175,7 +174,11 @@ const ConnectedSessionView = ({ sessionId, fromGame }) => {
       socket={socket}
       LoadingComponent={Waiter}
     >
-      <SessionProvider sessionId={sessionId} fromGameId={fromGame}>
+      <SessionProvider
+        sessionId={sessionId}
+        fromGameId={fromGame}
+        isVassalSession={isVassalSession}
+      >
         <Session />
       </SessionProvider>
     </BoardWrapper>

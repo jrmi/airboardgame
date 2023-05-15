@@ -11,6 +11,7 @@ import SliderRange from "../../ui/SliderRange";
 import { ImageField } from "../../mediaLibrary";
 
 import { backgrounds } from "../../gameComponents";
+import { FiTrash2 } from "react-icons/fi";
 
 const BoardConfigForm = () => {
   const { t } = useTranslation();
@@ -235,10 +236,7 @@ const BoardConfigForm = () => {
                 className="button clear icon-only trash"
                 onClick={() => removeTranslation(id)}
               >
-                <img
-                  src="https://icongr.am/feather/trash.svg?size=25&color=ffffff"
-                  alt={t("Remove")}
-                />
+                <FiTrash2 size="25" color="white" alt={t("Remove")} />
               </button>
 
               <Label>

@@ -8,8 +8,8 @@ import { OpenViduProvider, StreamList } from "./react-useOpenVidu";
 
 const StyledWebConference = styled.div`
   position: fixed;
-  top: 5em;
-  right: 1em;
+  top: 5px;
+  right: 45px;
   line-height: 1em;
   bottom: 5.5em;
   z-index: 1;

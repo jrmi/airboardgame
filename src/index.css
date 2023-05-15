@@ -29,8 +29,8 @@ body {
 }
 
 .blurry .sync-board,
-.blurry #panel-container {
-  filter: blur(3px);
+.blurry .side-panel--open {
+  filter: blur(2px) grayscale(50%);
 }
 
 .button,
@@ -188,4 +188,8 @@ textarea[type="text"] {
   opacity: 0.5;
   width: 7px;
   height: 7px;
+}
+
+.invisible-scrollbar::-webkit-scrollbar {
+  display: none;
 }

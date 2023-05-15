@@ -6,22 +6,20 @@ import { SHOW_WELCOME } from "../../utils/settings";
 import WelcomeModal from "./WelcomeModal";
 import NavBar from "./NavBar";
 import styled from "styled-components";
-import BoardForm from "./BoardForm";
 import SelectedItemsPane from "./SelectedItemsPane";
 
 import { itemTemplates, backgrounds } from "../../gameComponents";
 
-import ActionBar from "./ActionBar";
-
 import { MediaLibraryProvider, ImageDropNPaste } from "../../mediaLibrary";
 import HintOnLockedItem from "./HintOnLockedItem";
 import useGlobalConf from "../../hooks/useGlobalConf";
+import useSession from "../../hooks/useSession";
 
-import flipAudio from "../../media/audio/flip.wav?url";
-import rollAudio from "../../media/audio/roll.wav?url";
-import shuffleAudio from "../../media/audio/shuffle.wav?url";
+import flipAudio from "../../media/audio/flip.ogg?url";
+import rollAudio from "../../media/audio/roll.ogg?url";
+import shuffleAudio from "../../media/audio/shuffle.ogg?url";
 import { preloadAudio } from "../../utils";
-import lockIcon from "../../media/images/lock.svg";
+import UserBar from "./UserBar";
 
 const StyledBoard = styled.div`
   & .item.locked::after {
@@ -32,9 +30,8 @@ const StyledBoard = styled.div`
     top: 4px;
     right: 4px;
     opacity: 0.1;
-    background-image: url("${lockIcon}");
-    background-size: cover;
     user-select: none;
+    overflow: hidden;
   }
 
   & .item.locked:hover::after {
@@ -48,8 +45,9 @@ export const BoardView = ({
   itemLibraries,
 }) => {
   const { isSpaceMaster: isMaster } = useUsers();
+  const { isVassalSession } = useSession();
   const [showWelcomeModal, setShowWelcomeModal] = React.useState(
-    SHOW_WELCOME && !editMode && isMaster
+    SHOW_WELCOME && !editMode && isMaster && !isVassalSession
   );
 
   const [boardConfig] = useBoardConfig();
@@ -78,16 +76,15 @@ export const BoardView = ({
             showResizeHandle={editItem}
           />
         </StyledBoard>
-        <NavBar editMode={editMode} />
-        <ActionBar
+        <NavBar
           editMode={editMode}
-          BoardFormComponent={BoardForm}
           itemLibraries={itemLibraries}
           moveFirst={moveFirst}
           setMoveFirst={setMoveFirst}
           hideMenu={hideMenu}
           setHideMenu={setHideMenu}
         />
+        {!editMode && <UserBar />}
         <WelcomeModal show={showWelcomeModal} setShow={setShowWelcomeModal} />
       </ImageDropNPaste>
       <SelectedItemsPane

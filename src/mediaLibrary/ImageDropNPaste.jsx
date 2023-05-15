@@ -39,7 +39,19 @@ const ImageDropNPaste = ({ children }) => {
     [addImageItem, addMedia, libraries]
   );
 
-  const { getRootProps } = useDropzone({ onDrop });
+  const { getRootProps } = useDropzone({
+    onDrop,
+    noClick: true,
+    noKeyboard: true,
+    accept: {
+      "image/png": [".png"],
+      "image/jpg": [".jpg", ".jpeg"],
+      "image/svg+xml": [".svg"],
+      "image/tiff": [".tif", ".tiff"],
+      "image/webp": [".webp"],
+      "image/gif": [".gif"],
+    },
+  });
 
   const onPaste = React.useCallback(
     async (e) => {
@@ -70,7 +82,7 @@ const ImageDropNPaste = ({ children }) => {
   }, [onPaste]);
 
   return (
-    <div {...getRootProps()}>
+    <div {...getRootProps()} style={{ overflow: "hidden" }}>
       {children}
       {uploading && <Waiter message={t("Uploading image(s)...")} />}
     </div>

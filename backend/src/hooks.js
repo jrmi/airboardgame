@@ -15,7 +15,7 @@ export const ownerOrAdminOrNewHooks = async (context) => {
     return context;
   }
 
-  // It's a game modification...
+  // From here it's a game modification...
 
   if (!userId) {
     throwError(
@@ -90,7 +90,7 @@ export const onlySelfOrPublicGames = async (context) => {
   const newContext = { ...context };
 
   newContext.response = response.filter(
-    ({ board: { published }, owner }) =>
+    ({ board: { published } = {}, owner } = {}) =>
       published || owner === userId || userIsAdmin
   );
 

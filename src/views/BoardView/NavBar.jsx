@@ -1,16 +1,24 @@
 import React from "react";
 
-import styled from "styled-components";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useMatch, useParams } from "react-router-dom";
 import { confirmAlert } from "react-confirm-alert";
-import { useUsers, useBoardConfig } from "react-sync-board";
+import { useUsers } from "react-sync-board";
 
-import UserList from "../../users/UserList";
-import Touch from "../../ui/Touch";
-import WebConferenceButton from "../../webconf/WebConferenceButton";
+import {
+  FiHelpCircle,
+  FiUpload,
+  FiSave,
+  FiMove,
+  FiMousePointer,
+  FiHome,
+  FiMaximize,
+} from "react-icons/fi";
+import { GiPokerHand } from "react-icons/gi";
 
-import { getBestTranslationFromConfig } from "../../utils/api";
+import BoardForm from "./BoardForm";
+import SessionForm from "./SessionForm";
+import NavButton from "../../ui/NavButton";
 
 import InfoModal from "./InfoModal";
 import LoadGameModal from "./LoadGameModal";
@@ -19,147 +27,45 @@ import ChangeGameModal from "./ChangeGameModal";
 import ExportModal from "./ExportModal";
 import SaveExportModal from "./SaveExportModal";
 import WelcomeModal from "./WelcomeModal";
+import EditInfoButton from "./EditInfoButton";
+import AddItemButton from "./AddItemButton";
 
 import useSession from "../../hooks/useSession";
 
-const StyledNavBar = styled.div.attrs(() => ({ className: "nav" }))`
-  position: fixed;
-  top: 0;
-  width: 100%;
-  z-index: 205;
+import vassalIconUrl from "../../media/images/vassal.svg?url";
+import target from "../../media/images/target.svg";
 
-  background-color: #19202ce0;
-  box-shadow: 0px 3px 6px #00000029;
+import { default as RawNavBar } from "../../ui/NavBar";
+import useFullScreen from "../../hooks/useFullScreen";
 
-  color: var(--font-color);
+const LoadVassalModuleGameModal = React.lazy(() =>
+  import("./LoadVassalModuleGameModal.jsx")
+);
 
-  & .nav-center {
-    display: relative;
-    & h3 {
-      position: absolute;
-      top: 0;
-      margin: 0;
-      padding: 0 1em;
+const NavBar = ({ editMode, itemLibraries, moveFirst, setMoveFirst }) => {
+  const { t } = useTranslation();
+  const { isVassalSession } = useSession();
 
-      background-color: ${({ edit }) =>
-        edit ? "var(--color-primary)" : "transparent"};
-
-      line-height: 5rem;
-      letter-spacing: 0px;
-      font-size: 24px;
-      text-transform: uppercase;
-    }
-  }
-
-  & .nav-right,
-  & .nav-center,
-  & .nav-left {
-    align-items: center;
-  }
-
-  & .nav-left {
-    & > div {
-      padding-right: 1em;
-    }
-    padding-left: 40px;
-    justify-content: flex-start;
-  }
-
-  & .nav-right {
-    justify-content: flex-end;
-    padding-right: 1em;
-    gap: 1em;
-  }
-
-  & .spacer {
-    flex: 1;
-    max-width: 1em;
-  }
-
-  @media screen and (max-width: 640px) {
-    & .nav-left {
-      flex: 1;
-      padding-left: 5px;
-      & > div {
-        padding-right: 2px;
-      }
-    }
-
-    & .nav-center h3 {
-      position: relative;
-      padding: 0;
-
-      background-color: transparent;
-      box-shadow: none;
-      line-height: 1.2em;
-      font-size: 1.2em;
-      transform: none;
-    }
-
-    /* TODO quick but dirty way to do that, need refactoring */
-    & .hide-mobile {
-      display: none;
-    }
-
-    & .spacer {
-      flex: 0;
-    }
-
-    & {
-      flex-direction: row;
-    }
-    & .save {
-      display: none;
-    }
-    & .info {
-      margin: 0;
-      padding: 0;
-      width: 24px;
-      height: 24px;
-    }
-    & .help {
-      margin: 0;
-      padding: 0;
-      width: 24px;
-      height: 24px;
-    }
-    & h3 {
-      font-size: 1.2em;
-    }
-  }
-`;
-
-const NavBar = ({ editMode, title }) => {
-  const { t, i18n } = useTranslation();
-  const { sessionId: room } = useSession();
-  const [boardConfig] = useBoardConfig();
+  const { toggleFullScreen, active: isFullScreen } = useFullScreen();
 
   const { isSpaceMaster: isMaster } = useUsers();
 
   const navigate = useNavigate();
   const params = useParams();
-  const insideASession = useMatch("/session/:sessionId");
   const insideARoom = useMatch("/room/:roomId/session/:sessionId");
 
-  const [showLoadGameModal, setShowLoadGameModal] = React.useState(false);
+  const [showLoadGameModal, setShowLoadGameModal] = React.useState(
+    isMaster && isVassalSession
+  );
   const [showSaveGameModal, setShowSaveGameModal] = React.useState(false);
   const [showChangeGameModal, setShowChangeGameModal] = React.useState(false);
   const [showInfoModal, setShowInfoModal] = React.useState(false);
   const [showLink, setShowLink] = React.useState(false);
-
-  const translation = React.useMemo(
-    () => getBestTranslationFromConfig(boardConfig, i18n.languages),
-    [boardConfig, i18n.languages]
-  );
+  const [showAddPanel, setShowAddPanel] = React.useState(false);
 
   const handleBack = React.useCallback(() => {
-    // If inside session
-    if (insideASession) {
-      // Go to previous if exists
-      // Previous can be home or studio
-      // Yes history should be greater than 2 for some reason...
-      navigate(-1);
-      return;
+    if (isFullScreen) {
+      toggleFullScreen();
     }
     // If inside room, go back to that room
     if (insideARoom) {
@@ -168,7 +74,7 @@ const NavBar = ({ editMode, title }) => {
     }
     // Otherwise, go back to home
     navigate("/games");
-  }, [insideASession, navigate, insideARoom, params.roomId]);
+  }, [isFullScreen, insideARoom, navigate, toggleFullScreen, params.roomId]);
 
   const handleBackWithConfirm = React.useCallback(() => {
     confirmAlert({
@@ -191,125 +97,150 @@ const NavBar = ({ editMode, title }) => {
 
   return (
     <>
-      <StyledNavBar edit={editMode}>
-        <div className="nav-left">
-          {!editMode && (
-            <>
-              <Touch
+      <RawNavBar folded={true}>
+        {!editMode && (
+          <>
+            <div className="keep-folded">
+              <NavButton
+                Icon={FiHome}
                 onClick={handleBack}
                 alt={t("Go back")}
                 title={t("Go back")}
-                icon={"chevron-left"}
-                style={{ display: "inline" }}
-              />
-              {isMaster && (
-                <div className="hide-mobile">
-                  <Touch
-                    onClick={() => setShowChangeGameModal((prev) => !prev)}
-                    alt={t("Change game")}
-                    title={t("Change game")}
-                    icon="https://icongr.am/material/cards-playing-outline.svg?size=24&color=f9fbfa"
-                  />
-                  <ChangeGameModal
-                    show={showChangeGameModal}
-                    setShow={setShowChangeGameModal}
-                  />
-                </div>
-              )}
-            </>
-          )}
-          {editMode && (
-            <Touch
-              onClick={handleBackWithConfirm}
-              alt={t("Go back to studio")}
-              title={t("Go back to studio")}
-              icon={"chevron-left"}
-              style={{ display: "inline" }}
-            />
-          )}
-        </div>
-
-        <div className="nav-center">
-          <h3>
-            {translation.name ? translation.name : title || "Air Board Game"}
-          </h3>
-        </div>
-
-        <div className="nav-right">
-          {!editMode && (
-            <>
-              <div className="hide-mobile">
-                <UserList />
-              </div>
-              <div className="hide-mobile">
-                <Touch
-                  onClick={() => {
-                    setShowLink(true);
-                  }}
-                  icon="add-user"
-                  title={t("Invite more player")}
-                />
-              </div>
-              <div className="hide-mobile">
-                <WebConferenceButton room={room} />
-              </div>
-            </>
-          )}
-          <div className="spacer" />
-          {(isMaster || editMode) && (
-            <div className="hide-mobile">
-              <Touch
-                onClick={() => setShowLoadGameModal((prev) => !prev)}
-                alt={editMode ? t("Load game") : t("Load session")}
-                title={editMode ? t("Load game") : t("Load session")}
-                icon={"upload-to-cloud"}
               />
             </div>
-          )}
-          <div className="hide-mobile">
-            <Touch
-              onClick={() => setShowSaveGameModal((prev) => !prev)}
-              alt={t("Save")}
-              title={editMode ? t("Save game") : t("Save session")}
-              icon={editMode ? "save" : "download"}
-            />
-          </div>
-          <div className="spacer" />
-          <Touch
-            onClick={() => setShowInfoModal((prev) => !prev)}
-            alt={t("Help & info")}
-            title={t("Help & info")}
-            icon={"help"}
+            {isMaster && (
+              <>
+                <div className="sep" />
+                <NavButton
+                  Icon={GiPokerHand}
+                  onClick={() => setShowChangeGameModal((prev) => !prev)}
+                  alt={t("Change game")}
+                  title={t("Change game")}
+                />
+                <ChangeGameModal
+                  show={showChangeGameModal}
+                  setShow={setShowChangeGameModal}
+                />
+              </>
+            )}
+          </>
+        )}
+        {editMode && (
+          <NavButton
+            Icon={FiHome}
+            onClick={handleBackWithConfirm}
+            alt={t("Go back to studio")}
+            title={t("Go back to studio")}
+          />
+        )}
+        <div className="sep" />
+        <AddItemButton
+          itemLibraries={itemLibraries}
+          setShowAddPanel={setShowAddPanel}
+          showAddPanel={showAddPanel}
+        />
+        <div className="spacer" />
+        {(isMaster || editMode) && !isVassalSession && (
+          <NavButton
+            onClick={() => setShowLoadGameModal((prev) => !prev)}
+            alt={editMode ? t("Load game") : t("Load session")}
+            title={editMode ? t("Load game") : t("Load session")}
+            Icon={FiUpload}
+          />
+        )}
+        {isMaster && isVassalSession && (
+          <NavButton
+            onClick={() => setShowLoadGameModal((prev) => !prev)}
+            alt={t("Load Vassal module")}
+            title={t("Load Vassal module")}
+            icon={vassalIconUrl}
+          />
+        )}
+        <NavButton
+          onClick={() => setShowSaveGameModal((prev) => !prev)}
+          alt={t("Save")}
+          title={editMode ? t("Save game") : t("Save session")}
+          Icon={FiSave}
+        />
+        <div className="spacer" />
+        <div className="keep-folded">
+          <NavButton
+            onClick={() => setMoveFirst(!moveFirst)}
+            alt={moveFirst ? t("Move mode") : t("Select mode")}
+            title={
+              moveFirst ? t("Switch to select mode") : t("Switch to move mode")
+            }
+            Icon={moveFirst ? FiMove : FiMousePointer}
           />
         </div>
-      </StyledNavBar>
+        <NavButton
+          Icon={FiMaximize}
+          onClick={toggleFullScreen}
+          alt={t("Fullscreen")}
+          title={t("Fullscreen")}
+          active={isFullScreen}
+        />
+        <div className="sep" />
+        {editMode && <EditInfoButton BoardFormComponent={BoardForm} />}
+        {!editMode && isMaster && (
+          <EditInfoButton BoardFormComponent={SessionForm} />
+        )}
+        <NavButton
+          onClick={() => setShowInfoModal((prev) => !prev)}
+          alt={t("Help & info")}
+          title={t("Help & info")}
+          Icon={FiHelpCircle}
+        />
+      </RawNavBar>
+      {showAddPanel && (
+        <img
+          style={{
+            position: "absolute",
+            width: "60px",
+            height: "60px",
+            left: "calc(50% - 30px)",
+            top: "calc(50% - 30px)",
+            pointerEvents: "none",
+            opacity: 0.3,
+          }}
+          src={target}
+        />
+      )}
       <InfoModal show={showInfoModal} setShow={setShowInfoModal} />
-
-      {!editMode && (
-        <WelcomeModal show={showLink} setShow={setShowLink} welcome={false} />
-      )}
-      {!editMode && (
-        <LoadSessionModal
-          show={showLoadGameModal}
-          setShow={setShowLoadGameModal}
-          edit={editMode}
-        />
-      )}
       {editMode && (
-        <LoadGameModal
-          show={showLoadGameModal}
-          setShow={setShowLoadGameModal}
-          edit={editMode}
-        />
+        <>
+          <LoadGameModal
+            show={showLoadGameModal}
+            setShow={setShowLoadGameModal}
+            edit={editMode}
+          />
+          <SaveExportModal
+            show={showSaveGameModal}
+            setShow={setShowSaveGameModal}
+          />
+        </>
       )}
       {!editMode && (
-        <ExportModal show={showSaveGameModal} setShow={setShowSaveGameModal} />
-      )}
-      {editMode && (
-        <SaveExportModal
-          show={showSaveGameModal}
-          setShow={setShowSaveGameModal}
-        />
+        <>
+          <WelcomeModal show={showLink} setShow={setShowLink} welcome={false} />
+          <ExportModal
+            show={showSaveGameModal}
+            setShow={setShowSaveGameModal}
+          />
+          {isVassalSession ? (
+            <LoadVassalModuleGameModal
+              show={showLoadGameModal}
+              setShow={setShowLoadGameModal}
+              edit={editMode}
+            />
+          ) : (
+            <LoadSessionModal
+              show={showLoadGameModal}
+              setShow={setShowLoadGameModal}
+              edit={editMode}
+            />
+          )}
+        </>
       )}
     </>
   );

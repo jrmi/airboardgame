@@ -92,6 +92,9 @@ const Zone = ({
           case "stack":
             actionMap["stack"].action(args)(insideItems);
             break;
+          case "roll":
+            actionMap["roll"].action(args)(insideItems);
+            break;
         }
       });
     },

@@ -2,9 +2,10 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import { useMessage } from "react-sync-board";
+import { FiMessageSquare } from "react-icons/fi";
 
 import useNotify from "../hooks/useNotify";
-import Touch from "../ui/Touch";
+import NavButton from "../ui/NavButton";
 import SidePanel from "../ui/SidePanel";
 
 import Composer from "./Composer";
@@ -39,7 +40,7 @@ export const MessagePanel = ({ onNewMessage, show, setShow }) => {
       onClose={() => {
         setShow(false);
       }}
-      position="left"
+      position="right"
       noMargin
       title={t("Chat")}
     >
@@ -83,13 +84,11 @@ export const MessageButton = () => {
   return (
     <>
       <div style={{ position: "relative" }}>
-        <Touch
+        <NavButton
           onClick={() => setShowPanelRef(!showPanelRef.current)}
           alt={t("Chat")}
           title={t("Chat")}
-          label={t("Chat")}
-          icon={"message"}
-          active={showPanel}
+          Icon={FiMessageSquare}
         />
         {count > 0 && <NotifCount>{countStr}</NotifCount>}
       </div>

@@ -51,6 +51,7 @@ if (useProxy) {
   console.log("Proxy backend...");
   proxy = {
     server: {
+      port: 3001,
       proxy: {
         "/socket.io": socketServer
           .replace("https", "wss")
@@ -69,7 +70,10 @@ export default defineConfig({
     analyze({ summaryOnly: true, hideDeps: true, limit: 20 }),
   ],
   build: {
-    sourcemap: "inline",
+    sourcemap: true,
+  },
+  server: {
+    port: 3001,
   },
   ...proxy,
 });

@@ -45,8 +45,8 @@ const GameListView = () => {
       )
       .sort((a, b) => {
         const [nameA, nameB] = [
-          a.board.defaultName || a.board.name,
-          b.board.defaultName || b.board.name,
+          a?.board?.defaultName || a?.board?.name,
+          b?.board?.defaultName || b?.board?.name,
         ];
         if (nameA < nameB) {
           return -1;

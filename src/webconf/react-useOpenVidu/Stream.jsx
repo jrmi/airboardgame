@@ -7,7 +7,13 @@ const Stream = ({ stream }) => {
     stream.addVideoElement(videoRef.current);
   }, [stream]);
 
-  return <video autoPlay={true} ref={videoRef} style={{ width: "100%" }} />;
+  return (
+    <video
+      autoPlay={true}
+      ref={videoRef}
+      style={{ width: "100%", display: "block" }}
+    />
+  );
 };
 
 export default Stream;

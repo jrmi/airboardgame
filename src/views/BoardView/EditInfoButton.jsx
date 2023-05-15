@@ -3,11 +3,13 @@ import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import { Form } from "react-final-form";
 
-import Touch from "../../ui/Touch";
+import { FiSettings } from "react-icons/fi";
+
 import SidePanel from "../../ui/SidePanel";
 import AutoSave from "../../ui/formUtils/AutoSave";
 
 import { useBoardConfig } from "react-sync-board";
+import NavButton from "../../ui/NavButton";
 
 const BoardConfigForm = styled.div`
   display: flex;
@@ -60,12 +62,11 @@ const EditInfoButton = ({ BoardFormComponent }) => {
 
   return (
     <>
-      <Touch
+      <NavButton
         onClick={() => setShow((prev) => !prev)}
         alt={t("Edit game info")}
         title={t("Edit game info")}
-        label={t("Edit game info")}
-        icon={"cog"}
+        Icon={FiSettings}
       />
       <BoardConfigPanel
         BoardFormComponent={BoardFormComponent}

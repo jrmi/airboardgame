@@ -5,9 +5,10 @@ import {
 } from "./hooks.js";
 import getConfToken from "./getConfToken.js";
 
-const SESSION_DURATION = 60; // Session duration in days
+import { deleteOldSession } from "./scheduled.js";
 
-export const main = async ({ store, schedules, hooks, functions }) => {
+export const main = async ({ store, schedules, functions, hooks }) => {
+  // Add hooks
   hooks.before = [ownerOrAdminOrNewHooks, onlySelfUser];
   hooks.after = [ownerOrAdminOrNewHooks, onlySelfOrPublicGames];
   hooks.beforeFile = [ownerOrAdminOrNewHooks];
@@ -21,24 +22,7 @@ export const main = async ({ store, schedules, hooks, functions }) => {
   await store.createOrUpdateBox("user", { security: "private" });
 
   // Add schedules
-  schedules["daily"] = [
-    async () => {
-      const sessions = await store.list("session", { limit: 10000 });
-      sessions.forEach(async (session) => {
-        const now = Date.now();
-        if (!session.timestamp) {
-          console.log("Delete session without timestamp ", session._id);
-          await store.delete("session", session._id);
-        }
-        if (now - session.timestamp > SESSION_DURATION * 24 * 60 * 60 * 1000) {
-          console.log("Delete too old session ", session._id);
-          await store.delete("session", session._id);
-        }
-      });
-    },
-  ];
-
-  //await replaceImageUrl({ store });
+  schedules["daily"] = [deleteOldSession(store)];
 
   console.log("Setup loaded with session");
 };
