@@ -146,6 +146,9 @@ const BoardConfigForm = () => {
             return <ImageField value={value} onChange={onChange} />;
           }}
         </Field>
+        <Hint>
+          {t("Image ideal resolution: 482x310px or an aspect ratio of 1.55")}
+        </Hint>
       </Label>
       <Label>
         {t("Material language")}

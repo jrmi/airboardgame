@@ -13,7 +13,6 @@ import { uid } from "../utils";
 
 import useGame, { GameProvider } from "../hooks/useGame";
 import { GlobalConfProvider } from "../hooks/useGlobalConf";
-import Spinner from "../ui/Spinner";
 
 // Keep compatibility with previous availableItems shape
 const migrateAvailableItemList = (old) => {

@@ -32,6 +32,8 @@ const Round = ({
   size,
   radius = size,
   color = "#ccc",
+  flippedColor = "#ccc",
+  flipped = false,
   text = "",
   textColor = "#000",
   fontSize = "16",
@@ -44,7 +46,7 @@ const Round = ({
           cy="50"
           r="50"
           style={{
-            fill: color,
+            fill: flipped ? flippedColor : color,
           }}
         />
       </svg>

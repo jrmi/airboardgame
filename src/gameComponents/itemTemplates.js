@@ -96,6 +96,7 @@ const itemTemplates = {
     component: Rect,
     defaultActions: ["lock", "remove"],
     availableActions: [
+      "flip",
       "stack",
       "alignAsLine",
       "alignAsSquare",
@@ -148,6 +149,7 @@ const itemTemplates = {
     component: Round,
     defaultActions: ["clone", "lock", "remove"],
     availableActions: [
+      "flip",
       "stack",
       "alignAsLine",
       "alignAsSquare",
@@ -166,6 +168,7 @@ const itemTemplates = {
     component: Token,
     defaultActions: ["clone", "lock", "remove"],
     availableActions: [
+      "flip",
       "stack",
       "alignAsLine",
       "alignAsSquare",
