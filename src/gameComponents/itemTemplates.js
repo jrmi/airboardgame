@@ -5,6 +5,7 @@ import { uid } from "../utils";
 import Rect from "./Rect";
 import Cube from "./Cube";
 import Round from "./Round";
+import Hexagon from "./Hexagon";
 import Token from "./Token";
 import Image from "./Image";
 import AdvancedImage from "./AdvancedImage";
@@ -28,6 +29,7 @@ import CounterFormFields from "./forms/CounterFormFields";
 import RectFormFields from "./forms/RectFormFields";
 import CubeFormFields from "./forms/CubeFormFields";
 import RoundFormFields from "./forms/RoundFormFields";
+import HexagonFormField from "./forms/HexagonFormFields";
 import DiceFormFields from "./forms/DiceFormFields";
 import DiceImageFormFields from "./forms/DiceImageFormFields";
 import NoteFormFields from "./forms/NoteFormFields";
@@ -162,6 +164,25 @@ const itemTemplates = {
     name: i18n.t("Round"),
     template: {},
     resize: radiusResize,
+    resizeDirections: { b: true },
+  },
+  hexagon: {
+    component: Hexagon,
+    defaultActions: ["clone", "lock", "remove"],
+    availableActions: [
+      "flip",
+      "stack",
+      "alignAsLine",
+      "alignAsSquare",
+      "shuffle",
+      "clone",
+      "lock",
+      "remove",
+    ],
+    form: HexagonFormField,
+    name: i18n.t("Hexagon"),
+    template: { size: 50 },
+    resize: sizeResize,
     resizeDirections: { b: true },
   },
   token: {
