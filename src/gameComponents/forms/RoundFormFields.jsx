@@ -47,6 +47,19 @@ const Form = ({ initialValues }) => {
       </Label>
 
       <Label>
+        {t("Flipped color")}
+        <Field
+          name="flippedColor"
+          component="input"
+          initialValue={initialValues.flippedColor}
+        >
+          {({ input: { onChange, value } }) => (
+            <ColorPicker value={value} onChange={onChange} />
+          )}
+        </Field>
+      </Label>
+
+      <Label>
         {t("Font size")}
         <Field
           name="fontSize"

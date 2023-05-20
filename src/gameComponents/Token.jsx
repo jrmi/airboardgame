@@ -31,11 +31,14 @@ const StyledShape = styled.div`
 const Token = ({
   size = 50,
   color = "#b3b3b3",
+  flippedColor = "#b3b3b3",
+  flipped = false,
   text = "",
   textColor = "#000",
   fontSize = 24,
 }) => {
-  const colorDarken1 = darken(color, 0.25);
+  const currentColor = flipped ? flippedColor : color;
+  const colorDarken1 = darken(currentColor, 0.25);
   return (
     <StyledShape size={size}>
       <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
@@ -53,7 +56,7 @@ const Token = ({
           cy="45"
           cx="50"
           id="ellipse2139"
-          fill={color}
+          fill={currentColor}
         />
       </svg>
       {text && (

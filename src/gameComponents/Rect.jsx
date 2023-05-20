@@ -22,12 +22,18 @@ const Rect = ({
   width = 50,
   height = 50,
   color = "#ccc",
+  flippedColor = "#ccc",
+  flipped = false,
   text = "",
   textColor = "#000",
   fontSize = "16",
 }) => {
   return (
-    <StyledShape width={width} height={height} color={color}>
+    <StyledShape
+      width={width}
+      height={height}
+      color={flipped ? flippedColor : color}
+    >
       {text && (
         <span
           style={{
