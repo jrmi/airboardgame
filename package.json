@@ -1,6 +1,6 @@
 {
   "name": "airboardgame",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "private": false,
   "dependencies": {
     "@color2k/compat": "^1.0.0-rc.5",
@@ -15,8 +15,8 @@
     "eslint-config-airbnb": "^19.0.4",
     "final-form": "^4.20.0",
     "final-form-arrays": "^3.0.2",
-    "i18next": "^19.4.5",
-    "i18next-browser-languagedetector": "^4.3.1",
+    "i18next": "^22.5.0",
+    "i18next-browser-languagedetector": "^7.0.1",
     "jszip": "^3.10.1",
     "lodash.debounce": "^4.0.8",
     "marked": "^4.0.12",
@@ -35,7 +35,7 @@
     "react-final-form": "^6.5.9",
     "react-final-form-arrays": "^3.1.4",
     "react-full-screen": "^1.1.1",
-    "react-i18next": "^11.7.0",
+    "react-i18next": "^12.3.1",
     "react-icons": "^4.8.0",
     "react-query": "^3.39.3",
     "react-router-dom": "^6.8.0",
@@ -59,7 +59,8 @@
     "server": "echo 'This command is deprecated. Please, see Readme for more information.'",
     "i18n:scanner": "i18next-scanner --config i18next-scanner.config.js 'src/**/*.{js,jsx}'",
     "cypress:open": "cross-env VITE_CI=1 LANGUAGE=en cypress open",
-    "cypress:run": "cross-env VITE_CI=1 LANGUAGE=en cypress run"
+    "cypress:run": "cross-env VITE_CI=1 LANGUAGE=en cypress run",
+    "version": "git changelog -n -t $npm_package_version && git add CHANGELOG.md"
   },
   "browserslist": {
     "production": [
@@ -92,7 +93,7 @@
     "eslint-plugin-react": "^7.24.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "http-proxy-middleware": "^2.0.0",
-    "i18next-scanner": "^3.0.0",
+    "i18next-scanner": "^4.2.0",
     "prettier": "2.0.5",
     "rollup-plugin-analyzer": "^4.0.0",
     "vite": "^4.3.5",
