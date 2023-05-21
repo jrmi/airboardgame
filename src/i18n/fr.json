@@ -339,5 +339,9 @@
   "Square distance": "Distance entre les carrés",
   "Square size": "Taille des carrés",
   "Fold/Unfold": "Plier/déplier",
-  "Fullscreen": "Plein écran"
+  "Fullscreen": "Plein écran",
+  "Vertical?": "Vertical ?",
+  "Flipped color": "Color verso",
+  "Hexagon": "Hexagone",
+  "Image ideal resolution: 482x310px or an aspect ratio of 1.55": "Résolution idéale de l'image: 482x310px ou un ratio de 1.55"
 }
