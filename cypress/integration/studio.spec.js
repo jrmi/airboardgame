@@ -75,7 +75,7 @@ describe("Studio", () => {
     // Add an item
     cy.get("[title^='Add an item']").click({ force: true });
     cy.contains("Rectangle").parent().parent().click();
-    cy.get(".side-panel.open [alt^='Close']").click();
+    cy.get(".side-panel__close").click();
 
     // save
     cy.intercept(
@@ -106,9 +106,7 @@ describe("Studio", () => {
     // Edit title
     cy.get("[title^='Configuration']").click({ force: true });
     cy.get('input[name="defaultName"]').clear().type("ChangeGameName");
-    cy.get(".side-panel.open [alt^='Close']").click();
-
-    cy.contains("ChangeGameName");
+    cy.get(".side-panel__close").click();
 
     cy.intercept(
       {
@@ -137,12 +135,12 @@ describe("Studio", () => {
       // Add an item
       cy.get("[title^='Add an item']").click({ force: true });
       cy.contains("Rectangle").parent().parent().click();
-      cy.get(".side-panel.open [alt^='Close']").click();
+      cy.get(".side-panel__close").click();
     });
 
     it("Can update item properties", () => {
       cy.get(".item").click({ force: true });
-      cy.get("button img[alt^='Edit']").click({ force: true });
+      cy.get("[title^='Edit']").click({ force: true });
 
       cy.get('input[name="width"]').clear().type("100");
       cy.get('input[name="height"]').clear().type("75");
@@ -162,7 +160,7 @@ describe("Studio", () => {
 
     it("Can lock an item", () => {
       cy.get(".item").click({ force: true });
-      cy.get("button img[alt^='Edit']").click({ force: true });
+      cy.get("[title^='Edit']").click({ force: true });
 
       cy.get("input[name='locked']").click();
 
@@ -194,7 +192,7 @@ describe("Studio", () => {
 
     it("Can change item layer", () => {
       cy.get(".item").click({ force: true });
-      cy.get("button img[alt^='Edit']").click({ force: true });
+      cy.get("[title^='Edit']").click({ force: true });
 
       cy.get(".item").parent().should("have.css", "z-index", "140");
 

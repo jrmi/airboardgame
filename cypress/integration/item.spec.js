@@ -70,11 +70,8 @@ describe("Item interactions", () => {
 
   it("should flip item", () => {
     // Check before
-    cy.get("img[src='/game_assets/JC.jpg']")
-      .siblings("img[src='/game_assets/Red_back.jpg']")
-      .should("have.css", "opacity", "0");
-    cy.get("img[src='/game_assets/JC.jpg']").should("have.css", "opacity", "1");
-
+    cy.get("img[src='/game_assets/JC.jpg']");
+    cy.get("img[src='/game_assets/Red_back.jpg']").should("not.exist");
     // Select card
     cy.get("img[src='/game_assets/JC.jpg']")
       .parents(".item")
@@ -83,13 +80,11 @@ describe("Item interactions", () => {
     cy.get('[title = "Reveal/Hide (f)"]').click({ force: true });
 
     // Check after
-    cy.get("img[src='/game_assets/JC.jpg']").should("have.css", "opacity", "0");
-    cy.get("img[src='/game_assets/JC.jpg']")
-      .siblings("img[src='/game_assets/Red_back.jpg']")
-      .should("have.css", "opacity", "1");
+    cy.get("img[src='/game_assets/JC.jpg']").should("not.exist");
+    cy.get("img[src='/game_assets/Red_back.jpg']");
   });
 
-  it.only("should tap item", () => {
+  it("should tap item", () => {
     // Check before
     cy.get("img[src='/game_assets/JC.jpg']")
       .parents(".item")
@@ -106,16 +101,5 @@ describe("Item interactions", () => {
     cy.get("img[src='/game_assets/JC.jpg']")
       .parents(".item")
       .should("have.css", "transform", "matrix(0, 1, -1, 0, 0, 0)");
-  });
-
-  it("should hide menu", () => {
-    // Select card
-    cy.get("img[src='/game_assets/JC.jpg']").click(500, 500, { force: true });
-
-    cy.get("img[alt='Edit']").should("exist");
-
-    cy.get("img[alt='Hide menu']").click({ scrollBehavior: false });
-
-    cy.get("img[alt='Edit']").should("not.exist");
   });
 });

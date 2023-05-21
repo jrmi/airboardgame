@@ -133,7 +133,7 @@ const SidePanel = ({
   React.useEffect(() => {
     setState((prev) => {
       if (prev === "closed" && open) return "opening";
-      if (prev === "open" && !open) return "closing";
+      if ((prev === "open" || prev === "opening") && !open) return "closing";
       return prev;
     });
   }, [open]);
@@ -170,7 +170,9 @@ const SidePanel = ({
         {title && <h2 className="side-panel__title">{title}</h2>}
         <button
           className="button clear icon-only side-panel__close"
-          onClick={() => canClose && onClose()}
+          onClick={() => {
+            canClose && onClose();
+          }}
         >
           <FiX size={42} alt={t("Close")} color="white" />
         </button>

@@ -65,13 +65,16 @@ const GameListItem = () => {
 
   return (
     <Game>
-      <Link to={"/game/"} className="img-wrapper">
+      <Link
+        to={"/game/"}
+        className="img-wrapper"
+        title={t("Create a new game")}
+      >
         <span>
           <FiPlusSquare
             color="#f9fbfa"
             size="120"
             alt={t("Create a new game")}
-            title={t("Create a new game")}
           />
         </span>
       </Link>
