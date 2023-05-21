@@ -3,6 +3,8 @@ import styled from "styled-components";
 
 import { getImage } from "../utils/image";
 
+const defaultSize = 50;
+
 const paint = async ({
   canvas,
   width: givenWidth,
@@ -17,36 +19,35 @@ const paint = async ({
 
     const firstImage = images.find((image) => image);
 
+    const firstImageDim = {};
+    firstImageDim.width = firstImage?.width || defaultSize;
+    firstImageDim.height = firstImage?.height || defaultSize;
+
     let width, height;
     let ratioWidth = 1,
       ratioHeight = 1;
 
     if (isNaN(givenWidth) && isNaN(givenHeight)) {
-      if (firstImage) {
-        width = firstImage.width;
-        height = firstImage.height;
-      } else {
-        width = 50;
-        height = 50;
-      }
+      width = firstImageDim.width;
+      height = firstImageDim.height;
     } else if (isNaN(givenWidth)) {
       // Height is set
       height = givenHeight;
-      ratioHeight = ratioWidth = givenHeight / firstImage.height;
-      width = ratioWidth * firstImage.width;
+      ratioHeight = ratioWidth = givenHeight / firstImageDim.height;
+      width = ratioWidth * firstImageDim.width;
     } else if (isNaN(givenHeight)) {
       width = givenWidth;
-      ratioWidth = ratioHeight = givenWidth / firstImage.width;
-      height = ratioHeight * firstImage.height;
+      ratioWidth = ratioHeight = givenWidth / firstImageDim.width;
+      height = ratioHeight * firstImageDim.height;
     } else {
-      ratioWidth = givenWidth / firstImage.width;
-      ratioHeight = givenHeight / firstImage.height;
-      width = firstImage.width * ratioWidth;
-      height = firstImage.height * ratioHeight;
+      ratioWidth = givenWidth / firstImageDim.width;
+      ratioHeight = givenHeight / firstImageDim.height;
+      width = firstImageDim.width * ratioWidth;
+      height = firstImageDim.height * ratioHeight;
     }
 
-    const originalHeigh = firstImage.height;
-    const originalWidth = firstImage.width;
+    const originalHeigh = firstImageDim.height;
+    const originalWidth = firstImageDim.width;
 
     canvas.width = originalWidth;
     canvas.height = originalHeigh;
@@ -109,13 +110,15 @@ const NoCanvas = ({ layers, width, height }) => {
 
   return (
     <div style={{ position: "relative" }}>
-      <ImageElm
-        src={firstImage.url}
-        alt=""
-        draggable={false}
-        width={width}
-        height={height}
-      />
+      {firstImage && (
+        <ImageElm
+          src={firstImage.url}
+          alt=""
+          draggable={false}
+          width={width}
+          height={height}
+        />
+      )}
       {rest.map(({ url, offsetX = 0, offsetY = 0 }) => {
         return (
           <ImageWrapper key={url}>

@@ -113,5 +113,9 @@ export const playAudio = (url, volume = 1) => {
   audioFiles[url].pause();
   audioFiles[url].currentTime = 0;
   audioFiles[url].volume = volume;
-  audioFiles[url].play();
+  try {
+    audioFiles[url].play();
+  } catch (e) {
+    console.log("Fail to play audio", e);
+  }
 };

@@ -325,7 +325,7 @@ const itemTemplates = {
     component: AdvancedImage,
     defaultActions: (item) => {
       let actions = ["stack", "shuffle", "clone", "lock", "remove"];
-      if (item.layers.length) {
+      if (item.layers?.length) {
         actions = ["nextImage"].concat(actions);
       }
       if (item.back) {
@@ -347,7 +347,7 @@ const itemTemplates = {
         "lock",
         "remove",
       ];
-      if (item.layers.length) {
+      if (item.layers?.length) {
         actions = [
           "prevImageForLayer",
           "nextImageForLayer",

@@ -122,7 +122,7 @@ const LayersForm = ({ value, onChange }) => {
   };
 
   const onLayerChange = (newLayerValue) => {
-    const newValue = value.map((layer) => {
+    const newValue = (value || []).map((layer) => {
       if (layer.uid === newLayerValue.uid) {
         return { ...layer, ...newLayerValue };
       }
@@ -207,7 +207,7 @@ const ImageForm = ({ initialValues }) => {
       </Label>
 
       <h3>{t("Layers")}</h3>
-      <Field name="layers" initialValue={initialValues.layers}>
+      <Field name="layers" initialValue={initialValues.layers || []}>
         {({ input: { value, onChange } }) => {
           return <LayersForm value={value} onChange={onChange} />;
         }}
