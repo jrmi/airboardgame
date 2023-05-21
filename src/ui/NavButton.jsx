@@ -45,18 +45,23 @@ const NavButton = ({
 
   let component;
   if (Icon) {
-    component = <Icon size={size} alt={alt} title={title} />;
+    component = <Icon size={size} alt={alt} />;
   } else {
     const iconSrc =
       icon.startsWith("http") || icon.startsWith("/")
         ? icon
         : `https://icongr.am/entypo/${icon}.svg?size=${size}&color=f9fbfa`;
 
-    component = <img src={iconSrc} alt={alt} title={title} width={size} />;
+    component = <img src={iconSrc} alt={alt} width={size} />;
   }
 
   return (
-    <StyledNavButton active={active} disabled={disabled} onClick={handleClick}>
+    <StyledNavButton
+      active={active}
+      disabled={disabled}
+      onClick={handleClick}
+      title={title}
+    >
       {component}
     </StyledNavButton>
   );

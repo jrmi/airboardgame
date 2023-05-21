@@ -1,4 +1,4 @@
-describe("Studio", () => {
+describe("Authentication", () => {
   beforeEach(() => {
     cy.viewport(1000, 600);
     cy.intercept(
@@ -28,7 +28,7 @@ describe("Studio", () => {
     );
 
     cy.contains("Log in").click();
-    cy.get(".side-panel input").type("test@fake.fr");
+    cy.get(".modal input").type("test@fake.fr");
 
     cy.contains("Ask an authentication link").click();
 
