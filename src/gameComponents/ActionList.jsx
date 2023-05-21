@@ -31,8 +31,7 @@ const StyledActionList = styled.div`
       justify-content: space-between;
     }
     & .action-form {
-      margin: 0.3em 0 0.2em 1em;
-      padding: 0.5em;
+      padding: 0.2em 0.5em;
       background-color: var(--bg-secondary-color);
     }
   }
