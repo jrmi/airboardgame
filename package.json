@@ -52,6 +52,7 @@
     "start": "npm run dev -- --open",
     "build": "vite build",
     "serve": "vite preview --open --port=5000",
+    "serve:ci": "vite preview --port=5000",
     "lint": "eslint src/",
     "prettier": "prettier --write src/",
     "check": "node ./checkConfig.mjs",

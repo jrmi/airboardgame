@@ -1,13 +1,13 @@
 name: End-to-end tests
 on:
   push:
-    branches: [ master ]
+    branches: [master]
   pull_request:
-    branches: [ master ]
+    branches: [master]
 jobs:
   cypress-run:
     runs-on: ubuntu-latest
-    steps:      
+    steps:
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
@@ -20,7 +20,7 @@ jobs:
         uses: cypress-io/github-action@v5
         with:
           build: npm run build
-          start: npm run serve
+          start: npm run serve:ci
           wait-on: http://localhost:5000
           config: baseUrl=http://localhost:5000
           browser: chrome
