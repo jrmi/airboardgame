@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { useTranslation } from "react-i18next";
+import * as Sentry from "@sentry/browser";
 
 import { FiEdit } from "react-icons/fi";
 
@@ -25,10 +26,31 @@ const EditItemButton = ({ showEdit, setShowEdit }) => {
   const selectedItems = useSelectedItems();
   const { batchUpdateItems } = useItemActions();
 
-  const currentItems = React.useMemo(
-    () => (items || []).filter(({ id }) => selectedItems?.includes(id)),
-    [items, selectedItems]
-  );
+  const currentItems = React.useMemo(() => {
+    try {
+      // FIXME why do we need to be so protective here
+      return items.filter(({ id }) => selectedItems.includes(id));
+    } catch (err) {
+      console.log("Fail to compute item list", err);
+      console.debug(
+        "Debug:",
+        typeof items,
+        JSON.parse(JSON.stringify(selectedItems))
+      );
+
+      try {
+        Sentry.captureException(err, {
+          typeItems: typeof items,
+          lastItems: items.slice(-4),
+          selectedItems,
+        });
+      } catch {
+        console.log("Sentry call failed");
+      }
+
+      return [];
+    }
+  }, [items, selectedItems]);
 
   const onSubmitHandler = React.useCallback(
     (formValues) => {
