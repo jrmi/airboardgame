@@ -274,7 +274,7 @@ export const useGameItemActions = () => {
             return { ...item, layers: newLayers };
           }
           default:
-            return itemTemplates;
+            return item;
         }
       };
 
@@ -301,18 +301,18 @@ export const useGameItemActions = () => {
     async (itemIds, { step = 1, layer: layerToUpdate = 0 }) => {
       const [ids] = await getItemListOrSelected(itemIds);
 
-      const stepItem = (item) => {
-        const { value = 0, images } = item;
+      const stepItem = (item, max) => {
+        const { value = 0 } = item;
         if (step > 0) {
           return {
             ...item,
-            value: (value + step) % images.length,
+            value: (value + step) % max,
           };
         } else {
           const newValue = value + step;
           return {
             ...item,
-            value: newValue >= 0 ? newValue : images.length + newValue,
+            value: newValue >= 0 ? newValue : max + newValue,
           };
         }
       };
@@ -320,10 +320,10 @@ export const useGameItemActions = () => {
       batchUpdateItems(ids, (item) => {
         switch (item.type) {
           case "dice":
-            return item.side || 6;
+            return stepItem(item, item.side || 6);
           case "diceImage":
           case "imageSequence":
-            return stepItem(item);
+            return stepItem(item, item.images.length);
           case "advancedImage":
             return {
               ...item,
@@ -334,6 +334,8 @@ export const useGameItemActions = () => {
                 return layer;
               }),
             };
+          default:
+            return item;
         }
       });
     },

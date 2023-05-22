@@ -3,7 +3,7 @@ import { useItems, useBoardConfig, useMessage } from "react-sync-board";
 import useTimeout from "../hooks/useTimeout";
 import useSession from "../hooks/useSession";
 
-const GRACE_DELAY = import.meta.env.VITE_CI === "1" ? 100 : 5000;
+const GRACE_DELAY = import.meta.env.VITE_CI === "1" ? 100 : 3000;
 
 export const AutoSaveSession = () => {
   const { saveSession, getSession } = useSession();
