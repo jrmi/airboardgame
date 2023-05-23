@@ -53,7 +53,7 @@ const MediaLibraryModal = ({ show, setShow, onSelect }) => {
 
   const currentLibrary = libraries.find(({ id }) => id === tab);
 
-  const { isLoading, data = [] } = useQuery(
+  const { isLoading, data = [], isError } = useQuery(
     `media__${tab}`,
     () => getLibraryMedia(currentLibrary),
     {
@@ -169,7 +169,7 @@ const MediaLibraryModal = ({ show, setShow, onSelect }) => {
                   </>
                 )}
                 <h3>{name}</h3>
-                {!isLoading && (
+                {!isLoading && !isError && (
                   <ImageGrid>
                     {data.map((key) => (
                       <div key={key}>
