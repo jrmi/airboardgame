@@ -349,5 +349,7 @@
   "To edit an item, click on it and then click on the pen icon at the bottom of the screen.\n\n": "Pour modifier un élément, cliquez dessus, puis sur l'icône du stylo en bas de l'écran.\n\n",
   "You can configure the game title and other settings by clicking on the gear icon in the left sidebar. From there, you can also choose to make your game public.\n\n": "Vous pouvez configurer le titre du jeu et d'autres paramètres en cliquant sur l'icône de roue dentée dans la barre latérale gauche. À partir de là, vous pouvez également choisir de rendre votre jeu public.\n\n",
   "Don't forget to save your game using the save button located in the middle of the left sidebar.\n\n": "N'oubliez pas de sauvegarder votre jeu en utilisant le bouton de sauvegarde situé au milieu de la barre latérale gauche.\n\n",
-  "Have fun exploring the possibilities and enjoy the process of game creation!": "Amusez-vous à explorer les possibilités !"
+  "Have fun exploring the possibilities and enjoy the process of game creation!": "Amusez-vous à explorer les possibilités !",
+  "Login failed. Please try again.": "Échec de l'authentification, veuillez réessayer...",
+  "Home": "Accueil"
 }
