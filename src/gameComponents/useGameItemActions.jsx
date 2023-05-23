@@ -302,7 +302,12 @@ export const useGameItemActions = () => {
       const [ids] = await getItemListOrSelected(itemIds);
 
       const stepItem = (item, max) => {
-        const { value = 0 } = item;
+        let { value } = item;
+
+        if (isNaN(value)) {
+          value = 0;
+        }
+
         if (step > 0) {
           return {
             ...item,
@@ -329,7 +334,7 @@ export const useGameItemActions = () => {
               ...item,
               layers: item.layers.map((layer, index) => {
                 if (index === layerToUpdate) {
-                  return stepItem(layer);
+                  return stepItem(layer, layer.images.length);
                 }
                 return layer;
               }),
