@@ -1,6 +1,6 @@
 {
   "name": "airboardgame",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "private": false,
   "dependencies": {
     "@color2k/compat": "^1.0.0-rc.5",
