@@ -105,10 +105,6 @@ const Modal = ({
   const modalRef = React.useRef();
   const { t } = useTranslation();
 
-  const [bindTo] = React.useState(() =>
-    document.getElementById("modal-container")
-  );
-
   const [state, setState] = React.useState("closed");
 
   const onAnimationEnd = React.useCallback(() => {
@@ -134,6 +130,8 @@ const Modal = ({
       document.getElementById("root").classList.remove("blurry");
     }
   }, [show]);
+
+  const bindTo = document.getElementById("modal-container");
 
   if (!bindTo || (state === "closed" && !show)) {
     return null;
