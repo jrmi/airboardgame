@@ -164,7 +164,32 @@ const fetchGame = async (url) => {
   const result = await fetch(url, {
     credentials: "include",
   });
+
+  if (result.status === 404) {
+    throw new Error("Game not found");
+  }
+  if (result.status === 403) {
+    throw new Error("Forbidden");
+  }
+  if (result.status >= 300) {
+    throw new Error("Server error");
+  }
+
   return await result.json();
+};
+
+const fixGame = (game) => {
+  // Add id if missing
+  game.items = game.items.map((item) => ({
+    id: uid(),
+    ...item,
+  }));
+
+  game.availableItems = game.availableItems.map((item) => ({
+    id: uid(),
+    ...item,
+  }));
+  return game;
 };
 
 export const getGame = async (gameId) => {
@@ -186,24 +211,29 @@ export const getGame = async (gameId) => {
       game = await fetchGame(`${gameURI}/${gameId}`);
   }
 
-  // Add id if missing
-  game.items = game.items.map((item) => ({
-    id: uid(),
-    ...item,
-  }));
-
-  game.availableItems = game.availableItems.map((item) => ({
-    id: uid(),
-    ...item,
-  }));
-
-  return game;
+  return fixGame(game);
 };
 
 export const createGame = async (data) => {
   const newGameId = uid();
   const result = await updateGame(newGameId, data);
   return result;
+};
+
+export const getOrCreateGame = async (gameId, defaultData) => {
+  const result = await fetch(`${gameURI}/${gameId}`, {
+    credentials: "include",
+  });
+  if (result.status === 404) {
+    return fixGame(await updateGame(gameId, defaultData));
+  }
+  if (result.status === 403) {
+    throw new Error("Forbidden");
+  }
+  if (result.status >= 300) {
+    throw new Error("Server error");
+  }
+  return fixGame(await result.json());
 };
 
 export const updateGame = async (gameId, data) => {

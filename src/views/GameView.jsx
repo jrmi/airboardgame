@@ -9,7 +9,7 @@ import { itemTemplates, itemLibrary, premadeItems } from "../gameComponents";
 import Waiter from "../ui/Waiter";
 
 import BoardView from "./BoardView";
-import { getGame, updateGame } from "../utils/api";
+import { getOrCreateGame } from "../utils/api";
 import { uid } from "../utils";
 
 import useGame, { GameProvider } from "../hooks/useGame";
@@ -48,6 +48,43 @@ const adaptItems = (nodes) => {
   });
 };
 
+const newGameData = (translate) => ({
+  items: [
+    {
+      label: translate("Welcome to AirBoardGame Studio!"),
+      type: "note",
+      value:
+        translate(
+          "To add new items, click on the plus button located on the left sidebar.\n\n"
+        ) +
+        translate(
+          "To edit an item, click on it and then click on the pen icon at the bottom of the screen.\n\n"
+        ) +
+        translate(
+          "You can configure the game title and other settings by clicking on the gear icon in the left sidebar. From there, you can also choose to make your game public.\n\n"
+        ) +
+        translate(
+          "Don't forget to save your game using the save button located in the middle of the left sidebar.\n\n"
+        ) +
+        translate(
+          "Have fun exploring the possibilities and enjoy the process of game creation!"
+        ),
+      x: 0,
+      y: 0,
+      width: 400,
+      height: 500,
+    },
+  ],
+  availableItems: [],
+  board: {
+    size: 2000,
+    scale: 1,
+    imageUrl: "/game_assets/default.png",
+    neverSaved: true,
+    defaultName: translate("New game"),
+  },
+});
+
 export const GameView = () => {
   const [gameLoaded, setGameLoaded] = React.useState(false);
   const { setGame, gameId, availableItems } = useGame();
@@ -60,17 +97,13 @@ export const GameView = () => {
     async (isMounted) => {
       if (!gameLoaded && !gameLoadingRef.current) {
         gameLoadingRef.current = true;
-        try {
-          // Load game from server
-          const gameData = await getGame(gameId);
+        // Load game from server
+        const gameData = await getOrCreateGame(gameId, newGameData(t));
 
-          if (!isMounted) return;
+        if (!isMounted) return;
 
-          setGame(gameData);
-          setGameLoaded(true);
-        } catch (e) {
-          console.log(e);
-        }
+        setGame(gameData);
+        setGameLoaded(true);
       }
     },
     [gameLoaded]
@@ -126,56 +159,17 @@ export const GameView = () => {
   );
 };
 
-const newGameData = (t) => ({
-  items: [
-    {
-      label: t("Welcome to AirBoardGame Studio!"),
-      type: "note",
-      value:
-        t(
-          "To add new items, click on the plus button located on the left sidebar.\n\n"
-        ) +
-        t(
-          "To edit an item, click on it and then click on the pen icon at the bottom of the screen.\n\n"
-        ) +
-        t(
-          "You can configure the game title and other settings by clicking on the gear icon in the left sidebar. From there, you can also choose to make your game public.\n\n"
-        ) +
-        t(
-          "Don't forget to save your game using the save button located in the middle of the left sidebar.\n\n"
-        ) +
-        t(
-          "Have fun exploring the possibilities and enjoy the process of game creation!"
-        ),
-      x: 0,
-      y: 0,
-      width: 400,
-      height: 500,
-    },
-  ],
-  availableItems: [],
-  board: { size: 2000, scale: 1, imageUrl: "/game_assets/default.png" },
-});
-
 const ConnectedGameView = ({ gameId }) => {
   const socket = useSocket();
   const [sessionId] = React.useState(uid());
   const navigate = useNavigate();
 
-  const { t } = useTranslation();
-
   React.useEffect(() => {
     if (!gameId) {
-      const createGame = async () => {
-        const newGameId = uid();
-        const gameData = newGameData(t);
-        gameData.board.defaultName = t("New game");
-        await updateGame(newGameId, gameData);
-        navigate(`/game/${newGameId}/`);
-      };
-      createGame();
+      const newGameId = uid();
+      navigate(`/game/${newGameId}/`);
     }
-  }, [gameId, navigate, t]);
+  }, [gameId, navigate]);
 
   if (!gameId) {
     return <Waiter />;

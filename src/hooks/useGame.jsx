@@ -36,6 +36,7 @@ export const GameProvider = ({ gameId, game, children }) => {
 
   const saveGame = React.useCallback(async () => {
     const currentGame = await getCurrentGame();
+    delete currentGame.neverSaved;
     return updateGame(gameId, currentGame);
   }, [gameId, getCurrentGame]);
 
