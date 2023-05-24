@@ -1,3 +1,11 @@
+/* global cy */
+
+const newGameData = () => ({
+  items: [],
+  availableItems: [],
+  board: { size: 2000, scale: 1, imageUrl: "/game_assets/default.png" },
+});
+
 describe("Studio", () => {
   beforeEach(() => {
     cy.viewport(1000, 600);
@@ -15,7 +23,6 @@ describe("Studio", () => {
         method: "GET",
         url: "/airboardgame/store/game*",
       },
-      // eslint-disable-next-line quotes
       "[]"
     );
 
@@ -32,6 +39,24 @@ describe("Studio", () => {
   });
 
   it("Can access new game creation", () => {
+    cy.intercept(
+      {
+        method: "POST",
+        url: "/airboardgame/store/game/*",
+      },
+      (req) => {
+        req.reply(req.body);
+      }
+    );
+    cy.intercept(
+      {
+        method: "GET",
+        url: "/airboardgame/store/game/*",
+      },
+      (req) => {
+        req.reply(newGameData());
+      }
+    );
     cy.get("[title^='Add a game']").click();
     cy.get(".board-pane").should(
       "have.css",
@@ -41,6 +66,26 @@ describe("Studio", () => {
   });
 
   it("Can create empty game", () => {
+    cy.intercept(
+      {
+        method: "POST",
+        url: "/airboardgame/store/game/*",
+      },
+      // eslint-disable-next-line quotes
+      (req) => {
+        req.reply(req.body);
+      }
+    );
+    cy.intercept(
+      {
+        method: "GET",
+        url: "/airboardgame/store/game/*",
+      },
+      (req) => {
+        req.reply(newGameData());
+      }
+    );
+
     cy.get("[title^='Add a game']").click();
     cy.get(".board-pane").should(
       "have.css",
@@ -54,7 +99,6 @@ describe("Studio", () => {
         method: "POST",
         url: "/airboardgame/store/game/*",
       },
-      // eslint-disable-next-line quotes
       (req) => {
         expect(req.body.items.length).to.equal(0);
         req.reply(req.body);
@@ -66,6 +110,25 @@ describe("Studio", () => {
   });
 
   it("Can create basic game", () => {
+    cy.intercept(
+      {
+        method: "POST",
+        url: "/airboardgame/store/game/*",
+      },
+      (req) => {
+        req.reply(req.body);
+      }
+    );
+    cy.intercept(
+      {
+        method: "GET",
+        url: "/airboardgame/store/game/*",
+      },
+      (req) => {
+        req.reply(newGameData());
+      }
+    );
+
     cy.get("[title^='Add a game']").click();
     cy.get(".board-pane").should(
       "have.css",
@@ -83,7 +146,6 @@ describe("Studio", () => {
         method: "POST",
         url: "/airboardgame/store/game/*",
       },
-      // eslint-disable-next-line quotes
       (req) => {
         expect(req.body.items.length).to.equal(1);
         expect(req.body.items[0].type).to.equal("rect");
@@ -96,6 +158,25 @@ describe("Studio", () => {
   });
 
   it("Can edit game properties", () => {
+    cy.intercept(
+      {
+        method: "POST",
+        url: "/airboardgame/store/game/*",
+      },
+      (req) => {
+        req.reply(req.body);
+      }
+    );
+    cy.intercept(
+      {
+        method: "GET",
+        url: "/airboardgame/store/game/*",
+      },
+      (req) => {
+        req.reply(newGameData());
+      }
+    );
+
     cy.get("[title^='Add a game']").click({ force: true });
     cy.get(".board-pane").should(
       "have.css",
@@ -126,6 +207,25 @@ describe("Studio", () => {
 
   describe("Item edition", () => {
     beforeEach(() => {
+      cy.intercept(
+        {
+          method: "POST",
+          url: "/airboardgame/store/game/*",
+        },
+        (req) => {
+          req.reply(req.body);
+        }
+      );
+      cy.intercept(
+        {
+          method: "GET",
+          url: "/airboardgame/store/game/*",
+        },
+        (req) => {
+          req.reply(newGameData());
+        }
+      );
+
       cy.get("[title^='Add a game']").click({ force: true });
       cy.get(".board-pane").should(
         "have.css",
