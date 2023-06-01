@@ -1,7 +1,8 @@
 import React, { memo, useEffect } from "react";
 import styled, { css } from "styled-components";
 import { lighten } from "color2k";
-import { randInt } from "../utils";
+
+import { randInt } from "../../utils";
 
 const NotePane = styled.div`
   ${({ color, fontSize, textColor, width, height, fontFamily, rotate }) => css`
@@ -70,7 +71,7 @@ const Note = ({
   label = "",
   textColor = "#000",
   fontFamily = "Roboto",
-  fontSize = "20",
+  fontSize = 20,
   width = 300,
   height = 200,
   setState,

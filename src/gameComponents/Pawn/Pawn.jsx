@@ -1,6 +1,7 @@
 import React from "react";
 import { darken } from "color2k";
-import { uid } from "../utils";
+
+import { uid } from "../../utils";
 
 function Pawn({ size = 50, color = "#b3b3b3" }) {
   const ind = uid();

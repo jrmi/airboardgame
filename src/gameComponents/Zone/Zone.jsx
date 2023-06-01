@@ -4,17 +4,11 @@ import styled, { css } from "styled-components";
 import { useItemInteraction } from "react-sync-board";
 import { opacify } from "color2k";
 
-import { isItemInsideElement, getItemElement } from "../utils";
-import useGameItemActions from "./useGameItemActions";
+import { isItemInsideElement, getItemElement } from "../../utils";
+import useGameItemActions from "../useGameItemActions";
 
 const ZoneWrapper = styled.div`
-  ${({
-    width = 200,
-    height = 200,
-    borderColor = "#cccccc33",
-    borderStyle = "dotted",
-    backgroundColor = "transparent",
-  }) => css`
+  ${({ width, height, borderColor, borderStyle, backgroundColor }) => css`
     width: ${width}px;
     height: ${height}px;
     border: 0.5em ${borderStyle} ${borderColor};
@@ -48,14 +42,14 @@ const ZoneWrapper = styled.div`
 `;
 
 const Zone = ({
-  width,
-  height,
+  width = 200,
+  height = 200,
+  borderColor = "#cccccc33",
+  borderStyle = "dotted",
+  backgroundColor = "transparent",
+  labelPosition = "left",
   label,
   onItem,
-  borderColor,
-  borderStyle,
-  backgroundColor,
-  labelPosition = "left",
 }) => {
   const { register } = useItemInteraction("place");
   const zoneRef = React.useRef(null);

@@ -1,11 +1,11 @@
 import React, { memo } from "react";
 import { useUsers } from "react-sync-board";
 import styled from "styled-components";
-import { media2Url } from "../mediaLibrary";
-
+import { media2Url } from "../../mediaLibrary";
 import { FiEye } from "react-icons/fi";
-import Canvas from "./Canvas";
-import { getImage } from "../utils/image";
+
+import Canvas from "../Canvas";
+import { getImage } from "../../utils/image";
 
 const UnflippedFor = styled.div`
   position: absolute;
@@ -30,52 +30,37 @@ const UnflippedForUser = styled.div`
   margin: 4px;
 `;
 
-const Label = styled.div`
-  position: absolute;
-  top: 1px;
-  right: 1px;
-  padding: 0 3px;
-  background-color: black;
-  color: white;
-  border-radius: 0.5em;
-  opacity: 0.5;
-  font-size: 0.6em;
-  line-height: 1.5em;
-`;
-
 const Wrapper = styled.div`
   user-select: none;
   position: relative;
   line-height: 0em;
 `;
 
-// See https://stackoverflow.com/questions/3680429/click-through-div-to-underlying-elements
-// https://developer.mozilla.org/fr/docs/Web/CSS/pointer-events
-const Image = ({
+/*
+
+const layer={
+  name: 'ttt',
+  images: {...}
+  side: "front"|"back"|"both"
+  offset: {x, y}
+  uid: ''
+}
+
+*/
+
+const AdvancedImage = ({
   width,
   height,
-  content = "/default.png",
-  backContent: rawBackContent,
+  front,
+  back,
   flipped = false,
   unflippedFor,
-  text,
-  backText,
-  overlay,
+  layers,
 }) => {
   const { currentUser, localUsers: users } = useUsers();
 
-  const imageContent = media2Url(content) || "/default.png";
-  const backContent = media2Url(rawBackContent);
-  const overlayContent = media2Url(overlay?.content);
-
-  const size = {};
-
-  if (width) {
-    size.width = width;
-  }
-  if (height) {
-    size.height = height;
-  }
+  const frontUrl = media2Url(front);
+  const backUrl = media2Url(back);
 
   const unflippedForUsers = React.useMemo(() => {
     if (Array.isArray(unflippedFor)) {
@@ -87,32 +72,40 @@ const Image = ({
   }, [unflippedFor, users]);
 
   const flippedForMe =
-    backContent &&
+    backUrl &&
     flipped &&
     (!Array.isArray(unflippedFor) || !unflippedFor.includes(currentUser.uid));
 
-  const flippable = Boolean(backContent);
+  const flippable = Boolean(backUrl);
 
-  const layers = React.useMemo(() => {
+  const canvasLayers = React.useMemo(() => {
     const result = [];
-    if (!flippedForMe) {
-      result.push({ url: imageContent });
+    if (flippedForMe) {
+      result.push({ url: backUrl });
     } else {
-      result.push({ url: backContent });
+      result.push({ url: frontUrl });
     }
-    if (overlayContent) {
-      result.push({ url: overlayContent });
-    }
+    layers?.forEach(({ value = 0, images, side, offsetX = 0, offsetY = 0 }) => {
+      if (
+        side === "both" ||
+        (side === "front" && !flippedForMe) ||
+        (side === "back" && flippedForMe)
+      ) {
+        const currentImage = images[value];
+        const url = media2Url(currentImage);
+        result.push({ url, offsetX, offsetY });
+      }
+    });
     return result;
-  }, [backContent, flippedForMe, imageContent, overlayContent]);
+  }, [backUrl, flippedForMe, frontUrl, layers]);
 
   React.useEffect(() => {
     // preload images
-    getImage(imageContent);
-    if (backContent) {
-      getImage(backContent);
+    getImage(frontUrl);
+    if (backUrl) {
+      getImage(backUrl);
     }
-  }, [imageContent, backContent]);
+  }, [frontUrl, backUrl]);
 
   return (
     <Wrapper
@@ -125,23 +118,24 @@ const Image = ({
         e.target.classList.remove("hovered");
       }}
     >
-      <Canvas layers={layers} width={width} height={height} />
-
-      {flippedForMe && backText && <Label>{backText}</Label>}
-      {(!flippedForMe || !backText) && text && <Label>{text}</Label>}
-      {unflippedForUsers && (
-        <UnflippedFor>
-          {unflippedForUsers.map(({ color, id }) => {
+      <Canvas
+        layers={canvasLayers}
+        width={width}
+        height={height}
+        useCanvas={true}
+      />
+      <UnflippedFor>
+        {unflippedForUsers &&
+          unflippedForUsers.map(({ color, id }) => {
             return (
               <UnflippedForUser key={id} color={color}>
                 <FiEye color="white" size="16" />
               </UnflippedForUser>
             );
           })}
-        </UnflippedFor>
-      )}
+      </UnflippedFor>
     </Wrapper>
   );
 };
 
-export default memo(Image);
+export default memo(AdvancedImage);

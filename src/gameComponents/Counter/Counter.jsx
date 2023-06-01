@@ -48,7 +48,7 @@ const Counter = ({
   color = "#CCC",
   label = "",
   textColor = "#000",
-  fontSize = "22",
+  fontSize = 22,
   setState,
 }) => {
   const setValue = (e) => {

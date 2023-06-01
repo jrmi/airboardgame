@@ -10,9 +10,9 @@ import {
 } from "react-sync-board";
 import useAsyncEffect from "use-async-effect";
 
-import { getItemElement, fastItemIntersect } from "../utils";
-import useGameItemActions from "./useGameItemActions";
-import useGlobalConf from "../hooks/useGlobalConf";
+import { getItemElement, fastItemIntersect } from "../../utils";
+import useGameItemActions from "../useGameItemActions";
+import useGlobalConf from "../../hooks/useGlobalConf";
 
 const StyledAnchor = styled.div`
   ${({ highlight, editMode, color }) => css`
