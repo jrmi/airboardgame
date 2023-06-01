@@ -2,11 +2,11 @@ import React, { memo } from "react";
 import styled, { css } from "styled-components";
 import { useItemActions, useItemInteraction, useUsers } from "react-sync-board";
 import { FiMove } from "react-icons/fi";
-
-import { uid, getItemElement } from "../utils";
-import itemTemplates from "./itemTemplates";
 import { useTranslation } from "react-i18next";
 import debounce from "lodash.debounce";
+
+import { uid, getItemElement } from "../../utils";
+import itemTemplates from "../itemTemplates";
 
 const StyledShape = styled.div`
   ${({ color }) => css`

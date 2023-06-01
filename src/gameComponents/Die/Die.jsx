@@ -2,7 +2,7 @@ import React, { memo } from "react";
 import styled, { css } from "styled-components";
 import { useTranslation } from "react-i18next";
 
-import useGameItemActions from "./useGameItemActions";
+import useGameItemActions from "../useGameItemActions";
 
 const DicePane = styled.div`
   ${({ color }) => css`

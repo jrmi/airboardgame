@@ -26,7 +26,7 @@ const Rect = ({
   flipped = false,
   text = "",
   textColor = "#000",
-  fontSize = "16",
+  fontSize = 16,
 }) => {
   return (
     <StyledShape

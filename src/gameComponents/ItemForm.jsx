@@ -105,6 +105,19 @@ const ItemForm = ({ items, types, extraExcludeFields }) => {
     );
   }, [items]);
 
+  const {
+    locked = false,
+    rotation = 0,
+    layer = 0,
+    groupId = "",
+    grid: {
+      type: gridType = "",
+      size: gridSize = 1,
+      offset: { x: gridOffsetX = 0, gridOffsetY = 0 } = {},
+    } = {},
+    actions = [],
+  } = initialValues;
+
   return (
     <>
       {!excludeFields.locked && (
@@ -113,7 +126,7 @@ const ItemForm = ({ items, types, extraExcludeFields }) => {
             name="locked"
             component="input"
             type="checkbox"
-            initialValue={initialValues.locked}
+            initialValue={locked}
           />
           <span className="checkable">{t("Locked?")}</span>
           <Hint>{t("Lock action help")}</Hint>
@@ -122,7 +135,7 @@ const ItemForm = ({ items, types, extraExcludeFields }) => {
       {!excludeFields.rotation && (
         <Label>
           {t("Rotation")}
-          <Field name="rotation" initialValue={initialValues.rotation}>
+          <Field name="rotation" initialValue={rotation}>
             {({ input: { onChange, value } }) => {
               return (
                 <Slider
@@ -154,7 +167,7 @@ const ItemForm = ({ items, types, extraExcludeFields }) => {
       {!excludeFields.layer && (
         <Label>
           {t("Layer")}
-          <Field name="layer" initialValue={initialValues.layer}>
+          <Field name="layer" initialValue={layer}>
             {({ input: { onChange, value } }) => {
               return (
                 <Slider
@@ -184,11 +197,7 @@ const ItemForm = ({ items, types, extraExcludeFields }) => {
       {!excludeFields.family && (
         <Label>
           {t("Family")}
-          <Field
-            name="groupId"
-            component="input"
-            initialValue={initialValues.groupId || ""}
-          />
+          <Field name="groupId" component="input" initialValue={groupId} />
           <Hint>
             {t(
               "Optional - Use the same family name for items that are part of the same set."
@@ -202,11 +211,7 @@ const ItemForm = ({ items, types, extraExcludeFields }) => {
           <h3>{t("Snap to grid")}</h3>
           <Label>
             {t("Grid type")}
-            <Field
-              name="grid.type"
-              initialValue={initialValues.grid?.type}
-              component="select"
-            >
+            <Field name="grid.type" initialValue={gridType} component="select">
               <option value="none">{t("None")}</option>
               <option value="grid">{t("Grid")}</option>
               <option value="hexH">{t("Horizontal hexagons")}</option>
@@ -216,11 +221,7 @@ const ItemForm = ({ items, types, extraExcludeFields }) => {
           <div style={{ display: "flex", gap: "10px", alignItems: "flex-end" }}>
             <Label>
               {t("Size")}
-              <Field
-                name="grid.size"
-                component="input"
-                initialValue={initialValues.grid?.size}
-              >
+              <Field name="grid.size" component="input" initialValue={gridSize}>
                 {(props) => <input {...props.input} type="number" />}
               </Field>
             </Label>
@@ -230,7 +231,7 @@ const ItemForm = ({ items, types, extraExcludeFields }) => {
                 name="grid.offset.x"
                 component="input"
                 parse={toInt}
-                initialValue={initialValues.grid?.offset?.x || 0}
+                initialValue={gridOffsetX}
               >
                 {(props) => <input {...props.input} type="number" />}
               </Field>
@@ -241,7 +242,7 @@ const ItemForm = ({ items, types, extraExcludeFields }) => {
                 name="grid.offset.y"
                 component="input"
                 parse={toInt}
-                initialValue={initialValues.grid?.offset?.y || 0}
+                initialValue={gridOffsetY}
               >
                 {(props) => <input {...props.input} type="number" />}
               </Field>
@@ -255,7 +256,7 @@ const ItemForm = ({ items, types, extraExcludeFields }) => {
 
           <ActionList
             name="actions"
-            initialValue={initialValues.actions || []}
+            initialValue={actions}
             availableActions={availableActions}
           />
         </>

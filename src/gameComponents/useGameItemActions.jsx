@@ -13,10 +13,10 @@ import {
 } from "../utils";
 
 import itemTemplates from "./itemTemplates";
-import ActionRotateForm from "./forms/ActionRotateForm";
-import ActionRandomlyRotateForm from "./forms/ActionRandomlyRotateForm";
-import ActionRollLayerForm from "./forms/ActionRollLayerForm";
-import ActionChangeImageLayerForm from "./forms/ActionChangeImageLayerForm";
+import ActionRotateForm from "./actionForms/ActionRotateForm";
+import ActionRandomlyRotateForm from "./actionForms/ActionRandomlyRotateForm";
+import ActionRollLayerForm from "./actionForms/ActionRollLayerForm";
+import ActionChangeImageLayerForm from "./actionForms/ActionChangeImageLayerForm";
 
 import stackToCenterIcon from "../media/images/stackToCenter.svg";
 import stackToTopLeftIcon from "../media/images/stackToTopLeft.svg";
@@ -25,6 +25,7 @@ import alignAsSquareIcon from "../media/images/alignAsSquare.svg";
 import flipIcon from "../media/images/flip.svg";
 import shuffleIcon from "../media/images/shuffle.svg";
 import tapIcon from "../media/images/tap.svg";
+
 import { GiRollingDices } from "react-icons/gi";
 import {
   FiPlusCircle,

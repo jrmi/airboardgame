@@ -1,9 +1,8 @@
 import React, { memo } from "react";
-import styled from "styled-components";
 import { useItemInteraction } from "react-sync-board";
-import { media2Url } from "../mediaLibrary";
-import useGameItemActions from "./useGameItemActions";
-import Canvas from "./Canvas";
+import { media2Url } from "../../mediaLibrary";
+import useGameItemActions from "../useGameItemActions";
+import Canvas from "../Canvas";
 
 const Dice = ({
   id,

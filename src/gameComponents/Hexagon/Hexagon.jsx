@@ -2,7 +2,7 @@ import React, { memo } from "react";
 import styled, { css } from "styled-components";
 
 const StyledHexagon = styled.div`
-  ${({ size = 50, vertical }) => css`
+  ${({ size, vertical }) => css`
     width: ${vertical ? 0.866025 * size : size}px;
     height: ${vertical ? size : 0.866025 * size}px;
     display: flex;
@@ -28,7 +28,7 @@ const StyledHexagon = styled.div`
 `;
 
 const Hexagon = ({
-  size,
+  size = 50,
   color = "#ccc",
   flippedColor = "#ccc",
   flipped = false,

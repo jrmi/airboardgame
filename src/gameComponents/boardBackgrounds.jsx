@@ -29,19 +29,25 @@ const ColorBgForm = ({ value, onChange }) => {
   const onSecondaryColorChange = (clr) => {
     onChange({ ...value, color: clr });
   };
+
+  const valueWithDefault = Object.assign(
+    {
+      color: defaultBgColor,
+      secondaryColor: defaultSecondaryColor,
+    },
+    value
+  );
+
   return (
     <>
       <label>
         {t("Color")}
-        <ColorPicker
-          value={value.color || defaultBgColor}
-          onChange={onColorChange}
-        />
+        <ColorPicker value={valueWithDefault.color} onChange={onColorChange} />
       </label>
       <label>
         {t("Secondary color")}
         <ColorPicker
-          value={value.secondaryColor || defaultSecondaryColor}
+          value={valueWithDefault.secondaryColor}
           disableAlpha={false}
           onChange={onSecondaryColorChange}
         />
@@ -64,41 +70,51 @@ const GridBgForm = ({ value, onChange }) => {
   const onLineWidthChange = (event) => {
     let lineWidth = parseInt(event.target.value, 10);
     if (isNaN(lineWidth)) {
-      lineWidth = 1;
-    }
-    if (lineWidth < 1) {
-      lineWidth = 1;
-    }
-    if (lineWidth > 200) {
-      lineWidth = 200;
+      lineWidth = null;
+    } else {
+      if (lineWidth < 1) {
+        lineWidth = 1;
+      }
+      if (lineWidth > 200) {
+        lineWidth = 200;
+      }
     }
     onChange({ ...value, thickness: lineWidth });
   };
 
   const onGridSizeChange = (event) => {
     let gridSize = parseInt(event.target.value, 10);
+    console.log(gridSize, event.target.value);
     if (isNaN(gridSize)) {
-      gridSize = 1;
-    }
-    if (gridSize < 1) {
-      gridSize = 1;
+      gridSize = null;
+    } else {
+      if (gridSize < 1) {
+        gridSize = 1;
+      }
     }
     onChange({ ...value, size: gridSize });
   };
+
+  const valueWithDefault = Object.assign(
+    {
+      size: 200,
+      thickness: 4,
+      color: defaultBgColor,
+      secondaryColor: defaultSecondaryColor,
+    },
+    value
+  );
 
   return (
     <>
       <label>
         {t("Bg color")}
-        <ColorPicker
-          value={value.color || defaultBgColor}
-          onChange={onColorChange}
-        />
+        <ColorPicker value={valueWithDefault.color} onChange={onColorChange} />
       </label>
       <label>
         {t("Line color")}
         <ColorPicker
-          value={value.secondaryColor || defaultSecondaryColor}
+          value={valueWithDefault.secondaryColor}
           disableAlpha={false}
           onChange={onLineColorChange}
         />
@@ -107,7 +123,7 @@ const GridBgForm = ({ value, onChange }) => {
         {t("Grid size")}
         <input
           type="number"
-          value={value.size || 200}
+          value={valueWithDefault.size}
           onChange={onGridSizeChange}
         />
       </label>
@@ -115,7 +131,7 @@ const GridBgForm = ({ value, onChange }) => {
         {t("Line thickness")}
         <input
           type="number"
-          value={value.thickness || 4}
+          value={valueWithDefault.thickness}
           onChange={onLineWidthChange}
         />
       </label>
@@ -137,9 +153,8 @@ const DotBgForm = ({ value, onChange }) => {
   const onDotSizeChange = (event) => {
     let dotSize = parseInt(event.target.value, 10);
     if (isNaN(dotSize)) {
-      dotSize = 1;
-    }
-    if (dotSize < 1) {
+      dotSize = null;
+    } else if (dotSize < 1) {
       dotSize = 1;
     }
     onChange({ ...value, secondarySize: dotSize });
@@ -148,27 +163,33 @@ const DotBgForm = ({ value, onChange }) => {
   const onDotDistanceChange = (event) => {
     let dotDistance = parseInt(event.target.value, 10);
     if (isNaN(dotDistance)) {
-      dotDistance = 1;
-    }
-    if (dotDistance < 1) {
+      dotDistance = null;
+    } else if (dotDistance < 1) {
       dotDistance = 1;
     }
     onChange({ ...value, size: dotDistance });
   };
 
+  const valueWithDefault = Object.assign(
+    {
+      color: defaultBgColor,
+      secondaryColor: defaultSecondaryColor,
+      size: 200,
+      secondarySize: 100,
+    },
+    value
+  );
+
   return (
     <>
       <label>
         {t("Bg color")}
-        <ColorPicker
-          value={value.color || defaultBgColor}
-          onChange={onColorChange}
-        />
+        <ColorPicker value={valueWithDefault.color} onChange={onColorChange} />
       </label>
       <label>
         {t("Dot color")}
         <ColorPicker
-          value={value.secondaryColor || defaultSecondaryColor}
+          value={valueWithDefault.secondaryColor}
           disableAlpha={false}
           onChange={onDotColorChange}
         />
@@ -177,7 +198,7 @@ const DotBgForm = ({ value, onChange }) => {
         {t("Dot distance")}
         <input
           type="number"
-          value={value.size || 200}
+          value={valueWithDefault.size}
           onChange={onDotDistanceChange}
         />
       </label>
@@ -185,7 +206,7 @@ const DotBgForm = ({ value, onChange }) => {
         {t("Dot size")}
         <input
           type="number"
-          value={value.secondarySize || 100}
+          value={valueWithDefault.secondarySize}
           onChange={onDotSizeChange}
         />
       </label>
@@ -207,9 +228,8 @@ const SquareBgForm = ({ value, onChange }) => {
   const onSquareSizeChange = (event) => {
     let squareSize = parseInt(event.target.value, 10);
     if (isNaN(squareSize)) {
-      squareSize = 1;
-    }
-    if (squareSize < 1) {
+      squareSize = null;
+    } else if (squareSize < 1) {
       squareSize = 1;
     }
     onChange({ ...value, secondarySize: squareSize });
@@ -218,27 +238,33 @@ const SquareBgForm = ({ value, onChange }) => {
   const onSquareDistanceChange = (event) => {
     let squareDistance = parseInt(event.target.value, 10);
     if (isNaN(squareDistance)) {
-      squareDistance = 1;
-    }
-    if (squareDistance < 1) {
+      squareDistance = null;
+    } else if (squareDistance < 1) {
       squareDistance = 1;
     }
     onChange({ ...value, size: squareDistance });
   };
 
+  const valueWithDefault = Object.assign(
+    {
+      color: defaultBgColor,
+      secondaryColor: defaultSecondaryColor,
+      size: 200,
+      secondarySize: 100,
+    },
+    value
+  );
+
   return (
     <>
       <label>
         {t("Bg color")}
-        <ColorPicker
-          value={value.color || defaultBgColor}
-          onChange={onColorChange}
-        />
+        <ColorPicker value={valueWithDefault.color} onChange={onColorChange} />
       </label>
       <label>
         {t("Square color")}
         <ColorPicker
-          value={value.secondaryColor || defaultSecondaryColor}
+          value={valueWithDefault.secondaryColor}
           disableAlpha={false}
           onChange={onSquareColorChange}
         />
@@ -247,7 +273,7 @@ const SquareBgForm = ({ value, onChange }) => {
         {t("Square distance")}
         <input
           type="number"
-          value={value.size || 100}
+          value={valueWithDefault.size}
           onChange={onSquareDistanceChange}
         />
       </label>
@@ -255,7 +281,7 @@ const SquareBgForm = ({ value, onChange }) => {
         {t("Square size")}
         <input
           type="number"
-          value={value.secondarySize || 50}
+          value={valueWithDefault.secondarySize}
           onChange={onSquareSizeChange}
         />
       </label>
@@ -272,18 +298,23 @@ const CustomBgForm = ({ value, onChange }) => {
   const onColorChange = (clr) => {
     onChange({ ...value, color: clr });
   };
+
+  const valueWithDefault = Object.assign(
+    {
+      color: defaultBgColor,
+    },
+    value
+  );
+
   return (
     <>
       <label>
         {t("Color")}
-        <ColorPicker
-          value={value.color || defaultBgColor}
-          onChange={onColorChange}
-        />
+        <ColorPicker value={valueWithDefault.color} onChange={onColorChange} />
       </label>
       <label>
         {t("Image")}
-        <ImageField value={value.img} onChange={onImageChange} />
+        <ImageField value={valueWithDefault.img} onChange={onImageChange} />
       </label>
     </>
   );

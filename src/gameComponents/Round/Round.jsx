@@ -2,7 +2,7 @@ import React, { memo } from "react";
 import styled, { css } from "styled-components";
 
 const StyledRound = styled.div`
-  ${({ radius = 50 }) => css`
+  ${({ radius }) => css`
     border-radius: 100%;
     width: ${radius}px;
     height: ${radius}px;
@@ -29,8 +29,8 @@ const StyledRound = styled.div`
 `;
 
 const Round = ({
-  size,
-  radius = size,
+  size = 50,
+  radius = isNaN(size) ? 50 : size,
   color = "#ccc",
   flippedColor = "#ccc",
   flipped = false,

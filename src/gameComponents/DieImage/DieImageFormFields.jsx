@@ -1,12 +1,12 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { Field } from "react-final-form";
+import { useItemActions } from "react-sync-board";
 
 import Label from "../../ui/formUtils/Label";
 import Hint from "../../ui/formUtils/Hint";
 import { ImageField } from "../../mediaLibrary";
-import { useItemActions } from "react-sync-board";
-import { nanoid } from "nanoid";
+import { uid } from "../../utils";
 
 const Form = ({ initialValues }) => {
   const { t } = useTranslation();
@@ -23,7 +23,7 @@ const Form = ({ initialValues }) => {
       batchUpdateItems([initialValues.id], (prevItem) => {
         const newItem = { ...prevItem };
         newItem.images = [...newItem.images];
-        newItem.images.push({ id: nanoid(), type: "empty" });
+        newItem.images.push({ id: uid(), type: "empty" });
         return newItem;
       });
     }
