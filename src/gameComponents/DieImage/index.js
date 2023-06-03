@@ -42,9 +42,11 @@ const Template = createItemTemplate({
   type: "diceImage",
   component: Component,
   form: FormComponent,
-  defaultActions: ["roll", "clone", "lock", "remove"],
+  defaultActions: ["roll", "prevImage", "nextImage", "clone", "lock", "remove"],
   availableActions: [
     "roll",
+    "previous",
+    "next",
     "clone",
     "lock",
     "remove",

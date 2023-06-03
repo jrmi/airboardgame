@@ -330,6 +330,11 @@ export const useGameItemActions = () => {
           case "diceImage":
           case "imageSequence":
             return stepItem(item, item.images.length);
+          case "counter":
+            return {
+              ...item,
+              value: isNaN(item.value) ? 0 : item.value + step,
+            };
           case "advancedImage":
             return {
               ...item,
