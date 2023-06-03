@@ -8,8 +8,8 @@ const Template = createItemTemplate({
   type: "counter",
   component: Component,
   form: FormComponent,
-  defaultActions: ["clone", "lock", "remove"],
-  availableActions: ["clone", "lock", "remove"],
+  defaultActions: ["prevImage", "nextImage", "clone", "lock", "remove"],
+  availableActions: ["prevImage", "nextImage", "clone", "lock", "remove"],
   name: i18n.t("Counter"),
   template: {
     value: 0,

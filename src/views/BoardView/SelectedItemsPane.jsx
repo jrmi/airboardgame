@@ -86,6 +86,9 @@ const SelectedItemsPane = ({
     () =>
       availableActions
         .map(({ name, args }) => {
+          if (!actionMap[name]) {
+            console.log("Missing action " + name);
+          }
           const action = { ...actionMap[name] };
           action.action = action.action(args);
           action.label = args?.customLabel || action.label(args);
