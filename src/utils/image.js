@@ -1,26 +1,37 @@
 const imageCache = {};
 
-export const getImage = async (url, retry = 0) => {
+export const getImageWithRetry = async (url, retry = 0) => {
+  console.log("called with", url, retry);
+  if (!url) {
+    return null;
+  }
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => {
+      resolve(img);
+    };
+    img.onerror = (e) => {
+      console.log("onError", url, e);
+      if (retry < 3) {
+        console.log("call retry", retry);
+        getImageWithRetry(url, retry + 1)
+          .then(resolve)
+          .catch(reject);
+      } else {
+        console.log("reject");
+        reject(new Error(`Failed to load: <${url}>`));
+      }
+    };
+    img.src = url;
+  });
+};
+
+export const getImage = async (url) => {
   if (!url) {
     return null;
   }
   if (!imageCache[url]) {
-    imageCache[url] = new Promise((resolve, reject) => {
-      const img = new Image();
-      img.onload = () => {
-        resolve(img);
-      };
-      img.onerror = () => {
-        if (retry < 2) {
-          getImage(url, retry + 1)
-            .then(resolve)
-            .catch(reject);
-        } else {
-          reject(new Error(`Failed to load: <${url}>`));
-        }
-      };
-      img.src = url;
-    });
+    imageCache[url] = getImageWithRetry(url);
   }
   return imageCache[url];
 };

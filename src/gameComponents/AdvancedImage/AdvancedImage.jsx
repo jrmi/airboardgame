@@ -76,8 +76,6 @@ const AdvancedImage = ({
     flipped &&
     (!Array.isArray(unflippedFor) || !unflippedFor.includes(currentUser.uid));
 
-  const flippable = Boolean(backUrl);
-
   const canvasLayers = React.useMemo(() => {
     const result = [];
     if (flippedForMe) {
@@ -108,16 +106,7 @@ const AdvancedImage = ({
   }, [frontUrl, backUrl]);
 
   return (
-    <Wrapper
-      onMouseEnter={(e) => {
-        flippable && e.target.classList.add("hvr-curl-top-right");
-        e.target.classList.add("hovered");
-      }}
-      onMouseLeave={(e) => {
-        flippable && e.target.classList.remove("hvr-curl-top-right");
-        e.target.classList.remove("hovered");
-      }}
-    >
+    <Wrapper>
       <Canvas
         layers={canvasLayers}
         width={width}

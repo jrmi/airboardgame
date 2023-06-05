@@ -1,11 +1,13 @@
 import React from "react";
 import { Field } from "react-final-form";
 import { useTranslation } from "react-i18next";
+import { useField } from "react-final-form";
 
 import Label from "../../ui/formUtils/Label";
 
-import { ImageField } from "../../mediaLibrary";
+import { ImageField, media2Url } from "../../mediaLibrary";
 import { uid } from "../../utils";
+import { getImage } from "../../utils/image";
 
 const defaultLayer = () => {
   return {
@@ -158,6 +160,13 @@ const LayersForm = ({ value, onChange }) => {
 
 const ImageForm = ({ initialValues }) => {
   const { t } = useTranslation();
+  const {
+    input: { onChange: onWidthChange },
+  } = useField("width");
+  const {
+    input: { onChange: onHeightChange },
+  } = useField("height");
+
   return (
     <>
       <Label>
@@ -192,7 +201,22 @@ const ImageForm = ({ initialValues }) => {
         {t("Front image")}
         <Field name="front" initialValue={initialValues.front}>
           {({ input: { value, onChange } }) => {
-            return <ImageField value={value} onChange={onChange} />;
+            const onFrontImageChange = (newValue) => {
+              // Propagate change
+              onChange(newValue);
+
+              const url = media2Url(newValue);
+              if (url) {
+                getImage(url).then((image) => {
+                  if (image?.width && image?.height) {
+                    // Update item dimension if possible
+                    onWidthChange(image.width);
+                    onHeightChange(image.height);
+                  }
+                });
+              }
+            };
+            return <ImageField value={value} onChange={onFrontImageChange} />;
           }}
         </Field>
       </Label>

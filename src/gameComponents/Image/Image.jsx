@@ -91,8 +91,6 @@ const Image = ({
     flipped &&
     (!Array.isArray(unflippedFor) || !unflippedFor.includes(currentUser.uid));
 
-  const flippable = Boolean(backContent);
-
   const layers = React.useMemo(() => {
     const result = [];
     if (!flippedForMe) {
@@ -115,16 +113,7 @@ const Image = ({
   }, [imageContent, backContent]);
 
   return (
-    <Wrapper
-      onMouseEnter={(e) => {
-        flippable && e.target.classList.add("hvr-curl-top-right");
-        e.target.classList.add("hovered");
-      }}
-      onMouseLeave={(e) => {
-        flippable && e.target.classList.remove("hvr-curl-top-right");
-        e.target.classList.remove("hovered");
-      }}
-    >
+    <Wrapper>
       <Canvas layers={layers} width={width} height={height} />
 
       {flippedForMe && backText && <Label>{backText}</Label>}

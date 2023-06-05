@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import { MediaLibraryButton, media2Url } from "./";
 import backgroundGrid from "../media/images/background-grid.png";
+import { getImage } from "../utils/image";
 
 const StyledImageField = styled.div`
   display: flex;
@@ -36,7 +37,7 @@ const Thumbnail = styled.img`
   background-image: url(${backgroundGrid});
 `;
 
-const ImageField = ({ value, onChange }) => {
+const ImageField = ({ value, onChange, onImageLoaded }) => {
   const { t } = useTranslation();
   let type, content;
 
@@ -67,6 +68,12 @@ const ImageField = ({ value, onChange }) => {
   };
 
   const url = media2Url(value);
+
+  React.useEffect(() => {
+    if (url && onImageLoaded) {
+      getImage(url).then(onImageLoaded);
+    }
+  }, [url, onImageLoaded]);
 
   return (
     <StyledImageField>
