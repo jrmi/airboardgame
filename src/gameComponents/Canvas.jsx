@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 
 import { getImage } from "../utils/image";
+import { useAsync } from "@react-hookz/web/esm/useAsync";
 
 const defaultSize = 50;
 
@@ -105,8 +106,61 @@ const ImageWrapper = styled.div`
   align-items: center;
 `;
 
+const Error = styled.div`
+  min-width: 50px;
+  min-height: 50px;
+  &:after {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    content: "\\274c";
+    font-size: 25px;
+    color: #fff;
+    line-height: 50px;
+    text-align: center;
+  }
+`;
+
+const Loading = styled.div`
+  background: transparent;
+  background: linear-gradient(
+    90deg,
+    transparent 8%,
+    #f5f5f53d 18%,
+    transparent 33%
+  );
+  background-size: 200% 100%;
+  animation: 2s shine linear infinite;
+  min-width: 50px;
+  min-height: 50px;
+`;
+
 const NoCanvas = ({ layers, width, height }) => {
   const [firstImage, ...rest] = layers;
+
+  const [state, actions] = useAsync(async () => {
+    await getImage(firstImage.url);
+    return true;
+  }, false);
+
+  React.useEffect(() => {
+    if (firstImage.url) {
+      actions.reset();
+      actions.execute();
+    }
+  }, [actions, firstImage.url]);
+
+  console.log(firstImage.url, state.status, state.error);
+
+  if (state.status === "error") {
+    return <Error />;
+  }
+
+  if (state.status === "loading") {
+    return <Loading />;
+  }
 
   return (
     <div style={{ position: "relative" }}>

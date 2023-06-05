@@ -28,13 +28,16 @@ const ImageDropNPaste = ({ children }) => {
   const onDrop = React.useCallback(
     async (acceptedFiles) => {
       setUploading(true);
-      await Promise.all(
-        acceptedFiles.map(async (file) => {
-          const media = await addMedia(libraries[0], file);
-          await addImageItem(media);
-        })
-      );
-      setUploading(false);
+      try {
+        await Promise.all(
+          acceptedFiles.map(async (file) => {
+            const media = await addMedia(libraries[0], file);
+            await addImageItem(media);
+          })
+        );
+      } finally {
+        setUploading(false);
+      }
     },
     [addImageItem, addMedia, libraries]
   );
@@ -58,17 +61,20 @@ const ImageDropNPaste = ({ children }) => {
       const { items } = e.clipboardData;
       setUploading(true);
       // eslint-disable-next-line no-plusplus
-      for (let i = 0; i < items.length; i++) {
-        const item = items[i];
-        if (item.type.indexOf("image") !== -1) {
-          const file = item.getAsFile();
-          // eslint-disable-next-line no-await-in-loop
-          const location = await addMedia(libraries[0], file);
-          // eslint-disable-next-line no-await-in-loop
-          await addImageItem(location);
+      try {
+        for (let i = 0; i < items.length; i++) {
+          const item = items[i];
+          if (item.type.indexOf("image") !== -1) {
+            const file = item.getAsFile();
+            // eslint-disable-next-line no-await-in-loop
+            const location = await addMedia(libraries[0], file);
+            // eslint-disable-next-line no-await-in-loop
+            await addImageItem(location);
+          }
         }
+      } finally {
+        setUploading(false);
       }
-      setUploading(false);
     },
     [addImageItem, addMedia, libraries]
   );

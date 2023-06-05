@@ -41,6 +41,8 @@ const ImageGrid = styled.div`
 const MediaLibraryModal = ({ show, setShow, onSelect }) => {
   const { t } = useTranslation();
 
+  const [fileUploading, setFileUploading] = React.useState(false);
+
   const {
     getLibraryMedia,
     addMedia,
@@ -71,6 +73,7 @@ const MediaLibraryModal = ({ show, setShow, onSelect }) => {
 
   const uploadMediaMutation = useMutation(
     async (files) => {
+      setFileUploading(true);
       if (files.length === 1) {
         return [await addMedia(currentLibrary, files[0])];
       } else {
@@ -79,6 +82,7 @@ const MediaLibraryModal = ({ show, setShow, onSelect }) => {
     },
     {
       onSuccess: (result) => {
+        setFileUploading(false);
         if (result.length === 1) {
           // If only one file is processed
           handleSelect(result[0].content);
@@ -154,18 +158,21 @@ const MediaLibraryModal = ({ show, setShow, onSelect }) => {
                 {index === 0 && (
                   <>
                     <h3>{t("Add file")}</h3>
-                    <div
-                      {...getRootProps()}
-                      style={{
-                        border: "3px dashed white",
-                        margin: "0.5em",
-                        padding: "0.5em",
-                        textAlign: "center",
-                      }}
-                    >
-                      <input {...getInputProps()} />
-                      <p>{t("Click or drag'n'drop file here")}</p>
-                    </div>
+                    {!fileUploading && (
+                      <div
+                        {...getRootProps()}
+                        style={{
+                          border: "3px dashed white",
+                          margin: "0.5em",
+                          padding: "0.5em",
+                          textAlign: "center",
+                        }}
+                      >
+                        <input {...getInputProps()} />
+                        <p>{t("Click or drag'n'drop file here")}</p>
+                      </div>
+                    )}
+                    {fileUploading && <div>{t("Uploading image(s)...")}</div>}
                   </>
                 )}
                 <h3>{name}</h3>

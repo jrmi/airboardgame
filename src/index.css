@@ -193,3 +193,10 @@ textarea[type="text"] {
 .invisible-scrollbar::-webkit-scrollbar {
   display: none;
 }
+
+
+@keyframes shine {
+  to {
+    background-position-x: -200%;
+  }
+}
