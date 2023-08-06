@@ -58,3 +58,19 @@ export const getItemElement = (id) => {
   }
   return elem;
 };
+
+export const availableItemVisitor = async (items, callback) => {
+  return await Promise.all(
+    items.map(async (node) => {
+      if (node.items) {
+        return {
+          ...node,
+          items: await availableItemVisitor(node.items, callback),
+        };
+      } else {
+        // It's an element
+        return await callback(node);
+      }
+    })
+  );
+};

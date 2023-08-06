@@ -1,7 +1,9 @@
+import pLimit from "p-limit";
+import { itemTemplates } from "../gameComponents";
+
 const imageCache = {};
 
 export const getImageWithRetry = async (url, retry = 0) => {
-  console.log("called with", url, retry);
   if (!url) {
     return null;
   }
@@ -10,15 +12,12 @@ export const getImageWithRetry = async (url, retry = 0) => {
     img.onload = () => {
       resolve(img);
     };
-    img.onerror = (e) => {
-      console.log("onError", url, e);
+    img.onerror = () => {
       if (retry < 3) {
-        console.log("call retry", retry);
         getImageWithRetry(url, retry + 1)
           .then(resolve)
           .catch(reject);
       } else {
-        console.log("reject");
         reject(new Error(`Failed to load: <${url}>`));
       }
     };
@@ -35,3 +34,74 @@ export const getImage = async (url) => {
   }
   return imageCache[url];
 };
+
+export class ItemMediaUploader {
+  constructor(onFile) {
+    this.onFile = onFile;
+    this.queue = pLimit(4);
+    this.cache = {};
+  }
+
+  async uploadMedia(media) {
+    if (typeof media === "object" && media?.file) {
+      if (!this.cache[media.file]) {
+        this.cache[media.file] = this.queue(this.onFile, media.file);
+      }
+      return {
+        type: "local",
+        content: await this.cache[media.file],
+      };
+    } else {
+      return media;
+    }
+  }
+
+  async upload(item) {
+    const template = itemTemplates[item.type];
+    const itemCloned = JSON.parse(JSON.stringify(item));
+
+    await template.mapMedia(itemCloned, async (media) => {
+      return this.uploadMedia(media);
+    });
+
+    return itemCloned;
+  }
+}
+
+export const imageAsBlob = async (image) => {
+  const response = await fetch(image.src);
+  return await response.blob();
+};
+
+export const URLAsBlob = async (url) => {
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error(`Failed to fetch file: ${response.statusText}`);
+  }
+  return await response.blob();
+};
+
+export async function hashBlob(blob) {
+  // Read the blob as an ArrayBuffer
+  const blobBuffer = await readBlobAsArrayBuffer(blob);
+
+  // Use the SubtleCrypto API to hash the content
+  const hashBuffer = await crypto.subtle.digest("SHA-256", blobBuffer);
+
+  // Convert the hash to a hex string
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  const hashHex = hashArray
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("");
+
+  return hashHex;
+}
+
+function readBlobAsArrayBuffer(blob) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = () => reject(new Error("Failed to read blob"));
+    reader.readAsArrayBuffer(blob);
+  });
+}

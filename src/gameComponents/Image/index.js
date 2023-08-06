@@ -57,6 +57,16 @@ const Template = createItemTemplate({
   },
   name: i18n.t("Image"),
   template: {},
+  async mapMedia(item, fn) {
+    const result = await Promise.all([
+      fn(item.content),
+      fn(item.backContent),
+      fn(item.overlay?.content),
+    ]);
+    item.content = result[0];
+    item.backContent = result[1];
+    item.overlay = { content: result[2] };
+  },
 });
 
 export default Template;

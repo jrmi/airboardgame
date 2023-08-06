@@ -20,6 +20,7 @@ export const main = async ({ store, schedules, functions, hooks }) => {
   await store.createOrUpdateBox("room", { security: "public" });
   await store.createOrUpdateBox("session", { security: "public" });
   await store.createOrUpdateBox("user", { security: "private" });
+  await store.createOrUpdateBox("files", { security: "private" });
 
   // Add schedules
   schedules["daily"] = [deleteOldSession(store)];

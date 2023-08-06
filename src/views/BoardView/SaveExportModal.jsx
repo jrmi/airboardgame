@@ -12,6 +12,8 @@ const SaveExportGameModal = ({ show, setShow }) => {
 
   const { saveGame, getGame } = useGame();
 
+  const [withFile, setWithFile] = React.useState(false);
+
   const handleSave = React.useCallback(async () => {
     try {
       await saveGame();
@@ -64,7 +66,17 @@ const SaveExportGameModal = ({ show, setShow }) => {
       </header>
       <section>
         <p>{t("You can also save it to your computer.")}</p>
-        <DownloadLink getData={getGame} />
+        <DownloadLink getData={getGame} withFile={withFile} />
+        <div style={{ paddingTop: "1em" }}>
+          <label>
+            <input
+              type="checkbox"
+              checked={withFile}
+              onChange={() => setWithFile((prev) => !prev)}
+            />
+            {t("Include files")}
+          </label>
+        </div>
       </section>
     </Modal>
   );

@@ -168,6 +168,23 @@ const filterItems = (filter, nodes) =>
     return acc;
   }, []);
 
+/**
+ * In the Item library we have a hierarchical structure where nodes are
+ *
+ * {
+ *   name, // Name of the group
+ *   items: [...] // Items/subgroup in this group
+ * }
+ *
+ * and items (leaf) are
+ *
+ * {
+ *   type, // It's an element
+ *   ... // Other element properties
+ * }
+ *
+ */
+
 const ItemLibrary = ({ items }) => {
   const { t } = useTranslation();
   const [filter, setFilter] = React.useState("");

@@ -79,7 +79,7 @@ const newGameData = (translate) => ({
   board: {
     size: 2000,
     scale: 1,
-    imageUrl: "/game_assets/default.png",
+    imageUrl: { type: "external", content: "/game_assets/default.png" },
     neverSaved: true,
     defaultName: translate("New game"),
   },

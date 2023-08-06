@@ -152,8 +152,6 @@ const NoCanvas = ({ layers, width, height }) => {
     }
   }, [actions, firstImage.url]);
 
-  console.log(firstImage.url, state.status, state.error);
-
   if (state.status === "error") {
     return <Error />;
   }
