@@ -324,7 +324,7 @@
   "Error while loading the module, please report the error...": "Error while loading the module, please report the error...",
   "Drag'n'drop a vassal module here": "Drag'n'drop a vassal module here",
   "Load a Vassal module": "Load a Vassal module",
-  "Load a Vassal module?": "Load a Vassal module?",
+  "Load a Vassal module?": "Load a Vassal module? (experimental)",
   "Load Vassal module": "Load Vassal module",
   "Import Vassal module": "Import Vassal module",
   "Secondary color": "Secondary color",
@@ -351,5 +351,9 @@
   "Don't forget to save your game using the save button located in the middle of the left sidebar.\n\n": "Don't forget to save your game using the save button located in the middle of the left sidebar.\n\n",
   "Have fun exploring the possibilities and enjoy the process of game creation!": "Have fun exploring the possibilities and enjoy the process of game creation!",
   "Login failed. Please try again.": "Login failed. Please try again.",
-  "Home": "Home"
+  "Home": "Home",
+  "Die": "Die",
+  "Image die": "Image die",
+  "Include files": "Include files",
+  "An error occurred. Try again!": "An error occurred. Try again!"
 }

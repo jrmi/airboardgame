@@ -77,7 +77,7 @@
   "Game saved": "Sauvegarde effectuée",
   "Game studio": "Créer",
   "Game": "Jeu",
-  "Generating export": "Génération de l'export",
+  "Generating export": "Génération de l'export...",
   "Github": "Github",
   "Go back to studio": "Retourner au studio",
   "Go back": "Retour",
@@ -322,9 +322,9 @@
   "Next": "Suivant",
   "Previous": "Précédent",
   "Error while loading the module, please report the error...": "Une erreur est survenue pendant le chargement de ce module, merci de nous prévenir...",
-  "Drag'n'drop a vassal module here": "Glisser&Déposer un module Vassal ici",
+  "Drag'n'drop a vassal module here": "Glisser & Déposer un module Vassal ici",
   "Load a Vassal module": "Charger un module Vassal",
-  "Load a Vassal module?": "Charger un module Vassal ?",
+  "Load a Vassal module?": "Charger un module Vassal ? (Expérimental)",
   "Load Vassal module": "Charger le module Vassal",
   "Import Vassal module": "Importer le module Vassal",
   "Secondary color": "Couleur secondaire",
@@ -351,5 +351,9 @@
   "Don't forget to save your game using the save button located in the middle of the left sidebar.\n\n": "N'oubliez pas de sauvegarder votre jeu en utilisant le bouton de sauvegarde situé au milieu de la barre latérale gauche.\n\n",
   "Have fun exploring the possibilities and enjoy the process of game creation!": "Amusez-vous à explorer les possibilités !",
   "Login failed. Please try again.": "Échec de l'authentification, veuillez réessayer...",
-  "Home": "Accueil"
+  "Home": "Accueil",
+  "Die": "Dé",
+  "Image die": "Dé image",
+  "Include files": "Inclure les fichiers",
+  "An error occurred. Try again!": "Une erreur est survenue. Veuillez réessayer !"
 }

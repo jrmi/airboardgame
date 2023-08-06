@@ -16,7 +16,7 @@ const resize = (prop) => ({ width, actualWidth, prevState }) => {
 export const sizeResize = resize("size");
 export const radiusResize = resize("radius");
 
-const defaultTemplate = {
+const defaultTemplate = () => ({
   resizeDirections: {
     w: true,
     h: true,
@@ -25,15 +25,12 @@ const defaultTemplate = {
   applyDefault(item) {
     return item;
   },
-};
+  // eslint-disable-next-line no-unused-vars
+  mapMedia(item, fn) {},
+});
 
 export const createItemTemplate = (template) => {
-  return Object.assign(
-    {},
-    JSON.parse(JSON.stringify(defaultTemplate)),
-    template,
-    { uid: uid() }
-  );
+  return Object.assign({}, defaultTemplate(), template, { uid: uid() });
 };
 
 export default createItemTemplate;

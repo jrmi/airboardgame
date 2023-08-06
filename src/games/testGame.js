@@ -292,6 +292,13 @@ const genGame = () => {
         color: "#D00022",
         size: 80,
       },
+      {
+        type: "image",
+        content: "/game_assets/JC.jpg",
+        backContent: "/game_assets/Red_back.jpg",
+        overlay: { content: "/game_assets/overlay.png" },
+        width: 100,
+      },
     ],
     board: {
       size: 1000,
