@@ -211,10 +211,10 @@
   "You've locked your first element. Long click to select it again.": "Vous avez figé votre premier élément. Un long click sur celui-ci permet de le sélectionner de nouveau.",
   "Your games": "Vos jeux",
   "Zone": "Zone",
-  "about": "<0>Air Board Game is a plateform designed to play any board games with your friends online. For more information or to access source code visit <1>Github</1>.</0><1>Legal mentions</1><2>This site is hosted by Netlify (San Francisco, US) and OVH (2, rue Kellermann, 59100 Roubaix)</2><3>Abuse report</3><4>To report abuse, please email at abu<1>anti-span</1>se-report@airboardgame.com</4><5>RGPD</5><6>No personnal data are collected. When you use your email to login, this information is lost and not used for anything else than sending you an authentication link.</6><7>Credits</7><8>Thanks to everybody !</8>",
+  "about": "<0>Airboardgame est une plateforme pour jouer avec vos amis en ligne. For more information or to access source code visit <1>Github</1>.</0><1>Legal mentions</1><2>This site is hosted by Netlify (San Francisco, US) and OVH (2, rue Kellermann, 59100 Roubaix)</2><3>Abuse report</3><4>To report abuse, please email at abu<1>anti-span</1>se-report@airboardgame.com</4><5>RGPD</5><6>No personnal data are collected. When you use your email to login, this information is lost and not used for anything else than sending you an authentication link.</6><7>Credits</7><8>Thanks to everybody !</8>",
   "baseline": "<0>Jouez aux jeux de société en ligne<1></1>avec vos amis - gratuitement !</0><1>Choisissez parmi notre sélection ou ajoutez le votre.<1></1>Pas besoin de compte, démarrez un jeu et partagez le lien avec vos amis.</1>",
   "games-available": "{{ nbOfGames }} jeux disponibles",
-  "helpBoard": "<0><0>Déplacez le plateau en cliquant avec le bouton du milieu de la souris. vous pouvez également utiliser le bouton gauche tout en maintenant la touche Alt de votre clavier.</0><1>Utilisez la molette pour zoomer.</1><2>Basculer en mode édition avec le bouton dédié afin d'éditer les éléments du jeu.</2><3>Vous pouvez enregistrer et charger vos parties en ouvrant le menu.</3><4>Utilisez <5>Ctrl</5> + <5>1</5>…<5>9</5> pour enregistrer une position et <5>1</5>…<5>9</5> la restaurer.</4><4>Pressez <5>espace</5> pour zoomer temporairement.</4></0>",
+  "helpBoard": "<0><0>Déplacez le plateau en cliquant avec le bouton de gauche de la souris. vous pouvez également utiliser le bouton de droite tout en maintenant la touche Alt de votre clavier.</0><1>Utilisez la molette pour zoomer.</1><2>Basculer en mode édition avec le bouton dans la barre en bas de l'écran afin d'éditer les éléments du jeu.</2><3>Vous pouvez enregistrer et charger vos parties en ouvrant le menu.</3><4>Utilisez <5>Ctrl</5> + <5>1</5>…<5>9</5> pour enregistrer une position et <5>1</5>…<5>9</5> la restaurer.</4><4>Pressez <5>espace</5> pour zoomer temporairement.</4></0>",
   "helpItem": "<0><0>Double cliquez sur un élément pour exécuter son action principale.</0><1>Cliquez longuement sur un élément afin de le déverrouiller</1><2>Découvrez les autres raccourcis dans le menu d'actions.</2></0>",
   "items": "Un élément",
   "items_plural": "{{count}} éléments",
@@ -355,5 +355,6 @@
   "Die": "Dé",
   "Image die": "Dé image",
   "Include files": "Inclure les fichiers",
-  "An error occurred. Try again!": "Une erreur est survenue. Veuillez réessayer !"
+  "An error occurred. Try again!": "Une erreur est survenue. Veuillez réessayer !",
+  "Rotate board": "Tourner le plateau"
 }
