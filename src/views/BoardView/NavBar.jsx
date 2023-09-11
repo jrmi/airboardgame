@@ -13,8 +13,11 @@ import {
   FiMousePointer,
   FiHome,
   FiMaximize,
+  FiRotateCw,
 } from "react-icons/fi";
 import { GiPokerHand } from "react-icons/gi";
+
+import { useBoardPosition } from "react-sync-board";
 
 import BoardForm from "./BoardForm";
 import SessionForm from "./SessionForm";
@@ -45,6 +48,8 @@ const LoadVassalModuleGameModal = React.lazy(() =>
 const NavBar = ({ editMode, itemLibraries, moveFirst, setMoveFirst }) => {
   const { t } = useTranslation();
   const { isVassalSession } = useSession();
+
+  const { rotateBoard } = useBoardPosition();
 
   const { toggleFullScreen, active: isFullScreen } = useFullScreen();
 
@@ -173,6 +178,12 @@ const NavBar = ({ editMode, itemLibraries, moveFirst, setMoveFirst }) => {
             Icon={moveFirst ? FiMove : FiMousePointer}
           />
         </div>
+        <NavButton
+          Icon={FiRotateCw}
+          onClick={() => rotateBoard((prev) => prev + 90)}
+          alt={t("Rotate board")}
+          title={t("Rotate board")}
+        />
         <NavButton
           Icon={FiMaximize}
           onClick={toggleFullScreen}

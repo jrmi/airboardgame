@@ -211,10 +211,10 @@
   "You've locked your first element. Long click to select it again.": "You've locked your first element. Long click on it to select it again.",
   "Your games": "Your games",
   "Zone": "Zone",
-  "about": "<0>Air Board Game is a plateform designed to play any board games with your friends online. For more information or to access source code visit <1>Github</1>.</0><1>Legal mentions</1><2>This site is hosted by Netlify (San Francisco, US) and OVH (2, rue Kellermann, 59100 Roubaix)</2><3>Abuse report</3><4>To report abuse, please email at abu<1>anti-span</1>se-report@airboardgame.com</4><5>RGPD</5><6>No personnal data are collected. When you use your email to login, this information is lost and not used for anything else than sending you an authentication link.</6><7>Credits</7><8>Thanks to everybody !</8>",
+  "about": "<0>Air Board Game is a platform designed to play any board games with your friends online. For more information or to access source code visit <1>Github</1>.</0><1>Legal mentions</1><2>This site is hosted by Netlify (San Francisco, US) and OVH (2, rue Kellermann, 59100 Roubaix)</2><3>Abuse report</3><4>To report abuse, please email at abu<1>anti-span</1>se-report@airboardgame.com</4><5>RGPD</5><6>No personnal data are collected. When you use your email to login, this information is lost and not used for anything else than sending you an authentication link.</6><7>Credits</7><8>Thanks to everybody !</8>",
   "baseline": "<0>Play board games online<1></1>with your friends - for free!</0><1>Choose from our selection or create your own.<1></1>No need to sign up. Just start a game and share the link with your friends.</1>",
   "games-available": "{{ nbOfGames }} games available",
-  "helpBoard": "<0><0>Move the board with middle mouse button click. Alternatively you can use left button with alt key.</0><1>Zoom with mouse wheel.</1><2>Switch to edit mode with top button to be able to edit the game.</2><3>You can save and reload game by clicking the burger menu.</3><4>Use <5>Ctrl</5> + <5>1</5>…<5>9</5> to save a position and <5>1</5>…<5>9</5> to restore it.</4><4>Press <5>space</5> to zoom temporally.</4></0>",
+  "helpBoard": "<0><0>Move the board with the left mouse button. Alternatively you can use right button with alt key.</0><1>Zoom with mouse wheel.</1><2>Switch to edit mode with the bottom button button bar to be able to edit an item.</2><3>You can save and reload game by clicking the burger menu.</3><4>Use <5>Ctrl</5> + <5>1</5>…<5>9</5> to save a position and <5>1</5>…<5>9</5> to restore it.</4><4>Press <5>space</5> to zoom temporally.</4></0>",
   "helpItem": "<0><0>Double click on any item to execute his main action.</0><1>Long click an item to select a locked item</1><2>See other shortcut on action menu</2></0>",
   "items": "One item",
   "items_plural": "{{count}} items",
@@ -355,5 +355,6 @@
   "Die": "Die",
   "Image die": "Image die",
   "Include files": "Include files",
-  "An error occurred. Try again!": "An error occurred. Try again!"
+  "An error occurred. Try again!": "An error occurred. Try again!",
+  "Rotate board": "Rotate board"
 }
