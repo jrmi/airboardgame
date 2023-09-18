@@ -61,7 +61,7 @@ describe("Studio", () => {
     cy.get(".board-pane").should(
       "have.css",
       "transform",
-      "matrix(0.48, 0, 0, 0.48, -11500, -11700)"
+      "matrix(0.15, 0, 0, 0.15, -3250, -3450)"
     );
   });
 
@@ -90,7 +90,7 @@ describe("Studio", () => {
     cy.get(".board-pane").should(
       "have.css",
       "transform",
-      "matrix(0.48, 0, 0, 0.48, -11500, -11700)"
+      "matrix(0.15, 0, 0, 0.15, -3250, -3450)"
     );
 
     // save
@@ -133,7 +133,7 @@ describe("Studio", () => {
     cy.get(".board-pane").should(
       "have.css",
       "transform",
-      "matrix(0.48, 0, 0, 0.48, -11500, -11700)"
+      "matrix(0.15, 0, 0, 0.15, -3250, -3450)"
     );
     // Add an item
     cy.get("[title^='Add an item']").click({ force: true });
@@ -181,7 +181,7 @@ describe("Studio", () => {
     cy.get(".board-pane").should(
       "have.css",
       "transform",
-      "matrix(0.48, 0, 0, 0.48, -11500, -11700)"
+      "matrix(0.15, 0, 0, 0.15, -3250, -3450)"
     );
 
     // Edit title
@@ -230,7 +230,7 @@ describe("Studio", () => {
       cy.get(".board-pane").should(
         "have.css",
         "transform",
-        "matrix(0.48, 0, 0, 0.48, -11500, -11700)"
+        "matrix(0.15, 0, 0, 0.15, -3250, -3450)"
       );
       // Add an item
       cy.get("[title^='Add an item']").click({ force: true });
