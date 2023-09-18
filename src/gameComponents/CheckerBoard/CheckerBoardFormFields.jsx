@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Field } from "react-final-form";
 
 import Label from "../../ui/formUtils/Label";
+import Hint from "../../ui/formUtils/Hint";
 
 import ColorPicker from "../../ui/formUtils/ColorPicker";
 
@@ -85,6 +86,22 @@ const Form = ({ initialValues }) => {
         >
           {(props) => <input {...props.input} type="number" />}
         </Field>
+      </Label>
+
+      <Label>
+        {t("Hold items")}
+        <Field
+          name="holdItems"
+          component="input"
+          type="checkbox"
+          initialValue={initialValues.holdItems}
+        />
+        <Hint>
+          {t(
+            "Whether we can place items on it. When an item is placed, " +
+              "moving the current item one also moves the placed items."
+          )}
+        </Hint>
       </Label>
     </>
   );

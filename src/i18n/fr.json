@@ -356,5 +356,7 @@
   "Image die": "Dé image",
   "Include files": "Inclure les fichiers",
   "An error occurred. Try again!": "Une erreur est survenue. Veuillez réessayer !",
-  "Rotate board": "Tourner le plateau"
+  "Rotate board": "Tourner le plateau",
+  "Hold items": "Porte les autres éléments",
+  "Whether we can place items on it. When an item is placed, moving the current item one also moves the placed items.": "Indique si l'on peut placer des éléments dessus. Quand un élément est placé, il se déplace avec cet élément."
 }
