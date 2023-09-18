@@ -17,7 +17,7 @@ describe("Selection action", () => {
     cy.get(".board-pane", { timeout: 10000 }).should(
       "have.css",
       "transform",
-      "matrix(0.48, 0, 0, 0.48, -11693, -11917)"
+      "matrix(0.24, 0, 0, 0.24, -5596.48, -5808.48)"
     );
     cy.get(".item")
       .first()
@@ -53,7 +53,7 @@ describe("Selection action", () => {
     cy.get(".selection").should(
       "have.css",
       "transform",
-      "matrix(1, 0, 0, 1, 499.04, 275.04)"
+      "matrix(1, 0, 0, 1, 405.92, 215.52)"
     );
 
     cy.get(".board").trigger("pointerup", {

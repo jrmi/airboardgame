@@ -18,7 +18,7 @@ describe("Item interactions", () => {
     cy.get(".board-pane", { timeout: 10000 }).should(
       "have.css",
       "transform",
-      "matrix(0.48, 0, 0, 0.48, -11693, -11917)"
+      "matrix(0.24, 0, 0, 0.24, -5596.48, -5808.48)"
     );
     cy.get(".item")
       .first()
@@ -65,7 +65,7 @@ describe("Item interactions", () => {
     cy.get("img[src='/game_assets/JC.jpg']")
       .parents(".item")
       .parent()
-      .should("have.css", "transform", "matrix(1, 0, 0, 1, 628, 608.5)");
+      .should("have.css", "transform", "matrix(1, 0, 0, 1, 837, 816.5)");
   });
 
   it("should flip item", () => {
