@@ -49,6 +49,8 @@ const Zone = ({
   backgroundColor = "transparent",
   labelPosition = "left",
   label,
+  holdItems = false,
+  setState,
   onItem,
 }) => {
   const { register } = useItemInteraction("place");
@@ -57,49 +59,78 @@ const Zone = ({
 
   const onInsideItem = React.useCallback(
     (itemIds) => {
-      const insideItems = itemIds.filter((itemId) =>
-        isItemInsideElement(getItemElement(itemId), zoneRef.current)
+      const whetherItemIsInside = Object.fromEntries(
+        itemIds.map((itemId) => [
+          itemId,
+          isItemInsideElement(getItemElement(itemId), zoneRef.current),
+        ])
+      );
+      const insideItems = itemIds.filter(
+        (itemId) => whetherItemIsInside[itemId]
       );
 
-      if (!insideItems.length) return;
+      if (holdItems) {
+        setState((item) => {
+          const { linkedItems = [] } = item;
+          // Remove outside items from linkedItems
+          const linkedItemsCleaned = linkedItems.filter(
+            (itemId) => whetherItemIsInside[itemId] !== false
+          );
+          const newLinkedItems = Array.from(
+            new Set(linkedItemsCleaned.concat(insideItems))
+          );
 
-      const onItemActions = onItem.map((action) => {
-        if (typeof action === "string") {
-          return { name: action };
-        }
-        return action;
-      });
-      onItemActions.forEach(({ name, args }) => {
-        switch (name) {
-          case "reveal":
-            actionMap["reveal"].action(args)(insideItems);
-            break;
-          case "hide":
-            actionMap["hide"].action(args)(insideItems);
-            break;
-          case "revealSelf":
-            actionMap["revealSelf"].action(args)(insideItems);
-            break;
-          case "hideSelf":
-            actionMap["hideSelf"].action(args)(insideItems);
-            break;
-          case "stack":
-            actionMap["stack"].action(args)(insideItems);
-            break;
-          case "roll":
-            actionMap["roll"].action(args)(insideItems);
-            break;
-        }
-      });
+          return {
+            ...item,
+            linkedItems: newLinkedItems,
+          };
+        });
+      }
+
+      if (onItem && insideItems.length) {
+        const onItemActions = onItem.map((action) => {
+          if (typeof action === "string") {
+            return { name: action };
+          }
+          return action;
+        });
+        onItemActions.forEach(({ name, args }) => {
+          switch (name) {
+            case "reveal":
+              actionMap["reveal"].action(args)(insideItems);
+              break;
+            case "hide":
+              actionMap["hide"].action(args)(insideItems);
+              break;
+            case "revealSelf":
+              actionMap["revealSelf"].action(args)(insideItems);
+              break;
+            case "hideSelf":
+              actionMap["hideSelf"].action(args)(insideItems);
+              break;
+            case "stack":
+              actionMap["stack"].action(args)(insideItems);
+              break;
+            case "roll":
+              actionMap["roll"].action(args)(insideItems);
+              break;
+          }
+        });
+      }
     },
-    [actionMap, onItem]
+    [actionMap, holdItems, onItem, setState]
   );
 
   React.useEffect(() => {
-    const unregisterList = [];
-    if (onItem?.length) {
-      unregisterList.push(register(onInsideItem));
+    if (!holdItems && setState) {
+      setState((item) => ({ ...item, linkedItems: [] }));
     }
+  }, [holdItems, setState]);
+
+  React.useEffect(() => {
+    const unregisterList = [];
+    unregisterList.push(register(onInsideItem));
+
     return () => {
       unregisterList.forEach((callback) => callback());
     };

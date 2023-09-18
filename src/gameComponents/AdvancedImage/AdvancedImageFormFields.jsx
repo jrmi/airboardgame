@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useField } from "react-final-form";
 
 import Label from "../../ui/formUtils/Label";
+import Hint from "../../ui/formUtils/Hint";
 
 import { ImageField, media2Url } from "../../mediaLibrary";
 import { uid } from "../../utils";
@@ -236,6 +237,22 @@ const ImageForm = ({ initialValues }) => {
           return <LayersForm value={value} onChange={onChange} />;
         }}
       </Field>
+
+      <Label>
+        {t("Hold items")}
+        <Field
+          name="holdItems"
+          component="input"
+          type="checkbox"
+          initialValue={initialValues.holdItems}
+        />
+        <Hint>
+          {t(
+            "Whether we can place items on it. When an item is placed, " +
+              "moving the current item one also moves the placed items."
+          )}
+        </Hint>
+      </Label>
     </>
   );
 };

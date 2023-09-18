@@ -6,6 +6,7 @@ import { useField } from "react-final-form";
 import { getImage } from "../../utils/image";
 
 import Label from "../../ui/formUtils/Label";
+import Hint from "../../ui/formUtils/Hint";
 
 import { ImageField, media2Url } from "../../mediaLibrary";
 
@@ -109,6 +110,22 @@ const ImageForm = ({ initialValues }) => {
             return <ImageField value={value} onChange={onChange} />;
           }}
         </Field>
+      </Label>
+
+      <Label>
+        {t("Hold items")}
+        <Field
+          name="holdItems"
+          component="input"
+          type="checkbox"
+          initialValue={initialValues.holdItems}
+        />
+        <Hint>
+          {t(
+            "Whether we can place items on it. When an item is placed, " +
+              "moving the current item one also moves the placed items."
+          )}
+        </Hint>
       </Label>
     </>
   );

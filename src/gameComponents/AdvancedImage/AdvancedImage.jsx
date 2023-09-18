@@ -3,7 +3,9 @@ import { useUsers } from "react-sync-board";
 import styled from "styled-components";
 import { media2Url } from "../../mediaLibrary";
 import { FiEye } from "react-icons/fi";
+import { useItemInteraction } from "react-sync-board";
 
+import { isItemInsideElement, getItemElement } from "../../utils";
 import Canvas from "../Canvas";
 import { getImage } from "../../utils/image";
 
@@ -55,8 +57,12 @@ const AdvancedImage = ({
   back,
   flipped = false,
   unflippedFor,
+  holdItems,
+  setState,
   layers,
 }) => {
+  const { register } = useItemInteraction("place");
+  const wrapperRef = React.useRef(null);
   const { currentUser, localUsers: users } = useUsers();
 
   const frontUrl = media2Url(front);
@@ -105,8 +111,50 @@ const AdvancedImage = ({
     }
   }, [frontUrl, backUrl]);
 
+  const onInsideItem = React.useCallback(
+    (itemIds) => {
+      const whetherItemIsInside = Object.fromEntries(
+        itemIds.map((itemId) => [
+          itemId,
+          isItemInsideElement(getItemElement(itemId), wrapperRef.current),
+        ])
+      );
+      const insideItems = itemIds.filter(
+        (itemId) => whetherItemIsInside[itemId]
+      );
+
+      if (holdItems) {
+        setState((item) => {
+          const { linkedItems = [] } = item;
+          // Remove outside items from linkedItems
+          const linkedItemsCleaned = linkedItems.filter(
+            (itemId) => whetherItemIsInside[itemId] !== false
+          );
+          const newLinkedItems = Array.from(
+            new Set(linkedItemsCleaned.concat(insideItems))
+          );
+
+          return {
+            ...item,
+            linkedItems: newLinkedItems,
+          };
+        });
+      }
+    },
+    [holdItems, setState]
+  );
+
+  React.useEffect(() => {
+    const unregisterList = [];
+    unregisterList.push(register(onInsideItem));
+
+    return () => {
+      unregisterList.forEach((callback) => callback());
+    };
+  }, [onInsideItem, register]);
+
   return (
-    <Wrapper>
+    <Wrapper ref={wrapperRef}>
       <Canvas
         layers={canvasLayers}
         width={width}

@@ -62,7 +62,8 @@ const Generator = ({ color = "#ccc", item, id, currentItemId, setState }) => {
     height: 50,
   });
   const [center, setCenter] = React.useState({ top: 0, left: 0 });
-  const { register } = useItemInteraction("place");
+  const { register: registerPlace } = useItemInteraction("place");
+  const { register: registerDelete } = useItemInteraction("delete");
   const {
     pushItem,
     getItems,
@@ -92,40 +93,13 @@ const Generator = ({ color = "#ccc", item, id, currentItemId, setState }) => {
         editable: false,
         id: newItemId,
       });
-      setState((prev) => ({ ...prev, currentItemId: newItemId }));
+      setState((prev) => ({
+        ...prev,
+        currentItemId: newItemId,
+        linkedItems: [newItemId],
+      }));
     }
   }, [getItems, id, pushItem, setState]);
-
-  const centerItem = React.useCallback(async () => {
-    /**
-     * Center generated item
-     */
-    const [thisItem, other] = await getItems([id, currentItemRef.current]);
-    if (!other) {
-      // Item has been deleted, need a new one.
-      currentItemRef.current = undefined;
-      setState((prev) => ({ ...prev, currentItemId: undefined }));
-    } else {
-      batchUpdateItems([currentItemRef.current], (item) => {
-        const newX = thisItem.x + centerRef.current.left + 3;
-        const newY = thisItem.y + centerRef.current.top + 3;
-        /* Prevent modification if item doesn't need update */
-        if (
-          newX !== item.x ||
-          newY !== item.y ||
-          item.layer !== thisItem.layer + 1
-        ) {
-          return {
-            ...item,
-            x: newX,
-            y: newY,
-            layer: thisItem.layer + 1,
-          };
-        }
-        return item;
-      });
-    }
-  }, [batchUpdateItems, getItems, id, setState]);
 
   const onPlaceItem = React.useCallback(
     async (itemIds) => {
@@ -150,14 +124,22 @@ const Generator = ({ color = "#ccc", item, id, currentItemId, setState }) => {
         if (!currentItemRef.current) {
           // Missing item for any reason
           await addItem();
-        } else {
-          // We are moving generator so we must
-          // update generated item position
-          await centerItem();
         }
       }
     },
-    [addItem, batchUpdateItems, centerItem, getItems, id]
+    [addItem, batchUpdateItems, getItems, id]
+  );
+
+  const onDeleteItem = React.useCallback(
+    async (itemIds) => {
+      /**
+       * Callback if an item is deleted
+       */
+      if (itemIds.includes(currentItemRef.current)) {
+        await addItem();
+      }
+    },
+    [addItem]
   );
 
   /**
@@ -258,16 +240,16 @@ const Generator = ({ color = "#ccc", item, id, currentItemId, setState }) => {
 
   React.useEffect(() => {
     /**
-     * Register onPlaceItem callback
+     * Register events callback
      */
     const unregisterList = [];
-    if (currentItemId) {
-      unregisterList.push(register(onPlaceItem));
-    }
+    unregisterList.push(registerPlace(onPlaceItem));
+    unregisterList.push(registerDelete(onDeleteItem));
+
     return () => {
       unregisterList.forEach((callback) => callback());
     };
-  }, [register, onPlaceItem, currentItemId]);
+  }, [registerPlace, registerDelete, onPlaceItem, onDeleteItem]);
 
   React.useEffect(() => {
     /**
@@ -275,12 +257,6 @@ const Generator = ({ color = "#ccc", item, id, currentItemId, setState }) => {
      */
     resize(item?.rotation);
   }, [item, resize, dimension.height, dimension.width]);
-
-  React.useEffect(() => {
-    if (currentItemRef.current && isMaster) {
-      centerItem();
-    }
-  }, [item, centerItem, isMaster, center]);
 
   // Define item component if type is defined
   let Item = () => (

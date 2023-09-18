@@ -113,6 +113,21 @@ const Form = ({ initialValues }) => {
         </Field>
       </Label>
 
+      <Label>
+        {t("Hold items")}
+        <Field
+          name="holdItems"
+          component="input"
+          type="checkbox"
+          initialValue={initialValues.holdItems}
+        />
+        <Hint>
+          {t(
+            "Whether we can place items on it. When an item is placed, moving the current item one also moves the placed items."
+          )}
+        </Hint>
+      </Label>
+
       <h3>{t("Interactions")}</h3>
       <Hint>{t("Interaction help")}</Hint>
       <Label>
