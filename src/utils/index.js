@@ -101,6 +101,7 @@ export const preloadAudio = (urls) => {
   urls.forEach((url) => {
     if (!audioFiles[url]) {
       audioFiles[url] = new Audio(url);
+      audioFiles[url].load();
     }
   });
 };
@@ -108,16 +109,16 @@ export const preloadAudio = (urls) => {
 export const playAudio = (url, volume = 1) => {
   if (!audioFiles[url]) {
     audioFiles[url] = new Audio(url);
+    audioFiles[url].load();
   }
 
-  audioFiles[url].pause();
-  audioFiles[url].currentTime = 0;
-  audioFiles[url].volume = volume;
-  try {
-    audioFiles[url].play();
-  } catch (e) {
-    console.log("Fail to play audio", e);
+  if (!audioFiles[url].paused) {
+    audioFiles[url].pause();
+    audioFiles[url].load();
   }
+  audioFiles[url].volume = volume;
+
+  audioFiles[url].play().catch((e) => console.log("Fail to play audio", e));
 };
 
 export const triggerFileDownload = (url, filename) => {
