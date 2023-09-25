@@ -108,7 +108,12 @@ const ImageField = ({ value, onChange, onImageLoaded }) => {
       </form>
 
       <div className="imgContainer" onClick={(e) => e.preventDefault()}>
-        {type !== "empty" && content && <Thumbnail src={url} />}
+        {type !== "empty" && content && (
+          <Thumbnail
+            src={url}
+            onError={(e) => (e.target.src = "/default.png")}
+          />
+        )}
 
         {type === "external" && (
           <input

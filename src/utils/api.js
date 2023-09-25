@@ -36,6 +36,16 @@ export const uploadResourceImage = async (boxId, resourceId, file) => {
     credentials: "include",
   });
 
+  if (result.status === 404) {
+    throw new Error("Resource not found");
+  }
+  if (result.status === 403) {
+    throw new Error("Forbidden");
+  }
+  if (result.status >= 300) {
+    throw new Error("Server error");
+  }
+
   return await result.text();
 };
 

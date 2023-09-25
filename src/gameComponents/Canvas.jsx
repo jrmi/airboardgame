@@ -166,6 +166,7 @@ const NoCanvas = ({ layers, width, height }) => {
         <ImageElm
           src={firstImage.url}
           alt=""
+          onError={(e) => (e.target.src = "/default.png")}
           draggable={false}
           width={width}
           height={height}
@@ -176,6 +177,7 @@ const NoCanvas = ({ layers, width, height }) => {
           <ImageWrapper key={url}>
             <ImageElm
               src={url}
+              onError={(e) => (e.target.src = "/default.png")}
               alt=""
               draggable={false}
               style={{ marginLeft: offsetX * 2, marginTop: offsetY * 2 }}

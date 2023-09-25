@@ -13,7 +13,7 @@ export const getImageWithRetry = async (url, retry = 0) => {
       resolve(img);
     };
     img.onerror = () => {
-      if (retry < 3) {
+      if (retry < 2) {
         getImageWithRetry(url, retry + 1)
           .then(resolve)
           .catch(reject);
@@ -25,12 +25,20 @@ export const getImageWithRetry = async (url, retry = 0) => {
   });
 };
 
-export const getImage = async (url) => {
+export const getImage = (url, defaultImage = "/default.png") => {
   if (!url) {
     return null;
   }
   if (!imageCache[url]) {
-    imageCache[url] = getImageWithRetry(url);
+    imageCache[url] = new Promise((resolve) => {
+      console.log("promise", url);
+      getImageWithRetry(url)
+        .then(resolve)
+        .catch(async () => {
+          console.log(`Missing image <${url}>`);
+          resolve(await getImage(defaultImage));
+        });
+    });
   }
   return imageCache[url];
 };
