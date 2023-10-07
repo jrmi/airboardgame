@@ -231,6 +231,23 @@ const ImageForm = ({ initialValues }) => {
         </Field>
       </Label>
 
+      <Label>
+        {t("Text")}
+        <Field
+          name="text"
+          component="input"
+          initialValue={initialValues.text}
+        />
+      </Label>
+      <Label>
+        {t("Back Text")}
+        <Field
+          name="backText"
+          component="input"
+          initialValue={initialValues.backText}
+        />
+      </Label>
+
       <h3>{t("Layers")}</h3>
       <Field name="layers" initialValue={initialValues.layers || []}>
         {({ input: { value, onChange } }) => {
