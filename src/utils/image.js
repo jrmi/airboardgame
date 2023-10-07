@@ -66,6 +66,9 @@ export class ItemMediaUploader {
 
   async upload(item) {
     const template = itemTemplates[item.type];
+    if (!template) {
+      return item;
+    }
     const itemCloned = JSON.parse(JSON.stringify(item));
 
     await template.mapMedia(itemCloned, async (media) => {
