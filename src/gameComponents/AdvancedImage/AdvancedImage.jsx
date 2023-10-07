@@ -38,6 +38,19 @@ const Wrapper = styled.div`
   line-height: 0em;
 `;
 
+const Label = styled.div`
+  position: absolute;
+  top: 1px;
+  right: 1px;
+  padding: 0 3px;
+  background-color: black;
+  color: white;
+  border-radius: 0.5em;
+  opacity: 0.5;
+  font-size: 0.6em;
+  line-height: 1.5em;
+`;
+
 /*
 
 const layer={
@@ -59,6 +72,8 @@ const AdvancedImage = ({
   unflippedFor,
   holdItems,
   setState,
+  text,
+  backText,
   layers,
 }) => {
   const { register } = useItemInteraction("place");
@@ -161,6 +176,8 @@ const AdvancedImage = ({
         height={height}
         useCanvas={true}
       />
+      {flippedForMe && backText && <Label>{backText}</Label>}
+      {(!flippedForMe || !backText) && text && <Label>{text}</Label>}
       <UnflippedFor>
         {unflippedForUsers &&
           unflippedForUsers.map(({ color, id }) => {
