@@ -101,47 +101,6 @@ const Generator = ({ color = "#ccc", item, id, currentItemId, setState }) => {
     }
   }, [getItems, id, pushItem, setState]);
 
-  const onPlaceItem = React.useCallback(
-    async (itemIds) => {
-      /**
-       * Callback if generated item or generator is placed
-       */
-      const placeSelf = itemIds.includes(id);
-      if (itemIds.includes(currentItemRef.current) && !placeSelf) {
-        // We have removed generated item so we create a new one.
-        const [thisItem] = await getItems([id]);
-        batchUpdateItems([currentItemRef.current], (item) => {
-          const result = {
-            ...item,
-            layer: thisItem.layer,
-          };
-          delete result.editable;
-          return result;
-        });
-        await addItem();
-      }
-      if (placeSelf) {
-        if (!currentItemRef.current) {
-          // Missing item for any reason
-          await addItem();
-        }
-      }
-    },
-    [addItem, batchUpdateItems, getItems, id]
-  );
-
-  const onDeleteItem = React.useCallback(
-    async (itemIds) => {
-      /**
-       * Callback if an item is deleted
-       */
-      if (itemIds.includes(currentItemRef.current)) {
-        await addItem();
-      }
-    },
-    [addItem]
-  );
-
   /**
    * Set generator dimension according to Item content.
    */
@@ -192,6 +151,50 @@ const Generator = ({ color = "#ccc", item, id, currentItemId, setState }) => {
       setDimension((prev) => ({ ...prev, width, height }));
     }, 100),
     []
+  );
+
+  const onPlaceItem = React.useCallback(
+    async (itemIds) => {
+      /**
+       * Callback if generated item or generator is placed
+       */
+      const placeSelf = itemIds.includes(id);
+      if (itemIds.includes(currentItemRef.current) && !placeSelf) {
+        // We have removed generated item so we create a new one.
+        const [thisItem] = await getItems([id]);
+        batchUpdateItems([currentItemRef.current], (item) => {
+          const result = {
+            ...item,
+            layer: thisItem.layer,
+          };
+          delete result.editable;
+          return result;
+        });
+
+        await addItem();
+        resize(item?.rotation);
+      }
+      if (placeSelf) {
+        if (!currentItemRef.current) {
+          // Missing item for any reason
+          await addItem();
+        }
+        resize(item?.rotation);
+      }
+    },
+    [addItem, batchUpdateItems, getItems, id, item?.rotation, resize]
+  );
+
+  const onDeleteItem = React.useCallback(
+    async (itemIds) => {
+      /**
+       * Callback if an item is deleted
+       */
+      if (itemIds.includes(currentItemRef.current)) {
+        await addItem();
+      }
+    },
+    [addItem]
   );
 
   React.useEffect(() => {
