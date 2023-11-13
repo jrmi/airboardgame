@@ -14,6 +14,12 @@ export const isItemInsideElement = (itemElement, otherElem) => {
   });
 };
 
+export const isItemCenterInsideElement = (itemElement, otherElem) => {
+  const rect = otherElem.getBoundingClientRect();
+  const itemCenter = getItemCenter(itemElement);
+  return isPointInsideRect(itemCenter, rect);
+};
+
 export const pointInItem = (itemElement, point) => {
   return isPointInPolygon(point, getItemPolygon(itemElement));
 };

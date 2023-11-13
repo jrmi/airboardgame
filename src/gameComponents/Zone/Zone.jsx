@@ -4,7 +4,11 @@ import styled, { css } from "styled-components";
 import { useItemInteraction } from "react-sync-board";
 import { opacify } from "color2k";
 
-import { isItemInsideElement, getItemElement } from "../../utils";
+import {
+  isItemInsideElement,
+  isItemCenterInsideElement,
+  getItemElement,
+} from "../../utils/item";
 import useGameItemActions from "../useGameItemActions";
 
 const ZoneWrapper = styled.div`
@@ -62,11 +66,19 @@ const Zone = ({
       const whetherItemIsInside = Object.fromEntries(
         itemIds.map((itemId) => [
           itemId,
-          isItemInsideElement(getItemElement(itemId), zoneRef.current),
+          [
+            isItemInsideElement(getItemElement(itemId), zoneRef.current), // Fully inside
+            isItemCenterInsideElement(getItemElement(itemId), zoneRef.current), // Center inside
+          ],
         ])
       );
+
       const insideItems = itemIds.filter(
-        (itemId) => whetherItemIsInside[itemId]
+        (itemId) => whetherItemIsInside[itemId][0]
+      );
+
+      const centerInsideItems = itemIds.filter(
+        (itemId) => whetherItemIsInside[itemId][1]
       );
 
       if (holdItems) {
@@ -74,10 +86,12 @@ const Zone = ({
           const { linkedItems = [] } = item;
           // Remove outside items from linkedItems
           const linkedItemsCleaned = linkedItems.filter(
-            (itemId) => whetherItemIsInside[itemId] !== false
+            (itemId) =>
+              !whetherItemIsInside[itemId] ||
+              whetherItemIsInside[itemId][1] !== false
           );
           const newLinkedItems = Array.from(
-            new Set(linkedItemsCleaned.concat(insideItems))
+            new Set(linkedItemsCleaned.concat(centerInsideItems))
           );
 
           return {

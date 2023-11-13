@@ -31,7 +31,6 @@ export const getImage = (url, defaultImage = "/default.png") => {
   }
   if (!imageCache[url]) {
     imageCache[url] = new Promise((resolve) => {
-      console.log("promise", url);
       getImageWithRetry(url)
         .then(resolve)
         .catch(async () => {
