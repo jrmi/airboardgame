@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { FiEye } from "react-icons/fi";
 import { useItemInteraction } from "react-sync-board";
 
-import { isItemInsideElement, getItemElement } from "../../utils";
+import { isItemCenterInsideElement, getItemElement } from "../../utils/item";
 import Canvas from "../Canvas";
 import { media2Url } from "../../mediaLibrary";
 import { getImage } from "../../utils/image";
@@ -120,14 +120,14 @@ const Image = ({
 
   const onInsideItem = React.useCallback(
     (itemIds) => {
-      const whetherItemIsInside = Object.fromEntries(
+      const whetherCenterItemIsInside = Object.fromEntries(
         itemIds.map((itemId) => [
           itemId,
-          isItemInsideElement(getItemElement(itemId), wrapperRef.current),
+          isItemCenterInsideElement(getItemElement(itemId), wrapperRef.current),
         ])
       );
       const insideItems = itemIds.filter(
-        (itemId) => whetherItemIsInside[itemId]
+        (itemId) => whetherCenterItemIsInside[itemId]
       );
 
       if (holdItems) {
@@ -135,7 +135,7 @@ const Image = ({
           const { linkedItems = [] } = item;
           // Remove outside items from linkedItems
           const linkedItemsCleaned = linkedItems.filter(
-            (itemId) => whetherItemIsInside[itemId] !== false
+            (itemId) => whetherCenterItemIsInside[itemId] !== false
           );
           const newLinkedItems = Array.from(
             new Set(linkedItemsCleaned.concat(insideItems))
