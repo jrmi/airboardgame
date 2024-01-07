@@ -16,6 +16,7 @@ import itemTemplates from "./itemTemplates";
 import ActionRotateForm from "./actionForms/ActionRotateForm";
 import ActionRandomlyRotateForm from "./actionForms/ActionRandomlyRotateForm";
 import ActionRollLayerForm from "./actionForms/ActionRollLayerForm";
+import ActionChangeImageForm from "./actionForms/ActionChangeImageForm";
 import ActionChangeImageLayerForm from "./actionForms/ActionChangeImageLayerForm";
 
 import stackToCenterIcon from "../media/images/stackToCenter.svg";
@@ -715,16 +716,20 @@ export const useGameItemActions = () => {
         form: ActionRollLayerForm,
       },
       nextImage: {
-        action: () => (itemIds) => changeValue(itemIds, { step: 1 }),
+        action: ({ step = 1 } = {}) => (itemIds) =>
+          changeValue(itemIds, { step }),
         label: t("Next"),
         shortcut: "n",
         icon: FiPlusCircle,
+        form: ActionChangeImageForm,
       },
       prevImage: {
-        action: () => (itemIds) => changeValue(itemIds, { step: -1 }),
+        action: ({ step = 1 } = {}) => (itemIds) =>
+          changeValue(itemIds, { step: -step }),
         label: t("Previous"),
         shortcut: "p",
         icon: FiMinusCircle,
+        form: ActionChangeImageForm,
       },
       nextImageForLayer: {
         action: ({ step = 1, layer = 0 } = {}) => (itemIds) =>

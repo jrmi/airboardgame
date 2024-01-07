@@ -45,8 +45,8 @@ const Template = createItemTemplate({
   defaultActions: ["roll", "prevImage", "nextImage", "clone", "lock", "remove"],
   availableActions: [
     "roll",
-    "previous",
-    "next",
+    "prevImage",
+    "nextImage",
     "clone",
     "lock",
     "remove",
