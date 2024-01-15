@@ -20,6 +20,30 @@ export const isItemCenterInsideElement = (itemElement, otherElem) => {
   return isPointInsideRect(itemCenter, rect);
 };
 
+export const areItemsInside = (
+  element,
+  itemIds,
+  previousIds = [],
+  centerOnly = false
+) => {
+  return Object.fromEntries(
+    [...itemIds, ...previousIds].map((itemId) => {
+      const inside = centerOnly
+        ? isItemCenterInsideElement(getItemElement(itemId), element)
+        : isItemInsideElement(getItemElement(itemId), element);
+
+      return [
+        itemId,
+        {
+          inside,
+          added: inside && !previousIds.includes(itemId),
+          removed: !inside && previousIds.includes(itemId),
+        },
+      ];
+    })
+  );
+};
+
 export const pointInItem = (itemElement, point) => {
   return isPointInPolygon(point, getItemPolygon(itemElement));
 };
@@ -79,4 +103,33 @@ export const availableItemVisitor = async (items, callback) => {
       }
     })
   );
+};
+
+export const getHeldItems = ({
+  element,
+  currentItemId,
+  linkedItemIds,
+  itemList,
+  itemIds,
+  shouldHoldItems,
+}) => {
+  if (shouldHoldItems) {
+    let before = true;
+    const afterItemIds = itemList
+      .filter(({ id }) => {
+        const result = !before && itemIds.includes(id);
+        if (id === currentItemId) {
+          before = false;
+        }
+        return result;
+      })
+      .map(({ id }) => id);
+    return Object.entries(
+      areItemsInside(element, afterItemIds, linkedItemIds || [], true)
+    )
+      .filter(([, { inside }]) => inside)
+      .map(([itemId]) => itemId);
+  } else {
+    return [];
+  }
 };

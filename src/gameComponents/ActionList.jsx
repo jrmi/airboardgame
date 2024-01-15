@@ -161,7 +161,7 @@ const ActionList = ({ name, initialValue, availableActions }) => {
             {(availableActions || []).map((name) => {
               return (
                 <option key={name} value={name}>
-                  {actionMap[name].genericLabel || actionMap[name].label()}
+                  {actionMap[name]?.genericLabel || actionMap[name].label()}
                 </option>
               );
             })}

@@ -1,14 +1,10 @@
 import React from "react";
 import { memo } from "react";
 import styled, { css } from "styled-components";
-import { useItemInteraction } from "react-sync-board";
+import { useItemInteraction, useItemActions } from "react-sync-board";
 import { opacify } from "color2k";
 
-import {
-  isItemInsideElement,
-  isItemCenterInsideElement,
-  getItemElement,
-} from "../../utils/item";
+import { getHeldItems, areItemsInside } from "../../utils/item";
 import useGameItemActions from "../useGameItemActions";
 
 const ZoneWrapper = styled.div`
@@ -56,52 +52,35 @@ const Zone = ({
   holdItems = false,
   setState,
   onItem,
+  id: currentItemId,
 }) => {
   const { register } = useItemInteraction("place");
-  const zoneRef = React.useRef(null);
+  const { getItemList } = useItemActions();
   const { actionMap } = useGameItemActions();
+
+  const zoneRef = React.useRef(null);
 
   const onInsideItem = React.useCallback(
     (itemIds) => {
-      const whetherItemIsInside = Object.fromEntries(
-        itemIds.map((itemId) => [
-          itemId,
-          [
-            isItemInsideElement(getItemElement(itemId), zoneRef.current), // Fully inside
-            isItemCenterInsideElement(getItemElement(itemId), zoneRef.current), // Center inside
-          ],
-        ])
-      );
+      setState((item) => ({
+        ...item,
+        linkedItems: getHeldItems({
+          element: zoneRef.current,
+          currentItemId,
+          linkedItemIds: item.linkedItems,
+          itemList: getItemList(),
+          itemIds,
+          shouldHoldItems: item.holdItems,
+        }),
+      }));
 
-      const insideItems = itemIds.filter(
-        (itemId) => whetherItemIsInside[itemId][0]
-      );
+      const addedItems = Object.entries(
+        areItemsInside(zoneRef.current, itemIds)
+      )
+        .filter(([, { added }]) => added)
+        .map(([itemId]) => itemId);
 
-      const centerInsideItems = itemIds.filter(
-        (itemId) => whetherItemIsInside[itemId][1]
-      );
-
-      if (holdItems) {
-        setState((item) => {
-          const { linkedItems = [] } = item;
-          // Remove outside items from linkedItems
-          const linkedItemsCleaned = linkedItems.filter(
-            (itemId) =>
-              !whetherItemIsInside[itemId] ||
-              whetherItemIsInside[itemId][1] !== false
-          );
-          const newLinkedItems = Array.from(
-            new Set(linkedItemsCleaned.concat(centerInsideItems))
-          );
-
-          return {
-            ...item,
-            linkedItems: newLinkedItems,
-          };
-        });
-      }
-
-      if (onItem && insideItems.length) {
+      if (onItem && addedItems.length) {
         const onItemActions = onItem.map((action) => {
           if (typeof action === "string") {
             return { name: action };
@@ -109,30 +88,13 @@ const Zone = ({
           return action;
         });
         onItemActions.forEach(({ name, args }) => {
-          switch (name) {
-            case "reveal":
-              actionMap["reveal"].action(args)(insideItems);
-              break;
-            case "hide":
-              actionMap["hide"].action(args)(insideItems);
-              break;
-            case "revealSelf":
-              actionMap["revealSelf"].action(args)(insideItems);
-              break;
-            case "hideSelf":
-              actionMap["hideSelf"].action(args)(insideItems);
-              break;
-            case "stack":
-              actionMap["stack"].action(args)(insideItems);
-              break;
-            case "roll":
-              actionMap["roll"].action(args)(insideItems);
-              break;
+          if (actionMap[name]) {
+            actionMap[name].action(args)(addedItems);
           }
         });
       }
     },
-    [actionMap, holdItems, onItem, setState]
+    [actionMap, currentItemId, getItemList, onItem, setState]
   );
 
   React.useEffect(() => {

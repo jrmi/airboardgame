@@ -3,9 +3,9 @@ import { useUsers } from "react-sync-board";
 import styled from "styled-components";
 import { media2Url } from "../../mediaLibrary";
 import { FiEye } from "react-icons/fi";
-import { useItemInteraction } from "react-sync-board";
+import { useItemInteraction, useItemActions } from "react-sync-board";
 
-import { isItemCenterInsideElement, getItemElement } from "../../utils/item";
+import { getHeldItems } from "../../utils/item";
 import Canvas from "../Canvas";
 import { getImage } from "../../utils/image";
 
@@ -70,13 +70,14 @@ const AdvancedImage = ({
   back,
   flipped = false,
   unflippedFor,
-  holdItems,
   setState,
   text,
   backText,
   layers,
+  id: currentItemId,
 }) => {
   const { register } = useItemInteraction("place");
+  const { getItemList } = useItemActions();
   const wrapperRef = React.useRef(null);
   const { currentUser, localUsers: users } = useUsers();
 
@@ -126,47 +127,31 @@ const AdvancedImage = ({
     }
   }, [frontUrl, backUrl]);
 
-  const onInsideItem = React.useCallback(
+  const onPlaceItem = React.useCallback(
     (itemIds) => {
-      const whetherCenterItemIsInside = Object.fromEntries(
-        itemIds.map((itemId) => [
-          itemId,
-          isItemCenterInsideElement(getItemElement(itemId), wrapperRef.current),
-        ])
-      );
-      const insideItems = itemIds.filter(
-        (itemId) => whetherCenterItemIsInside[itemId]
-      );
-
-      if (holdItems) {
-        setState((item) => {
-          const { linkedItems = [] } = item;
-          // Remove outside items from linkedItems
-          const linkedItemsCleaned = linkedItems.filter(
-            (itemId) => whetherCenterItemIsInside[itemId] !== false
-          );
-          const newLinkedItems = Array.from(
-            new Set(linkedItemsCleaned.concat(insideItems))
-          );
-
-          return {
-            ...item,
-            linkedItems: newLinkedItems,
-          };
-        });
-      }
+      setState((item) => ({
+        ...item,
+        linkedItems: getHeldItems({
+          element: wrapperRef.current,
+          currentItemId,
+          linkedItemIds: item.linkedItems,
+          itemList: getItemList(),
+          itemIds,
+          shouldHoldItems: item.holdItems,
+        }),
+      }));
     },
-    [holdItems, setState]
+    [currentItemId, getItemList, setState]
   );
 
   React.useEffect(() => {
     const unregisterList = [];
-    unregisterList.push(register(onInsideItem));
+    unregisterList.push(register(onPlaceItem));
 
     return () => {
       unregisterList.forEach((callback) => callback());
     };
-  }, [onInsideItem, register]);
+  }, [onPlaceItem, register]);
 
   return (
     <Wrapper ref={wrapperRef}>
