@@ -31,6 +31,16 @@ export const insideClass = (element, className) => {
   return insideClass(element.parentNode, className);
 };
 
+export const insideElement = (wrapperElement, element) => {
+  if (element === wrapperElement) {
+    return true;
+  }
+  if (!element.parentNode) {
+    return false;
+  }
+  return insideClass(wrapperElement, element.parentNode);
+};
+
 /**
  * Shuffles array in place.
  * @param {Array} a An array containing the items.

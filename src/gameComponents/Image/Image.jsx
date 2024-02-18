@@ -122,17 +122,24 @@ const Image = ({
 
   const onPlaceItem = React.useCallback(
     (itemIds) => {
-      setState((item) => ({
-        ...item,
-        linkedItems: getHeldItems({
+      setState((item) => {
+        const newLinkedItems = getHeldItems({
           element: wrapperRef.current,
           currentItemId,
-          linkedItemIds: item.linkedItems,
+          currentLinkedItemIds: item.linkedItems,
           itemList: getItemList(),
           itemIds,
           shouldHoldItems: item.holdItems,
-        }),
-      }));
+        });
+
+        if (item.linkedItems !== newLinkedItems) {
+          return {
+            linkedItems: newLinkedItems,
+          };
+        }
+
+        return {};
+      }, true);
     },
     [currentItemId, getItemList, setState]
   );

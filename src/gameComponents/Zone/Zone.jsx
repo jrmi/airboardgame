@@ -62,17 +62,24 @@ const Zone = ({
 
   const onInsideItem = React.useCallback(
     (itemIds) => {
-      setState((item) => ({
-        ...item,
-        linkedItems: getHeldItems({
+      setState((item) => {
+        const newLinkedItems = getHeldItems({
           element: zoneRef.current,
           currentItemId,
-          linkedItemIds: item.linkedItems,
+          currentLinkedItemIds: item.linkedItems,
           itemList: getItemList(),
           itemIds,
           shouldHoldItems: item.holdItems,
-        }),
-      }));
+        });
+
+        if (item.linkedItems !== newLinkedItems) {
+          return {
+            linkedItems: newLinkedItems,
+          };
+        }
+
+        return {};
+      }, true);
 
       const addedItems = Object.entries(
         areItemsInside(zoneRef.current, itemIds)

@@ -11,6 +11,7 @@ import {
   useItemActions,
 } from "react-sync-board";
 import useGameItemActions from "../../gameComponents/useGameItemActions";
+import FixedButton from "../../ui/FixedButton";
 
 const ActionPaneWrapper = styled.div`
   pointer-events: none;
@@ -178,14 +179,14 @@ const SelectedItemsPane = ({
             ({ label, action, edit: onlyEdit, shortcut, icon: Icon, uid }) => {
               if (onlyEdit && !showEdit) return null;
               return (
-                <button
+                <FixedButton
                   className="button clear icon-only"
                   key={uid}
                   onClick={() => action()}
                   title={label + (shortcut ? ` (${shortcut})` : "")}
                 >
                   <Icon size="24" alt={label} color="#FFFFFF" />
-                </button>
+                </FixedButton>
               );
             }
           )}
