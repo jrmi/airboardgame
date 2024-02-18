@@ -2,8 +2,6 @@ import React from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 
-import { useEventListener } from "@react-hookz/web/esm/useEventListener";
-import { insideElement } from "../utils";
 import FixedButton from "./FixedButton";
 
 const StyledNavButton = styled(FixedButton)`
