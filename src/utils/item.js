@@ -113,6 +113,7 @@ export const getHeldItems = ({
   itemIds,
   shouldHoldItems,
 }) => {
+  const safeCurrentLinkedItems = currentLinkedItemIds || [];
   if (shouldHoldItems) {
     let before = true;
     const afterItemIds = itemList
@@ -125,20 +126,20 @@ export const getHeldItems = ({
       })
       .map(({ id }) => id);
     const newHeldItems = Object.entries(
-      areItemsInside(element, afterItemIds, currentLinkedItemIds || [], true)
+      areItemsInside(element, afterItemIds, safeCurrentLinkedItems, true)
     )
       .filter(([, { inside }]) => inside)
       .map(([itemId]) => itemId);
     if (
-      currentLinkedItemIds.length !== newHeldItems.length ||
-      !currentLinkedItemIds.every((itemId) => newHeldItems.includes(itemId))
+      safeCurrentLinkedItems.length !== newHeldItems.length ||
+      !safeCurrentLinkedItems.every((itemId) => newHeldItems.includes(itemId))
     ) {
       return newHeldItems;
     }
   } else {
     if (
-      !Array.isArray(currentLinkedItemIds) ||
-      currentLinkedItemIds.length !== 0
+      !Array.isArray(safeCurrentLinkedItems) ||
+      safeCurrentLinkedItems.length !== 0
     ) {
       return [];
     }
