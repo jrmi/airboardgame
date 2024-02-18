@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
+import FixedButton from "./FixedButton";
 
 const StyledWrapper = styled.div`
   display: flex;
@@ -16,7 +17,7 @@ const StyledWrapper = styled.div`
   }
 `;
 
-const StyledButton = styled.div.attrs(({ active }) => ({
+const StyledButton = styled(FixedButton).attrs(({ active }) => ({
   className: active ? "active" : "",
 }))`
   border-radius: 100%;

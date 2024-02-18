@@ -1,8 +1,11 @@
 import React from "react";
 
 import styled from "styled-components";
+import FixedButton from "../ui/FixedButton";
 
-const StyledUserCircle = styled.div`
+const StyledUserCircle = styled(FixedButton)`
+  margin: 0px;
+  padding: 0px;
   background-color: ${({ color }) => color};
   width: 30px;
   min-width: 30px;

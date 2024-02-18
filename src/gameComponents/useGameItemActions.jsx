@@ -123,16 +123,19 @@ export const useGameItemActions = () => {
       let newY =
         minMax.min.y + (minMax.max.y - minMax.min.y) / 2 - clientHeight / 2;
 
-      batchUpdateItems(ids, (item) => {
-        const newItem = {
-          ...item,
-          x: newX,
-          y: newY,
-        };
-        newX += stackThickness;
-        newY -= stackThickness;
-        return newItem;
-      });
+      batchUpdateItems(
+        ids,
+        (item) => {
+          const newItem = {
+            x: newX,
+            y: newY,
+          };
+          newX += stackThickness;
+          newY -= stackThickness;
+          return newItem;
+        },
+        true
+      );
     },
     [batchUpdateItems, getItemListOrSelected]
   );
@@ -157,16 +160,19 @@ export const useGameItemActions = () => {
         stackThickness = stackThicknessMin;
       }
 
-      batchUpdateItems(ids, (item) => {
-        const newItem = {
-          ...item,
-          x: newX,
-          y: newY,
-        };
-        newX += stackThickness;
-        newY -= stackThickness;
-        return newItem;
-      });
+      batchUpdateItems(
+        ids,
+        (item) => {
+          const newItem = {
+            x: newX,
+            y: newY,
+          };
+          newX += stackThickness;
+          newY -= stackThickness;
+          return newItem;
+        },
+        true
+      );
     },
     [batchUpdateItems, getItemListOrSelected]
   );
@@ -179,16 +185,19 @@ export const useGameItemActions = () => {
 
       let { x: newX, y: newY } = items[0];
 
-      batchUpdateItems(ids, (item) => {
-        const { clientWidth } = getItemElement(item.id);
-        const newItem = {
-          ...item,
-          x: newX,
-          y: newY,
-        };
-        newX += clientWidth + gapBetweenItems;
-        return newItem;
-      });
+      batchUpdateItems(
+        ids,
+        (item) => {
+          const { clientWidth } = getItemElement(item.id);
+          const newItem = {
+            x: newX,
+            y: newY,
+          };
+          newX += clientWidth + gapBetweenItems;
+          return newItem;
+        },
+        true
+      );
     },
     [getItemListOrSelected, batchUpdateItems]
   );
@@ -207,40 +216,46 @@ export const useGameItemActions = () => {
 
       let currentColumn = 1;
 
-      batchUpdateItems(ids, (item) => {
-        const { clientWidth, clientHeight } = getItemElement(item.id);
-        const newItem = {
-          ...item,
-          x: newX,
-          y: newY,
-        };
-        newX += clientWidth + gapBetweenItems;
-        currentColumn += 1;
-        if (currentColumn > numberOfColumns) {
-          currentColumn = 1;
-          newX = items[0].x;
-          newY += clientHeight + gapBetweenItems;
-        }
-        return newItem;
-      });
+      batchUpdateItems(
+        ids,
+        (item) => {
+          const { clientWidth, clientHeight } = getItemElement(item.id);
+          const newItem = {
+            x: newX,
+            y: newY,
+          };
+          newX += clientWidth + gapBetweenItems;
+          currentColumn += 1;
+          if (currentColumn > numberOfColumns) {
+            currentColumn = 1;
+            newX = items[0].x;
+            newY += clientHeight + gapBetweenItems;
+          }
+          return newItem;
+        },
+        true
+      );
     },
     [getItemListOrSelected, batchUpdateItems]
   );
 
   const snapToPoint = React.useCallback(
     async (itemIds, { x, y } = {}) => {
-      batchUpdateItems(itemIds, (item) => {
-        const { clientWidth, clientHeight } = getItemElement(item.id);
-        let newX = x - clientWidth / 2;
-        let newY = y - clientHeight / 2;
+      batchUpdateItems(
+        itemIds,
+        (item) => {
+          const { clientWidth, clientHeight } = getItemElement(item.id);
+          let newX = x - clientWidth / 2;
+          let newY = y - clientHeight / 2;
 
-        const newItem = {
-          ...item,
-          x: newX,
-          y: newY,
-        };
-        return newItem;
-      });
+          const newItem = {
+            x: newX,
+            y: newY,
+          };
+          return newItem;
+        },
+        true
+      );
     },
     [batchUpdateItems]
   );
@@ -257,13 +272,11 @@ export const useGameItemActions = () => {
         switch (item.type) {
           case "dice":
             return {
-              ...item,
               value: randInt(0, (item.side || 6) - 1),
             };
           case "diceImage":
           case "imageSequence":
             return {
-              ...item,
               value: randInt(0, item.images.length - 1),
             };
           case "advancedImage": {
@@ -273,17 +286,21 @@ export const useGameItemActions = () => {
               }
               return layer;
             });
-            return { ...item, layers: newLayers };
+            return { layers: newLayers };
           }
           default:
-            return item;
+            return {};
         }
       };
 
       const simulateRoll = (nextTimeout) => {
-        batchUpdateItems(ids, (item) => {
-          return randomizeValue(item);
-        });
+        batchUpdateItems(
+          ids,
+          (item) => {
+            return randomizeValue(item);
+          },
+          true
+        );
         if (nextTimeout < 300) {
           setTimeout(
             () => simulateRoll(nextTimeout + randInt(10, 50)),
@@ -312,44 +329,44 @@ export const useGameItemActions = () => {
 
         if (step > 0) {
           return {
-            ...item,
             value: (value + step) % max,
           };
         } else {
           const newValue = value + step;
           return {
-            ...item,
             value: newValue >= 0 ? newValue : max + newValue,
           };
         }
       };
 
-      batchUpdateItems(ids, (item) => {
-        switch (item.type) {
-          case "dice":
-            return stepItem(item, item.side || 6);
-          case "diceImage":
-          case "imageSequence":
-            return stepItem(item, item.images.length);
-          case "counter":
-            return {
-              ...item,
-              value: isNaN(item.value) ? 0 : item.value + step,
-            };
-          case "advancedImage":
-            return {
-              ...item,
-              layers: item.layers.map((layer, index) => {
-                if (index === layerToUpdate) {
-                  return stepItem(layer, layer.images.length);
-                }
-                return layer;
-              }),
-            };
-          default:
-            return item;
-        }
-      });
+      batchUpdateItems(
+        ids,
+        (item) => {
+          switch (item.type) {
+            case "dice":
+              return stepItem(item, item.side || 6);
+            case "diceImage":
+            case "imageSequence":
+              return stepItem(item, item.images.length);
+            case "counter":
+              return {
+                value: isNaN(item.value) ? 0 : item.value + step,
+              };
+            case "advancedImage":
+              return {
+                layers: item.layers.map((layer, index) => {
+                  if (index === layerToUpdate) {
+                    return stepItem(layer, layer.images.length);
+                  }
+                  return layer;
+                }),
+              };
+            default:
+              return item;
+          }
+        },
+        true
+      );
     },
     [batchUpdateItems, getItemListOrSelected]
   );
@@ -376,11 +393,15 @@ export const useGameItemActions = () => {
 
       const maxRotate = maxRotateCount || Math.round(360 / angle);
 
-      batchUpdateItems(ids, (item) => {
-        const rotation =
-          ((item.rotation || 0) + angle * randInt(0, maxRotate)) % 360;
-        return { ...item, rotation };
-      });
+      batchUpdateItems(
+        ids,
+        (item) => {
+          const rotation =
+            ((item.rotation || 0) + angle * randInt(0, maxRotate)) % 360;
+          return { rotation };
+        },
+        true
+      );
     },
     [getItemListOrSelected, batchUpdateItems]
   );
@@ -399,11 +420,14 @@ export const useGameItemActions = () => {
         tap = false;
       }
 
-      batchUpdateItems(ids, (item) => ({
-        ...item,
-        tapped: tap,
-        rotation: tap ? (item.rotation || 0) + 90 : (item.rotation || 0) - 90,
-      }));
+      batchUpdateItems(
+        ids,
+        (item) => ({
+          tapped: tap,
+          rotation: tap ? (item.rotation || 0) + 90 : (item.rotation || 0) - 90,
+        }),
+        true
+      );
     },
     [getItemListOrSelected, batchUpdateItems]
   );
@@ -413,10 +437,13 @@ export const useGameItemActions = () => {
     async (itemIds) => {
       const [ids] = await getItemListOrSelected(itemIds);
 
-      batchUpdateItems(ids, (item) => ({
-        ...item,
-        locked: !item.locked,
-      }));
+      batchUpdateItems(
+        ids,
+        (item) => ({
+          locked: !item.locked,
+        }),
+        true
+      );
 
       // Help user on first lock
       if (isFirstLock) {
@@ -449,14 +476,17 @@ export const useGameItemActions = () => {
         })
         .map(({ id }) => id);
 
-      batchUpdateItems(itemIdsToFlip, (item) => ({
-        ...item,
-        flipped: flip,
-        unflippedFor:
-          !Array.isArray(item.unflippedFor) || item.unflippedFor.length > 0
-            ? null
-            : item.unflippedFor,
-      }));
+      batchUpdateItems(
+        itemIdsToFlip,
+        (item) => ({
+          flipped: flip,
+          unflippedFor:
+            !Array.isArray(item.unflippedFor) || item.unflippedFor.length > 0
+              ? null
+              : item.unflippedFor,
+        }),
+        true
+      );
       if (reverseOrder) {
         reverseItemsOrder(itemIdsToFlip);
       }
@@ -487,10 +517,13 @@ export const useGameItemActions = () => {
     async (itemIds, { angle }) => {
       const [ids] = await getItemListOrSelected(itemIds);
 
-      batchUpdateItems(ids, (item) => ({
-        ...item,
-        rotation: (item.rotation || 0) + angle,
-      }));
+      batchUpdateItems(
+        ids,
+        (item) => ({
+          rotation: (item.rotation || 0) + angle,
+        }),
+        true
+      );
     },
     [getItemListOrSelected, batchUpdateItems]
   );
@@ -518,26 +551,29 @@ export const useGameItemActions = () => {
         })
         .map(({ id }) => id);
 
-      batchUpdateItems(itemIdsToFlip, (item) => {
-        let { unflippedFor = [] } = item;
+      batchUpdateItems(
+        itemIdsToFlip,
+        (item) => {
+          let { unflippedFor = [] } = item;
 
-        if (!Array.isArray(item.unflippedFor)) {
-          unflippedFor = [];
-        }
-        const isFlippedFor = unflippedFor.includes(currentUser.uid);
+          if (!Array.isArray(item.unflippedFor)) {
+            unflippedFor = [];
+          }
+          const isFlippedFor = unflippedFor.includes(currentUser.uid);
 
-        if (flipSelf && !isFlippedFor) {
-          unflippedFor = [...unflippedFor, currentUser.uid];
-        }
-        if (!flipSelf && isFlippedFor) {
-          unflippedFor = unflippedFor.filter((id) => id !== currentUser.uid);
-        }
-        return {
-          ...item,
-          flipped: true,
-          unflippedFor,
-        };
-      });
+          if (flipSelf && !isFlippedFor) {
+            unflippedFor = [...unflippedFor, currentUser.uid];
+          }
+          if (!flipSelf && isFlippedFor) {
+            unflippedFor = unflippedFor.filter((id) => id !== currentUser.uid);
+          }
+          return {
+            flipped: true,
+            unflippedFor,
+          };
+        },
+        true
+      );
 
       if (itemIdsToFlip.length) {
         playAudio(flipAudio, 0.2);

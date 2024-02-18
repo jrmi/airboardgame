@@ -108,7 +108,7 @@ export const availableItemVisitor = async (items, callback) => {
 export const getHeldItems = ({
   element,
   currentItemId,
-  linkedItemIds,
+  currentLinkedItemIds,
   itemList,
   itemIds,
   shouldHoldItems,
@@ -124,12 +124,25 @@ export const getHeldItems = ({
         return result;
       })
       .map(({ id }) => id);
-    return Object.entries(
-      areItemsInside(element, afterItemIds, linkedItemIds || [], true)
+    const newHeldItems = Object.entries(
+      areItemsInside(element, afterItemIds, currentLinkedItemIds || [], true)
     )
       .filter(([, { inside }]) => inside)
       .map(([itemId]) => itemId);
+    if (
+      currentLinkedItemIds.length !== newHeldItems.length ||
+      !currentLinkedItemIds.every((itemId) => newHeldItems.includes(itemId))
+    ) {
+      return newHeldItems;
+    }
   } else {
-    return [];
+    if (
+      !Array.isArray(currentLinkedItemIds) ||
+      currentLinkedItemIds.length !== 0
+    ) {
+      return [];
+    }
   }
+
+  return currentLinkedItemIds;
 };
