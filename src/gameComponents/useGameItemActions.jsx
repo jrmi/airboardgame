@@ -356,13 +356,16 @@ export const useGameItemActions = () => {
               return {
                 layers: item.layers.map((layer, index) => {
                   if (index === layerToUpdate) {
-                    return stepItem(layer, layer.images.length);
+                    return {
+                      ...layer,
+                      ...stepItem(layer, layer.images.length),
+                    };
                   }
                   return layer;
                 }),
               };
             default:
-              return item;
+              return undefined;
           }
         },
         true

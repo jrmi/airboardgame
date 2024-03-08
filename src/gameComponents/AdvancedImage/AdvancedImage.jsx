@@ -144,8 +144,6 @@ const AdvancedImage = ({
             linkedItems: newLinkedItems,
           };
         }
-
-        return {};
       }, true);
     },
     [currentItemId, getItemList, setState]
@@ -153,12 +151,14 @@ const AdvancedImage = ({
 
   React.useEffect(() => {
     const unregisterList = [];
-    unregisterList.push(register(onPlaceItem));
+    if (currentItemId) {
+      unregisterList.push(register(onPlaceItem));
+    }
 
     return () => {
       unregisterList.forEach((callback) => callback());
     };
-  }, [onPlaceItem, register]);
+  }, [currentItemId, onPlaceItem, register]);
 
   return (
     <Wrapper ref={wrapperRef}>

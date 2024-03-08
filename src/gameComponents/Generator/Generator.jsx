@@ -246,13 +246,15 @@ const Generator = ({ color = "#ccc", item, id, currentItemId, setState }) => {
      * Register events callback
      */
     const unregisterList = [];
-    unregisterList.push(registerPlace(onPlaceItem));
-    unregisterList.push(registerDelete(onDeleteItem));
+    if (currentItemId) {
+      unregisterList.push(registerPlace(onPlaceItem));
+      unregisterList.push(registerDelete(onDeleteItem));
+    }
 
     return () => {
       unregisterList.forEach((callback) => callback());
     };
-  }, [registerPlace, registerDelete, onPlaceItem, onDeleteItem]);
+  }, [registerPlace, registerDelete, onPlaceItem, onDeleteItem, currentItemId]);
 
   React.useEffect(() => {
     /**
