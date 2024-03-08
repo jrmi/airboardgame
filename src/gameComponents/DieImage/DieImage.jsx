@@ -18,13 +18,12 @@ const Dice = ({
 
   React.useEffect(() => {
     const unregisterList = [];
-    if (rollOnMove) {
+    if (id && rollOnMove) {
       const rollOnPlace = (itemIds) => {
         if (itemIds.includes(id)) {
           roll([id]);
         }
       };
-
       unregisterList.push(register(rollOnPlace));
     }
     return () => {

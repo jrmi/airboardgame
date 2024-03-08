@@ -77,8 +77,6 @@ const Zone = ({
             linkedItems: newLinkedItems,
           };
         }
-
-        return {};
       }, true);
 
       const addedItems = Object.entries(
@@ -106,18 +104,24 @@ const Zone = ({
 
   React.useEffect(() => {
     if (!holdItems && setState) {
-      setState((item) => ({ ...item, linkedItems: [] }));
+      setState((item) => {
+        if (!Array.isArray(item.linkedItems) || item.linkedItems.length > 0) {
+          return { linkedItems: [] };
+        }
+      }, true);
     }
   }, [holdItems, setState]);
 
   React.useEffect(() => {
     const unregisterList = [];
-    unregisterList.push(register(onInsideItem));
+    if (currentItemId) {
+      unregisterList.push(register(onInsideItem));
+    }
 
     return () => {
       unregisterList.forEach((callback) => callback());
     };
-  }, [onInsideItem, onItem, register]);
+  }, [currentItemId, onInsideItem, onItem, register]);
 
   return (
     <ZoneWrapper

@@ -28,9 +28,13 @@ export const areItemsInside = (
 ) => {
   return Object.fromEntries(
     [...itemIds, ...previousIds].map((itemId) => {
+      const elementToTest = getItemElement(itemId);
+      if (!elementToTest) {
+        return [itemId, { inside: false, added: false, removed: true }];
+      }
       const inside = centerOnly
-        ? isItemCenterInsideElement(getItemElement(itemId), element)
-        : isItemInsideElement(getItemElement(itemId), element);
+        ? isItemCenterInsideElement(elementToTest, element)
+        : isItemInsideElement(elementToTest, element);
 
       return [
         itemId,
