@@ -482,7 +482,7 @@ const backgrounds = [
       const style = {
         backgroundColor: color,
       };
-      if (img.type) {
+      if (img?.type) {
         const url = media2Url(img);
         if (url) {
           style.backgroundImage = `url(${url})`;
