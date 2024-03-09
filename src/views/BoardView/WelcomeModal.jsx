@@ -34,8 +34,14 @@ const WelcomeModal = ({ show, setShow, welcome = true }) => {
   const currentUrl = window.location.href;
 
   const handleCopy = async () => {
-    await navigator.clipboard.writeText(window.location.href);
-    toast.info(t("Url copied to clipboard!"), { autoClose: 1000 });
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      toast.info(t("Url copied to clipboard!"), { autoClose: 1000 });
+    } catch (e) {
+      toast.info(t("You don't have the permissions to copy the Url"), {
+        autoClose: 1000,
+      });
+    }
   };
 
   return (
