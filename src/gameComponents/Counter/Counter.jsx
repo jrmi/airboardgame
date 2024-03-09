@@ -23,7 +23,9 @@ const CounterPane = styled.div`
       padding: 1rem;
       margin: 0;
       border: none;
-      margin-top: -1px;
+      min-width: 40px;
+      font-size: 1.2em;
+      flex: 1;
     }
 
     input {
@@ -33,11 +35,14 @@ const CounterPane = styled.div`
       border-radius: 0 !important;
       border: none !important;
       margin: 0 -1px;
+      flex: 5;
     }
 
     h3 {
+      line-height: 1em;
       user-select: none;
       padding: 0;
+      padding-bottom: 0.5em;
       margin: 0;
     }
   `}
@@ -81,7 +86,7 @@ const Counter = ({
 
   return (
     <CounterPane color={color}>
-      <h3>{label}</h3>
+      {label && <h3>{label}</h3>}
       <div className="counter-content">
         <button
           onClick={decrement}
