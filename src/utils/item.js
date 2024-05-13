@@ -117,35 +117,49 @@ export const getHeldItems = ({
   itemIds,
   shouldHoldItems,
 }) => {
-  const safeCurrentLinkedItems = currentLinkedItemIds || [];
+  const safeCurrentLinkedItems = Array.isArray(currentLinkedItemIds)
+    ? currentLinkedItemIds
+    : [];
+
   if (shouldHoldItems) {
-    let before = true;
-    const afterItemIds = itemList
-      .filter(({ id }) => {
-        const result = !before && itemIds.includes(id);
-        if (id === currentItemId) {
-          before = false;
-        }
-        return result;
+    const currentItemIndex = itemList.findIndex(
+      ({ id }) => id === currentItemId
+    );
+    const currentItemLayer = itemList[currentItemIndex].layer || 0;
+
+    const afterMap = Object.fromEntries(
+      itemList.map(({ id, layer = 0 }, index) => {
+        return [
+          id,
+          layer > currentItemLayer ||
+            (layer === currentItemLayer && index > currentItemIndex),
+        ];
       })
-      .map(({ id }) => id);
+    );
+    const afterItemIds = itemIds.filter((id) => afterMap[id]);
+
+    const afterCurrentLinkedItemIds = (currentLinkedItemIds || []).filter(
+      (id) => afterMap[id]
+    );
+
     const newHeldItems = Object.entries(
-      areItemsInside(element, afterItemIds, safeCurrentLinkedItems, true)
+      areItemsInside(element, afterItemIds, afterCurrentLinkedItemIds, true)
     )
       .filter(([, { inside }]) => inside)
       .map(([itemId]) => itemId);
+
+    const oldLinked = new Set(safeCurrentLinkedItems);
+    const newLinked = new Set(newHeldItems);
+
     if (
-      safeCurrentLinkedItems.length !== newHeldItems.length ||
-      !safeCurrentLinkedItems.every((itemId) => newHeldItems.includes(itemId))
+      newLinked.size !== oldLinked.size ||
+      !Array.from(oldLinked).every((id) => newLinked.has(id))
     ) {
       return newHeldItems;
     }
   } else {
-    if (
-      !Array.isArray(safeCurrentLinkedItems) ||
-      safeCurrentLinkedItems.length !== 0
-    ) {
-      return [];
+    if (safeCurrentLinkedItems.length !== 0) {
+      return safeCurrentLinkedItems;
     }
   }
 

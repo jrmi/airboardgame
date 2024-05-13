@@ -2,7 +2,12 @@ import React from "react";
 
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
-import { useItemActions, useUsers, useSelectedItems } from "react-sync-board";
+import {
+  useItemActions,
+  useUsers,
+  useSelectedItems,
+  useItemInteraction,
+} from "react-sync-board";
 
 import {
   shuffle as shuffleArray,
@@ -53,6 +58,7 @@ export const useGameItemActions = () => {
     swapItems,
     getItems,
   } = useItemActions();
+  const { call: callPlaceInteractions } = useItemInteraction("place");
 
   const { t } = useTranslation();
 
@@ -125,7 +131,7 @@ export const useGameItemActions = () => {
 
       batchUpdateItems(
         ids,
-        (item) => {
+        () => {
           const newItem = {
             x: newX,
             y: newY,
@@ -136,8 +142,9 @@ export const useGameItemActions = () => {
         },
         true
       );
+      callPlaceInteractions(ids);
     },
-    [batchUpdateItems, getItemListOrSelected]
+    [batchUpdateItems, getItemListOrSelected, callPlaceInteractions]
   );
 
   // Stack selection to Top Left
@@ -162,7 +169,7 @@ export const useGameItemActions = () => {
 
       batchUpdateItems(
         ids,
-        (item) => {
+        () => {
           const newItem = {
             x: newX,
             y: newY,
@@ -173,8 +180,9 @@ export const useGameItemActions = () => {
         },
         true
       );
+      callPlaceInteractions(ids);
     },
-    [batchUpdateItems, getItemListOrSelected]
+    [batchUpdateItems, getItemListOrSelected, callPlaceInteractions]
   );
 
   // Align selection to a line
@@ -198,8 +206,9 @@ export const useGameItemActions = () => {
         },
         true
       );
+      callPlaceInteractions(ids);
     },
-    [getItemListOrSelected, batchUpdateItems]
+    [getItemListOrSelected, batchUpdateItems, callPlaceInteractions]
   );
 
   // Align selection to an array
@@ -235,8 +244,9 @@ export const useGameItemActions = () => {
         },
         true
       );
+      callPlaceInteractions(ids);
     },
-    [getItemListOrSelected, batchUpdateItems]
+    [getItemListOrSelected, batchUpdateItems, callPlaceInteractions]
   );
 
   const snapToPoint = React.useCallback(
@@ -256,8 +266,9 @@ export const useGameItemActions = () => {
         },
         true
       );
+      callPlaceInteractions(itemIds);
     },
-    [batchUpdateItems]
+    [batchUpdateItems, callPlaceInteractions]
   );
 
   const roll = React.useCallback(
@@ -386,8 +397,10 @@ export const useGameItemActions = () => {
       swapItems(ids, shuffledItems);
 
       playAudio(shuffleAudio, 0.5);
+
+      callPlaceInteractions(ids);
     },
-    [getItemListOrSelected, swapItems]
+    [getItemListOrSelected, callPlaceInteractions, swapItems]
   );
 
   const randomlyRotateSelectedItems = React.useCallback(
@@ -492,12 +505,13 @@ export const useGameItemActions = () => {
       );
       if (reverseOrder) {
         reverseItemsOrder(itemIdsToFlip);
+        callPlaceInteractions(itemIds);
       }
       if (itemIdsToFlip.length) {
         playAudio(flipAudio, 0.2);
       }
     },
-    [batchUpdateItems, getItems, reverseItemsOrder]
+    [batchUpdateItems, callPlaceInteractions, getItems, reverseItemsOrder]
   );
 
   // Toggle flip state
