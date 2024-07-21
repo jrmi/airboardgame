@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import {
   useItemActions,
   useUsers,
-  useSelectedItems,
+  useGetSelectedItems,
   useItemInteraction,
 } from "react-sync-board";
 
@@ -66,17 +66,18 @@ export const useGameItemActions = () => {
 
   const { currentUser } = useUsers();
 
-  const selectedItems = useSelectedItems();
+  const getSelectedItems = useGetSelectedItems();
 
   const getItemListOrSelected = React.useCallback(
     async (itemIds) => {
       if (itemIds) {
         return [itemIds, await getItems(itemIds)];
       } else {
+        const selectedItems = getSelectedItems();
         return [selectedItems, await getItems(selectedItems)];
       }
     },
-    [getItems, selectedItems]
+    [getItems, getSelectedItems]
   );
 
   // Stack selection to Center
