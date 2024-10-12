@@ -55,6 +55,7 @@ const Zone = ({
   id: currentItemId,
 }) => {
   const { register } = useItemInteraction("place");
+  const { register: registerDelete } = useItemInteraction("delete");
   const { getItemList } = useItemActions();
   const { actionMap } = useGameItemActions();
 
@@ -79,27 +80,66 @@ const Zone = ({
         }
       }, true);
 
-      const addedItems = Object.entries(
-        areItemsInside(zoneRef.current, itemIds)
-      )
-        .filter(([, { added }]) => added)
-        .map(([itemId]) => itemId);
+      setState((item) => {
+        const safeInsideItems = Array.isArray(item.insideItems)
+          ? item.insideItems
+          : [];
+        const insideMap = areItemsInside(
+          zoneRef.current,
+          itemIds,
+          safeInsideItems
+        );
+        const addedItems = Object.entries(insideMap)
+          .filter(([, { added }]) => added)
+          .map(([itemId]) => itemId);
 
-      if (onItem && addedItems.length) {
-        const onItemActions = onItem.map((action) => {
-          if (typeof action === "string") {
-            return { name: action };
-          }
-          return action;
-        });
-        onItemActions.forEach(({ name, args }) => {
-          if (actionMap[name]) {
-            actionMap[name].action(args)(addedItems);
-          }
-        });
-      }
+        const currentInsideItems = Object.entries(insideMap)
+          .filter(([, { inside }]) => inside)
+          .map(([itemId]) => itemId);
+
+        if (onItem && addedItems.length) {
+          const onItemActions = onItem.map((action) => {
+            if (typeof action === "string") {
+              return { name: action };
+            }
+            return action;
+          });
+          onItemActions.forEach(({ name, args }) => {
+            if (actionMap[name]) {
+              actionMap[name].action(args)(addedItems);
+            }
+          });
+        }
+        const oldLinked = new Set(safeInsideItems);
+        const newLinked = new Set(currentInsideItems);
+
+        if (
+          newLinked.size !== oldLinked.size ||
+          !Array.from(oldLinked).every((id) => newLinked.has(id))
+        ) {
+          return { insideItems: currentInsideItems };
+        }
+      }, true);
     },
     [actionMap, currentItemId, getItemList, onItem, setState]
+  );
+
+  const onDeleteItem = React.useCallback(
+    (itemIds) => {
+      setState((item) => {
+        const safeInsideItems = item.insideItems || [];
+        const newInsideItems = safeInsideItems.filter(
+          (id) => !itemIds.includes(id)
+        );
+
+        if (safeInsideItems.length !== newInsideItems.length) {
+          return {
+            insideItems: newInsideItems,
+          };
+        }
+      }, true);
+    },
+    [setState]
   );
 
   React.useEffect(() => {
@@ -122,6 +162,17 @@ const Zone = ({
       unregisterList.forEach((callback) => callback());
     };
   }, [currentItemId, onInsideItem, onItem, register]);
+
+  React.useEffect(() => {
+    const unregisterList = [];
+    if (currentItemId) {
+      unregisterList.push(registerDelete(onDeleteItem));
+    }
+
+    return () => {
+      unregisterList.forEach((callback) => callback());
+    };
+  }, [currentItemId, onDeleteItem, registerDelete]);
 
   return (
     <ZoneWrapper

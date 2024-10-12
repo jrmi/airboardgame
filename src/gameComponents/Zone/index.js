@@ -19,6 +19,7 @@ const Template = createItemTemplate({
     borderStyle: "dotted",
     backgroundColor: "#cccccc00",
     labelPosition: "left",
+    insideItems: [],
   },
 });
 

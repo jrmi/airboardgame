@@ -26,7 +26,10 @@ const EditItemButton = ({ showEdit, setShowEdit }) => {
   const { batchUpdateItems } = useItemActions();
 
   const currentItems = React.useMemo(
-    () => items.filter(({ id }) => selectedItems.includes(id)),
+    () =>
+      items
+        .filter((item) => item)
+        .filter(({ id }) => selectedItems.includes(id)),
     [items, selectedItems]
   );
 
