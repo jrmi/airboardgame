@@ -67,7 +67,8 @@ const Image = ({
   id: currentItemId,
 }) => {
   const { currentUser, localUsers: users } = useUsers();
-  const { register } = useItemInteraction("place");
+  const { register: registerPlace } = useItemInteraction("place");
+  const { register: registerDelete } = useItemInteraction("delete");
   const { getItemList } = useItemActions();
 
   const wrapperRef = React.useRef(null);
@@ -131,7 +132,6 @@ const Image = ({
           itemIds,
           shouldHoldItems: item.holdItems,
         });
-
         if (item.linkedItems !== newLinkedItems) {
           return {
             linkedItems: newLinkedItems,
@@ -142,16 +142,45 @@ const Image = ({
     [currentItemId, getItemList, setState]
   );
 
+  const onDeleteItem = React.useCallback(
+    (itemIds) => {
+      setState((item) => {
+        const safeLinkedItems = item.linkedItems || [];
+        const newLinkedItems = safeLinkedItems.filter(
+          (id) => !itemIds.includes(id)
+        );
+
+        if (safeLinkedItems.length !== newLinkedItems.length) {
+          return {
+            linkedItems: newLinkedItems,
+          };
+        }
+      }, true);
+    },
+    [setState]
+  );
+
   React.useEffect(() => {
     const unregisterList = [];
     if (currentItemId) {
-      unregisterList.push(register(onPlaceItem));
+      unregisterList.push(registerPlace(onPlaceItem));
     }
 
     return () => {
       unregisterList.forEach((callback) => callback());
     };
-  }, [currentItemId, onPlaceItem, register]);
+  }, [currentItemId, onPlaceItem, registerPlace]);
+
+  React.useEffect(() => {
+    const unregisterList = [];
+    if (currentItemId) {
+      unregisterList.push(registerDelete(onDeleteItem));
+    }
+
+    return () => {
+      unregisterList.forEach((callback) => callback());
+    };
+  }, [currentItemId, onDeleteItem, registerDelete]);
 
   return (
     <Wrapper ref={wrapperRef}>

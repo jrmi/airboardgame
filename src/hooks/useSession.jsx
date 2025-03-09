@@ -157,6 +157,13 @@ export const SessionProvider = ({
     [getCurrentSession, sessionId]
   );
 
+  React.useEffect(() => {
+    // Allow to refresh all items if there is a problem with the display or something
+    window.refreshItems = () => {
+      setItemList(structuredClone(getItemList()));
+    };
+  }, [getItemList, setItemList]);
+
   return (
     <SessionContext.Provider
       value={{

@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next";
 import debounce from "lodash.debounce";
 
 import { uid, getItemElement } from "../../utils";
+import { isItemCenterInsideElement } from "../../utils/item";
 import itemTemplates from "../itemTemplates";
 
 const StyledShape = styled.div`
@@ -85,6 +86,11 @@ const Generator = ({ color = "#ccc", item, id, currentItemId, setState }) => {
     const [thisItem] = getItems([id]);
     const { item } = thisItem || {}; // Inside item library, thisItem is not defined
     if (item?.type) {
+      setState((prev) => ({
+        ...prev,
+        currentItemId: newItemId,
+        linkedItems: [newItemId],
+      }));
       await pushItem({
         ...item,
         x: thisItem.x + centerRef.current.left + 3,
@@ -93,11 +99,6 @@ const Generator = ({ color = "#ccc", item, id, currentItemId, setState }) => {
         editable: false,
         id: newItemId,
       });
-      setState((prev) => ({
-        ...prev,
-        currentItemId: newItemId,
-        linkedItems: [newItemId],
-      }));
     }
   }, [getItems, id, pushItem, setState]);
 
@@ -159,9 +160,18 @@ const Generator = ({ color = "#ccc", item, id, currentItemId, setState }) => {
        * Callback if generated item or generator is placed
        */
       const placeSelf = itemIds.includes(id);
-      if (itemIds.includes(currentItemRef.current) && !placeSelf) {
+
+      const [thisItem] = await getItems([id]);
+
+      if (
+        itemIds.includes(currentItemRef.current) &&
+        !placeSelf &&
+        !isItemCenterInsideElement(
+          getItemElement(currentItemRef.current),
+          itemRef.current
+        )
+      ) {
         // We have removed generated item so we create a new one.
-        const [thisItem] = await getItems([id]);
         batchUpdateItems([currentItemRef.current], (item) => {
           const result = {
             ...item,

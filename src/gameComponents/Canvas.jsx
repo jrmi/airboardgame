@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 
-import { getImage } from "../utils/image";
 import { useAsync } from "@react-hookz/web/esm/useAsync";
+import useAsyncEffect from "use-async-effect";
+import { getImage } from "../utils/image";
 
 const defaultSize = 50;
 
@@ -84,11 +85,25 @@ const paint = async ({
 };
 
 const Canvas = ({ width, height, layers }) => {
+  const [refreshed, setRefreshed] = useState(false);
   const canvasRef = React.useRef(null);
 
-  React.useEffect(() => {
-    paint({ canvas: canvasRef.current, width, height, layers });
-  }, [layers, height, width]);
+  useAsyncEffect(async () => {
+    await paint({
+      canvas: canvasRef.current,
+      width,
+      height,
+      layers,
+    });
+    if (!refreshed) {
+      // Force a refresh a few seconds after the first paint.
+      // Somehow it's not displaying in Firefox in some situations when using external
+      // images.
+      setTimeout(() => {
+        setRefreshed(true);
+      }, 1000);
+    }
+  }, [layers, height, width, refreshed]);
 
   return <canvas ref={canvasRef}></canvas>;
 };
