@@ -76,7 +76,6 @@ const AdvancedImage = ({
   layers,
   id: currentItemId,
 }) => {
-  const [refreshed, setRefreshed] = useState(false);
   const { register } = useItemInteraction("place");
   const { getItemList } = useItemActions();
   const wrapperRef = React.useRef(null);
