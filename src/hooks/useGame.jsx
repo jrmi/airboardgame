@@ -46,6 +46,13 @@ export const GameProvider = ({ gameId, game, children }) => {
     }
   }, [game, setGame]);
 
+  React.useEffect(() => {
+    // Allow to refresh all items if there is a problem with the display or something
+    window.refreshItems = () => {
+      setItemList(structuredClone(getItemList()));
+    };
+  }, [getItemList, setItemList]);
+
   return (
     <GameContext.Provider
       value={{

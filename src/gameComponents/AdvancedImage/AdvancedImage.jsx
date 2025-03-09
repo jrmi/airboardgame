@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import React, { memo, useState } from "react";
 import { useUsers } from "react-sync-board";
 import styled from "styled-components";
 import { media2Url } from "../../mediaLibrary";
@@ -76,6 +76,7 @@ const AdvancedImage = ({
   layers,
   id: currentItemId,
 }) => {
+  const [refreshed, setRefreshed] = useState(false);
   const { register } = useItemInteraction("place");
   const { getItemList } = useItemActions();
   const wrapperRef = React.useRef(null);
