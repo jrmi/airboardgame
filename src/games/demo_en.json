@@ -232,10 +232,9 @@
     "imageUrl": "/game_assets/default.png",
     "keepTitle": true,
     "initialBoardPosition": {
-      "top": 24700,
-      "left": 24750,
-      "width": 1000,
-      "height": 300
+      "x": 270,
+      "y": 820,
+      "radius": 1235
     },
     "defaultLanguage": "en",
     "materialLanguage": "Multi-lang",
