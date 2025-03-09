@@ -32,13 +32,13 @@ jobs:
           VITE_API_ENDPOINT: https://ricochetjs-deploy-production.up.railway.app/
           VITE_RICOCHET_SITEID: airboardgame
           ACTIONS_ALLOW_UNSECURE_COMMANDS: true
-      - uses: actions/upload-artifact@v1
+      - uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: cypress-screenshots
           path: cypress/screenshots
       # Test run video was always captured, so this action uses "always()" condition
-      - uses: actions/upload-artifact@v1
+      - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: cypress-videos
