@@ -57,7 +57,8 @@ const layer={
   name: 'ttt',
   images: {...}
   side: "front"|"back"|"both"
-  offset: {x, y}
+  offsetX: 0,
+  offsetY:0,
   uid: ''
 }
 

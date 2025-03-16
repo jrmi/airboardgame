@@ -15,7 +15,8 @@ const defaultLayer = () => {
     uid: uid(),
     images: [],
     side: "front",
-    offset: { x: 0, y: 0 },
+    offsetX: 0,
+    offsetY: 0,
   };
 };
 
