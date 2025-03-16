@@ -76,13 +76,13 @@ class ZipBuilder {
         data.availableItems,
         this.addImageToZipFromItem.bind(this)
       );
-    }
 
-    data.board.imageUrl = await this.exportMediaToZip(data.board.imageUrl);
-    if (data.board?.bgConf?.img) {
-      data.board.bgConf.img = await this.exportMediaToZip(
-        data.board.bgConf.img
-      );
+      data.board.imageUrl = await this.exportMediaToZip(data.board.imageUrl);
+      if (data.board?.bgConf?.img) {
+        data.board.bgConf.img = await this.exportMediaToZip(
+          data.board.bgConf.img
+        );
+      }
     }
 
     this.zip.file("content.json", JSON.stringify(data));

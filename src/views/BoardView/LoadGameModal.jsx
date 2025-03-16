@@ -41,8 +41,8 @@ const LoadGameModal = ({ show, setShow }) => {
           (item) => itemMediaUploader.upload(item)
         );
 
-        game.board.imgUrl = await itemMediaUploader.uploadMedia(
-          game.board.imgUrl
+        game.board.imageUrl = await itemMediaUploader.uploadMedia(
+          game.board.imageUrl
         );
         if (game.board?.bgConf?.img) {
           game.board.bgConf.img = await itemMediaUploader.uploadMedia(
