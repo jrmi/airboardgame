@@ -7,7 +7,7 @@ import { confirmAlert } from "react-confirm-alert";
 import { toast } from "react-toastify";
 import { useMutation, useQueryClient } from "react-query";
 import { media2Url } from "../mediaLibrary";
-import { FiDelete, FiEdit, FiEyeOff, FiShare2, FiTrash2 } from "react-icons/fi";
+import { FiEdit, FiEyeOff, FiShare2, FiTrash2 } from "react-icons/fi";
 
 const Game = styled.li`
   position: relative;

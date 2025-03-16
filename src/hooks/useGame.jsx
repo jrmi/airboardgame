@@ -46,6 +46,12 @@ export const GameProvider = ({ gameId, game, children }) => {
     }
   }, [game, setGame]);
 
+  React.useEffect(() => {
+    window.debugShowGame = () => {
+      console.log(getItemList());
+    };
+  }, [getItemList]);
+
   return (
     <GameContext.Provider
       value={{
