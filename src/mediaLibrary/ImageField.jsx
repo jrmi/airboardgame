@@ -37,6 +37,14 @@ const Thumbnail = styled.img`
   background-image: url(${backgroundGrid});
 `;
 
+const ensureMedia = (val) => {
+  if (typeof val === "string") {
+    return { type: "external", content: val };
+  } else {
+    return val;
+  }
+};
+
 const ImageField = ({ value, onChange, onImageLoaded }) => {
   const { t } = useTranslation();
   let type, content;
@@ -56,15 +64,15 @@ const ImageField = ({ value, onChange, onImageLoaded }) => {
   }
 
   const handleInputChange = (e) => {
-    onChange({ ...value, type, content: e.target.value });
+    onChange({ ...ensureMedia(value), type, content: e.target.value });
   };
 
   const handleTypeChange = (e) => {
-    onChange({ ...value, type: e.target.value, content: "" });
+    onChange({ ...ensureMedia(value), type: e.target.value, content: "" });
   };
 
   const handleMediaSelect = (key) => {
-    onChange({ ...value, type: "local", content: key });
+    onChange({ ...ensureMedia(value), type: "local", content: key });
   };
 
   const url = media2Url(value);

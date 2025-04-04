@@ -267,9 +267,8 @@ export const useGameItemActions = () => {
         },
         true
       );
-      callPlaceInteractions(itemIds);
     },
-    [batchUpdateItems, callPlaceInteractions]
+    [batchUpdateItems]
   );
 
   const roll = React.useCallback(

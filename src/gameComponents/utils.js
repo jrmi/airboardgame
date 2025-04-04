@@ -30,7 +30,7 @@ const defaultTemplate = () => ({
 });
 
 export const createItemTemplate = (template) => {
-  return Object.assign({}, defaultTemplate(), template, { uid: uid() });
+  return Object.assign({}, defaultTemplate(), template, { id: uid() });
 };
 
 export default createItemTemplate;
