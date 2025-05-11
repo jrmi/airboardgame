@@ -12,7 +12,7 @@ body.react-confirm-alert-body-element {
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: 260;
+  z-index: 290;
   background: rgba(0, 0, 0, 0.4);
   display: flex;
   justify-content: center;

@@ -97,6 +97,7 @@ export const DownloadLink = ({ getData = () => {}, withFile = false }) => {
   const { t } = useTranslation();
 
   const [generating, setGenerating] = React.useState(false);
+  const [error, setError] = React.useState(false);
   const [fileCount, setFileCount] = React.useState(0);
 
   const triggerDownload = React.useCallback(async () => {
@@ -105,6 +106,7 @@ export const DownloadLink = ({ getData = () => {}, withFile = false }) => {
     if (data.items.length) {
       setGenerating(true);
       setFileCount(0);
+      setError(false);
       try {
         const zipBuilder = new ZipBuilder();
         const url = await zipBuilder.build(
@@ -115,17 +117,26 @@ export const DownloadLink = ({ getData = () => {}, withFile = false }) => {
           withFile
         );
         triggerFileDownload(url, `airboardgame_${Date.now()}.zip`);
+      } catch (e) {
+        console.error(e);
+        setError(true);
       } finally {
+        setFileCount(0);
         setGenerating(false);
       }
     }
   }, [getData, withFile]);
 
   return (
-    <button className="button success icon" onClick={triggerDownload}>
-      {!generating ? t("Export") : `#${fileCount} - ${t("Generating export")} `}
-      {!generating && <FiDownload size="20" color="#f9fbfa" alt="Download" />}
-    </button>
+    <>
+      <button className="button success icon" onClick={triggerDownload}>
+        {!generating
+          ? t("Export")
+          : `#${fileCount} - ${t("Generating export")} `}
+        {!generating && <FiDownload size="20" color="#f9fbfa" alt="Download" />}
+      </button>
+      {error && <p className="error">{t("An error occurred. Try again!")}</p>}
+    </>
   );
 };
 

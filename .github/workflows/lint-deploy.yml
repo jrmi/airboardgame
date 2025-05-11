@@ -6,16 +6,16 @@ on:
   workflow_dispatch:
 jobs:
   build:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v3
-        
+
       - uses: actions/setup-node@v3
         with:
           node-version: 18
 
       - run: npm ci
-      - run: npm run lint  
+      - run: npm run lint
       - run: |
           cat <<EOF > ./backend/.env
           OPENVIDU_URL=${{ secrets.OPENVIDU_URL }}
@@ -23,7 +23,7 @@ jobs:
           EOF
       - run: cat backend/.env
       - run: cd backend && npm ci && npm run build
-        env:      
+        env:
           RICOCHET_SITE_KEY: ${{ secrets.RICOCHET_SECRET_KEY }}
       - run: npm run build
         env:
@@ -45,7 +45,7 @@ jobs:
       - name: Deploy to Netlify
         uses: nwtgck/actions-netlify@v1.2
         with:
-          publish-dir: './dist'
+          publish-dir: "./dist"
           production-branch: master
           github-token: ${{ secrets.GITHUB_TOKEN }}
           deploy-message: "Deploy from GitHub Actions"
