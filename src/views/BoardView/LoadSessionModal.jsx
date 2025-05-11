@@ -24,6 +24,11 @@ const LoadSessionModal = ({ show, setShow }) => {
       setFileCount(0);
 
       const onFile = (file) => {
+        if (!files[file]) {
+          setFileCount((prev) => prev + 1);
+          console.error(`File ${file} not found in archive`);
+          return null;
+        }
         const url = uploadMedia("session", sessionId, files[file]);
         setFileCount((prev) => prev + 1);
         return url;

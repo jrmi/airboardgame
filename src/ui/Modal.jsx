@@ -11,7 +11,7 @@ const StyledModalWrapper = styled.div`
   justify-content: center;
   align-items: start;
 
-  z-index: 290;
+  z-index: 280;
   overflow: hidden;
   overflow-y: auto;
 
