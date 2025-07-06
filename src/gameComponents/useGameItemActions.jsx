@@ -53,7 +53,7 @@ export const useGameItemActions = () => {
   const {
     batchUpdateItems,
     removeItems,
-    pushItem,
+    pushItems,
     reverseItemsOrder,
     swapItems,
     getItems,
@@ -630,14 +630,15 @@ export const useGameItemActions = () => {
   const cloneItem = React.useCallback(
     async (itemIds) => {
       const [, items] = await getItemListOrSelected(itemIds);
-      items.forEach((itemToClone) => {
+      const newItems = items.map((itemToClone) => {
         const newItem = JSON.parse(JSON.stringify(itemToClone));
         newItem.id = uid();
         delete newItem.move;
-        pushItem(newItem, itemToClone.id);
+        return newItem;
       });
+      pushItems(newItems, null);
     },
-    [getItemListOrSelected, pushItem]
+    [getItemListOrSelected, pushItems]
   );
 
   const actionMap = React.useMemo(() => {
