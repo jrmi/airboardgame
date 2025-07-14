@@ -9,6 +9,8 @@ const server = process.env.VITE_API_ENDPOINT;
 const socketServer = process.env.VITE_SOCKET_URL;
 const siteId = process.env.VITE_RICOCHET_SITEID;
 
+console.log(server);
+
 const checkDeprecatedVars = () => {
   const deprecatedVars = [
     "API_ENDPOINT",
@@ -56,8 +58,7 @@ if (useProxy) {
         "/socket.io": socketServer
           .replace("https", "wss")
           .replace("http", "ws"),
-        "/file": server,
-        [`/${siteId}`]: server,
+        "/api": server,
       },
     },
   };

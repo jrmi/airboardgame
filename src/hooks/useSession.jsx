@@ -7,7 +7,12 @@ import {
 } from "react-sync-board";
 import { useTranslation } from "react-i18next";
 
-import { updateSession, getSession, getGame } from "../utils/api";
+import {
+  updateSession,
+  getSession,
+  getGame,
+  createSession,
+} from "../utils/api";
 
 import demoEn from "../games/demo_en.json?url";
 import demoFr from "../games/demo_fr.json?url";
@@ -80,6 +85,7 @@ export const SessionProvider = ({
         setCurrentGameId(sessionGameId);
       }
     } catch {
+      // Doesn't exist
       if (fromGameId) {
         // Then from initial game
         if (fromGameId === "demo") {
@@ -96,6 +102,12 @@ export const SessionProvider = ({
         // Empty board
         sessionData = emptyBoard;
       }
+      createSession({
+        ...sessionData,
+        gameId: fromGameId,
+        messages: [],
+        id: sessionId,
+      });
     }
     return sessionData;
   }, [fromGameId, i18n.languages, sessionId]);

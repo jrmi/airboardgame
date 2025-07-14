@@ -1,4 +1,4 @@
-import { API_BASE } from "../utils/settings";
+import { API_ENDPOINT } from "../utils/settings";
 
 export { default as MediaLibraryProvider } from "./MediaLibraryProvider";
 export { useMediaLibrary } from "./MediaLibraryProvider";
@@ -11,7 +11,7 @@ export const media2Url = (value) => {
     switch (value.type) {
       case "local":
         if (value.content) {
-          return `${API_BASE}/${value.content}`;
+          return `${API_ENDPOINT}/${value.content}`;
         } else {
           return "";
         }

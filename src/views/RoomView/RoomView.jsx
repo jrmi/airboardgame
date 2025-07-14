@@ -1,5 +1,4 @@
 import React from "react";
-import { nanoid } from "nanoid";
 import styled from "styled-components";
 
 import { RoomWrapper, useWire, useUsers } from "react-sync-board";
@@ -7,6 +6,7 @@ import { RoomWrapper, useWire, useUsers } from "react-sync-board";
 import { Routes, Route, Link, useParams } from "react-router-dom";
 import Session from "../Session";
 import UserCircle from "../../users/UserCircle";
+import { uid } from "../../utils";
 
 import RoomNavBar from "./RoomNavBar";
 
@@ -111,7 +111,7 @@ const Room = ({ roomId, room, setRoom }) => {
   const onAdd = () => {
     setRoom((prev) => ({
       ...prev,
-      sessions: [...prev.sessions, { id: nanoid() }],
+      sessions: [...prev.sessions, { id: uid() }],
     }));
   };
 
@@ -251,7 +251,7 @@ const StartSession = () => {
 
 const RoomView = ({ roomId }) => {
   const [room, setRoom] = React.useState(() => ({
-    sessions: [{ id: nanoid() }, { id: nanoid() }, { id: nanoid() }],
+    sessions: [{ id: uid() }, { id: uid() }, { id: uid() }],
   }));
 
   return (

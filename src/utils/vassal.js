@@ -10,6 +10,8 @@ import {
 import { uid } from ".";
 import { itemTemplates } from "../gameComponents";
 
+const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
 class Decoder {
   constructor(value, delimiter) {
     this.val = value;
@@ -234,6 +236,7 @@ class FileHandler {
     } catch (e) {
       if (retry < 5) {
         this.log(`Upload failed for ${fileName}. Retrying`);
+        await delay(retry * 1000);
         return await this.uploadFileWithoutQueue(
           fileName,
           uploadHandler,
@@ -1462,6 +1465,8 @@ export const loadVassalModuleInSession = async (
     fake
   );
   const { name, description } = await moduleLoader.loadVassalModule();
+
+  const allFiles = [];
 
   const uploadHandler = (file) => {
     return uploadMedia("session", sessionId, file);

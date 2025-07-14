@@ -73,6 +73,7 @@ const newGameData = (translate) => ({
       y: 0,
       width: 400,
       height: 500,
+      id: uid(),
     },
   ],
   availableItems: [],

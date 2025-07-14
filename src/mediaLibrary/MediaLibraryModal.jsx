@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useQuery, useMutation, useQueryClient } from "react-query";
 import styled from "styled-components";
 
-import { API_BASE } from "../utils/settings";
+import { API_ENDPOINT } from "../utils/settings";
 import backgroundGrid from "../media/images/background-grid.png";
 
 import { confirmAlert } from "react-confirm-alert";
@@ -98,7 +98,7 @@ const MediaLibraryModal = ({ show, setShow, onSelect }) => {
             label: t("Yes"),
             onClick: async () => {
               try {
-                await removeMedia(key);
+                await removeMedia(currentLibrary, key);
                 toast.success(t("Media deleted"), { autoClose: 1500 });
               } catch (e) {
                 if (e.message === "Forbidden") {
@@ -119,7 +119,7 @@ const MediaLibraryModal = ({ show, setShow, onSelect }) => {
         ],
       });
     },
-    [removeMedia, t]
+    [currentLibrary, removeMedia, t]
   );
 
   const { getRootProps, getInputProps } = useDropzone({
@@ -177,7 +177,7 @@ const MediaLibraryModal = ({ show, setShow, onSelect }) => {
                     {data.map((key) => (
                       <div key={key}>
                         <img
-                          src={`${API_BASE}/${key}`}
+                          src={`${API_ENDPOINT}/${key}`}
                           onClick={() => handleSelect(key)}
                         />
                         <button

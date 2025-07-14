@@ -63,7 +63,7 @@
   "Enter your message and press ENTER": "Enter your message...",
   "Error while deleting game. Try again later...": "Error while deleting game. Try again later...",
   "Error while deleting media. Try again later...": "Error while deleting media. Try again later...",
-  "Error while logging, verify your email address": "Error while logging, verify your email address",
+  "Error while logging, verify your email address": "Error while logging, please verify your credentials.",
   "Error while saving game. Try again later...": "Error while saving game. Try again later...",
   "Export the board?": "Export the board?",
   "Export": "Export",

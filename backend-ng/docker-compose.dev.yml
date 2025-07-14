@@ -1,0 +1,21 @@
+services:
+  pocketbase:
+    extends:
+      file: docker-compose.yml
+      service: pocketbase
+    depends_on:
+      - mailhog
+    networks:
+      - dev-network
+
+  mailhog:
+    image: mailhog/mailhog:latest
+    ports:
+      - "8026:8025" # Web interface
+    restart: unless-stopped
+    networks:
+      - dev-network
+
+networks:
+  dev-network:
+    driver: bridge

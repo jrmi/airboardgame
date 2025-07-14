@@ -31,6 +31,7 @@ const LoadSessionModal = ({ show, setShow }) => {
         }
         const url = uploadMedia("session", sessionId, files[file]);
         setFileCount((prev) => prev + 1);
+        console.log("url", url);
         return url;
       };
 

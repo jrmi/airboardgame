@@ -1,82 +1,85 @@
-import { API_ENDPOINT, IS_PRODUCTION, API_BASE } from "./settings";
+import PocketBase from "pocketbase";
+import { API_ENDPOINT, IS_PRODUCTION } from "./settings";
 
 import testGame from "../games/testGame";
 import perfGame from "../games/perfGame";
 import unpublishedGame from "../games/unpublishedGame";
 import { uid } from "./";
 
-const oldUploadURI = `${API_ENDPOINT}/file`;
-const gameURI = `${API_ENDPOINT}/store/game`;
-const sessionURI = `${API_ENDPOINT}/store/session`;
-const roomURI = `${API_ENDPOINT}/store/room`;
-const userURI = `${API_ENDPOINT}/store/user`;
-const execURI = `${API_ENDPOINT}/execute`;
-const authURI = `${API_ENDPOINT}/auth`;
+const pb = new PocketBase(API_ENDPOINT);
 
-export const uploadImage = async (namespace, file) => {
-  const payload = new FormData();
-  payload.append("file", file);
-  const result = await fetch(`${oldUploadURI}/${namespace}/`, {
-    method: "POST",
-    body: payload, // this sets the `Content-Type` header to `multipart/form-data`
-  });
+// Media
 
-  return await result.text();
+export const _uploadResourceImage = async (boxId, resourceId, file) => {
+  console.log("upload", boxId, resourceId);
+  let collection;
+  switch (boxId) {
+    case "session":
+      collection = "session";
+      break;
+    case "game":
+      collection = "games";
+  }
+  const result = await pb
+    .collection(collection)
+    .update(resourceId, { "files+": file });
+  const last = result.files.at(-1);
+
+  return `api/files/${collection}/${resourceId}/${last}`;
 };
 
 export const uploadResourceImage = async (boxId, resourceId, file) => {
-  const uploadGameURI = `${API_ENDPOINT}/store/${boxId}/${resourceId}/file`;
-
-  const payload = new FormData();
-  payload.append("file", file);
-
-  const result = await fetch(`${uploadGameURI}/`, {
-    method: "POST",
-    body: payload, // this sets the `Content-Type` header to `multipart/form-data`
-    credentials: "include",
-  });
-
-  if (result.status === 404) {
-    throw new Error("Resource not found");
-  }
-  if (result.status === 403) {
-    throw new Error("Forbidden");
-  }
-  if (result.status >= 300) {
-    throw new Error("Server error");
+  console.log("upload", boxId, resourceId);
+  let collection;
+  switch (boxId) {
+    case "session":
+      collection = "sessionFiles";
+      break;
+    case "game":
+      collection = "gameFiles";
   }
 
-  return await result.text();
+  const result = await pb
+    .collection(collection)
+    .create({ [boxId]: resourceId, file: file });
+
+  return `api/files/${collection}/${result.id}/${result.file}`;
 };
 
 export const listResourceImage = async (boxId, resourceId) => {
-  const uploadGameURI = `${API_ENDPOINT}/store/${boxId}/${resourceId}/file`;
+  let collection;
+  switch (boxId) {
+    case "session":
+      collection = "sessionFiles";
+      break;
+    case "game":
+      collection = "gameFiles";
+  }
 
-  const result = await fetch(`${uploadGameURI}/`, {
-    method: "GET",
-    credentials: "include",
+  const files = await pb.collection(collection).getFullList({
+    filter: `${boxId}='${resourceId}'`,
   });
 
-  if (result.status === 404) {
-    throw new Error("Files not found");
-  }
-  if (result.status === 403) {
-    throw new Error("Forbidden");
-  }
-  if (result.status >= 300) {
-    throw new Error("Server error");
-  }
-
-  return await result.json();
+  return files.map(({ id, file }) => `api/files/${collection}/${id}/${file}`);
 };
 
-export const deleteResourceImage = async (filePath) => {
-  const result = await fetch(`${API_BASE}/${filePath}`, {
-    method: "DELETE",
-    credentials: "include",
-  });
+export const deleteResourceImage = async (boxId, ressourceId, filePath) => {
+  let collection;
+  switch (boxId) {
+    case "session":
+      collection = "sessions";
+      break;
+    case "game":
+      collection = "games";
+  }
 
-  return await result.json();
+  const file = filePath.split("/").at(-1);
+
+  const result = await pb
+    .collection(collection)
+    .update(ressourceId, { "files-": file });
+
+  return result;
 };
 
 export const getBestTranslationFromConfig = (
@@ -139,53 +142,33 @@ const demoGame = {
   },
 };
 
+// Games
+
 export const getGames = async () => {
-  const fetchParams = new URLSearchParams({
-    fields: "_id,board,owner",
-    limit: 2000,
-  });
+  const serverGames = await pb
+    .collection("games")
+    .getFullList({ fields: "id,board,owner" });
 
   let gameList = [];
 
-  const result = await fetch(`${gameURI}?${"" + fetchParams}`, {
-    credentials: "include",
-  });
+  gameList = serverGames.map((game) => ({
+    id: game.id,
+    owner: game.owner,
+    board: game.board,
+    url: `${game.id}`, // TODO
+  }));
 
-  if (result.status === 200) {
-    const serverGames = await result.json();
-
-    gameList = serverGames.map((game) => ({
-      id: game._id,
-      owner: game.owner,
-      board: game.board,
-      url: `${gameURI}/${game._id}`,
-    }));
-  }
   if (!IS_PRODUCTION || import.meta.env.VITE_CI) {
     gameList = [testGame, perfGame, unpublishedGame, ...gameList];
   }
 
-  gameList = [demoGame, ...gameList];
-
-  return gameList;
+  return [demoGame, ...gameList];
 };
 
-const fetchGame = async (url) => {
-  const result = await fetch(url, {
-    credentials: "include",
-  });
+const fetchGame = async (gameId) => {
+  const record = await pb.collection("games").getOne(gameId);
 
-  if (result.status === 404) {
-    throw new Error("Game not found");
-  }
-  if (result.status === 403) {
-    throw new Error("Forbidden");
-  }
-  if (result.status >= 300) {
-    throw new Error("Server error");
-  }
-
-  return await result.json();
+  return record;
 };
 
 const fixGame = (game) => {
@@ -218,32 +201,27 @@ export const getGame = async (gameId) => {
       break;
     // Real games
     default:
-      game = await fetchGame(`${gameURI}/${gameId}`);
+      game = await fetchGame(gameId);
   }
 
   return fixGame(game);
 };
 
 export const createGame = async (data) => {
-  const newGameId = uid();
-  const result = await updateGame(newGameId, data);
-  return result;
+  return await pb.collection("games").create(data);
 };
 
 export const getOrCreateGame = async (gameId, defaultData) => {
-  const result = await fetch(`${gameURI}/${gameId}`, {
-    credentials: "include",
-  });
-  if (result.status === 404) {
-    return fixGame(await updateGame(gameId, defaultData));
+  try {
+    return await pb.collection("games").getOne(gameId);
+  } catch (e) {
+    if (e.status === 404) {
+      return await pb
+        .collection("games")
+        .create({ id: gameId, owner: pb.authStore.record.id, ...defaultData });
+    }
+    throw e;
   }
-  if (result.status === 403) {
-    throw new Error("Forbidden");
-  }
-  if (result.status >= 300) {
-    throw new Error("Server error");
-  }
-  return fixGame(await result.json());
 };
 
 export const updateGame = async (gameId, data) => {
@@ -251,177 +229,88 @@ export const updateGame = async (gameId, data) => {
   if (["test", "perf", "unpublished", "demo"].includes(gameId)) {
     return data;
   }
-  const result = await fetch(`${gameURI}/${gameId}`, {
-    method: "POST",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(data),
-    credentials: "include",
-  });
-  if (result.status === 404) {
-    throw new Error("Resource not found");
-  }
-  if (result.status === 403) {
-    throw new Error("Forbidden");
-  }
-  if (result.status >= 300) {
-    throw new Error("Server error");
-  }
-  return await result.json();
+  return await pb.collection("games").update(gameId, data);
 };
 
 export const deleteGame = async (gameId) => {
-  const result = await fetch(`${gameURI}/${gameId}`, {
-    method: "DELETE",
-    credentials: "include",
-  });
-  if (result.status === 404) {
-    throw new Error("Resource not found");
-  }
-  if (result.status === 403) {
-    throw new Error("Forbidden");
-  }
-  if (result.status >= 300) {
-    throw new Error("Server error");
-  }
-  return await result.json();
+  return await pb.collection("games").delete(gameId);
 };
 
+// Sessions
+
 export const getSession = async (id) => {
-  const result = await fetch(`${sessionURI}/${id}`, {
-    method: "GET",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-    },
-    credentials: "include",
-  });
-  if (result.status === 404) {
-    throw new Error("Resource not found");
-  }
-  if (result.status === 403) {
-    throw new Error("Forbidden");
-  }
-  if (result.status >= 300) {
-    throw new Error("Server error");
-  }
-  return await result.json();
+  return await pb.collection("sessions").getOne(id);
+};
+
+export const createSession = async (data) => {
+  return await pb.collection("sessions").create(data);
 };
 
 export const updateSession = async (id, data) => {
-  const result = await fetch(`${sessionURI}/${id}`, {
-    method: "POST",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(data),
-    credentials: "include",
-  });
-  if (result.status === 404) {
-    throw new Error("Resource not found");
-  }
-  if (result.status === 403) {
-    throw new Error("Forbidden");
-  }
-  if (result.status >= 300) {
-    throw new Error("Server error");
-  }
-  return await result.json();
+  return await pb.collection("sessions").update(id, data);
 };
 
-export const getRoom = async (id) => {
-  const result = await fetch(`${roomURI}/${id}`, {
-    method: "GET",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-    },
-    credentials: "include",
-  });
-  if (result.status === 404) {
-    throw new Error("Resource not found");
-  }
-  if (result.status === 403) {
-    throw new Error("Forbidden");
-  }
-  if (result.status >= 300) {
-    throw new Error("Server error");
-  }
-  return await result.json();
+// Authentication
+
+export const authenticate = async (email, password) => {
+  pb.authStore.clear();
+
+  const authData = await pb
+    .collection("users")
+    .authWithPassword(email, password);
+
+  return authData.record;
 };
 
-export const updateRoom = async (id, data) => {
-  const result = await fetch(`${roomURI}/${id}`, {
-    method: "POST",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(data),
-    credentials: "include",
-  });
-  if (result.status === 404) {
-    throw new Error("Resource not found");
-  }
-  if (result.status === 403) {
-    throw new Error("Forbidden");
-  }
-  if (result.status >= 300) {
-    throw new Error("Server error");
-  }
-  return await result.json();
-};
+export const refresh = async () => {
+  pb.cancelRequest("refresh");
+  await pb.collection("users").authRefresh({ requestKey: "refresh" });
 
-export const sendAuthToken = async (email) => {
-  const result = await fetch(`${authURI}/`, {
-    method: "POST",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ userEmail: email }),
-    credentials: "include",
-  });
-
-  if (result.status !== 200) {
-    throw new Error("Can't send token");
-  }
-};
-
-export const login = async (userHash, token) => {
-  const result = await fetch(`${authURI}/verify/${userHash}/${token}`, {
-    credentials: "include",
-  });
-
-  if (result.status !== 200) {
-    throw new Error("Auth failed");
-  }
-};
-
-export const checkAuthentication = async () => {
-  const result = await fetch(`${authURI}/check`, {
-    credentials: "include",
-  });
-
-  if (result.status !== 200) {
-    return false;
-  }
-  return true;
+  return pb.authStore.isValid;
 };
 
 export const logout = async () => {
-  const result = await fetch(`${authURI}/logout/`, {
-    credentials: "include",
-  });
-
-  if (result.status !== 200) {
-    throw new Error("Logout failed");
-  }
+  pb.authStore.clear();
 };
 
+export const passwordReset = async (email) => {
+  await pb.collection("users").requestPasswordReset(email);
+};
+
+export const confirmPasswordReset = async (
+  resetToken,
+  newPassword,
+  newPasswordConfirm
+) => {
+  await pb
+    .collection("users")
+    .confirmPasswordReset(resetToken, newPassword, newPasswordConfirm);
+};
+
+export const requestVerification = async (email) => {
+  await pb.collection("users").requestVerification(email);
+};
+
+export const createAccount = async (email, password) => {
+  console.log(email, password);
+  const record = await pb.collection("users").create({
+    email,
+    emailVisibility: false,
+    verified: true,
+    name: "",
+    password,
+    passwordConfirm: password,
+  });
+  return record;
+};
+
+export const getAccount = async (id) => {
+  const record = await pb.collection("users").getOne(id);
+  return record;
+};
+
+// visio token
+// TODO
 export const getConfToken = async (session) => {
   const result = await fetch(`${execURI}/getConfToken?session=${session}`, {
     credentials: "include",
@@ -433,27 +322,6 @@ export const getConfToken = async (session) => {
 
   if (result.status === 404) {
     throw new Error("Webconference not enabled");
-  }
-  if (result.status === 403) {
-    throw new Error("Forbidden");
-  }
-  if (result.status >= 300) {
-    throw new Error("Server error");
-  }
-  return await result.json();
-};
-
-export const getAccount = async (id) => {
-  const result = await fetch(`${userURI}/${id}`, {
-    method: "GET",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-    },
-    credentials: "include",
-  });
-  if (result.status === 404) {
-    throw new Error("Resource not found");
   }
   if (result.status === 403) {
     throw new Error("Forbidden");

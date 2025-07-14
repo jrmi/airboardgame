@@ -3,33 +3,52 @@ import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 
 import Modal from "../ui/Modal";
-import { sendAuthToken } from "../utils/api";
 import useAuth from "../hooks/useAuth";
 
 import Waiter from "../ui/Waiter";
 
 const Account = ({ disabled, ...props }) => {
   const { t } = useTranslation();
-  const { isAuthenticated, logout } = useAuth();
+  const {
+    isAuthenticated,
+    login,
+    logout,
+    passwordReset,
+    createAccountAndLogin,
+  } = useAuth();
   const [email, setEmail] = React.useState("");
-  const [emailSent, setEmailSent] = React.useState(false);
+  const [password, setPassword] = React.useState("");
+  const [success, setSuccess] = React.useState(false);
   const [showLogin, setShowLogin] = React.useState(false);
   const [loginInProgress, setLoginInProgress] = React.useState(false);
-
-  const handleChange = (e) => {
-    setEmail(e.target.value);
-  };
 
   const handleSubmit = async () => {
     try {
       setLoginInProgress(true);
-      await sendAuthToken(email);
-      setEmailSent(true);
-      setLoginInProgress(false);
+      await login(email, password);
+      setSuccess(true);
     } catch (e) {
-      setLoginInProgress(false);
       console.log(e);
       toast.error(t("Error while logging, verify your email address"));
+    } finally {
+      setLoginInProgress(false);
+    }
+  };
+
+  const handleReset = async () => {
+    await passwordReset(email);
+  };
+
+  const handleCreate = async () => {
+    try {
+      setLoginInProgress(true);
+      await createAccountAndLogin(email, password);
+      setSuccess(true);
+    } catch (e) {
+      console.log(e);
+      toast.error(t("Error while logging, verify your email address"));
+    } finally {
+      setLoginInProgress(false);
     }
   };
 
@@ -40,7 +59,7 @@ const Account = ({ disabled, ...props }) => {
   React.useEffect(() => {
     if (!showLogin) {
       setEmail("");
-      setEmailSent(false);
+      setSuccess(false);
     }
   }, [showLogin]);
 
@@ -76,38 +95,56 @@ const Account = ({ disabled, ...props }) => {
       {loginInProgress && <Waiter message={t("In progress...")} />}
 
       <Modal
-        show={!emailSent && showLogin}
+        show={!success && showLogin}
         setShow={setShowLogin}
         title={t("Login")}
         width="33%"
       >
-        <input
-          value={email}
-          onChange={handleChange}
-          placeholder={t("Enter your email here")}
-          onKeyDown={handleKeyDown}
-        />
         <div
           style={{
             display: "flex",
+            flexDirection: "column",
             justifyContent: "center",
-            marginTop: "2em",
+            gap: "1em",
+            padding: "1em 2em",
+            width: "500px",
           }}
         >
+          <input
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder={t("Enter your email here")}
+            onKeyDown={handleKeyDown}
+          />
+          <input
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            type="password"
+            placeholder={t("Password...")}
+            onKeyDown={handleKeyDown}
+          />
+          <button onClick={handleCreate} className="button">
+            {t("Create account")}
+          </button>
+          <span />
+          <button onClick={handleReset} className="button">
+            {t("Password reset")}
+          </button>
+          <span />
           <button onClick={handleSubmit} className="button success">
-            {t("Ask authentication link")}
+            {t("Authenticate")}
           </button>
         </div>
       </Modal>
 
-      {emailSent && (
+      {success && (
         <Modal
           show={showLogin}
           setShow={setShowLogin}
           title={t("Login")}
           width="33%"
         >
-          <p>{t("Mail sent, check your inbox and click the link to login.")}</p>
+          <p>{t("Successfully loggued in.")}</p>
           <div
             style={{
               display: "flex",

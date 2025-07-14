@@ -10,14 +10,15 @@ export const MediaLibraryContext = React.createContext({});
 export const MediaLibraryProvider = ({ children, libraries = [] }) => {
   const addMedia = React.useCallback(async ({ boxId, resourceId }, file) => {
     const filePath = await uploadMedia(boxId, resourceId, file);
+    console.log(filePath);
     return {
       type: "local",
       content: filePath,
     };
   }, []);
 
-  const removeMedia = React.useCallback(async (key) => {
-    return await deleteMedia(key);
+  const removeMedia = React.useCallback(async ({ boxId, resourceId }, key) => {
+    return await deleteMedia(boxId, resourceId, key);
   }, []);
 
   const getLibraryMedia = React.useCallback(
