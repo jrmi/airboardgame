@@ -12,7 +12,7 @@ jobs:
 
       - uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: 24
 
       - run: npm ci
       - run: npm run lint
@@ -28,8 +28,8 @@ jobs:
       - run: npm run build
         env:
           VITE_API_ENDPOINT: /api
-          VITE_SOCKET_URL: https://public.jeremiez.net/
-          VITE_SOCKET_PATH: /wamp2/socket.io
+          VITE_SOCKET_URL: https://wireio1.filai.re
+          VITE_SOCKET_PATH: /socket.io
           VITE_RICOCHET_SITEID: airboardgame
           VITE_USE_PROXY: 0
           VITE_WEBCONFERENCE: audio
