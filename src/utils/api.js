@@ -296,7 +296,7 @@ export const createAccount = async (email, password) => {
   const record = await pb.collection("users").create({
     email,
     emailVisibility: false,
-    verified: true,
+    verified: false,
     name: "",
     password,
     passwordConfirm: password,
