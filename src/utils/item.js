@@ -165,3 +165,43 @@ export const getHeldItems = ({
 
   return currentLinkedItemIds;
 };
+
+// Capture, on each newly held item itself, the offset from its holder's
+// center and the holder's rotation at that exact moment (heldOffset /
+// heldAngle). All later rotations of the holder are then derived from that
+// fixed reference (see computeHeldRotationUpdates) instead of from the held
+// item's own live (already rotated) position, so floating point error can't
+// compound across repeated rotations. Returns null if nothing to capture.
+export const captureHeldReferences = ({ holderId, heldIds, itemList }) => {
+  if (!heldIds || heldIds.length === 0) {
+    return null;
+  }
+  const holderItemData = itemList.find(({ id }) => id === holderId);
+  const holderElement = getItemElement(holderId);
+  if (!holderItemData || !holderElement) {
+    return null;
+  }
+  const holderCenter = {
+    x: holderItemData.x + holderElement.clientWidth / 2,
+    y: holderItemData.y + holderElement.clientHeight / 2,
+  };
+  const holderAngle = holderItemData.rotation || 0;
+
+  const referenceById = {};
+  heldIds.forEach((heldId) => {
+    const heldItemData = itemList.find(({ id }) => id === heldId);
+    const heldElement = getItemElement(heldId);
+    if (!heldItemData || !heldElement) {
+      return;
+    }
+    referenceById[heldId] = {
+      heldOffset: {
+        x: heldItemData.x + heldElement.clientWidth / 2 - holderCenter.x,
+        y: heldItemData.y + heldElement.clientHeight / 2 - holderCenter.y,
+      },
+      heldAngle: holderAngle,
+    };
+  });
+
+  return Object.keys(referenceById).length > 0 ? referenceById : null;
+};

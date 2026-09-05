@@ -50,6 +50,20 @@ const BoardConfigForm = () => {
         />
         <Hint>{t("Check it to make your board publicly visible")}</Hint>
       </Label>
+      <Label>
+        {t("Limit board dragging")}
+        <Field
+          name="limitPan"
+          component="input"
+          type="checkbox"
+          initialValue={boardConfig.limitPan}
+        />
+        <Hint>
+          {t(
+            "Check it to keep the board tethered near the items when dragging. Uncheck to allow unlimited dragging."
+          )}
+        </Hint>
+      </Label>
       <fieldset style={{ marginBottom: "2em", paddingBottom: "1em" }}>
         <legend>{t("Background")}</legend>
 

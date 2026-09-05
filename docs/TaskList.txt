@@ -1,0 +1,13 @@
+npm run dev:all
+
+--map scrolling option
+--list of "counters" and click on one to center
+--Users must have a unique name on joining a game
+--creation and assignment of groups (sides for example)
+    --default group of umpire for first player
+    --default group of player for others
+    --umpire (only) can create and assign people to other groups
+--hiding counters by groups
+    --opacity option for those that can see them
+    --umpire can see everything
+Right Click menu

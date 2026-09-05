@@ -8,8 +8,15 @@ const Template = createItemTemplate({
   type: "zone",
   component: Component,
   form: FormComponent,
-  defaultActions: ["clone", "lock", "remove"],
-  availableActions: ["clone", "lock", "remove", "alignAsLine", "alignAsSquare"],
+  defaultActions: ["clone", "lock", "groupHide", "remove"],
+  availableActions: [
+    "clone",
+    "lock",
+    "groupHide",
+    "remove",
+    "alignAsLine",
+    "alignAsSquare",
+  ],
   name: i18n.t("Zone"),
   template: {
     layer: -1,

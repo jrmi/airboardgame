@@ -99,10 +99,12 @@ const Modal = ({
   footer,
   show,
   setShow = () => {},
+  onClose,
   canClose = true,
   noMargin = false,
 }) => {
   const modalRef = React.useRef();
+  const mouseDownOnOverlayRef = React.useRef(false);
   const { t } = useTranslation();
 
   const [state, setState] = React.useState("closed");
@@ -116,10 +118,13 @@ const Modal = ({
   }, []);
 
   React.useEffect(() => {
+    // Re-derive from `show` on every change, not just from "closed"/"open" —
+    // otherwise toggling show again while still mid-transition (e.g. close
+    // then quickly reopen) leaves state stuck in "closing"/"opening" forever,
+    // since neither branch below would ever match it again.
     setState((prev) => {
-      if (prev === "closed" && show) return "opening";
-      if (prev === "open" && !show) return "closing";
-      return prev;
+      if (show) return prev === "open" ? "open" : "opening";
+      return prev === "closed" ? "closed" : "closing";
     });
   }, [show]);
 
@@ -137,16 +142,33 @@ const Modal = ({
     return null;
   }
 
+  const close = () => {
+    if (!canClose) return;
+    onClose?.();
+    setShow(false);
+  };
+
+  // Dragging to select text (e.g. selecting all of the username) can start
+  // inside the modal content and overshoot the modal edge before releasing
+  // the mouse button on the backdrop — the resulting click's target is then
+  // the overlay itself, indistinguishable from an intentional click-outside
+  // unless we also check where the drag started.
+  const onOverlayMouseDown = (event) => {
+    mouseDownOnOverlayRef.current = event.target === modalRef.current;
+  };
+
   const onOverlayClick = (event) => {
-    if (event.target === modalRef.current) {
-      if (canClose) setShow(false);
+    if (event.target === modalRef.current && mouseDownOnOverlayRef.current) {
+      close();
     }
+    mouseDownOnOverlayRef.current = false;
   };
 
   return createPortal(
     <StyledModalWrapper
       ref={modalRef}
       onTransitionEnd={onAnimationEnd}
+      onMouseDown={onOverlayMouseDown}
       onClick={onOverlayClick}
       noMargin={noMargin}
       className={
@@ -158,7 +180,7 @@ const Modal = ({
           {title && <h2 className="modal__title">{title}</h2>}
           <button
             className="button clear icon-only modal__close"
-            onClick={() => canClose && setShow(false)}
+            onClick={close}
           >
             <FiX size={42} alt={t("Close")} color="white" />
           </button>

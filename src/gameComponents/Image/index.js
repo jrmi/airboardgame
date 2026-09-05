@@ -18,10 +18,19 @@ const Template = createItemTemplate({
         "shuffle",
         "clone",
         "lock",
+        "groupHide",
         "remove",
       ];
     } else {
-      return ["tap", "stack", "shuffle", "clone", "lock", "remove"];
+      return [
+        "tap",
+        "stack",
+        "shuffle",
+        "clone",
+        "lock",
+        "groupHide",
+        "remove",
+      ];
     }
   },
   availableActions: (item) => {
@@ -38,6 +47,7 @@ const Template = createItemTemplate({
         "shuffle",
         "clone",
         "lock",
+        "groupHide",
         "remove",
       ];
     } else {
@@ -51,6 +61,7 @@ const Template = createItemTemplate({
         "shuffle",
         "clone",
         "lock",
+        "groupHide",
         "remove",
       ];
     }

@@ -74,6 +74,7 @@ export const BoardView = ({
             style={style}
             itemTemplates={itemTemplates}
             showResizeHandle={editItem}
+            limitPan={!!boardConfig.limitPan}
           />
         </StyledBoard>
         <NavBar

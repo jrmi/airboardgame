@@ -4,6 +4,7 @@ import { Field } from "react-final-form";
 import { useBoardConfig } from "react-sync-board";
 
 import Label from "../../ui/formUtils/Label";
+import Hint from "../../ui/formUtils/Hint";
 
 import { backgrounds } from "../../gameComponents";
 
@@ -45,6 +46,20 @@ const BoardConfigForm = () => {
           )}
         </div>
       </fieldset>
+      <Label>
+        {t("Limit board dragging")}
+        <Field
+          name="limitPan"
+          component="input"
+          type="checkbox"
+          initialValue={boardConfig.limitPan}
+        />
+        <Hint>
+          {t(
+            "Check it to keep the board tethered near the items when dragging. Uncheck to allow unlimited dragging."
+          )}
+        </Hint>
+      </Label>
     </>
   );
 };

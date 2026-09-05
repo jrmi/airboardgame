@@ -8,11 +8,12 @@ const Template = createItemTemplate({
   type: "dice",
   component: Component,
   form: FormComponent,
-  defaultActions: ["roll", "clone", "lock", "remove"],
+  defaultActions: ["roll", "clone", "lock", "groupHide", "remove"],
   availableActions: [
     "roll",
     "clone",
     "lock",
+    "groupHide",
     "remove",
     "alignAsLine",
     "alignAsSquare",

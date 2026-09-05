@@ -32,8 +32,11 @@ import SaveExportModal from "./SaveExportModal";
 import WelcomeModal from "./WelcomeModal";
 import EditInfoButton from "./EditInfoButton";
 import AddItemButton from "./AddItemButton";
+import BoardItemsButton from "./BoardItemsPanel";
+import GroupsButton from "./GroupsPanel";
 
 import useSession from "../../hooks/useSession";
+import { useCanManageGroups } from "../../hooks/useGroups";
 
 import vassalIconUrl from "../../media/images/vassal.svg?url";
 import target from "../../media/images/target.svg";
@@ -54,6 +57,7 @@ const NavBar = ({ editMode, itemLibraries, moveFirst, setMoveFirst }) => {
   const { toggleFullScreen, active: isFullScreen } = useFullScreen();
 
   const { isSpaceMaster: isMaster } = useUsers();
+  const canManageGroups = useCanManageGroups();
 
   const navigate = useNavigate();
   const params = useParams();
@@ -67,6 +71,8 @@ const NavBar = ({ editMode, itemLibraries, moveFirst, setMoveFirst }) => {
   const [showInfoModal, setShowInfoModal] = React.useState(false);
   const [showLink, setShowLink] = React.useState(false);
   const [showAddPanel, setShowAddPanel] = React.useState(false);
+  const [showItemsPanel, setShowItemsPanel] = React.useState(false);
+  const [showGroupsPanel, setShowGroupsPanel] = React.useState(false);
 
   const handleBack = React.useCallback(() => {
     if (isFullScreen) {
@@ -144,6 +150,16 @@ const NavBar = ({ editMode, itemLibraries, moveFirst, setMoveFirst }) => {
           setShowAddPanel={setShowAddPanel}
           showAddPanel={showAddPanel}
         />
+        <BoardItemsButton
+          showItemsPanel={showItemsPanel}
+          setShowItemsPanel={setShowItemsPanel}
+        />
+        {!editMode && canManageGroups && (
+          <GroupsButton
+            showGroupsPanel={showGroupsPanel}
+            setShowGroupsPanel={setShowGroupsPanel}
+          />
+        )}
         <div className="spacer" />
         {(isMaster || editMode) && !isVassalSession && (
           <NavButton

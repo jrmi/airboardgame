@@ -29,7 +29,7 @@ const UserBar = ({ editMode = false }) => {
           onClick={() => {
             setShowLink(true);
           }}
-          title={t("Invite more player")}
+          title={t("Invite more players")}
         />
         <div className="sep" />
         <div

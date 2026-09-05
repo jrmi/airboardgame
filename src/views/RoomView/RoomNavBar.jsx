@@ -30,7 +30,7 @@ const RoomNavBar = () => {
             onClick={() => {
               setShowInvite(true);
             }}
-            title={t("Invite more player")}
+            title={t("Invite more players")}
           />
         </div>
         <div className="sep" />
