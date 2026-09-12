@@ -5,7 +5,15 @@ import { lighten } from "color2k";
 import { randInt } from "../../utils";
 
 const NotePane = styled.div`
-  ${({ $color, $fontSize, $textColor, $width, $height, $fontFamily, $rotate }) => css`
+  ${({
+    $color,
+    $fontSize,
+    $textColor,
+    $width,
+    $height,
+    $fontFamily,
+    $rotate,
+  }) => css`
     background: linear-gradient(${$color}, ${lighten($color, 0.1)});
     width: ${$width}px;
     padding: 0.5em;
@@ -13,7 +21,7 @@ const NotePane = styled.div`
     display: flex;
     justify-content: space-between;
     flex-direction: column;
-    box-shadow: 2px 9px 10px 3px rgba(0,0,0,0.2);
+    box-shadow: 2px 9px 10px 3px rgba(0, 0, 0, 0.2);
     color: ${$textColor};
     transform: rotate(${$rotate}deg) skew(0);
     z-index: 2;
@@ -41,7 +49,7 @@ const NotePane = styled.div`
       color: ${$textColor};
       font-family: "${$fontFamily}", sans-serif;
 
-      &:focus{
+      &:focus {
         outline: none;
         box-shadow: none;
       }

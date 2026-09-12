@@ -54,6 +54,7 @@
     "serve": "vite preview --open --port=5000",
     "serve:ci": "vite preview --port=5000",
     "lint": "eslint src/",
+    "lint:fix": "eslint src/ --fix",
     "prettier": "prettier --write src/",
     "check": "node ./checkConfig.mjs",
     "server": "echo 'This command is deprecated. Please, see Readme for more information.'",
@@ -75,6 +76,8 @@
     ]
   },
   "devDependencies": {
+    "@eslint/eslintrc": "^3.3.7",
+    "globals": "^14.0.0",
     "@babel/cli": "^8.0.5",
     "@babel/core": "^8.0.5",
     "@babel/node": "^8.0.5",

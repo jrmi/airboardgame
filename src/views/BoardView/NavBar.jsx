@@ -42,8 +42,8 @@ import target from "../../media/images/target.svg";
 import { default as RawNavBar } from "../../ui/NavBar";
 import useFullScreen from "../../hooks/useFullScreen";
 
-const LoadVassalModuleGameModal = React.lazy(() =>
-  import("./LoadVassalModuleGameModal.jsx")
+const LoadVassalModuleGameModal = React.lazy(
+  () => import("./LoadVassalModuleGameModal.jsx")
 );
 
 const NavBar = ({ editMode, itemLibraries, moveFirst, setMoveFirst }) => {
@@ -79,10 +79,7 @@ const NavBar = ({ editMode, itemLibraries, moveFirst, setMoveFirst }) => {
 
     const x = (bounds.left + bounds.right) / 2;
     const y = (bounds.top + bounds.bottom) / 2;
-    const radius = Math.max(
-      Math.hypot(x - bounds.left, y - bounds.top),
-      1000
-    );
+    const radius = Math.max(Math.hypot(x - bounds.left, y - bounds.top), 1000);
 
     zoomToExtent({ x, y, radius });
   }, [items, zoomToExtent]);

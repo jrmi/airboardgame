@@ -12,7 +12,8 @@ const StyledCheckerBoard = styled.div`
     display: grid;
     grid-template-columns: repeat(${$colCount}, 1fr);
     grid-template-rows: repeat(${$rowCount}, 1fr);
-    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
+    box-shadow:
+      rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
       rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
 
     & .alternate {
@@ -88,8 +89,8 @@ const CheckerBoard = ({
                   ? "alternate"
                   : ""
                 : !(indexCol % 2)
-                ? "alternate"
-                : ""
+                  ? "alternate"
+                  : ""
             }
           />
         ))

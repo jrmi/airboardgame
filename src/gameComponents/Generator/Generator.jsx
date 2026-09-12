@@ -11,7 +11,8 @@ import itemTemplates from "../itemTemplates";
 
 const StyledShape = styled.div`
   ${({ $color }) => css`
-    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
+    box-shadow:
+      rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
       rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
     border: 3px dashed black;
     border-color: ${$color};
@@ -65,12 +66,8 @@ const Generator = ({ color = "#ccc", item, id, currentItemId, setState }) => {
   const [center, setCenter] = React.useState({ top: 0, left: 0 });
   const { register: registerPlace } = useItemInteraction("place");
   const { register: registerDelete } = useItemInteraction("delete");
-  const {
-    pushItem,
-    getItems,
-    batchUpdateItems,
-    removeItems,
-  } = useItemActions();
+  const { pushItem, getItems, batchUpdateItems, removeItems } =
+    useItemActions();
 
   const centerRef = React.useRef(center);
   Object.assign(centerRef.current, center);

@@ -1,17 +1,19 @@
 import { uid } from "../utils";
 
-const resize = (prop) => ({ width, actualWidth, prevState }) => {
-  let { [prop]: currentSize } = prevState;
-  currentSize = parseFloat(currentSize);
-  if (!currentSize || Number.isNaN(Number(currentSize))) {
-    currentSize = actualWidth;
-  }
+const resize =
+  (prop) =>
+  ({ width, actualWidth, prevState }) => {
+    let { [prop]: currentSize } = prevState;
+    currentSize = parseFloat(currentSize);
+    if (!currentSize || Number.isNaN(Number(currentSize))) {
+      currentSize = actualWidth;
+    }
 
-  return {
-    ...prevState,
-    [prop]: (currentSize + width).toFixed(2),
+    return {
+      ...prevState,
+      [prop]: (currentSize + width).toFixed(2),
+    };
   };
-};
 
 export const sizeResize = resize("size");
 export const radiusResize = resize("radius");

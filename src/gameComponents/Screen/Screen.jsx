@@ -46,12 +46,14 @@ const ScreenWrapper = styled.div`
     .screen__overlay {
       position: absolute;
       inset: 0;
-      ${$owned
-        ? ""
-        : `background-image: radial-gradient(${lighten(
-            $backgroundColor,
-            0.2
-          )}, ${$backgroundColor});`}
+      ${
+        $owned
+          ? ""
+          : `background-image: radial-gradient(${lighten(
+              $backgroundColor,
+              0.2
+            )}, ${$backgroundColor});`
+      }
       display: flex;
       justify-content: center;
       align-items: center;

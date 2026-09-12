@@ -28,9 +28,8 @@ export const SessionRestoreDim = () => {
           sessionDimensions[sessionId] || {};
 
         if (!isNaN(translateX) && !isNaN(translateY) && !isNaN(scale)) {
-          const { translateX, translateY, scale } = sessionDimensions[
-            sessionId
-          ];
+          const { translateX, translateY, scale } =
+            sessionDimensions[sessionId];
           const dim = {
             translateX,
             translateY,
