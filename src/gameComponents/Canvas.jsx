@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 
-import { useAsync } from "@react-hookz/web/esm/useAsync";
+import { useAsync } from "@react-hookz/web";
 import useAsyncEffect from "use-async-effect";
 import { getImage } from "../utils/image";
 

@@ -53,7 +53,7 @@ const StyledModalWrapper = styled.div`
   .modal__content {
     flex: 1;
     overflow: auto;
-    ${({ noMargin }) => (noMargin ? "" : "padding: 1em")};
+    ${({ $noMargin }) => ($noMargin ? "" : "padding: 1em")};
     header {
       padding: 0.5em;
       margin-top: 2em;
@@ -148,7 +148,7 @@ const Modal = ({
       ref={modalRef}
       onTransitionEnd={onAnimationEnd}
       onClick={onOverlayClick}
-      noMargin={noMargin}
+      $noMargin={noMargin}
       className={
         state === "opening" || state === "open" ? "modal__wrapper--open" : ""
       }

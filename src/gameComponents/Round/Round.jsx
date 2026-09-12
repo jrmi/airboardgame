@@ -2,10 +2,10 @@ import React, { memo } from "react";
 import styled, { css } from "styled-components";
 
 const StyledRound = styled.div`
-  ${({ radius }) => css`
+  ${({ $radius }) => css`
     border-radius: 100%;
-    width: ${radius}px;
-    height: ${radius}px;
+    width: ${$radius}px;
+    height: ${$radius}px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -39,7 +39,7 @@ const Round = ({
   fontSize = "16",
 }) => {
   return (
-    <StyledRound radius={radius}>
+    <StyledRound $radius={radius}>
       <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
         <circle
           cx="50"

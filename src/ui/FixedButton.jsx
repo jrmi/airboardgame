@@ -1,6 +1,6 @@
 import React from "react";
 
-import { useEventListener } from "@react-hookz/web/esm/useEventListener";
+import { useEventListener } from "@react-hookz/web";
 
 /**
  * Button to fix the firefox bug when the click event is triggered even if you don't

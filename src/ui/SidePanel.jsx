@@ -10,7 +10,7 @@ const StyledSidePanel = styled.div`
 
   top: 0;
   bottom: 0;
-  z-index: ${({ layer }) => 213 + layer};
+  z-index: ${({ $layer }) => 213 + $layer};
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -23,7 +23,7 @@ const StyledSidePanel = styled.div`
 
   min-width: 280px;
   max-width: 500px;
-  width: ${({ width }) => (width ? `${width}` : "25%")};
+  width: ${({ $width }) => ($width ? `${$width}` : "25%")};
 
   overflow-y: auto;
 
@@ -77,7 +77,7 @@ const StyledSidePanel = styled.div`
   .side-panel__content {
     flex: 1;
     overflow: auto;
-    ${({ noMargin }) => (noMargin ? "" : "padding: 1em")};
+    ${({ $noMargin }) => ($noMargin ? "" : "padding: 1em")};
     & header {
       padding: 0.5em;
       margin-top: 2em;
@@ -161,10 +161,10 @@ const SidePanel = ({
   return createPortal(
     <StyledSidePanel
       onTransitionEnd={onAnimationEnd}
-      noMargin={noMargin}
-      width={width}
+      $noMargin={noMargin}
+      $width={width}
       className={classes.join(" ")}
-      layer={layer}
+      $layer={layer}
     >
       <header className="side-panel__header">
         {title && <h2 className="side-panel__title">{title}</h2>}

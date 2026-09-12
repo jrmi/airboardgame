@@ -38,7 +38,7 @@ const Color = styled.div`
     inset: 0;
     content: "";
     position: absolute;
-    background: ${({ color }) => color};
+    background: ${({ $color }) => $color};
     border: 2px solid #ffffff66;
   }
 `;
@@ -99,7 +99,7 @@ const ColorPicker = ({
 
   return (
     <>
-      <Color color={value} onClick={showColorPicker} />
+      <Color $color={value} onClick={showColorPicker} />
       {showPicker && (
         <ColorPickerWrapper>
           <SketchPicker

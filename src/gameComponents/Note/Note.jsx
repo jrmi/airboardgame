@@ -5,17 +5,17 @@ import { lighten } from "color2k";
 import { randInt } from "../../utils";
 
 const NotePane = styled.div`
-  ${({ color, fontSize, textColor, width, height, fontFamily, rotate }) => css`
-    background: linear-gradient(${color}, ${lighten(color, 0.1)});
-    width: ${width}px;
+  ${({ $color, $fontSize, $textColor, $width, $height, $fontFamily, $rotate }) => css`
+    background: linear-gradient(${$color}, ${lighten($color, 0.1)});
+    width: ${$width}px;
     padding: 0.5em;
     text-align: center;
     display: flex;
     justify-content: space-between;
     flex-direction: column;
     box-shadow: 2px 9px 10px 3px rgba(0,0,0,0.2);
-    color: ${textColor};
-    transform: rotate(${rotate}deg) skew(0);
+    color: ${$textColor};
+    transform: rotate(${$rotate}deg) skew(0);
     z-index: 2;
 
     border-bottom-right-radius: 50% 1%;
@@ -27,7 +27,7 @@ const NotePane = styled.div`
 
     & .note__title {
       min-height: 2em;
-      font-family: "${fontFamily}", sans-serif;
+      font-family: "${$fontFamily}", sans-serif;
       font-weight: bold;
       padding: 0.2em 0;
       margin: 0;
@@ -38,21 +38,21 @@ const NotePane = styled.div`
     }
 
     & .note__textarea {
-      color: ${textColor};
-      font-family: "${fontFamily}", sans-serif;
+      color: ${$textColor};
+      font-family: "${$fontFamily}", sans-serif;
 
       &:focus{
         outline: none;
         box-shadow: none;
       }
 
-      height: ${height}px;
+      height: ${$height}px;
       width: 100%;
       padding: 0.3em;
       background-color: transparent;
       resize: none;
       border: none;
-      font-size: ${fontSize}px;
+      font-size: ${$fontSize}px;
       border-radius: 1px;
 
       .item-library__component & {
@@ -96,17 +96,17 @@ const Note = ({
 
   return (
     <NotePane
-      color={color}
-      fontSize={fontSize}
-      textColor={textColor}
-      fontFamily={fontFamily}
-      width={width}
-      height={height}
+      $color={color}
+      $fontSize={fontSize}
+      $textColor={textColor}
+      $fontFamily={fontFamily}
+      $width={width}
+      $height={height}
       onKeyDown={stopPropagationIfActive}
       onKeyUp={stopPropagationIfActive}
       onWheel={stopPropagationIfActive}
       onPointerMove={stopPropagationIfActive}
-      rotate={rotate}
+      $rotate={rotate}
     >
       <label style={{ userSelect: "none" }}>
         <h3 className="note__title">{label}</h3>

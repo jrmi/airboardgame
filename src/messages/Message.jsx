@@ -15,7 +15,7 @@ const StyledMessage = styled.div`
   & .name {
     padding-left: 0.5em;
     font-size: 1.3em;
-    ${({ color }) => `color: ${color};`}
+    ${({ $color }) => `color: ${$color};`}
     text-shadow: 0px 0px 1px var(--color-grey);
   }
   & .left-block {
@@ -38,7 +38,7 @@ const Message = ({
   timestamp,
   content,
 }) => (
-  <StyledMessage color={color}>
+  <StyledMessage $color={color}>
     {first && <div className="name">{name}</div>}
     <div className="line">
       <div className="left-block">

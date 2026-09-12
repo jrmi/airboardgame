@@ -4,7 +4,7 @@ import { useBoardPosition } from "react-sync-board";
 import useSession from "../hooks/useSession";
 
 import useLocalStorage from "../hooks/useLocalStorage";
-import { useIntervalEffect } from "@react-hookz/web/esm/useIntervalEffect";
+import { useIntervalEffect } from "@react-hookz/web";
 
 // 150 days max for session dim
 const MAX_SESSION_DIM_RETENTION = 1000 * 60 * 60 * 24 * 150;
