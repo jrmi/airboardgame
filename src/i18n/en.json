@@ -357,6 +357,7 @@
   "Include files": "Include files",
   "An error occurred. Try again!": "An error occurred. Try again!",
   "Rotate board": "Rotate board",
+  "Center on items": "Center on items",
   "Hold items": "Hold items",
   "Whether we can place items on it. When an item is placed, moving the current item one also moves the placed items.": "Whether we can place items on it. When an item is placed, moving the current item one also moves the placed items."
 }

@@ -69,6 +69,12 @@ export default defineConfig({
     reactRefresh(),
     analyze({ summaryOnly: true, hideDeps: true, limit: 20 }),
   ],
+  // Keep the local react-sync-board package under this app's node_modules
+  // resolution context so its external React imports use this app's React.
+  resolve: {
+    preserveSymlinks: true,
+    dedupe: ["react", "react-dom"],
+  },
   build: {
     sourcemap: true,
   },

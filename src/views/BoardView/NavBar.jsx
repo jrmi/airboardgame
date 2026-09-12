@@ -3,7 +3,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useMatch, useParams } from "react-router-dom";
 import { confirmAlert } from "react-confirm-alert";
-import { useUsers } from "react-sync-board";
+import { useItems, useUsers } from "react-sync-board";
 
 import {
   FiHelpCircle,
@@ -14,6 +14,7 @@ import {
   FiHome,
   FiMaximize,
   FiRotateCw,
+  FiTarget,
 } from "react-icons/fi";
 import { GiPokerHand } from "react-icons/gi";
 
@@ -49,7 +50,42 @@ const NavBar = ({ editMode, itemLibraries, moveFirst, setMoveFirst }) => {
   const { t } = useTranslation();
   const { isVassalSession } = useSession();
 
-  const { rotateBoard } = useBoardPosition();
+  const items = useItems();
+  const { rotateBoard, zoomToExtent } = useBoardPosition();
+
+  const centerOnItems = React.useCallback(() => {
+    const renderedItems = new Map(
+      Array.from(document.querySelectorAll("[data-id]")).map((element) => [
+        element.dataset.id,
+        element,
+      ])
+    );
+    const bounds = items.reduce(
+      (current, item) => {
+        const element = renderedItems.get(item.id);
+        if (!element) return current;
+
+        return {
+          left: Math.min(current.left, item.x),
+          top: Math.min(current.top, item.y),
+          right: Math.max(current.right, item.x + element.offsetWidth),
+          bottom: Math.max(current.bottom, item.y + element.offsetHeight),
+        };
+      },
+      { left: Infinity, top: Infinity, right: -Infinity, bottom: -Infinity }
+    );
+
+    if (!Number.isFinite(bounds.left)) return;
+
+    const x = (bounds.left + bounds.right) / 2;
+    const y = (bounds.top + bounds.bottom) / 2;
+    const radius = Math.max(
+      Math.hypot(x - bounds.left, y - bounds.top),
+      1000
+    );
+
+    zoomToExtent({ x, y, radius });
+  }, [items, zoomToExtent]);
 
   const { toggleFullScreen, active: isFullScreen } = useFullScreen();
 
@@ -183,6 +219,12 @@ const NavBar = ({ editMode, itemLibraries, moveFirst, setMoveFirst }) => {
           onClick={() => rotateBoard((prev) => prev + 90)}
           alt={t("Rotate board")}
           title={t("Rotate board")}
+        />
+        <NavButton
+          Icon={FiTarget}
+          onClick={centerOnItems}
+          alt={t("Center on items")}
+          title={t("Center on items")}
         />
         <NavButton
           Icon={FiMaximize}
