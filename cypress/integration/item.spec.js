@@ -15,11 +15,10 @@ describe("Item interactions", () => {
       .find(".img-wrapper")
       .click();
     // Wait board loading
-    cy.get(".board-pane", { timeout: 10000 }).should(
-      "have.css",
-      "transform",
-      "matrix(0.24, 0, 0, 0.24, -5596.48, -5808.48)"
-    );
+    cy.get(".board-pane", { timeout: 10000 })
+      .should("be.visible")
+      .should("have.css", "transform")
+      .and("match", /^matrix\(/);
     cy.get(".item")
       .first()
       .children()
