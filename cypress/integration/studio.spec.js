@@ -237,9 +237,9 @@ describe("Studio", () => {
       cy.get(".item").click({ force: true });
       cy.get("[title^='Edit']").click({ force: true });
 
-      cy.get('input[name="width"]').clear().type("100");
-      cy.get('input[name="height"]').clear().type("75");
-      cy.get('input[name="text"]').clear().type("myCube");
+      cy.get('input[name="width"]').click().type("{selectall}100").blur();
+      cy.get('input[name="height"]').click().type("{selectall}75").blur();
+      cy.get('input[name="text"]').clear().type("myCube").blur();
 
       cy.get(".item")
         .children()
