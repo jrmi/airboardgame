@@ -105,7 +105,13 @@ const Canvas = ({ width, height, layers }) => {
     }
   }, [layers, height, width, refreshed]);
 
-  return <canvas ref={canvasRef}></canvas>;
+  return (
+    <canvas
+      ref={canvasRef}
+      draggable={false}
+      onDragStart={(event) => event.preventDefault()}
+    ></canvas>
+  );
 };
 
 const ImageElm = styled.img`
