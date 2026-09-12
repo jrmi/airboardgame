@@ -7,7 +7,6 @@
     "@react-hookz/web": "^26.1.0",
     "@scripters/use-socket.io": "github:jrmi/use-socket.io#updated-v2",
     "@sentry/react": "^10.74.0",
-    "@sentry/tracing": "^7.120.4",
     "chota": "^0.9.2",
     "color2k": "^2.0.4",
     "dayjs": "^1.11.23",
