@@ -60,7 +60,7 @@
     "backend:test": "npm --prefix backend test",
     "lint": "eslint src/",
     "lint:fix": "eslint src/ --fix",
-    "prettier": "prettier --write src/",
+    "prettier": "prettier --write src/ backend/",
     "check": "node ./checkConfig.mjs",
     "i18n:scanner": "i18next-scanner --config i18next-scanner.config.js 'src/**/*.{js,jsx}'",
     "cypress:open": "cross-env VITE_CI=1 LANGUAGE=en cypress open",

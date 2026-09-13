@@ -1,21 +1,43 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { clientOrigin } from "../src/app.js";
-import { currentUser, mailFromOrigin, requestLogin, sessionCookie, userIdForEmail, verifyLogin } from "../src/auth.js";
+import {
+  currentUser,
+  mailFromOrigin,
+  requestLogin,
+  sessionCookie,
+  userIdForEmail,
+  verifyLogin,
+} from "../src/auth.js";
 
 test("login normalizes email before calculating the user id", () => {
-  assert.equal(userIdForEmail("  USER@Example.COM "), userIdForEmail("user@example.com"));
+  assert.equal(
+    userIdForEmail("  USER@Example.COM "),
+    userIdForEmail("user@example.com")
+  );
 });
 
 test("login links target the configured frontend", () => {
   process.env.CLIENT_URL = "https://airboardgame.example/";
-  assert.equal(clientOrigin({ get: () => "http://backend:4050" }), "https://airboardgame.example");
+  assert.equal(
+    clientOrigin({ get: () => "http://backend:4050" }),
+    "https://airboardgame.example"
+  );
   delete process.env.CLIENT_URL;
-  assert.equal(clientOrigin({ get: (header) => header === "origin" ? "http://localhost:3001" : undefined }), "http://localhost:3001");
+  assert.equal(
+    clientOrigin({
+      get: (header) =>
+        header === "origin" ? "http://localhost:3001" : undefined,
+    }),
+    "http://localhost:3001"
+  );
 });
 
 test("login mail sender uses the origin hostname", () => {
-  assert.equal(mailFromOrigin("https://airboardgame.example:3001/login"), "noreply@airboardgame.example");
+  assert.equal(
+    mailFromOrigin("https://airboardgame.example:3001/login"),
+    "noreply@airboardgame.example"
+  );
 });
 
 test("fake email login token is one-time and creates a valid session cookie", async () => {
@@ -25,7 +47,9 @@ test("fake email login token is one-time and creates a valid session cookie", as
   let message;
   process.env.EMAIL_HOST = "fake";
   process.env.ABG_SECRET = "test-secret";
-  console.log = (value) => { message = value; };
+  console.log = (value) => {
+    message = value;
+  };
   try {
     await requestLogin("User@example.com", "http://localhost:3001");
   } finally {
@@ -38,7 +62,10 @@ test("fake email login token is one-time and creates a valid session cookie", as
   const [, userId, token] = message.match(/\/login\/([^/]+)\/([^/]+)$/);
   assert.equal(userId, userIdForEmail("user@example.com"));
   verifyLogin(userId, token);
-  assert.throws(() => verifyLogin(userId, token), /Token invalid or has expired/);
+  assert.throws(
+    () => verifyLogin(userId, token),
+    /Token invalid or has expired/
+  );
 
   process.env.ABG_SECRET = "test-secret";
   const cookie = sessionCookie(userId).split(";")[0];
