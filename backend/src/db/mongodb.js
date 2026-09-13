@@ -1,5 +1,7 @@
 import { MongoClient } from "mongodb";
 import Datastore from "@seald-io/nedb";
+import fs from "node:fs/promises";
+import path from "node:path";
 import { SITE_PREFIX } from "../config.js";
 
 let client;
@@ -30,11 +32,13 @@ export const collectionName = (box) =>
   process.env[`MONGODB_COLLECTION_${box.toUpperCase()}`] ||
   `_${SITE_PREFIX}__${box}`;
 
-const loadNeDb = (filename) =>
-  new Promise((resolve, reject) => {
+const loadNeDb = async (filename) => {
+  await fs.mkdir(path.dirname(filename), { recursive: true });
+  return new Promise((resolve, reject) => {
     const store = new Datastore({ filename, autoload: false });
     store.loadDatabase((error) => (error ? reject(error) : resolve(store)));
   });
+};
 
 const getNeDb = async (box) => {
   const filename = `${process.env.NEDB_BACKEND_DIRNAME || process.env.NEDB_DIRNAME || "/tmp"}/${collectionName(box)}.json`;

@@ -37,6 +37,54 @@ the browser to complete authentication. Configure `EMAIL_HOST`, `EMAIL_PORT`,
 Set `DISK_DESTINATION` if game media should be stored outside `backend/media`.
 OpenVidu is enabled by setting `OPENVIDU_URL` and `OPENVIDU_SECRET`.
 
+### Local file storage
+
+Game media can be stored directly on the backend's local filesystem instead of
+using S3. Set the following variables in `.env`:
+
+```dotenv
+FILE_STORAGE=disk
+DISK_DESTINATION=/absolute/path/to/airboardgame-data/media
+```
+
+`FILE_STORAGE=disk` is also the default when `FILE_STORAGE` and
+`FILE_STORE_BACKEND` are not set. The backend creates one directory per game
+under `DISK_DESTINATION`. Use an absolute path so the location does not depend
+on the directory from which the backend is started. Keep this directory on a
+persistent volume or back it up; files are not stored in MongoDB or NeDB.
+
+For a setup that does not use either S3 or MongoDB, store the game data locally
+with NeDB as well:
+
+```dotenv
+STORE_BACKEND=nedb
+NEDB_BACKEND_DIRNAME=/absolute/path/to/airboardgame-data/db
+FILE_STORAGE=disk
+DISK_DESTINATION=/absolute/path/to/airboardgame-data/media
+```
+
+With Docker, the image provides `/data/db` and `/data/media`. Run the backend
+with a persistent volume and set the corresponding paths:
+
+```sh
+docker run -d --name airboardgame-backend \
+  --restart unless-stopped \
+  -p 4050:4050 \
+  -v airboardgame-data:/data \
+  --env-file .env \
+  airboardgame-backend
+```
+
+```dotenv
+STORE_BACKEND=nedb
+NEDB_BACKEND_DIRNAME=/data/db
+FILE_STORAGE=disk
+DISK_DESTINATION=/data/media
+```
+
+If MongoDB is used for the game data, only the media directory needs to be
+persisted locally. S3 variables are not required when `FILE_STORAGE=disk`.
+
 ### Docker deployment
 
 The backend can be built and run as a standalone container:
