@@ -24,6 +24,26 @@ printed in the backend console. Configure the SMTP variables for real email.
 Set `DISK_DESTINATION` if game media should be stored outside `backend/media`.
 OpenVidu is enabled by setting `OPENVIDU_URL` and `OPENVIDU_SECRET`.
 
+### Docker deployment
+
+The backend can be built and run as a standalone container:
+
+```sh
+cd backend
+docker build -t airboardgame-backend .
+docker run -d --name airboardgame-backend \
+  --restart unless-stopped \
+  -p 4050:4050 \
+  -v airboardgame-data:/data \
+  --env-file .env \
+  airboardgame-backend
+```
+
+For the default NeDB + disk-media setup, set `STORE_BACKEND=nedb` and keep
+`NEDB_BACKEND_DIRNAME=/data/db` and `DISK_DESTINATION=/data/media`. For a
+MongoDB or S3 deployment, configure those services in `.env` and keep the
+`/data` volume only if local media or NeDB data is still used.
+
 ## Client
 
 From the repository root:
