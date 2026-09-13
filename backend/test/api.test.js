@@ -119,7 +119,7 @@ const json = (method, body, userId) => ({
 
 before(async () => {
   dataDir = await fs.mkdtemp(path.join(os.tmpdir(), "airboardgame-api-"));
-  process.env.STORE_BACKEND = "nedb";
+  process.env.STORE_BACKEND ||= "nedb";
   process.env.NEDB_BACKEND_DIRNAME = dataDir;
   process.env.DISK_DESTINATION = path.join(dataDir, "media");
   process.env.RICOCHET_SECRET = "api-test-secret";
