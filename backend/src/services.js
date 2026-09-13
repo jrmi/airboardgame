@@ -81,6 +81,8 @@ const mediaRoot = () => process.env.DISK_DESTINATION || path.resolve("backend/me
 const mediaDir = (gameId) => path.join(mediaRoot(), gameId);
 const safeFilename = (filename) => path.basename(filename);
 const useS3 = () => (process.env.FILE_STORAGE || process.env.FILE_STORE_BACKEND || "disk") === "s3";
+const useS3Proxy = () => process.env.S3_PROXY === "1";
+const s3Cdn = () => (process.env.S3_CDN || "").replace(/\/$/, "");
 const s3 = () => new S3Client({
   region: process.env.S3_REGION || "fr-par",
   endpoint: process.env.S3_ENDPOINT,
@@ -118,6 +120,10 @@ export const mediaService = {
   },
   async get(gameId, filename) {
     if (!useS3()) return { path: path.join(mediaDir(gameId), safeFilename(filename)) };
+    const cleanFilename = safeFilename(filename);
+    if (!useS3Proxy() && s3Cdn()) {
+      return { redirectTo: `${s3Cdn()}/${s3Key(gameId, cleanFilename)}` };
+    }
     try { return await s3().send(new GetObjectCommand({ Bucket: process.env.S3_BUCKET, Key: s3Key(gameId, filename) })); } catch { throw new HttpError(404, "File not found"); }
   },
 };

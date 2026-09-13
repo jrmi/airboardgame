@@ -245,7 +245,7 @@ airboardgame/store/game/game-id/file/random-name.png
 
 The exact prefix is `{siteId}/{storePrefix}/{boxId}/{resourceId}/file/{filename}`. The client stores this returned string as `{type: "local", content: filePath}` and later resolves it as `${API_BASE}/${filePath}`.
 
-Ricochet's disk backend generates a random id filename and retains the MIME-derived extension. S3-backed deployments may redirect downloads to a CDN, a signed URL, or proxy the bytes.
+Ricochet's disk backend generates a random id filename and retains the MIME-derived extension. S3-backed deployments proxy the bytes by default. Set `S3_CDN` to redirect downloads to a CDN; set `S3_PROXY=1` to force proxying even when a CDN is configured.
 
 ### List files
 
@@ -426,7 +426,7 @@ Backend variables relevant to the contract:
 - `FILE_STORE_BACKEND`/`FILE_STORAGE`: memory, disk, or S3-compatible storage;
 - `NEDB_DIRNAME`, `MONGODB_URI`, `MONGODB_DATABASE`: persistence settings;
 - `DISK_DESTINATION` or S3 settings: file persistence/delivery;
-- `EMAIL_HOST`, `EMAIL_PORT`, `EMAIL_USER`, `EMAIL_PASSWORD`, `EMAIL_FROM`: passwordless auth mail;
+- `EMAIL_HOST`, `EMAIL_PORT`, `EMAIL_USER`, `EMAIL_PASSWORD`: passwordless auth mail. The sender is generated as `noreply@{origin hostname}`;
 - `OPENVIDU_URL`, `OPENVIDU_SECRET`: web-conference token generation.
 
 For local development, `backend/npm run all` starts Ricochet.js, wire.io, and the webpack watcher. The frontend separately runs Vite. The generated `public/ricochet.json` must be hosted at the browser-facing frontend origin expected by the Ricochet origin resolution.

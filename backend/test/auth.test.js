@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { clientOrigin } from "../src/app.js";
-import { currentUser, requestLogin, sessionCookie, userIdForEmail, verifyLogin } from "../src/auth.js";
+import { currentUser, mailFromOrigin, requestLogin, sessionCookie, userIdForEmail, verifyLogin } from "../src/auth.js";
 
 test("login normalizes email before calculating the user id", () => {
   assert.equal(userIdForEmail("  USER@Example.COM "), userIdForEmail("user@example.com"));
@@ -12,6 +12,10 @@ test("login links target the configured frontend", () => {
   assert.equal(clientOrigin({ get: () => "http://backend:4050" }), "https://airboardgame.example");
   delete process.env.CLIENT_URL;
   assert.equal(clientOrigin({ get: (header) => header === "origin" ? "http://localhost:3001" : undefined }), "http://localhost:3001");
+});
+
+test("login mail sender uses the origin hostname", () => {
+  assert.equal(mailFromOrigin("https://airboardgame.example:3001/login"), "noreply@airboardgame.example");
 });
 
 test("fake email login token is one-time and creates a valid session cookie", async () => {

@@ -11,6 +11,7 @@ export const sessionCookie = (userId) => {
   return `session=${value}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${10 * 24 * 60 * 60}`;
 };
 export const clearSessionCookie = "session=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0";
+export const mailFromOrigin = (origin) => `noreply@${new URL(origin).hostname}`;
 export const currentUser = (request) => {
   const value = request.headers.cookie?.match(/(?:^|;\s*)session=([^;]+)/)?.[1];
   if (!value) return null;
@@ -26,7 +27,7 @@ export const requestLogin = async (email, origin) => {
   tokens.set(`${userId}:${token}`, Date.now() + 15 * 60 * 1000);
   const link = `${origin}/login/${userId}/${token}`;
   if ((process.env.EMAIL_HOST || "fake") === "fake") console.log(`Authentication link: ${link}`);
-  else await nodemailer.createTransport({ host: process.env.EMAIL_HOST, port: process.env.EMAIL_PORT, auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASSWORD } }).sendMail({ from: process.env.EMAIL_FROM, to: email, subject: "Airboardgame login", text: link });
+  else await nodemailer.createTransport({ host: process.env.EMAIL_HOST, port: process.env.EMAIL_PORT, auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASSWORD } }).sendMail({ from: mailFromOrigin(origin), to: email, subject: "Airboardgame login", text: link });
 };
 export const verifyLogin = (userId, token) => {
   const key = `${userId}:${token}`;
