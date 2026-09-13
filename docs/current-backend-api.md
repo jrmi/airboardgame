@@ -6,20 +6,23 @@ The source of truth for the client HTTP calls is `src/utils/api.js`. The source 
 
 ## 1. Runtime topology
 
-Airboardgame currently uses three cooperating services:
+Airboardgame uses the frontend and one backend process. The backend exposes the
+HTTP API and Socket.IO endpoint on the same port, and embeds the `wire.io`
+server handler for board and room synchronization:
 
 ```text
 Browser
-  ├─ HTTP REST ───────────────► Ricochet.js (site-scoped API)
-  │                              └─ encrypted ricochet.json setup
-  ├─ Socket.IO/WebSocket ─────► wire.io relay
-  └─ HTTP through custom function ► OpenVidu (server-to-server)
+  ├─ HTTP REST ───────────────► Node/Feathers backend
+  ├─ Socket.IO/WebSocket ─────► same backend (wire.io handler)
+  └─ HTTP through backend ────► OpenVidu (server-to-server)
 ```
 
-The Ricochet.js URL is configured by `VITE_API_ENDPOINT`; in production the default is the current browser origin. Every application URL is prefixed with the configured site id:
+The backend URL is configured by `VITE_API_ENDPOINT`; in production the default
+is the current browser origin. Every application URL uses the fixed
+`airboardgame` prefix:
 
 ```text
-{API_BASE}/{siteId}/...
+{API_BASE}/airboardgame/...
 ```
 
 With the default development proxy, `API_BASE` is empty and the browser calls paths such as `/airboardgame/store/game/...`; the Vite proxy forwards `/store`, `/file`, `/execute`, and `/auth` to the configured backend. When the proxy is disabled, the full API endpoint is used, for example `https://backend.example/airboardgame/store/game/...`.
@@ -412,15 +415,16 @@ The client helpers do not parse the server's `message` field. They convert 404 a
 
 Frontend variables relevant to the contract:
 
-- `VITE_RICOCHET_SITEID`: tenant/site id, normally `airboardgame`;
-- `VITE_API_ENDPOINT`: Ricochet HTTP origin;
+- `airboardgame`: fixed site prefix used by the compatibility routes;
+- `VITE_API_ENDPOINT`: backend HTTP origin;
 - `VITE_USE_PROXY`: enables the development proxy unless set to `0`;
 - `VITE_SOCKET_URL`, `VITE_SOCKET_PATH`: real-time endpoint;
 - `VITE_WEBCONFERENCE`: `audio`, `video`, or disabled.
 
 Backend variables relevant to the contract:
 
-- `RICOCHET_SECRET`: signs the session cookie and is also used by Ricochet.js;
+- `ABG_SECRET`: signs the session cookie (`RICOCHET_SECRET` remains supported as
+  a migration fallback);
 - `RICOCHET_SITE_KEY`: decrypts the generated Airboardgame setup bundle;
 - `JSON_STORE_BACKEND`/`STORE_BACKEND`: memory, NeDB, or MongoDB;
 - `FILE_STORE_BACKEND`/`FILE_STORAGE`: memory, disk, or S3-compatible storage;
@@ -429,7 +433,9 @@ Backend variables relevant to the contract:
 - `EMAIL_HOST`, `EMAIL_PORT`, `EMAIL_USER`, `EMAIL_PASSWORD`: passwordless auth mail. The sender is generated as `noreply@{origin hostname}`;
 - `OPENVIDU_URL`, `OPENVIDU_SECRET`: web-conference token generation.
 
-For local development, `backend/npm run all` starts Ricochet.js, wire.io, and the webpack watcher. The frontend separately runs Vite. The generated `public/ricochet.json` must be hosted at the browser-facing frontend origin expected by the Ricochet origin resolution.
+For local development, `npm run backend:dev` starts the backend, including its
+embedded Socket.IO/`wire.io` handler. Run `npm run dev` separately for the
+frontend.
 
 ## 13. Migration checklist
 

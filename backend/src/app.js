@@ -4,10 +4,11 @@ import multer from "multer";
 import { gameService, getOrCreateUser, HttpError, mediaDir, mediaService, safeFilename } from "./services.js";
 import { clearSessionCookie, currentUser, requestLogin, sessionCookie, verifyLogin } from "./auth.js";
 import { getConfToken } from "./conference.js";
+import { SITE_PREFIX } from "./config.js";
 
 const json = express.json({ limit: "20mb" });
 const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 100 * 1024 * 1024 } });
-const site = process.env.VITE_RICOCHET_SITEID || "airboardgame";
+const site = SITE_PREFIX;
 const send = (response, value) => response.json(value);
 const route = (box) => `/store/${box}`;
 export const clientOrigin = (request) => {
@@ -21,6 +22,8 @@ export const createApp = () => {
   app.use(express.urlencoded({ extended: false }));
   app.use(json);
   app.use((request, response, next) => { request.userId = currentUser(request); next(); });
+
+  app.get("/health", (request, response) => send(response, { status: "ok" }));
 
   app.post("/auth/", async (request, response, next) => { try { await requestLogin(request.body?.userEmail || "", clientOrigin(request)); send(response, { message: "Token sent" }); } catch (error) { next(error); } });
   app.get("/auth/verify/:userId/:token", (request, response, next) => { try { if (request.userId !== request.params.userId) verifyLogin(request.params.userId, request.params.token); response.set("Set-Cookie", sessionCookie(request.params.userId)); send(response, { message: "success" }); } catch (error) { next(error); } });

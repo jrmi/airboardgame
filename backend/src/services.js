@@ -3,6 +3,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { GetObjectCommand, ListObjectsV2Command, PutObjectCommand, DeleteObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { getCollection } from "./db/mongodb.js";
+import { SITE_PREFIX } from "./config.js";
 
 export class HttpError extends Error {
   constructor(status, message) {
@@ -89,12 +90,12 @@ const s3 = () => new S3Client({
   forcePathStyle: true,
   credentials: { accessKeyId: process.env.S3_ACCESS_KEY, secretAccessKey: process.env.S3_SECRET_KEY },
 });
-const s3Key = (gameId, filename) => `${process.env.VITE_RICOCHET_SITEID || "airboardgame"}/game/${gameId}/${safeFilename(filename)}`;
+const s3Key = (gameId, filename) => `${SITE_PREFIX}/game/${gameId}/${safeFilename(filename)}`;
 
 export const mediaService = {
   async list(gameId) {
     if (useS3()) {
-      const result = await s3().send(new ListObjectsV2Command({ Bucket: process.env.S3_BUCKET, Prefix: `${process.env.VITE_RICOCHET_SITEID || "airboardgame"}/game/${gameId}/` }));
+      const result = await s3().send(new ListObjectsV2Command({ Bucket: process.env.S3_BUCKET, Prefix: `${SITE_PREFIX}/game/${gameId}/` }));
       return (result.Contents || []).map(({ Key }) => mediaPath(gameId, Key.split("/").pop()));
     }
     try { return (await fs.readdir(mediaDir(gameId))).map((file) => mediaPath(gameId, file)); } catch { throw new HttpError(404, "Files not found"); }
@@ -128,7 +129,7 @@ export const mediaService = {
   },
 };
 
-export const mediaPath = (gameId, filename) => `${process.env.VITE_RICOCHET_SITEID || "airboardgame"}/store/game/${gameId}/file/${filename}`;
+export const mediaPath = (gameId, filename) => `${SITE_PREFIX}/store/game/${gameId}/file/${filename}`;
 export { mediaDir, safeFilename };
 
 export const cleanupSessions = async () => {

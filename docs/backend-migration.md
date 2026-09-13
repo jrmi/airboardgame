@@ -2,7 +2,7 @@
 
 The Ricochet.js setup bundle has been replaced by the Node/Feathers backend in
 `backend/src`. The browser-facing compatibility surface remains site-prefixed
-under `/{VITE_RICOCHET_SITEID}` and includes:
+under `/airboardgame` and includes:
 
 - game, session, room, and user store routes;
 - passwordless auth and the signed `session` cookie;
@@ -20,7 +20,8 @@ document ids and fields must be retained; Mongo collections default to
 The old site-registration/setup endpoints, generic execute functions, generic
 Ricochet boxes and the legacy `/file/:namespace` upload helper
 are not active frontend dependencies and were dropped. Required configuration
-is now `SERVER_HOST`, `SERVER_PORT`, and `RICOCHET_SECRET`; email and OpenVidu
+is now `SERVER_HOST`, `SERVER_PORT`, and `ABG_SECRET`; the legacy
+`RICOCHET_SECRET` name remains supported as a fallback. Email and OpenVidu
 variables remain supported. The backend can read the old NeDB files when
 `STORE_BACKEND=nedb` and `NEDB_BACKEND_DIRNAME` are set. The old deployment uses
 S3 media is supported when configured with `FILE_STORAGE=s3` and the existing

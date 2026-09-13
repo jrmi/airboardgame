@@ -71,7 +71,6 @@ before(async () => {
   process.env.STORE_BACKEND = "nedb";
   process.env.NEDB_BACKEND_DIRNAME = dataDir;
   process.env.DISK_DESTINATION = path.join(dataDir, "media");
-  process.env.VITE_RICOCHET_SITEID = site;
   process.env.RICOCHET_SECRET = "api-test-secret";
   process.env.EMAIL_HOST = "fake";
   app = createApp();

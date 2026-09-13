@@ -93,7 +93,7 @@ You can drag'n'drop image from your desktop to the board to use them in Airboard
 * Made with React and Socket.io,
 * Use Recoiljs as state management,
 * Client to client driven architecture,
-* Use Ricochet.js as backend framework.
+* Use a Node/Feathers backend with MongoDB and Socket.IO.
 
 ## Developper documentation
 

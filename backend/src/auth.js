@@ -1,9 +1,10 @@
 import crypto from "node:crypto";
 import nodemailer from "nodemailer";
 import { HttpError } from "./services.js";
+import { sessionSecret } from "./config.js";
 
 const tokens = new Map();
-const secret = () => process.env.RICOCHET_SECRET || "development-secret";
+const secret = sessionSecret;
 export const userIdForEmail = (email) => crypto.createHash("sha256").update(email.trim().toLowerCase()).digest("hex");
 
 export const sessionCookie = (userId) => {

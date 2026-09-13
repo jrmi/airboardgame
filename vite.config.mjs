@@ -7,7 +7,7 @@ dotenv.config();
 const useProxy = process.env.VITE_USE_PROXY;
 const server = process.env.VITE_API_ENDPOINT;
 const socketServer = process.env.VITE_SOCKET_URL;
-const siteId = process.env.VITE_RICOCHET_SITEID;
+const siteId = "airboardgame";
 
 const checkDeprecatedVars = () => {
   const deprecatedVars = [
@@ -38,13 +38,6 @@ const checkDeprecatedVars = () => {
 
 checkDeprecatedVars();
 
-if (!siteId) {
-  console.log(
-    "ERR! You must define a VITE_RICOCHET_SITEID environment variable.",
-  );
-  process.exit(1);
-}
-
 let proxy = {};
 
 if (useProxy) {
@@ -57,6 +50,7 @@ if (useProxy) {
           .replace("https", "wss")
           .replace("http", "ws"),
         "/file": server,
+        "/health": server,
         [`/${siteId}`]: server,
       },
     },

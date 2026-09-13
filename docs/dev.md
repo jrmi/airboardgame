@@ -1,7 +1,8 @@
 # Development
 
 Airboardgame has a Vite client and a Node/Feathers backend. Node.js and npm are
-required for both parts.
+required for both parts. The backend serves the HTTP API and Socket.IO from the
+same process, by default on port `4050`.
 
 ## Backend
 
@@ -11,16 +12,28 @@ npm ci
 cp .env.dist .env
 ```
 
-Set `MONGODB_URI`, `MONGODB_DATABASE`, and a long random `RICOCHET_SECRET` in
-`.env`. The backend uses the existing MongoDB documents and serves its HTTP API
-and Socket.IO endpoint from one process:
+Set `MONGODB_URI`, `MONGODB_DATABASE`, and a long random `ABG_SECRET` in
+`.env` when using MongoDB. For the simplest local setup, use NeDB instead:
 
-```sh
-npm start
+```dotenv
+STORE_BACKEND=nedb
+NEDB_BACKEND_DIRNAME=/absolute/path/to/airboardgame-data
 ```
 
-For local passwordless authentication, leave `EMAIL_HOST=fake`; login links are
-printed in the backend console. Configure the SMTP variables for real email.
+The directory is created/used by the backend for its JSON collections. Keep it
+outside the repository if it contains local data. The backend uses the existing
+documents and serves its HTTP API and Socket.IO endpoint from one process:
+
+```sh
+npm run dev
+```
+
+From the repository root, the equivalent shortcut is `npm run backend:dev`.
+
+For local passwordless authentication, keep `EMAIL_HOST=fake`. No SMTP account
+is then required: each login link is printed in the backend terminal. Open it in
+the browser to complete authentication. Configure `EMAIL_HOST`, `EMAIL_PORT`,
+`EMAIL_USER`, and `EMAIL_PASSWORD` only when testing real email delivery.
 Set `DISK_DESTINATION` if game media should be stored outside `backend/media`.
 OpenVidu is enabled by setting `OPENVIDU_URL` and `OPENVIDU_SECRET`.
 
@@ -46,7 +59,7 @@ MongoDB or S3 deployment, configure those services in `.env` and keep the
 
 ## Client
 
-From the repository root:
+From the repository root, in a second terminal:
 
 ```sh
 npm ci
@@ -54,12 +67,16 @@ cp .env.dist .env
 npm start
 ```
 
-The default client configuration expects the backend at `http://localhost:4050`
-and uses the `airboardgame` site prefix. Set `VITE_API_ENDPOINT` and
-`VITE_SOCKET_URL` when the backend is hosted elsewhere.
+The default client configuration expects the backend HTTP and Socket.IO endpoints
+at `http://localhost:4050` and uses the `airboardgame` site prefix. With
+`VITE_USE_PROXY=1`, Vite proxies both endpoints through port `3001`. Set
+`VITE_API_ENDPOINT` and `VITE_SOCKET_URL` to the backend origin when the backend
+is hosted elsewhere.
+
+To verify both backend endpoints, run `npm run check` after starting the backend.
 
 ## Tests
 
-Run the frontend lint/build checks with `npm run lint` and `npm run build`. The
-Cypress suite requires a running MongoDB, backend, and client; run it with
-`npm run cypress:run`.
+Run the backend tests with `npm run backend:test`, and the frontend lint/build
+checks with `npm run lint` and `npm run build`. The Cypress suite requires a
+running database, backend, and client; run it with `npm run cypress:run`.

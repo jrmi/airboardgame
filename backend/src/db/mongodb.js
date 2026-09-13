@@ -1,5 +1,6 @@
 import { MongoClient } from "mongodb";
 import Datastore from "@seald-io/nedb";
+import { SITE_PREFIX } from "../config.js";
 
 let client;
 let database;
@@ -27,7 +28,7 @@ export const closeMongo = async () => {
 
 export const collectionName = (box) =>
   process.env[`MONGODB_COLLECTION_${box.toUpperCase()}`] ||
-  `_${process.env.VITE_RICOCHET_SITEID || "airboardgame"}__${box}`;
+  `_${SITE_PREFIX}__${box}`;
 
 const loadNeDb = (filename) =>
   new Promise((resolve, reject) => {
