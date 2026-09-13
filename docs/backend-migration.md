@@ -23,4 +23,5 @@ are not active frontend dependencies and were dropped. Required configuration
 is now `SERVER_HOST`, `SERVER_PORT`, and `RICOCHET_SECRET`; email and OpenVidu
 variables remain supported. The backend can read the old NeDB files when
 `STORE_BACKEND=nedb` and `NEDB_BACKEND_DIRNAME` are set. The old deployment uses
-S3 media, which remains a separate adapter to add before cutover.
+S3 media is supported when configured with `FILE_STORAGE=s3` and the existing
+bucket credentials.

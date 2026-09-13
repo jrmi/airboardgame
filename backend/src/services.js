@@ -1,6 +1,7 @@
 import crypto from "node:crypto";
 import fs from "node:fs/promises";
 import path from "node:path";
+import { GetObjectCommand, ListObjectsV2Command, PutObjectCommand, DeleteObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { getCollection } from "./db/mongodb.js";
 
 export class HttpError extends Error {
@@ -79,24 +80,45 @@ export const getOrCreateUser = async (userId) => {
 const mediaRoot = () => process.env.DISK_DESTINATION || path.resolve("backend/media");
 const mediaDir = (gameId) => path.join(mediaRoot(), gameId);
 const safeFilename = (filename) => path.basename(filename);
+const useS3 = () => (process.env.FILE_STORAGE || process.env.FILE_STORE_BACKEND || "disk") === "s3";
+const s3 = () => new S3Client({
+  region: process.env.S3_REGION || "fr-par",
+  endpoint: process.env.S3_ENDPOINT,
+  forcePathStyle: true,
+  credentials: { accessKeyId: process.env.S3_ACCESS_KEY, secretAccessKey: process.env.S3_SECRET_KEY },
+});
+const s3Key = (gameId, filename) => `${process.env.VITE_RICOCHET_SITEID || "airboardgame"}/game/${gameId}/${safeFilename(filename)}`;
 
 export const mediaService = {
   async list(gameId) {
+    if (useS3()) {
+      const result = await s3().send(new ListObjectsV2Command({ Bucket: process.env.S3_BUCKET, Prefix: `${process.env.VITE_RICOCHET_SITEID || "airboardgame"}/game/${gameId}/` }));
+      return (result.Contents || []).map(({ Key }) => mediaPath(gameId, Key.split("/").pop()));
+    }
     try { return (await fs.readdir(mediaDir(gameId))).map((file) => mediaPath(gameId, file)); } catch { throw new HttpError(404, "Files not found"); }
   },
   async save(gameId, file, userId) {
     const game = await gameService.get("game", gameId);
     if (!(await canModifyGame(game, userId))) throw new HttpError(403, "Forbidden");
-    await fs.mkdir(mediaDir(gameId), { recursive: true });
     const filename = `${crypto.randomBytes(16).toString("hex")}${path.extname(file.originalname || "")}`;
-    await fs.writeFile(path.join(mediaDir(gameId), filename), file.buffer);
+    if (useS3()) {
+      await s3().send(new PutObjectCommand({ Bucket: process.env.S3_BUCKET, Key: s3Key(gameId, filename), Body: file.buffer, ContentType: file.mimetype }));
+    } else {
+      await fs.mkdir(mediaDir(gameId), { recursive: true });
+      await fs.writeFile(path.join(mediaDir(gameId), filename), file.buffer);
+    }
     return mediaPath(gameId, filename);
   },
   async remove(gameId, filename, userId) {
     const game = await gameService.get("game", gameId);
     if (!(await canModifyGame(game, userId))) throw new HttpError(403, "Forbidden");
-    try { await fs.unlink(path.join(mediaDir(gameId), safeFilename(filename))); } catch { throw new HttpError(404, "File not found"); }
+    if (useS3()) await s3().send(new DeleteObjectCommand({ Bucket: process.env.S3_BUCKET, Key: s3Key(gameId, filename) }));
+    else try { await fs.unlink(path.join(mediaDir(gameId), safeFilename(filename))); } catch { throw new HttpError(404, "File not found"); }
     return { message: "Deleted" };
+  },
+  async get(gameId, filename) {
+    if (!useS3()) return { path: path.join(mediaDir(gameId), safeFilename(filename)) };
+    try { return await s3().send(new GetObjectCommand({ Bucket: process.env.S3_BUCKET, Key: s3Key(gameId, filename) })); } catch { throw new HttpError(404, "File not found"); }
   },
 };
 
