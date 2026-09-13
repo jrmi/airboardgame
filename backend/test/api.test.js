@@ -7,7 +7,7 @@ import { Readable, Writable } from "node:stream";
 import test, { after, before, beforeEach, describe } from "node:test";
 import { createApp } from "../src/app.js";
 import { getConfToken } from "../src/conference.js";
-import { getCollection } from "../src/db/mongodb.js";
+import { closeMongo, getCollection } from "../src/db/mongodb.js";
 import {
   cleanupSessions,
   gameService,
@@ -137,6 +137,7 @@ beforeEach(async () => {
 
 after(async () => {
   await fs.rm(dataDir, { recursive: true, force: true });
+  await closeMongo();
 });
 
 describe("HTTP API", () => {
