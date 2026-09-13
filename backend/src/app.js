@@ -51,7 +51,11 @@ export const createApp = () => {
 
   app.post("/auth/", async (request, response, next) => {
     try {
-      await requestLogin(request.body?.userEmail || "", clientOrigin(request));
+      await requestLogin(
+        request.body?.userEmail || "",
+        clientOrigin(request),
+        request.get("accept-language")
+      );
       send(response, { message: "Token sent" });
     } catch (error) {
       next(error);

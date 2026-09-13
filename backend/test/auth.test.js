@@ -3,6 +3,8 @@ import test from "node:test";
 import { clientOrigin } from "../src/app.js";
 import {
   currentUser,
+  authenticationMail,
+  mailLanguage,
   mailFromOrigin,
   requestLogin,
   sessionCookie,
@@ -38,6 +40,17 @@ test("login mail sender uses the origin hostname", () => {
     mailFromOrigin("https://airboardgame.example:3001/login"),
     "noreply@airboardgame.example"
   );
+});
+
+test("login mail follows the browser language", () => {
+  assert.equal(mailLanguage("fr-FR,fr;q=0.9,en;q=0.8"), "fr");
+  assert.equal(mailLanguage("de-DE,de;q=0.9,en;q=0.8"), "en");
+  assert.equal(mailLanguage("fr;q=0"), "en");
+
+  const mail = authenticationMail("https://airboardgame.example/login/user/token", "fr-FR");
+  assert.equal(mail.subject, "[Airboardgame] Votre lien d'authentification");
+  assert.match(mail.text, /Bonjour/);
+  assert.match(mail.html, /href="https:\/\/airboardgame\.example\/login\/user\/token"/);
 });
 
 test("fake email login token is one-time and creates a valid session cookie", async () => {

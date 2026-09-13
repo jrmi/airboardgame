@@ -15,6 +15,53 @@ export const sessionCookie = (userId) => {
 export const clearSessionCookie =
   "session=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0";
 export const mailFromOrigin = (origin) => `noreply@${new URL(origin).hostname}`;
+const siteName = "Airboardgame";
+const mailTranslations = {
+  en: {
+    subject: `[${siteName}] Your authentication link`,
+    text: (url) =>
+      `Hello,\n\nHere is the link that allows you to log in ${siteName}:\n\n${url}\n\nPlease click on the link or copy and paste it into your browser.\n\nYours sincerely,\n\n${siteName} team.`,
+    html: (url) =>
+      `<p>Hello,</p><p>Here is the link that allows you to log in ${siteName}:</p><p><a href="${escapeHtml(url)}">${escapeHtml(url)}</a></p><p>Please click on the link or copy and paste it into your browser.</p><p>Yours sincerely,</p><p>${siteName} team.</p>`,
+  },
+  fr: {
+    subject: `[${siteName}] Votre lien d'authentification`,
+    text: (url) =>
+      `Bonjour,\n\nVoici le lien qui vous permet de vous connecter à ${siteName} :\n\n${url}\n\nCliquez sur le lien ou copiez et collez-le dans votre navigateur.\n\nCordialement,\n\nL'équipe de ${siteName}.`,
+    html: (url) =>
+      `<p>Bonjour,</p><p>Voici le lien qui vous permet de vous connecter à ${siteName} :</p><p><a href="${escapeHtml(url)}">${escapeHtml(url)}</a></p><p>Cliquez sur le lien ou copiez et collez-le dans votre navigateur.</p><p>Cordialement,</p><p>L'équipe de ${siteName}.</p>`,
+  },
+};
+
+const escapeHtml = (value) =>
+  value.replace(
+    /[&<>\"]/g,
+    (character) =>
+      ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[
+        character
+      ]
+  );
+
+export const mailLanguage = (acceptLanguage = "") => {
+  for (const preference of acceptLanguage.split(",")) {
+    const [language, ...parameters] = preference.trim().toLowerCase().split(";");
+    const quality = parameters.find((parameter) => parameter.trim().startsWith("q="));
+    if (quality && Number(quality.trim().slice(2)) === 0) continue;
+    const baseLanguage = language.split("-")[0];
+    if (mailTranslations[baseLanguage]) return baseLanguage;
+  }
+  return "en";
+};
+
+export const authenticationMail = (url, acceptLanguage) => {
+  const translation = mailTranslations[mailLanguage(acceptLanguage)];
+  return {
+    subject: translation.subject,
+    text: translation.text(url),
+    html: translation.html(url),
+  };
+};
+
 export const currentUser = (request) => {
   const value = request.headers.cookie?.match(/(?:^|;\s*)session=([^;]+)/)?.[1];
   if (!value) return null;
@@ -31,14 +78,15 @@ export const currentUser = (request) => {
     ? userId
     : null;
 };
-export const requestLogin = async (email, origin) => {
+export const requestLogin = async (email, origin, acceptLanguage) => {
   const userId = userIdForEmail(email);
   const token = crypto.randomBytes(24).toString("hex");
   tokens.set(`${userId}:${token}`, Date.now() + 15 * 60 * 1000);
   const link = `${origin}/login/${userId}/${token}`;
   if ((process.env.EMAIL_HOST || "fake") === "fake")
     console.log(`Authentication link: ${link}`);
-  else
+  else {
+    const mail = authenticationMail(link, acceptLanguage);
     await nodemailer
       .createTransport({
         host: process.env.EMAIL_HOST,
@@ -51,9 +99,9 @@ export const requestLogin = async (email, origin) => {
       .sendMail({
         from: mailFromOrigin(origin),
         to: email,
-        subject: "Airboardgame login",
-        text: link,
+        ...mail,
       });
+  }
 };
 export const verifyLogin = (userId, token) => {
   const key = `${userId}:${token}`;
