@@ -117,8 +117,12 @@ const Modal = ({
 
   React.useEffect(() => {
     setState((prev) => {
-      if (prev === "closed" && show) return "opening";
-      if (prev === "open" && !show) return "closing";
+      if (show && (prev === "closed" || prev === "closing")) {
+        return "opening";
+      }
+      if (!show && (prev === "opening" || prev === "open")) {
+        return "closing";
+      }
       return prev;
     });
   }, [show]);
@@ -163,7 +167,7 @@ const Modal = ({
             <FiX size={42} alt={t("Close")} color="white" />
           </button>
         </header>
-        <div className="modal__content">{open && children}</div>
+        <div className="modal__content">{show && children}</div>
         {footer && <footer className="modal__footer">{footer}</footer>}
       </div>
     </StyledModalWrapper>,
