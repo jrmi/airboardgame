@@ -139,7 +139,7 @@ const ItemList = ({ items }) => (
   <StyledItemList>
     {items.map((node) => {
       if (node.type) {
-        return <NewItem {...node} key={node.uid} />;
+        return <NewItem {...node} key={node.uid || node.type} />;
       }
       // it's a group
       return (

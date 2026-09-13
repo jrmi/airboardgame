@@ -7,7 +7,6 @@ module.exports = (app) => {
 
   if (useProxy) {
     if (apiEndpoint === undefined) {
-      // eslint-disable-next-line no-console
       console.error(
         "You must set your VITE_API_HOST in your .env file or disable proxy"
       );

@@ -2,9 +2,9 @@ import React, { memo } from "react";
 import styled, { css } from "styled-components";
 
 const StyledHexagon = styled.div`
-  ${({ size, vertical }) => css`
-    width: ${vertical ? 0.866025 * size : size}px;
-    height: ${vertical ? size : 0.866025 * size}px;
+  ${({ $size, $vertical }) => css`
+    width: ${$vertical ? 0.866025 * $size : $size}px;
+    height: ${$vertical ? $size : 0.866025 * $size}px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -14,12 +14,12 @@ const StyledHexagon = styled.div`
     position: relative;
     & svg {
       transform-origin: center center;
-      ${vertical ? "transform: rotate(30deg);" : ""}
+      ${$vertical ? "transform: rotate(30deg);" : ""}
       position: absolute;
-      top: ${vertical ? (0.133975 * size) / 2 + "px" : "0"};
-      left: ${vertical ? (-0.133975 * size) / 2 + "px" : "0"};
-      width: ${size}px;
-      height: ${0.866025 * size}px;
+      top: ${$vertical ? (0.133975 * $size) / 2 + "px" : "0"};
+      left: ${$vertical ? (-0.133975 * $size) / 2 + "px" : "0"};
+      width: ${$size}px;
+      height: ${0.866025 * $size}px;
     }
     & span {
       z-index: 0;
@@ -38,7 +38,7 @@ const Hexagon = ({
   vertical = false,
 }) => {
   return (
-    <StyledHexagon size={size} vertical={vertical}>
+    <StyledHexagon $size={size} $vertical={vertical}>
       <svg
         version="1.1"
         xmlns="http://www.w3.org/2000/svg"

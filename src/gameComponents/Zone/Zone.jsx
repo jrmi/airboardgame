@@ -8,17 +8,17 @@ import { getHeldItems, areItemsInside } from "../../utils/item";
 import useGameItemActions from "../useGameItemActions";
 
 const ZoneWrapper = styled.div`
-  ${({ width, height, borderColor, borderStyle, backgroundColor }) => css`
-    width: ${width}px;
-    height: ${height}px;
-    border: 0.5em ${borderStyle} ${borderColor};
-    background-color: ${backgroundColor};
+  ${({ $width, $height, $borderColor, $borderStyle, $backgroundColor }) => css`
+    width: ${$width}px;
+    height: ${$height}px;
+    border: 0.5em ${$borderStyle} ${$borderColor};
+    background-color: ${$backgroundColor};
     border-radius: 5px;
     position: relative;
     & .zone__label {
       font-size: 1.5em;
       user-select: none;
-      background-color: ${opacify(borderColor, 1)};
+      background-color: ${opacify($borderColor, 1)};
       position: absolute;
       border-radius: 0.5em;
       color: var(--color-darkGrey);
@@ -176,12 +176,12 @@ const Zone = ({
 
   return (
     <ZoneWrapper
-      width={width}
-      height={height}
+      $width={width}
+      $height={height}
       ref={zoneRef}
-      borderStyle={borderStyle}
-      borderColor={borderColor}
-      backgroundColor={backgroundColor}
+      $borderStyle={borderStyle}
+      $borderColor={borderColor}
+      $backgroundColor={backgroundColor}
     >
       <div className={`zone__label ${labelPosition}`}>{label}</div>
     </ZoneWrapper>

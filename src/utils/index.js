@@ -36,10 +36,9 @@ export const insideClass = (element, className) => {
  * @param {Array} a An array containing the items.
  */
 export const shuffle = (a) => {
-  // eslint-disable-next-line no-plusplus
   for (let i = a.length - 1; i > 0; i -= 1) {
     const j = Math.floor(Math.random() * (i + 1));
-    // eslint-disable-next-line no-param-reassign
+
     [a[i], a[j]] = [a[j], a[i]];
   }
   return a;
@@ -58,15 +57,18 @@ export const smallUid = customAlphabet(alpha, 5);
 
 export const objectIntersection = (o1, o2) => {
   const keys = [...new Set([...Object.keys(o1), ...Object.keys(o2)])];
-  return keys.reduce((prev, key) => {
-    if (
-      prev[key] !== o2[key] &&
-      JSON.stringify(prev[key]) !== JSON.stringify(o2[key])
-    ) {
-      delete prev[key];
-    }
-    return prev;
-  }, JSON.parse(JSON.stringify(o1)));
+  return keys.reduce(
+    (prev, key) => {
+      if (
+        prev[key] !== o2[key] &&
+        JSON.stringify(prev[key]) !== JSON.stringify(o2[key])
+      ) {
+        delete prev[key];
+      }
+      return prev;
+    },
+    JSON.parse(JSON.stringify(o1))
+  );
 };
 
 export const objectDiff = (o1, o2) => {

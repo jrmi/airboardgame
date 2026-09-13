@@ -2,8 +2,8 @@ import React, { memo } from "react";
 import styled, { css } from "styled-components";
 
 const CounterPane = styled.div`
-  ${({ color }) => css`
-    background-color: ${color};
+  ${({ $color }) => css`
+    background-color: ${$color};
     padding: 0.5em;
     text-align: center;
     border-radius: 3px;
@@ -85,7 +85,7 @@ const Counter = ({
   };
 
   return (
-    <CounterPane color={color}>
+    <CounterPane $color={color}>
       {label && <h3>{label}</h3>}
       <div className="counter-content">
         <button

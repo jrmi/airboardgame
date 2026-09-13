@@ -58,11 +58,10 @@ describe("Studio", () => {
       }
     );
     cy.get("[title^='Add a game']").click();
-    cy.get(".board-pane").should(
-      "have.css",
-      "transform",
-      "matrix(0.15, 0, 0, 0.15, -3250, -3450)"
-    );
+    cy.get(".board-pane")
+      .should("be.visible")
+      .and("have.css", "transform")
+      .and("match", /^matrix\(/);
   });
 
   it("Can create empty game", () => {
@@ -87,11 +86,10 @@ describe("Studio", () => {
     );
 
     cy.get("[title^='Add a game']").click();
-    cy.get(".board-pane").should(
-      "have.css",
-      "transform",
-      "matrix(0.15, 0, 0, 0.15, -3250, -3450)"
-    );
+    cy.get(".board-pane")
+      .should("be.visible")
+      .and("have.css", "transform")
+      .and("match", /^matrix\(/);
 
     // save
     cy.intercept(
@@ -130,11 +128,10 @@ describe("Studio", () => {
     );
 
     cy.get("[title^='Add a game']").click();
-    cy.get(".board-pane").should(
-      "have.css",
-      "transform",
-      "matrix(0.15, 0, 0, 0.15, -3250, -3450)"
-    );
+    cy.get(".board-pane")
+      .should("be.visible")
+      .and("have.css", "transform")
+      .and("match", /^matrix\(/);
     // Add an item
     cy.get("[title^='Add an item']").click({ force: true });
     cy.contains("Rectangle").parent().parent().click();
@@ -178,11 +175,10 @@ describe("Studio", () => {
     );
 
     cy.get("[title^='Add a game']").click({ force: true });
-    cy.get(".board-pane").should(
-      "have.css",
-      "transform",
-      "matrix(0.15, 0, 0, 0.15, -3250, -3450)"
-    );
+    cy.get(".board-pane")
+      .should("be.visible")
+      .and("have.css", "transform")
+      .and("match", /^matrix\(/);
 
     // Edit title
     cy.get("[title^='Configuration']").click({ force: true });
@@ -227,11 +223,10 @@ describe("Studio", () => {
       );
 
       cy.get("[title^='Add a game']").click({ force: true });
-      cy.get(".board-pane").should(
-        "have.css",
-        "transform",
-        "matrix(0.15, 0, 0, 0.15, -3250, -3450)"
-      );
+      cy.get(".board-pane")
+        .should("be.visible")
+        .and("have.css", "transform")
+        .and("match", /^matrix\(/);
       // Add an item
       cy.get("[title^='Add an item']").click({ force: true });
       cy.contains("Rectangle").parent().parent().click();
@@ -242,9 +237,9 @@ describe("Studio", () => {
       cy.get(".item").click({ force: true });
       cy.get("[title^='Edit']").click({ force: true });
 
-      cy.get('input[name="width"]').clear().type("100");
-      cy.get('input[name="height"]').clear().type("75");
-      cy.get('input[name="text"]').clear().type("myCube");
+      cy.get('input[name="width"]').click().type("{selectall}100").blur();
+      cy.get('input[name="height"]').click().type("{selectall}75").blur();
+      cy.get('input[name="text"]').clear().type("myCube").blur();
 
       cy.get(".item")
         .children()

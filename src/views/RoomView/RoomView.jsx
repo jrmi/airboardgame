@@ -12,7 +12,7 @@ import RoomNavBar from "./RoomNavBar";
 
 import table from "../../media/images/table.png";
 import { useTranslation } from "react-i18next";
-import { useSocket } from "@scripters/use-socket.io";
+import { useSocket } from "@jrmi/use-socket.io";
 import Waiter from "../../ui/Waiter";
 import NavBar from "../../ui/NavBar";
 import NavButton from "../../ui/NavButton";
@@ -26,9 +26,9 @@ const StyledPlayer = styled.li`
   bottom: 0;
   display: flex;
   justify-content: center;
-  transform: rotate(${({ rotate }) => rotate}deg);
+  transform: rotate(${({ $rotate }) => $rotate}deg);
   & > div {
-    transform: rotate(-${({ rotate }) => rotate}deg);
+    transform: rotate(-${({ $rotate }) => $rotate}deg);
   }
 `;
 
@@ -64,7 +64,7 @@ const StyledTable = styled.li`
   display: flex;
   justify-content: center;
   align-items: center;
-  opacity: ${({ add }) => (add ? "0.5" : "1")};
+  opacity: ${({ $add }) => ($add ? "0.5" : "1")};
   & .players {
     position: absolute;
     top: -1em;
@@ -159,7 +159,7 @@ const Room = ({ roomId, room, setRoom }) => {
                 return (
                   <StyledPlayer
                     key={user.uid}
-                    rotate={(360 / spaceUsers.length) * index}
+                    $rotate={(360 / spaceUsers.length) * index}
                   >
                     <UserCircle {...user} />
                   </StyledPlayer>
@@ -180,7 +180,7 @@ const Room = ({ roomId, room, setRoom }) => {
           </StyledTable>
         ))}
         {isMaster && (
-          <StyledTable add>
+          <StyledTable $add>
             <button className="addTable" onClick={onAdd}>
               {t("Add new table")}
             </button>

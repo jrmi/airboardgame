@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 
-import { useAsync } from "@react-hookz/web/esm/useAsync";
+import { useAsync } from "@react-hookz/web";
 import useAsyncEffect from "use-async-effect";
 import { getImage } from "../utils/image";
 
@@ -105,7 +105,13 @@ const Canvas = ({ width, height, layers }) => {
     }
   }, [layers, height, width, refreshed]);
 
-  return <canvas ref={canvasRef}></canvas>;
+  return (
+    <canvas
+      ref={canvasRef}
+      draggable={false}
+      onDragStart={(event) => event.preventDefault()}
+    ></canvas>
+  );
 };
 
 const ImageElm = styled.img`

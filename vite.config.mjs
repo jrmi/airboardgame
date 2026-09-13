@@ -22,7 +22,7 @@ const checkDeprecatedVars = () => {
       !process.env[`VITE_${variable}`]
     ) {
       console.log(
-        `ERR! you have to migrate env variable REACT_APP_${variable} -> VITE_${variable}`
+        `ERR! you have to migrate env variable REACT_APP_${variable} -> VITE_${variable}`,
       );
       return true;
     }
@@ -30,7 +30,7 @@ const checkDeprecatedVars = () => {
   });
   if (toBeFixed.some((v) => v)) {
     console.log(
-      "ERR! Please fix error above to be able to start the server!\n\n"
+      "ERR! Please fix error above to be able to start the server!\n\n",
     );
     process.exit(1);
   }
@@ -40,7 +40,7 @@ checkDeprecatedVars();
 
 if (!siteId) {
   console.log(
-    "ERR! You must define a VITE_RICOCHET_SITEID environment variable."
+    "ERR! You must define a VITE_RICOCHET_SITEID environment variable.",
   );
   process.exit(1);
 }
@@ -69,6 +69,12 @@ export default defineConfig({
     reactRefresh(),
     analyze({ summaryOnly: true, hideDeps: true, limit: 20 }),
   ],
+  // Keep the local react-sync-board package under this app's node_modules
+  // resolution context so its external React imports use this app's React.
+  resolve: {
+    preserveSymlinks: true,
+    dedupe: ["react", "react-dom"],
+  },
   build: {
     sourcemap: true,
   },

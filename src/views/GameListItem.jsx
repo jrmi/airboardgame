@@ -75,7 +75,7 @@ const Game = styled.li`
     padding-top: 64.5%;
     & > span {
       background-color: var(--color-blueGrey);
-      ${({ other }) => (!other ? "" : "border: 1px solid red")};
+      ${({ $other }) => (!$other ? "" : "border: 1px solid red")};
 
       position: absolute;
       inset: 0;
@@ -301,7 +301,7 @@ const GameListItem = ({
   const owned = userId && (userId === owner || !owner);
 
   return (
-    <Game other={!owned && studio}>
+    <Game $other={!owned && studio}>
       <a href={`/playgame/${id}`} className="img-wrapper button">
         <span onClick={onClick}>
           {showImage && (

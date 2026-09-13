@@ -3,9 +3,9 @@ import { darken } from "color2k";
 import styled, { css } from "styled-components";
 
 const StyledShape = styled.div`
-  ${({ size }) => css`
-    width: ${size}px;
-    height: ${size}px;
+  ${({ $size }) => css`
+    width: ${$size}px;
+    height: ${$size}px;
     perspective: 300px;
     display: flex;
     justify-content: center;
@@ -40,7 +40,7 @@ const Token = ({
   const currentColor = flipped ? flippedColor : color;
   const colorDarken1 = darken(currentColor, 0.25);
   return (
-    <StyledShape size={size}>
+    <StyledShape $size={size}>
       <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
         <ellipse
           ry="40"
