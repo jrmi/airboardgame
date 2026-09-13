@@ -18,7 +18,7 @@ import Session from "./views/Session";
 import AuthView from "./views/AuthView";
 import RoomView from "./views/RoomView";
 
-import { Provider as SocketIOProvider } from "@scripters/use-socket.io";
+import { Provider as SocketIOProvider } from "@jrmi/use-socket.io";
 
 import { SOCKET_URL, SOCKET_OPTIONS } from "./utils/settings";
 
