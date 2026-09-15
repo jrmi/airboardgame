@@ -75,6 +75,8 @@ export default defineConfig({
   test: {
     environment: "jsdom",
     setupFiles: "./src/test/setup.js",
+    include: ["src/**/*.{test,spec}.{js,jsx,ts,tsx}"],
+    exclude: ["**/node_modules/**", "**/cypress/**", "**/backend/**"],
   },
   server: {
     port: 3001,

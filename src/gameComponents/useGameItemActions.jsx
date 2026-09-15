@@ -636,7 +636,9 @@ export const useGameItemActions = () => {
         delete newItem.move;
         return newItem;
       });
-      pushItems(newItems, null);
+      if (newItems.length) {
+        pushItems(newItems, null);
+      }
     },
     [getItemListOrSelected, pushItems]
   );

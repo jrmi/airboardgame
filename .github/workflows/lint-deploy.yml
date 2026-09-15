@@ -16,6 +16,7 @@ jobs:
 
       - run: npm ci
       - run: npm run lint
+      - run: npm test
       - run: |
           cat <<EOF > ./backend/.env
           OPENVIDU_URL=${{ secrets.OPENVIDU_URL }}
