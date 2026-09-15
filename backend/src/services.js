@@ -128,81 +128,137 @@ const s3 = () =>
       secretAccessKey: process.env.S3_SECRET_KEY,
     },
   });
-const s3Key = (gameId, filename) =>
-  `${SITE_PREFIX}/game/${gameId}/${safeFilename(filename)}`;
+const s3Key = (box, resourceId, filename) =>
+  `${SITE_PREFIX}/${box}/${resourceId}/${safeFilename(filename)}`;
+
+const mediaArguments = (
+  boxOrResourceId,
+  resourceIdOrFile,
+  fileOrUserId,
+  userId,
+  isGeneric
+) =>
+  !isGeneric
+    ? {
+        box: "game",
+        resourceId: boxOrResourceId,
+        file: resourceIdOrFile,
+        userId: fileOrUserId,
+      }
+    : {
+        box: boxOrResourceId,
+        resourceId: resourceIdOrFile,
+        file: fileOrUserId,
+        userId,
+      };
+
+const canModifyMedia = async (box, resourceId, userId) => {
+  const resource = await gameService.get(box, resourceId);
+  if (box === "game" && !(await canModifyGame(resource, userId)))
+    throw new HttpError(403, "Forbidden");
+  return resource;
+};
 
 export const mediaService = {
-  async list(gameId) {
+  async list(boxOrResourceId, resourceId) {
+    const box = resourceId === undefined ? "game" : boxOrResourceId;
+    const id = resourceId === undefined ? boxOrResourceId : resourceId;
     if (useS3()) {
       const result = await s3().send(
         new ListObjectsV2Command({
           Bucket: process.env.S3_BUCKET,
-          Prefix: `${SITE_PREFIX}/game/${gameId}/`,
+          Prefix: `${SITE_PREFIX}/${box}/${id}/`,
         })
       );
       return (result.Contents || []).map(({ Key }) =>
-        mediaPath(gameId, Key.split("/").pop())
+        mediaPath(box, id, Key.split("/").pop())
       );
     }
     try {
-      return (await fs.readdir(mediaDir(gameId))).map((file) =>
-        mediaPath(gameId, file)
+      return (await fs.readdir(mediaDir(id))).map((file) =>
+        mediaPath(box, id, file)
       );
     } catch {
       throw new HttpError(404, "Files not found");
     }
   },
-  async save(gameId, file, userId) {
-    const game = await gameService.get("game", gameId);
-    if (!(await canModifyGame(game, userId)))
-      throw new HttpError(403, "Forbidden");
-    const filename = `${crypto.randomBytes(16).toString("hex")}${path.extname(file.originalname || "")}`;
+  async save(boxOrResourceId, resourceIdOrFile, fileOrUserId, userId) {
+    const args = mediaArguments(
+      boxOrResourceId,
+      resourceIdOrFile,
+      fileOrUserId,
+      userId,
+      arguments.length === 4
+    );
+    await canModifyMedia(args.box, args.resourceId, args.userId);
+    const filename = `${crypto.randomBytes(16).toString("hex")}${path.extname(args.file.originalname || "")}`;
     if (useS3()) {
       await s3().send(
         new PutObjectCommand({
           Bucket: process.env.S3_BUCKET,
-          Key: s3Key(gameId, filename),
-          Body: file.buffer,
-          ContentType: file.mimetype,
+          Key: s3Key(args.box, args.resourceId, filename),
+          Body: args.file.buffer,
+          ContentType: args.file.mimetype,
         })
       );
     } else {
-      await fs.mkdir(mediaDir(gameId), { recursive: true });
-      await fs.writeFile(path.join(mediaDir(gameId), filename), file.buffer);
+      await fs.mkdir(mediaDir(args.resourceId), { recursive: true });
+      await fs.writeFile(
+        path.join(mediaDir(args.resourceId), filename),
+        args.file.buffer
+      );
     }
-    return mediaPath(gameId, filename);
+    return mediaPath(args.box, args.resourceId, filename);
   },
-  async remove(gameId, filename, userId) {
-    const game = await gameService.get("game", gameId);
-    if (!(await canModifyGame(game, userId)))
-      throw new HttpError(403, "Forbidden");
+  async remove(
+    boxOrResourceId,
+    resourceIdOrFilename,
+    filenameOrUserId,
+    userId
+  ) {
+    const args = mediaArguments(
+      boxOrResourceId,
+      resourceIdOrFilename,
+      filenameOrUserId,
+      userId,
+      arguments.length === 4
+    );
+    await canModifyMedia(args.box, args.resourceId, args.userId);
     if (useS3())
       await s3().send(
         new DeleteObjectCommand({
           Bucket: process.env.S3_BUCKET,
-          Key: s3Key(gameId, filename),
+          Key: s3Key(args.box, args.resourceId, args.file),
         })
       );
     else
       try {
-        await fs.unlink(path.join(mediaDir(gameId), safeFilename(filename)));
+        await fs.unlink(
+          path.join(mediaDir(args.resourceId), safeFilename(args.file))
+        );
       } catch {
         throw new HttpError(404, "File not found");
       }
     return { message: "Deleted" };
   },
-  async get(gameId, filename) {
+  async get(boxOrResourceId, resourceIdOrFilename, filename) {
+    const box = filename === undefined ? "game" : boxOrResourceId;
+    const resourceId =
+      filename === undefined ? boxOrResourceId : resourceIdOrFilename;
+    const name = filename === undefined ? resourceIdOrFilename : filename;
     if (!useS3())
-      return { path: path.join(mediaDir(gameId), safeFilename(filename)) };
-    const cleanFilename = safeFilename(filename);
+      return { path: path.join(mediaDir(resourceId), safeFilename(name)) };
+    const cleanFilename = safeFilename(name);
     if (!useS3Proxy() && s3Cdn()) {
-      return { redirectTo: `${s3Cdn()}/${s3Key(gameId, cleanFilename)}` };
+      return {
+        redirectTo: `${s3Cdn()}/${s3Key(box, resourceId, cleanFilename)}`,
+      };
     }
     try {
       return await s3().send(
         new GetObjectCommand({
           Bucket: process.env.S3_BUCKET,
-          Key: s3Key(gameId, filename),
+          Key: s3Key(box, resourceId, name),
         })
       );
     } catch {
@@ -211,8 +267,13 @@ export const mediaService = {
   },
 };
 
-export const mediaPath = (gameId, filename) =>
-  `${SITE_PREFIX}/store/game/${gameId}/file/${filename}`;
+export const mediaPath = (boxOrResourceId, resourceIdOrFilename, filename) => {
+  const box = filename === undefined ? "game" : boxOrResourceId;
+  const resourceId =
+    filename === undefined ? boxOrResourceId : resourceIdOrFilename;
+  const name = filename === undefined ? resourceIdOrFilename : filename;
+  return `${SITE_PREFIX}/store/${box}/${resourceId}/file/${name}`;
+};
 export { mediaDir, safeFilename };
 
 export const cleanupSessions = async () => {

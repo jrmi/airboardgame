@@ -132,74 +132,79 @@ export const createApp = () => {
     }
   });
 
-  app.post(
-    `${route("game")}/:id/file/`,
-    upload.single("file"),
-    async (request, response, next) => {
+  for (const box of ["game", "session"]) {
+    app.post(
+      `${route(box)}/:id/file/`,
+      upload.single("file"),
+      async (request, response, next) => {
+        try {
+          if (!request.file) throw new HttpError(400, "file is required");
+          response
+            .type("text/plain")
+            .send(
+              await mediaService.save(
+                box,
+                request.params.id,
+                request.file,
+                request.userId
+              )
+            );
+        } catch (error) {
+          next(error);
+        }
+      }
+    );
+    app.get(`${route(box)}/:id/file/`, async (request, response, next) => {
       try {
-        if (!request.file) throw new HttpError(400, "file is required");
-        response
-          .type("text/plain")
-          .send(
-            await mediaService.save(
+        send(response, await mediaService.list(box, request.params.id));
+      } catch (error) {
+        next(error);
+      }
+    });
+    app.delete(
+      `${route(box)}/:id/file/:filename`,
+      async (request, response, next) => {
+        try {
+          send(
+            response,
+            await mediaService.remove(
+              box,
               request.params.id,
-              request.file,
+              request.params.filename,
               request.userId
             )
           );
-      } catch (error) {
-        next(error);
+        } catch (error) {
+          next(error);
+        }
       }
-    }
-  );
-  app.get(`${route("game")}/:id/file/`, async (request, response, next) => {
-    try {
-      send(response, await mediaService.list(request.params.id));
-    } catch (error) {
-      next(error);
-    }
-  });
-  app.delete(
-    `${route("game")}/:id/file/:filename`,
-    async (request, response, next) => {
-      try {
-        send(
-          response,
-          await mediaService.remove(
+    );
+    app.get(
+      `${route(box)}/:id/file/:filename`,
+      async (request, response, next) => {
+        try {
+          const file = await mediaService.get(
+            box,
             request.params.id,
-            request.params.filename,
-            request.userId
-          )
-        );
-      } catch (error) {
-        next(error);
-      }
-    }
-  );
-  app.get(
-    `${route("game")}/:id/file/:filename`,
-    async (request, response, next) => {
-      try {
-        const file = await mediaService.get(
-          request.params.id,
-          request.params.filename
-        );
-        if (file.path)
-          return response.sendFile(
-            safeFilename(request.params.filename),
-            { root: mediaDir(request.params.id) },
-            (error) => error && next(new HttpError(404, "File not found"))
+            request.params.filename
           );
-        if (file.redirectTo) return response.redirect(file.redirectTo);
-        if (file.ContentType) response.type(file.ContentType);
-        if (file.ContentLength)
-          response.set("Content-Length", String(file.ContentLength));
-        file.Body.pipe(response);
-      } catch (error) {
-        next(error);
+          if (file.path)
+            return response.sendFile(
+              safeFilename(request.params.filename),
+              { root: mediaDir(request.params.id) },
+              (error) => error && next(new HttpError(404, "File not found"))
+            );
+          if (file.redirectTo) return response.redirect(file.redirectTo);
+          if (file.ContentType) response.type(file.ContentType);
+          if (file.ContentLength)
+            response.set("Content-Length", String(file.ContentLength));
+          file.Body.pipe(response);
+        } catch (error) {
+          next(error);
+        }
       }
-    }
-  );
+    );
+  }
   app.get("/execute/getConfToken", async (request, response, next) => {
     try {
       send(response, await getConfToken(request.query.session));

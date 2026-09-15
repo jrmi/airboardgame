@@ -311,6 +311,32 @@ describe("HTTP API", () => {
     );
   });
 
+  test("session media can be uploaded without game ownership", async () => {
+    await call("/store/session/session-media", {
+      ...json("POST", { timestamp: Date.now() }),
+    });
+    const form = new FormData();
+    form.append(
+      "file",
+      new Blob(["session media"], { type: "text/plain" }),
+      "session.txt"
+    );
+    const uploaded = await call("/store/session/session-media/file/", {
+      method: "POST",
+      body: form,
+    });
+    assert.equal(uploaded.response.status, 200);
+    assert.match(
+      uploaded.body,
+      new RegExp(
+        `^${site}/store/session/session-media/file/[a-f0-9]{32}\\.txt$`
+      )
+    );
+    assert.deepEqual((await call("/store/session/session-media/file/")).body, [
+      uploaded.body,
+    ]);
+  });
+
   test("conference endpoint reports disabled configuration", async () => {
     const result = await call("/execute/getConfToken?session=s1");
     assert.equal(result.response.status, 404);
