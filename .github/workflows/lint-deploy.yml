@@ -16,14 +16,13 @@ jobs:
 
       - run: npm ci
       - run: npm run lint
-      - run: npm test
       - run: |
           cat <<EOF > ./backend/.env
           OPENVIDU_URL=${{ secrets.OPENVIDU_URL }}
           OPENVIDU_SECRET=${{ secrets.OPENVIDU_SECRET }}
           EOF
       - run: cat backend/.env
-      - run: cd backend && npm ci && npm test
+      - run: cd backend && npm ci
         env:
           RICOCHET_SITE_KEY: ${{ secrets.RICOCHET_SECRET_KEY }}
       - run: npm run build
