@@ -55,6 +55,7 @@
     "build": "vite build",
     "serve": "vite preview --open --port=5000",
     "serve:ci": "vite preview --port=5000",
+    "test": "vitest run",
     "backend:dev": "npm --prefix backend run dev",
     "backend:start": "npm --prefix backend start",
     "backend:test": "npm --prefix backend test",
@@ -101,9 +102,11 @@
     "globals": "^14.0.0",
     "http-proxy-middleware": "^4.2.0",
     "i18next-scanner": "^4.6.0",
+    "jsdom": "^30.0.1",
     "prettier": "3.9.6",
     "rollup-plugin-analyzer": "^4.0.0",
     "vite": "^8.3.0",
+    "vitest": "^5.0.1",
     "wait-on": "^9.1.0"
   }
 }
