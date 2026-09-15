@@ -53,7 +53,7 @@ const StyledModalWrapper = styled.div`
   .modal__content {
     flex: 1;
     overflow: auto;
-    ${({ noMargin }) => (noMargin ? "" : "padding: 1em")};
+    ${({ $noMargin }) => ($noMargin ? "" : "padding: 1em")};
     header {
       padding: 0.5em;
       margin-top: 2em;
@@ -117,8 +117,12 @@ const Modal = ({
 
   React.useEffect(() => {
     setState((prev) => {
-      if (prev === "closed" && show) return "opening";
-      if (prev === "open" && !show) return "closing";
+      if (show && (prev === "closed" || prev === "closing")) {
+        return "opening";
+      }
+      if (!show && (prev === "opening" || prev === "open")) {
+        return "closing";
+      }
       return prev;
     });
   }, [show]);
@@ -148,7 +152,7 @@ const Modal = ({
       ref={modalRef}
       onTransitionEnd={onAnimationEnd}
       onClick={onOverlayClick}
-      noMargin={noMargin}
+      $noMargin={noMargin}
       className={
         state === "opening" || state === "open" ? "modal__wrapper--open" : ""
       }
@@ -163,7 +167,7 @@ const Modal = ({
             <FiX size={42} alt={t("Close")} color="white" />
           </button>
         </header>
-        <div className="modal__content">{open && children}</div>
+        <div className="modal__content">{show && children}</div>
         {footer && <footer className="modal__footer">{footer}</footer>}
       </div>
     </StyledModalWrapper>,

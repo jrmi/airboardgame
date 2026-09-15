@@ -10,11 +10,12 @@ import { isItemCenterInsideElement } from "../../utils/item";
 import itemTemplates from "../itemTemplates";
 
 const StyledShape = styled.div`
-  ${({ color }) => css`
-    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
+  ${({ $color }) => css`
+    box-shadow:
+      rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
       rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
     border: 3px dashed black;
-    border-color: ${color};
+    border-color: ${$color};
 
     border-radius: 3px;
     background-color: #cccccc22;
@@ -26,8 +27,8 @@ const StyledShape = styled.div`
 
     & .item-wrapper {
       position: absolute;
-      top: ${({ center: { top } }) => `${top}px`};
-      left: ${({ center: { left } }) => `${left}px`};
+      top: ${({ $center: { top } }) => `${top}px`};
+      left: ${({ $center: { left } }) => `${left}px`};
     }
 
     & .handle {
@@ -65,12 +66,8 @@ const Generator = ({ color = "#ccc", item, id, currentItemId, setState }) => {
   const [center, setCenter] = React.useState({ top: 0, left: 0 });
   const { register: registerPlace } = useItemInteraction("place");
   const { register: registerDelete } = useItemInteraction("delete");
-  const {
-    pushItem,
-    getItems,
-    batchUpdateItems,
-    removeItems,
-  } = useItemActions();
+  const { pushItem, getItems, batchUpdateItems, removeItems } =
+    useItemActions();
 
   const centerRef = React.useRef(center);
   Object.assign(centerRef.current, center);
@@ -283,7 +280,7 @@ const Generator = ({ color = "#ccc", item, id, currentItemId, setState }) => {
   }
 
   return (
-    <StyledShape color={color} center={center}>
+    <StyledShape $color={color} $center={center}>
       <div className="handle">
         <FiMove size="20" color="white" />
       </div>

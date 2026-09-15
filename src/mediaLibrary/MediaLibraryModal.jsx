@@ -43,25 +43,21 @@ const MediaLibraryModal = ({ show, setShow, onSelect }) => {
 
   const [fileUploading, setFileUploading] = React.useState(false);
 
-  const {
-    getLibraryMedia,
-    addMedia,
-    removeMedia,
-    libraries,
-  } = useMediaLibrary();
+  const { getLibraryMedia, addMedia, removeMedia, libraries } =
+    useMediaLibrary();
 
   const queryClient = useQueryClient();
   const [tab, setTab] = React.useState(libraries[0].id);
 
   const currentLibrary = libraries.find(({ id }) => id === tab);
 
-  const { isLoading, data = [], isError } = useQuery(
-    `media__${tab}`,
-    () => getLibraryMedia(currentLibrary),
-    {
-      enabled: show,
-    }
-  );
+  const {
+    isLoading,
+    data = [],
+    isError,
+  } = useQuery(`media__${tab}`, () => getLibraryMedia(currentLibrary), {
+    enabled: show,
+  });
 
   const handleSelect = React.useCallback(
     (media) => {

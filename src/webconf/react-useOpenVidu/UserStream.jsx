@@ -2,7 +2,7 @@ import React from "react";
 import Stream from "./Stream";
 import { FiMicOff } from "react-icons/fi";
 
-const UserStream = ({ stream, name, color, audio, video, self = false }) => {
+const UserStream = ({ stream, name, color, audio, self = false }) => {
   return (
     <div className="user-stream">
       <Stream stream={stream} />

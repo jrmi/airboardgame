@@ -48,11 +48,19 @@ const Action = ({ name, onUp, onDown, onRemove }) => {
 
   const { actionMap } = useGameItemActions();
 
-  const { form: ActionForm, label } = actionMap[value.name];
+  // Final Form can briefly expose the raw array value while a newly pushed
+  // field is being registered. Accept both the persisted object shape and the
+  // raw action-name shape.
+  const actionName = typeof value === "string" ? value : value?.name;
+  const actionArgs = typeof value === "object" ? value?.args : undefined;
+  const action = actionMap[actionName];
+  const ActionForm = action?.form;
+  const label = action?.label;
 
   const hasForm = Boolean(ActionForm);
 
-  const computedLabel = value.args?.customLabel || label(value.args);
+  const computedLabel =
+    actionArgs?.customLabel || label?.(actionArgs) || actionName;
 
   return (
     <li>
@@ -103,7 +111,7 @@ const Action = ({ name, onUp, onDown, onRemove }) => {
             <Field
               name={`${name}.args.customLabel`}
               component="input"
-              initialValue={value.args?.customLabel}
+              initialValue={actionArgs?.customLabel}
             />
           </Label>
           <Label>
@@ -111,11 +119,11 @@ const Action = ({ name, onUp, onDown, onRemove }) => {
             <Field
               name={`${name}.args.customShortcut`}
               component="input"
-              initialValue={value.args?.customShortcut}
+              initialValue={actionArgs?.customShortcut}
             />
           </Label>
           {hasForm && (
-            <ActionForm name={`${name}.args`} initialValues={value.args} />
+            <ActionForm name={`${name}.args`} initialValues={actionArgs} />
           )}
         </div>
       )}
@@ -161,7 +169,9 @@ const ActionList = ({ name, initialValue, availableActions }) => {
             {(availableActions || []).map((name) => {
               return (
                 <option key={name} value={name}>
-                  {actionMap[name]?.genericLabel || actionMap[name].label()}
+                  {actionMap[name]?.genericLabel ||
+                    actionMap[name]?.label?.() ||
+                    name}
                 </option>
               );
             })}

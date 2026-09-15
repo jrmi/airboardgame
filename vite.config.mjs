@@ -7,7 +7,7 @@ dotenv.config();
 const useProxy = process.env.VITE_USE_PROXY;
 const server = process.env.VITE_API_ENDPOINT;
 const socketServer = process.env.VITE_SOCKET_URL;
-const siteId = process.env.VITE_RICOCHET_SITEID;
+const siteId = "airboardgame";
 
 const checkDeprecatedVars = () => {
   const deprecatedVars = [
@@ -22,7 +22,7 @@ const checkDeprecatedVars = () => {
       !process.env[`VITE_${variable}`]
     ) {
       console.log(
-        `ERR! you have to migrate env variable REACT_APP_${variable} -> VITE_${variable}`
+        `ERR! you have to migrate env variable REACT_APP_${variable} -> VITE_${variable}`,
       );
       return true;
     }
@@ -30,20 +30,13 @@ const checkDeprecatedVars = () => {
   });
   if (toBeFixed.some((v) => v)) {
     console.log(
-      "ERR! Please fix error above to be able to start the server!\n\n"
+      "ERR! Please fix error above to be able to start the server!\n\n",
     );
     process.exit(1);
   }
 };
 
 checkDeprecatedVars();
-
-if (!siteId) {
-  console.log(
-    "ERR! You must define a VITE_RICOCHET_SITEID environment variable."
-  );
-  process.exit(1);
-}
 
 let proxy = {};
 
@@ -57,6 +50,7 @@ if (useProxy) {
           .replace("https", "wss")
           .replace("http", "ws"),
         "/file": server,
+        "/health": server,
         [`/${siteId}`]: server,
       },
     },
@@ -69,8 +63,20 @@ export default defineConfig({
     reactRefresh(),
     analyze({ summaryOnly: true, hideDeps: true, limit: 20 }),
   ],
+  // Keep the local react-sync-board package under this app's node_modules
+  // resolution context so its external React imports use this app's React.
+  resolve: {
+    preserveSymlinks: true,
+    dedupe: ["react", "react-dom"],
+  },
   build: {
     sourcemap: true,
+  },
+  test: {
+    environment: "jsdom",
+    setupFiles: "./src/test/setup.js",
+    include: ["src/**/*.{test,spec}.{js,jsx,ts,tsx}"],
+    exclude: ["**/node_modules/**", "**/cypress/**", "**/backend/**"],
   },
   server: {
     port: 3001,

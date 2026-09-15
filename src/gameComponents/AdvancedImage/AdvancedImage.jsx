@@ -1,4 +1,4 @@
-import React, { memo, useState } from "react";
+import React, { memo } from "react";
 import { useUsers } from "react-sync-board";
 import styled from "styled-components";
 import { media2Url } from "../../mediaLibrary";
@@ -25,7 +25,7 @@ const UnflippedFor = styled.div`
 `;
 
 const UnflippedForUser = styled.div`
-  background-color: ${({ color }) => color};
+  background-color: ${({ $color }) => $color};
   color: white;
   border-radius: 3px;
   padding: 4px;
@@ -175,7 +175,7 @@ const AdvancedImage = ({
         {unflippedForUsers &&
           unflippedForUsers.map(({ color, id }) => {
             return (
-              <UnflippedForUser key={id} color={color}>
+              <UnflippedForUser key={id} $color={color}>
                 <FiEye color="white" size="16" />
               </UnflippedForUser>
             );

@@ -5,8 +5,8 @@ import { useTranslation } from "react-i18next";
 import useGameItemActions from "../useGameItemActions";
 
 const DicePane = styled.div`
-  ${({ color }) => css`
-    background-color: ${color};
+  ${({ $color }) => css`
+    background-color: ${$color};
     padding: 0.3em;
     text-align: center;
     display: flex;
@@ -50,7 +50,7 @@ const Dice = ({
 
   return (
     <div>
-      <DicePane color={color}>
+      <DicePane $color={color}>
         <h3>{label}</h3>
         <span
           style={{

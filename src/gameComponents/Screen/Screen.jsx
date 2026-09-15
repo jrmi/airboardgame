@@ -7,19 +7,19 @@ import { readableColor, lighten } from "color2k";
 
 const ScreenWrapper = styled.div`
   ${({
-    width = 200,
-    height = 200,
-    borderColor = "#cccccc33",
-    borderStyle = "solid",
-    backgroundColor = "#ccc",
-    owned = false,
+    $width = 200,
+    $height = 200,
+    $borderColor = "#cccccc33",
+    $borderStyle = "solid",
+    $backgroundColor = "#ccc",
+    $owned = false,
   }) => css`
-    width: ${width}px;
-    height: ${height}px;
-    ${owned ? `border: 2px ${borderStyle} ${borderColor};` : ""}
+    width: ${$width}px;
+    height: ${$height}px;
+    ${$owned ? `border: 2px ${$borderStyle} ${$borderColor};` : ""}
     border-radius: 5px;
     position: relative;
-    color: ${readableColor(backgroundColor)};
+    color: ${readableColor($backgroundColor)};
 
     .screen__release-button {
       position: absolute;
@@ -46,12 +46,14 @@ const ScreenWrapper = styled.div`
     .screen__overlay {
       position: absolute;
       inset: 0;
-      ${owned
-        ? ""
-        : `background-image: radial-gradient(${lighten(
-            backgroundColor,
-            0.2
-          )}, ${backgroundColor});`}
+      ${
+        $owned
+          ? ""
+          : `background-image: radial-gradient(${lighten(
+              $backgroundColor,
+              0.2
+            )}, ${$backgroundColor});`
+      }
       display: flex;
       justify-content: center;
       align-items: center;
@@ -109,12 +111,12 @@ const Screen = ({
 
   return (
     <ScreenWrapper
-      width={width}
-      height={height}
-      borderStyle={borderStyle}
-      borderColor={borderColor}
-      backgroundColor={backgroundColor}
-      owned={ownedByMe}
+      $width={width}
+      $height={height}
+      $borderStyle={borderStyle}
+      $borderColor={borderColor}
+      $backgroundColor={backgroundColor}
+      $owned={ownedByMe}
     >
       <div className="screen__overlay">
         {!ownedByUser && (

@@ -1,5 +1,5 @@
 import React from "react";
-import { Range } from "rc-slider";
+import Slider from "rc-slider";
 import styled from "styled-components";
 
 import "rc-slider/assets/index.css";
@@ -57,8 +57,9 @@ const SliderRange = ({
   return (
     <StyledSliderRange className={props.className}>
       <span>{`${minMaxValues[0]}`}</span>
-      <Range
+      <Slider
         {...props}
+        range
         {...sliderRangeStyling}
         value={props.value.length ? props.value : [defaultMin, defaultMax]}
         onChange={onChangeCustom}

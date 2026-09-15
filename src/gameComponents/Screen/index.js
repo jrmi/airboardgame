@@ -19,9 +19,9 @@ const Template = createItemTemplate({
     borderStyle: "solid",
     backgroundColor: "#ccc",
   },
-  stateHook: (state, { getCurrentUser }) => {
+  stateHook: (state, { currentUser }) => {
     const { ownedBy } = state;
-    if (!Array.isArray(ownedBy) || !ownedBy.includes(getCurrentUser().uid)) {
+    if (!Array.isArray(ownedBy) || !ownedBy.includes(currentUser?.uid)) {
       return { ...state, layer: 3.6 };
     }
     return state;
