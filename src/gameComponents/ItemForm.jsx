@@ -113,7 +113,7 @@ const ItemForm = ({ items, types, extraExcludeFields }) => {
     grid: {
       type: gridType = "",
       size: gridSize = 1,
-      offset: { x: gridOffsetX = 0, gridOffsetY = 0 } = {},
+      offset: { x: gridOffsetX = 0, y: gridOffsetY = 0 } = {},
     } = {},
     actions = [],
   } = initialValues;

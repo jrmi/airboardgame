@@ -6,6 +6,15 @@ const newGameData = () => ({
   board: { size: 2000, scale: 1, imageUrl: "/game_assets/default.png" },
 });
 
+const gridGameData = () => ({
+  ...newGameData(),
+  board: {
+    ...newGameData().board,
+    bgType: "grid",
+    bgConf: null,
+  },
+});
+
 describe("Studio", () => {
   beforeEach(() => {
     cy.viewport(1000, 600);
@@ -57,6 +66,24 @@ describe("Studio", () => {
         req.reply(newGameData());
       }
     );
+    cy.get("[title^='Add a game']").click();
+    cy.get(".board-pane")
+      .should("be.visible")
+      .and("have.css", "transform")
+      .and("match", /^matrix\(/);
+  });
+
+  it("Can open a game with a grid background without crashing", () => {
+    cy.intercept(
+      {
+        method: "GET",
+        url: "/airboardgame/store/game/*",
+      },
+      (req) => {
+        req.reply(gridGameData());
+      }
+    );
+
     cy.get("[title^='Add a game']").click();
     cy.get(".board-pane")
       .should("be.visible")
@@ -251,6 +278,31 @@ describe("Studio", () => {
         });
 
       cy.get(".item").contains("myCube");
+    });
+
+    it("Can configure an item's snap grid", () => {
+      cy.get(".item").click({ force: true });
+      cy.get("[title^='Edit']").click({ force: true });
+
+      cy.get('select[name="grid.type"]').select("grid");
+      cy.get('input[name="grid.size"]').clear().type("50").blur();
+
+      cy.intercept(
+        {
+          method: "POST",
+          url: "/airboardgame/store/game/*",
+        },
+        (req) => {
+          expect(req.body.items[0].grid).to.deep.include({
+            type: "grid",
+            size: "50",
+          });
+          req.reply(req.body);
+        }
+      );
+
+      cy.get("[title^='Save']").click();
+      cy.get("button").contains("Save").click();
     });
 
     it("Can lock an item", () => {
