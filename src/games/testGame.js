@@ -201,6 +201,7 @@ const genGame = () => {
       type: "jewel",
       size: 70,
       color: "#ff0000",
+      grid: { type: "grid", size: 100, show: true },
     },
   });
 

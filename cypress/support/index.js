@@ -14,7 +14,22 @@
 // ***********************************************************
 
 // Import commands.js using ES2015 syntax:
-import './commands'
+import "./commands";
+
+// Keep text assertions deterministic across local machines and CI browsers.
+// Setting LANGUAGE for the Cypress process does not change navigator.language
+// in every browser (notably Chromium), while i18next detects that browser value.
+Cypress.on("window:before:load", (window) => {
+  Object.defineProperty(window.navigator, "language", {
+    configurable: true,
+    value: "en-US",
+  });
+  Object.defineProperty(window.navigator, "languages", {
+    configurable: true,
+    value: ["en-US", "en"],
+  });
+  window.localStorage.setItem("i18nextLng", "en");
+});
 
 // Alternatively you can use CommonJS syntax:
 // require('./commands')

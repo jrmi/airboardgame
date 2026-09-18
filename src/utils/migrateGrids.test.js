@@ -38,7 +38,7 @@ describe("grid migration at loading boundaries", () => {
   });
   it("retains size-only snapping without inventing a grid on empty boards", () => {
     expect(migrateBoardGrid({ gridSize: 12 })).toEqual({
-      grid: { type: "grid", size: 12 },
+      grid: { type: "grid", size: 12, show: false },
     });
     expect(migrateBoardGrid({ gridSize: 0 }).grid.type).toBe("none");
     expect(
@@ -81,7 +81,7 @@ describe("grid migration at loading boundaries", () => {
     expect(migrateGrids(result)).toEqual(result);
     expect(migrateGrids(JSON.parse(JSON.stringify(result)))).toEqual(result);
   });
-  it("preserves canonical custom templates", () => {
+  it("hides legacy item grids that have no display preference", () => {
     const item = {
       type: "generator",
       grid: { type: "hexH", size: 3.5 },
@@ -90,6 +90,12 @@ describe("grid migration at loading boundaries", () => {
         grid: { type: "hexV", size: "4", offset: { y: "2" } },
       },
     };
-    expect(migrateGrids({ items: [item] }).items).toEqual([item]);
+    expect(migrateGrids({ items: [item] }).items).toEqual([
+      {
+        ...item,
+        grid: { ...item.grid, show: false },
+        item: { ...item.item, grid: { ...item.item.grid, show: false } },
+      },
+    ]);
   });
 });

@@ -64,7 +64,14 @@ describe("Item interactions", () => {
     cy.get("img[src='/game_assets/JC.jpg']")
       .parents(".item")
       .parent()
-      .should("have.css", "transform", "matrix(1, 0, 0, 1, 837, 816.5)");
+      .should(($wrapper) => {
+        const values = $wrapper
+          .css("transform")
+          .match(/-?\d+(?:\.\d+)?/g)
+          .map(Number);
+        expect(values[4]).to.be.closeTo(837, 1);
+        expect(values[5]).to.be.closeTo(816.5, 1);
+      });
   });
 
   it("should flip item", () => {

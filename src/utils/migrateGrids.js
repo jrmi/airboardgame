@@ -19,6 +19,12 @@ export const migrateBoardGrid = (board = {}) => {
     if (!Object.hasOwn(grid, "type") && Object.hasOwn(grid, "size")) {
       grid.type = Number(grid.size) > 0 ? "grid" : "none";
     }
+    // Before grid overlays existed, visibility was not stored. Keep the
+    // previous behaviour for saved games instead of using Syncboard's visible
+    // by default fallback.
+    if (Object.keys(grid).length && !Object.hasOwn(grid, "show")) {
+      grid.show = false;
+    }
     if (Object.keys(grid).length) migrated.grid = grid;
   }
   for (const legacy of Object.keys(legacyFields)) delete migrated[legacy];
@@ -28,8 +34,13 @@ export const migrateBoardGrid = (board = {}) => {
 const migrateItem = (item) => {
   if (!item || typeof item !== "object") return item;
   const migrated = { ...item };
+  // Item grids existed before their overlay preference. A missing preference
+  // therefore means an existing game and must retain the former hidden state.
+  if (item.grid && !Object.hasOwn(item.grid, "show")) {
+    migrated.grid = { ...item.grid, show: false };
+  }
   if (item.grid && !gridTypes.has(item.grid.type)) {
-    migrated.grid = { ...item.grid };
+    migrated.grid = { ...migrated.grid };
     delete migrated.grid.type;
     delete migrated.grid.size;
     delete migrated.grid.offset;
