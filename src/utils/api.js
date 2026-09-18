@@ -119,7 +119,7 @@ const demoGame = {
     bgType: "default",
     playerCount: [],
     duration: [],
-    gridSize: 1,
+    grid: { type: null, size: 1 },
     defaultLanguage: "en",
     materialLanguage: "Multi-lang",
     defaultBaseline: "Learn how to play with Airboardgame",

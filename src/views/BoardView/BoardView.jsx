@@ -20,6 +20,7 @@ import rollAudio from "../../media/audio/roll.ogg?url";
 import shuffleAudio from "../../media/audio/shuffle.ogg?url";
 import { preloadAudio } from "../../utils";
 import UserBar from "./UserBar";
+import BoardGridOverlay from "../../gameComponents/GridOverlay";
 
 const StyledBoard = styled.div`
   & .item.locked::after {
@@ -76,7 +77,9 @@ export const BoardView = ({
             style={style}
             itemTemplates={itemTemplates}
             showResizeHandle={editItem}
-          />
+          >
+            <BoardGridOverlay />
+          </Board>
         </StyledBoard>
         <NavBar
           editMode={editMode}

@@ -28,6 +28,7 @@ const BoardConfigPanel = ({ BoardFormComponent, show, setShow }) => {
       setBoardConfig((prev) => ({
         ...prev,
         ...data,
+        grid: { ...prev.grid, ...data.grid },
       }));
     },
     [setBoardConfig]

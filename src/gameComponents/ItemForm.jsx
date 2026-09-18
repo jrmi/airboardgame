@@ -5,6 +5,7 @@ import { Field } from "react-final-form";
 import Label from "../ui/formUtils/Label";
 import Hint from "../ui/formUtils/Hint";
 import Slider from "../ui/Slider";
+import ColorPicker from "../ui/formUtils/ColorPicker";
 
 import ActionList from "./ActionList";
 
@@ -49,8 +50,8 @@ const getExcludedFields = (types) => {
   }, {});
 };
 
-const toInt = (val) => {
-  const value = parseInt(val, 10);
+const toNumber = (val) => {
+  const value = Number(val);
   if (isNaN(value)) {
     return 0;
   }
@@ -113,6 +114,9 @@ const ItemForm = ({ items, types, extraExcludeFields }) => {
     grid: {
       type: gridType = "",
       size: gridSize = 1,
+      show: gridShow = true,
+      color: gridColor = "#000000",
+      opacity: gridOpacity = 0.2,
       offset: { x: gridOffsetX = 0, y: gridOffsetY = 0 } = {},
     } = {},
     actions = [],
@@ -212,17 +216,49 @@ const ItemForm = ({ items, types, extraExcludeFields }) => {
           <Label>
             {t("Grid type")}
             <Field name="grid.type" initialValue={gridType} component="select">
-              <option value="none">{t("None")}</option>
+              <option value="">{t("Use board grid")}</option>
               <option value="grid">{t("Grid")}</option>
               <option value="hexH">{t("Horizontal hexagons")}</option>
               <option value="hexV">{t("Vertical hexagons")}</option>
             </Field>
           </Label>
+          <Label>
+            <Field
+              name="grid.show"
+              component="input"
+              type="checkbox"
+              initialValue={gridShow}
+            />
+            <span className="checkable">{t("Display grid while moving")}</span>
+          </Label>
+          <Label>
+            {t("Grid color")}
+            <Field name="grid.color" initialValue={gridColor}>
+              {({ input: { onChange, value } }) => (
+                <ColorPicker value={value} onChange={onChange} />
+              )}
+            </Field>
+          </Label>
+          <Label>
+            {t("Grid opacity")}
+            <Field name="grid.opacity" initialValue={gridOpacity}>
+              {({ input: { onChange, value } }) => (
+                <Slider
+                  min={0}
+                  max={1}
+                  step={0.05}
+                  value={Number(value)}
+                  onChange={onChange}
+                  marks={{ 0: "0%", 0.5: "50%", 1: "100%" }}
+                />
+              )}
+            </Field>
+          </Label>
           <div style={{ display: "flex", gap: "10px", alignItems: "flex-end" }}>
             <Label>
               {t("Size")}
-              <Field name="grid.size" component="input" initialValue={gridSize}>
-                {(props) => <input {...props.input} type="number" />}
+              <Field name="grid.size" parse={toNumber} initialValue={gridSize}>
+                {(props) => <input {...props.input} type="number" step="any" />}
               </Field>
             </Label>
             <Label>
@@ -230,10 +266,10 @@ const ItemForm = ({ items, types, extraExcludeFields }) => {
               <Field
                 name="grid.offset.x"
                 component="input"
-                parse={toInt}
+                parse={toNumber}
                 initialValue={gridOffsetX}
               >
-                {(props) => <input {...props.input} type="number" />}
+                {(props) => <input {...props.input} type="number" step="any" />}
               </Field>
             </Label>
             <Label>
@@ -241,10 +277,10 @@ const ItemForm = ({ items, types, extraExcludeFields }) => {
               <Field
                 name="grid.offset.y"
                 component="input"
-                parse={toInt}
+                parse={toNumber}
                 initialValue={gridOffsetY}
               >
-                {(props) => <input {...props.input} type="number" />}
+                {(props) => <input {...props.input} type="number" step="any" />}
               </Field>
             </Label>
           </div>

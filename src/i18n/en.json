@@ -1,4 +1,5 @@
 {
+  "Use board grid": "Use board grid",
   "About": "About",
   "Action forbidden. Try logging in again.": "Action forbidden. Try logging in again.",
   "Actions": "Actions",
@@ -83,6 +84,11 @@
   "Go back": "Back",
   "Got it!": "Got it!",
   "Grid type": "Grid type",
+  "Display grid while moving": "Display grid while moving",
+  "Grid color": "Grid color",
+  "Grid opacity": "Grid opacity",
+  "Moving grid": "Moving grid",
+  "Display board grid while moving": "Display board grid while moving",
   "Grid": "Grid",
   "Height": "Height",
   "Help & info": "Help & info",

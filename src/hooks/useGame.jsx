@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 
 import { updateGame } from "../utils/api";
+import { migrateGrids } from "../utils/migrateGrids";
 
 import { useBoardConfig, useItemActions } from "react-sync-board";
 
@@ -15,7 +16,7 @@ export const GameProvider = ({ gameId, game, children }) => {
 
   const setGame = React.useCallback(
     async (newGame) => {
-      const { availableItems, items, board } = newGame;
+      const { availableItems, items, board } = migrateGrids(newGame);
       setAvailableItems(availableItems);
       // The filter prevent the empty item bug on reload
       setItemList(items.filter((item) => item));
