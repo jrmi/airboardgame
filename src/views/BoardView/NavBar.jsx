@@ -248,6 +248,13 @@ const NavBar = ({
             setInteraction={setInteraction}
           />
         )}
+        {!editMode && !isMaster && (
+          <EditInfoButton
+            interaction={interaction}
+            setInteraction={setInteraction}
+            title="Navigation settings"
+          />
+        )}
         <NavButton
           onClick={() => setShowInfoModal((prev) => !prev)}
           alt={t("Help & info")}

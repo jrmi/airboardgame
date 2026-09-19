@@ -26,6 +26,7 @@ const BoardConfigPanel = ({
   setInteraction,
   show,
   setShow,
+  title,
 }) => {
   const { t } = useTranslation();
   const [, setBoardConfig] = useBoardConfig();
@@ -43,7 +44,7 @@ const BoardConfigPanel = ({
 
   return (
     <SidePanel
-      title={t("Edit game information")}
+      title={t(title || "Edit game information")}
       onClose={() => setShow(false)}
       show={show}
       position="left"
@@ -54,7 +55,7 @@ const BoardConfigPanel = ({
           render={() => (
             <BoardConfigForm>
               <AutoSave save={onSubmitHandler} />
-              <BoardFormComponent />
+              {BoardFormComponent && <BoardFormComponent />}
               {interaction && setInteraction && (
                 <InteractionSettingsForm
                   interaction={interaction}
@@ -73,6 +74,7 @@ const EditInfoButton = ({
   BoardFormComponent,
   interaction,
   setInteraction,
+  title,
 }) => {
   const { t } = useTranslation();
 
@@ -82,8 +84,8 @@ const EditInfoButton = ({
     <>
       <NavButton
         onClick={() => setShow((prev) => !prev)}
-        alt={t("Edit game info")}
-        title={t("Edit game info")}
+        alt={t(title || "Edit game info")}
+        title={t(title || "Edit game info")}
         Icon={FiSettings}
       />
       <BoardConfigPanel
@@ -92,6 +94,7 @@ const EditInfoButton = ({
         setInteraction={setInteraction}
         show={show}
         setShow={setShow}
+        title={title}
       />
     </>
   );
