@@ -21,7 +21,8 @@ const Header = styled.header`
   background-color: var(--bg-color);
   position: relative;
 
-  background: linear-gradient(
+  background:
+    linear-gradient(
       180deg,
       rgba(0, 0, 0, 1) 0%,
       rgba(0, 0, 0, 0.6) 40%,
@@ -90,7 +91,9 @@ const Filter = styled.div`
     }
   }
 
-  input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="color"]):not([type="button"]):not([type="reset"]) {
+  input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not(
+      [type="color"]
+    ):not([type="button"]):not([type="reset"]) {
     background-color: #1c1c1c;
     color: var(--font-color2);
     max-width: 30rem;

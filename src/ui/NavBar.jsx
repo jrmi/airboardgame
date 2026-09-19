@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { useMediaQuery } from "@react-hookz/web/esm/useMediaQuery";
+import { useMediaQuery } from "@react-hookz/web";
 
 import { FiChevronsDown, FiChevronsUp } from "react-icons/fi";
 import { useTranslation } from "react-i18next";

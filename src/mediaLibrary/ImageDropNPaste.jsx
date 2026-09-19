@@ -60,15 +60,15 @@ const ImageDropNPaste = ({ children }) => {
     async (e) => {
       const { items } = e.clipboardData;
       setUploading(true);
-      // eslint-disable-next-line no-plusplus
+
       try {
         for (let i = 0; i < items.length; i++) {
           const item = items[i];
           if (item.type.indexOf("image") !== -1) {
             const file = item.getAsFile();
-            // eslint-disable-next-line no-await-in-loop
+
             const location = await addMedia(libraries[0], file);
-            // eslint-disable-next-line no-await-in-loop
+
             await addImageItem(location);
           }
         }

@@ -349,12 +349,13 @@ const backgrounds = [
     type: "grid",
     name: i18n.t("Grid"),
     form: GridBgForm,
-    getStyle({
-      color = defaultBgColor,
-      secondaryColor = defaultSecondaryColor,
-      thickness = 4,
-      size = 200,
-    } = {}) {
+    getStyle(config = {}) {
+      const {
+        color = defaultBgColor,
+        secondaryColor = defaultSecondaryColor,
+        thickness = 4,
+        size = 200,
+      } = config || {};
       // Create grid background
       const dataUrl = drawToDataURL(size, size, (ctx) => {
         ctx.lineWidth = thickness;

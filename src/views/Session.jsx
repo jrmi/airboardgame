@@ -2,7 +2,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import useAsyncEffect from "use-async-effect";
 import { BoardWrapper, useUsers, useSessionInfo } from "react-sync-board";
-import { useSocket } from "@scripters/use-socket.io";
+import { useSocket } from "@jrmi/use-socket.io";
 
 import { itemTemplates, itemLibrary, premadeItems } from "../gameComponents";
 

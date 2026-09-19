@@ -15,15 +15,15 @@ import useGameItemActions from "../useGameItemActions";
 import useGlobalConf from "../../hooks/useGlobalConf";
 
 const StyledAnchor = styled.div`
-  ${({ highlight, editMode, color }) => css`
+  ${({ $highlight, $editMode, $color }) => css`
     width: 30px;
     height: 30px;
-    border: 3px solid ${color};
-    background-color: ${transparentize(color, 0.4)};
+    border: 3px solid ${$color};
+    background-color: ${transparentize($color, 0.4)};
     border-radius: 100%;
     position: relative;
     transition: opacity 300ms;
-    opacity: ${highlight ? "1" : editMode ? "0.8" : "0.05"};
+    opacity: ${$highlight ? "1" : $editMode ? "0.8" : "0.05"};
 
     .item-library__component & {
       opacity: 1;
@@ -111,9 +111,9 @@ const Anchor = ({ families, id, color = "#CCC" }) => {
 
   return (
     <StyledAnchor
-      highlight={movingItems && shouldHighlight}
-      editMode={editMode || editItem}
-      color={color}
+      $highlight={movingItems && shouldHighlight}
+      $editMode={editMode || editItem}
+      $color={color}
     />
   );
 };

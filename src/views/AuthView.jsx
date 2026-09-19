@@ -4,6 +4,8 @@ import useAuth from "../hooks/useAuth";
 import { useTranslation } from "react-i18next";
 import Waiter from "../ui/Waiter";
 
+const authRequests = new Map();
+
 const AuthView = () => {
   const { userHash, token } = useParams();
   const [logged, setLogged] = React.useState(false);
@@ -18,7 +20,14 @@ const AuthView = () => {
 
     const verify = async () => {
       try {
-        await login(userHash, token);
+        const requestKey = `${userHash}:${token}`;
+        let authRequest = authRequests.get(requestKey);
+        if (!authRequest) {
+          authRequest = login(userHash, token);
+          authRequests.set(requestKey, authRequest);
+          authRequest.catch(() => authRequests.delete(requestKey));
+        }
+        await authRequest;
         if (!isMounted) return;
         setLogged(true);
       } catch (e) {

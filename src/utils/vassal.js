@@ -546,7 +546,7 @@ class VassalModuleLoader {
   async makeCardFromSlot(slot) {
     let { width, height } = slot;
     const imageSize = await this.fileHandler.getImageSize(slot.content);
-    (width = imageSize.width), (height = imageSize.height);
+    ((width = imageSize.width), (height = imageSize.height));
 
     const newItem = {
       type: "image",
@@ -568,7 +568,7 @@ class VassalModuleLoader {
     let { width, height } = slot;
     if (!width || !height) {
       const imageSize = await this.fileHandler.getImageSize(slot.content);
-      (width = imageSize.width), (height = imageSize.height);
+      ((width = imageSize.width), (height = imageSize.height));
     }
     const newItem = {
       type: "image",
@@ -615,7 +615,7 @@ class VassalModuleLoader {
       }
       newItem.front = null;
     }
-    (width = imageSize.width), (height = imageSize.height);
+    ((width = imageSize.width), (height = imageSize.height));
 
     if (slot.backContent) {
       newItem.back = slot.backContent;
@@ -808,9 +808,9 @@ class VassalModuleLoader {
       }
     };
 
-    getList(
-      this.buildFile["VASSAL.build.module.ChartWindow"]
-    ).forEach((chartWindow) => searchMapWidget(chartWindow));
+    getList(this.buildFile["VASSAL.build.module.ChartWindow"]).forEach(
+      (chartWindow) => searchMapWidget(chartWindow)
+    );
 
     const mapItemList = await Promise.all(
       [...rootMaps, ...mapWidgets.flat()].map((map) => this.loadMapElement(map))
@@ -892,18 +892,18 @@ class VassalModuleLoader {
     /* Draw piles */
     const drawPileItems = (
       await Promise.all(
-        getList(
-          mapElement["VASSAL.build.module.map.DrawPile"]
-        ).map((drawPile) => this.loadMapDrawPileElement(drawPile))
+        getList(mapElement["VASSAL.build.module.map.DrawPile"]).map(
+          (drawPile) => this.loadMapDrawPileElement(drawPile)
+        )
       )
     ).flat();
 
     /* Setup Stack */
     const stackItems = (
       await Promise.all(
-        getList(
-          mapElement["VASSAL.build.module.map.SetupStack"]
-        ).map((setupStack) => this.loadMapSetupStackElement(setupStack))
+        getList(mapElement["VASSAL.build.module.map.SetupStack"]).map(
+          (setupStack) => this.loadMapSetupStackElement(setupStack)
+        )
       )
     ).flat();
 
@@ -1402,9 +1402,8 @@ class VassalModuleLoader {
   }
 
   async uploadFiles(uploadHandler) {
-    const [itemWFiles, availableItemWFiles] = await this.uploadAllItemFiles(
-      uploadHandler
-    );
+    const [itemWFiles, availableItemWFiles] =
+      await this.uploadAllItemFiles(uploadHandler);
     await this.close();
     return { items: itemWFiles, availableItems: availableItemWFiles };
   }
@@ -1436,9 +1435,8 @@ export const createGameFromVassalModule = async (file) => {
   const uploadHandler = (file) => {
     return uploadMedia("game", createdGame._id, file);
   };
-  const { items, availableItems } = await moduleLoader.uploadFiles(
-    uploadHandler
-  );
+  const { items, availableItems } =
+    await moduleLoader.uploadFiles(uploadHandler);
 
   await updateGame(this.createdGame._id, {
     ...this.createdGame,
@@ -1469,9 +1467,8 @@ export const loadVassalModuleInSession = async (
     return uploadMedia("session", sessionId, file);
   };
 
-  const { items, availableItems } = await moduleLoader.uploadFiles(
-    uploadHandler
-  );
+  const { items, availableItems } =
+    await moduleLoader.uploadFiles(uploadHandler);
 
   moduleLoader.showStats();
 

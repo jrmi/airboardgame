@@ -113,7 +113,7 @@ const ItemForm = ({ items, types, extraExcludeFields }) => {
     grid: {
       type: gridType = "",
       size: gridSize = 1,
-      offset: { x: gridOffsetX = 0, gridOffsetY = 0 } = {},
+      offset: { x: gridOffsetX = 0, y: gridOffsetY = 0 } = {},
     } = {},
     actions = [],
   } = initialValues;
@@ -182,9 +182,9 @@ const ItemForm = ({ items, types, extraExcludeFields }) => {
                     "-2": -2,
                     "-1": -1,
                     0: 0,
-                    "1": 1,
-                    "2": 2,
-                    "3": 3,
+                    1: 1,
+                    2: 2,
+                    3: 3,
                   }}
                   onChange={onChange}
                   className={"slider-layer"}

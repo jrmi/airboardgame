@@ -39,6 +39,8 @@ const StyledBoard = styled.div`
   }
 `;
 
+const preventNativeDrag = (event) => event.preventDefault();
+
 export const BoardView = ({
   mediaLibraries,
   edit: editMode,
@@ -68,7 +70,7 @@ export const BoardView = ({
   return (
     <MediaLibraryProvider libraries={mediaLibraries}>
       <ImageDropNPaste>
-        <StyledBoard>
+        <StyledBoard onDragStart={preventNativeDrag}>
           <Board
             moveFirst={moveFirst}
             style={style}

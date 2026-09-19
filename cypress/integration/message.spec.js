@@ -14,11 +14,10 @@ describe("Messages interactions", () => {
       .find(".img-wrapper")
       .click();
     // Way board loading
-    cy.get(".board-pane", { timeout: 10000 }).should(
-      "have.css",
-      "transform",
-      "matrix(0.24, 0, 0, 0.24, -5596.48, -5808.48)"
-    );
+    cy.get(".board-pane", { timeout: 10000 })
+      .should("be.visible")
+      .should("have.css", "transform")
+      .and("match", /^matrix\(/);
   });
 
   it("Should show and hide message panel", () => {

@@ -2,14 +2,15 @@ import React, { memo } from "react";
 import styled, { css } from "styled-components";
 
 const StyledRound = styled.div`
-  ${({ radius }) => css`
+  ${({ $radius }) => css`
     border-radius: 100%;
-    width: ${radius}px;
-    height: ${radius}px;
+    width: ${$radius}px;
+    height: ${$radius}px;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
+    box-shadow:
+      rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
       rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
     display: flex;
     justify-content: center;
@@ -39,7 +40,7 @@ const Round = ({
   fontSize = "16",
 }) => {
   return (
-    <StyledRound radius={radius}>
+    <StyledRound $radius={radius}>
       <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
         <circle
           cx="50"

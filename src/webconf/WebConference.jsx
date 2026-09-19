@@ -13,7 +13,7 @@ const StyledWebConference = styled.div`
   line-height: 1em;
   bottom: 5.5em;
   z-index: 1;
-  width: ${({ audioOnly }) => (audioOnly ? 80 : 150)}px;
+  width: ${({ $audioOnly }) => ($audioOnly ? 80 : 150)}px;
   overflow-y: auto;
   overflow-x: hidden;
   padding: 0.5em;
@@ -98,7 +98,7 @@ const WebConference = ({ room, currentUser, users, enableVideo = false }) => {
       getUserData={getUserData}
       getToken={getConfToken}
     >
-      <StyledWebConference audioOnly={true}>
+      <StyledWebConference $audioOnly={true}>
         <StreamList
           currentUser={currentUser}
           users={users}

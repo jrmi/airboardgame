@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import useAsyncEffect from "use-async-effect";
 import { BoardWrapper } from "react-sync-board";
 import { useNavigate } from "react-router-dom";
-import { useSocket } from "@scripters/use-socket.io";
+import { useSocket } from "@jrmi/use-socket.io";
 
 import { itemTemplates, itemLibrary, premadeItems } from "../gameComponents";
 import Waiter from "../ui/Waiter";

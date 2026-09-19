@@ -6,11 +6,11 @@ on:
   workflow_dispatch:
 jobs:
   build:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
           node-version: 24
 
@@ -22,15 +22,14 @@ jobs:
           OPENVIDU_SECRET=${{ secrets.OPENVIDU_SECRET }}
           EOF
       - run: cat backend/.env
-      - run: cd backend && npm ci && npm run build
+      - run: cd backend && npm ci
         env:
           RICOCHET_SITE_KEY: ${{ secrets.RICOCHET_SECRET_KEY }}
       - run: npm run build
         env:
           VITE_API_ENDPOINT: /api
-          VITE_SOCKET_URL: https://wireio1.filai.re
+          VITE_SOCKET_URL: https://abg.filai.re
           VITE_SOCKET_PATH: /socket.io
-          VITE_RICOCHET_SITEID: airboardgame
           VITE_USE_PROXY: 0
           VITE_WEBCONFERENCE: audio
           VITE_SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
@@ -38,7 +37,7 @@ jobs:
           CYPRESS_INSTALL_BINARY: 0
       - run: |
           cat <<EOF > ./dist/_redirects
-          /api/*  https://ricochet1.filai.re/:splat  200
+          /api/*  https://abg.filai.re/:splat  200
           /*    /index.html   200
           EOF
 

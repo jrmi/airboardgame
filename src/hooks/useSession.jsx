@@ -59,9 +59,10 @@ export const SessionProvider = ({
     [updateSessionInfo]
   );
 
-  const availableItems = React.useMemo(() => sessionInfo.availableItems || [], [
-    sessionInfo.availableItems,
-  ]);
+  const availableItems = React.useMemo(
+    () => sessionInfo.availableItems || [],
+    [sessionInfo.availableItems]
+  );
 
   const loadSession = React.useCallback(async () => {
     let sessionData;
