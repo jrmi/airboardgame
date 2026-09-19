@@ -7,23 +7,25 @@ body {
 }
 
 :root {
-  --bg-color: #19161d;
-  --bg-secondary-color: #211d27;
-  --font-color: #f6f0f5;
-  --font-color2: #c1b4c4;
-  --color-darkGrey: #1d1922;
-  --color-darkBlueGrey: #29242f;
-  --color-blueGrey: #332d3b;
-  --color-lightGrey: #d0c5d0;
-  --color-grey: #887e8d;
-  --color-midGrey: #463b4e;
-  --color-primary: #f08063;
-  --color-secondary: #72c5b2;
-  --color-error: #ec6576;
-  --color-success: #83c978;
-  --color-border: #5b4d64;
-  --color-border-subtle: #463b4e;
-  --color-backdrop: rgba(15, 11, 17, 0.76);
+  --bg-color: #151719;
+  --bg-secondary-color: #1d2025;
+  --font-color: #f2f1ef;
+  --font-color2: #b7b6b3;
+  --color-darkGrey: #191c21;
+  --color-darkBlueGrey: #23262c;
+  --color-blueGrey: #2a2d33;
+  --color-lightGrey: #c1c0bd;
+  --color-grey: #777a80;
+  --color-midGrey: #373b43;
+  --color-primary: #9d6bd4;
+  --color-secondary: #24c9bd;
+  --color-error: #ee5267;
+  --color-success: #62c978;
+  --color-accent-violet: #8f68d4;
+  --color-accent-yellow: #eab849;
+  --color-border: #4a4f58;
+  --color-border-subtle: #373b43;
+  --color-backdrop: rgba(12, 13, 15, 0.74);
   --grid-maxWidth: 120rem;
   --grid-gutter: 2rem;
   --font-size: 1.6rem;
@@ -43,7 +45,7 @@ body {
 button {
   padding: 1rem 2.5rem;
   color: var(--font-color);
-  background: var(--color-midGrey);
+  background: var(--color-primary);
   border-radius: 0;
 }
 
@@ -129,8 +131,8 @@ input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type=
 select:focus,
 textarea:focus {
   outline: none;
-  border-color: var(--color-secondary);
-  box-shadow: 0 0 0 3px rgba(114, 197, 178, 0.18);
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(157, 107, 212, 0.18);
   background-color: var(--bg-secondary-color);
 }
 
@@ -143,7 +145,7 @@ textarea:disabled {
 
 input[type="checkbox"],
 input[type="radio"] {
-  accent-color: var(--color-secondary);
+  accent-color: var(--color-primary);
 }
 
 fieldset {
