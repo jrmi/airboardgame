@@ -9,8 +9,6 @@ import {
   FiHelpCircle,
   FiUpload,
   FiSave,
-  FiMove,
-  FiMousePointer,
   FiHome,
   FiMaximize,
   FiRotateCw,
@@ -50,8 +48,8 @@ const LoadVassalModuleGameModal = React.lazy(
 const NavBar = ({
   editMode,
   itemLibraries,
-  moveFirst,
-  setMoveFirst,
+  interaction,
+  setInteraction,
   showItemFinder,
   setShowItemFinder,
 }) => {
@@ -216,16 +214,6 @@ const NavBar = ({
           Icon={FiSave}
         />
         <div className="spacer" />
-        <div className="keep-folded">
-          <NavButton
-            onClick={() => setMoveFirst(!moveFirst)}
-            alt={moveFirst ? t("Move mode") : t("Select mode")}
-            title={
-              moveFirst ? t("Switch to select mode") : t("Switch to move mode")
-            }
-            Icon={moveFirst ? FiMove : FiMousePointer}
-          />
-        </div>
         <NavButton
           Icon={FiRotateCw}
           onClick={() => rotateBoard((prev) => prev + 90)}
@@ -246,9 +234,19 @@ const NavBar = ({
           active={isFullScreen}
         />
         <div className="sep" />
-        {editMode && <EditInfoButton BoardFormComponent={BoardForm} />}
+        {editMode && (
+          <EditInfoButton
+            BoardFormComponent={BoardForm}
+            interaction={interaction}
+            setInteraction={setInteraction}
+          />
+        )}
         {!editMode && isMaster && (
-          <EditInfoButton BoardFormComponent={SessionForm} />
+          <EditInfoButton
+            BoardFormComponent={SessionForm}
+            interaction={interaction}
+            setInteraction={setInteraction}
+          />
         )}
         <NavButton
           onClick={() => setShowInfoModal((prev) => !prev)}
