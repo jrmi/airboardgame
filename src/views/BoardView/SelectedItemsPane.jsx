@@ -42,7 +42,7 @@ const ActionPane = styled.div`
   overflow-x: auto;
   overflow-y: hidden;
 
-  box-shadow: 0 -6px 20px rgba(5, 10, 18, 0.36);
+  box-shadow: 0 -6px 20px rgba(0, 0, 0, 0.36);
   
 
   & img {

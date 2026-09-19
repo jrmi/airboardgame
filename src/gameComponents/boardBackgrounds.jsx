@@ -328,7 +328,7 @@ const backgrounds = [
     getStyle() {
       const size = 160;
       const dataUrl = drawToDataURL(size, size, (ctx) => {
-        ctx.strokeStyle = "rgba(166, 201, 232, 0.055)";
+        ctx.strokeStyle = "rgba(235, 219, 240, 0.06)";
         ctx.lineWidth = 1;
 
         for (let position = 0; position <= size; position += 40) {
@@ -340,7 +340,7 @@ const backgrounds = [
           ctx.stroke();
         }
 
-        ctx.fillStyle = "rgba(166, 201, 232, 0.13)";
+        ctx.fillStyle = "rgba(235, 219, 240, 0.14)";
         for (let x = 0; x <= size; x += 80) {
           for (let y = 0; y <= size; y += 80) {
             ctx.fillRect(x - 1, y - 1, 2, 2);
@@ -349,7 +349,7 @@ const backgrounds = [
       });
 
       return {
-        backgroundColor: "#182235",
+        backgroundColor: "#292631",
         backgroundImage: `url(${dataUrl})`,
       };
     },

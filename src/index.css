@@ -7,23 +7,23 @@ body {
 }
 
 :root {
-  --bg-color: #0d1522;
-  --bg-secondary-color: #121d2e;
-  --font-color: #f4f7fb;
-  --font-color2: #adbad0;
-  --color-darkGrey: #101827;
-  --color-darkBlueGrey: #17243a;
-  --color-blueGrey: #1d2c43;
-  --color-lightGrey: #b4c0d0;
-  --color-grey: #65748b;
-  --color-midGrey: #2a405d;
-  --color-primary: #ed7258;
-  --color-secondary: #4acbbd;
-  --color-error: #e15d62;
-  --color-success: #58c779;
-  --color-border: #3a506e;
-  --color-border-subtle: #2a3c56;
-  --color-backdrop: rgba(5, 10, 18, 0.72);
+  --bg-color: #19161d;
+  --bg-secondary-color: #211d27;
+  --font-color: #f6f0f5;
+  --font-color2: #c1b4c4;
+  --color-darkGrey: #1d1922;
+  --color-darkBlueGrey: #29242f;
+  --color-blueGrey: #332d3b;
+  --color-lightGrey: #d0c5d0;
+  --color-grey: #887e8d;
+  --color-midGrey: #463b4e;
+  --color-primary: #f08063;
+  --color-secondary: #72c5b2;
+  --color-error: #ec6576;
+  --color-success: #83c978;
+  --color-border: #5b4d64;
+  --color-border-subtle: #463b4e;
+  --color-backdrop: rgba(15, 11, 17, 0.76);
   --grid-maxWidth: 120rem;
   --grid-gutter: 2rem;
   --font-size: 1.6rem;
@@ -130,7 +130,7 @@ select:focus,
 textarea:focus {
   outline: none;
   border-color: var(--color-secondary);
-  box-shadow: 0 0 0 3px rgba(74, 203, 189, 0.16);
+  box-shadow: 0 0 0 3px rgba(114, 197, 178, 0.18);
   background-color: var(--bg-secondary-color);
 }
 
@@ -150,7 +150,7 @@ fieldset {
   margin-inline: 0;
   border: 1px solid var(--color-border-subtle);
   border-radius: 6px;
-  background-color: rgba(9, 16, 28, 0.24);
+  background-color: rgba(0, 0, 0, 0.16);
   padding: 1em 1.2em;
 }
 

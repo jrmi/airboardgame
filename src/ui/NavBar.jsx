@@ -20,8 +20,8 @@ const StyledNavBar = styled.div`
   z-index: 215;
   line-height: normal;
 
-  background-color: rgba(20, 32, 50, 0.96);
-  box-shadow: 0 0 16px rgba(5, 10, 18, 0.26);
+  background-color: rgba(47, 40, 55, 0.96);
+  box-shadow: 0 0 16px rgba(0, 0, 0, 0.26);
 
   &.nav-bar--full-height {
     height: 100%;
