@@ -7,13 +7,13 @@ import Modal from "../../ui/Modal";
 import GameInformation from "./GameInformation";
 
 const Kbd = styled.kbd`
-  background-color: #eee;
+  background-color: var(--color-midGrey);
   border-radius: 3px;
-  border: 1px solid #b4b4b4;
+  border: 1px solid var(--color-border);
   box-shadow:
     0 1px 1px rgba(0, 0, 0, 0.2),
-    0 2px 0 0 rgba(255, 255, 255, 0.7) inset;
-  color: #333;
+    0 1px 0 0 rgba(255, 255, 255, 0.1) inset;
+  color: var(--font-color);
   display: inline-block;
   font-family: consolas, "Liberation Mono", courier, monospace;
   font-size: 0.85em;

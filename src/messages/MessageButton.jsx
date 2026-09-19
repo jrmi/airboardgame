@@ -27,7 +27,7 @@ const NotifCount = styled.div`
   background-color: var(--color-success);
   text-align: center;
   line-height: 2em;
-  box-shadow: 3px 3px 6px #000000c0;
+  box-shadow: 0 3px 8px rgba(5, 10, 18, 0.5);
 `;
 
 export const MessagePanel = ({ onNewMessage, show, setShow }) => {

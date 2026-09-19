@@ -35,12 +35,14 @@ const ActionPane = styled.div`
   align-items: center;
   border-top-left-radius: 4px;
   border-top-right-radius: 4px;
+  border: 1px solid var(--color-border);
+  border-bottom: 0;
   padding: 0.1em 0.5em;
   height: 50px;
   overflow-x: auto;
   overflow-y: hidden;
 
-  box-shadow: 2px 2px 10px 0.3px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 -6px 20px rgba(5, 10, 18, 0.36);
   
 
   & img {

@@ -9,8 +9,9 @@ const StyledMenu = styled.div`
   & .content {
     margin-top: 20px;
     background-color: var(--color-midGrey);
-    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-    border-radius: 5px;
+    border: 1px solid var(--color-border);
+    box-shadow: 0 8px 20px rgba(5, 10, 18, 0.38);
+    border-radius: 6px;
     max-height: 25em;
     overflow-y: scroll;
   }
@@ -22,7 +23,7 @@ const StyledMenu = styled.div`
     right: 1.2em;
     border-width: 0 15px 15px;
     border-style: solid;
-    border-color: var(--color-midGrey) transparent;
+    border-color: var(--color-border) transparent;
   }
 `;
 

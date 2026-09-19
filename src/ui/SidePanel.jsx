@@ -18,8 +18,9 @@ const StyledSidePanel = styled.div`
   overflow: hidden;
 
   background-color: var(--color-blueGrey);
+  border-right: 1px solid var(--color-border);
 
-  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  box-shadow: 8px 0 24px rgba(5, 10, 18, 0.38);
 
   min-width: 280px;
   max-width: 500px;
@@ -40,6 +41,8 @@ const StyledSidePanel = styled.div`
     padding-right: 40px;
     right: 0;
     transform: translateX(100%);
+    border-right: 0;
+    border-left: 1px solid var(--color-border);
   }
 
   &.side-panel--open {
@@ -81,7 +84,9 @@ const StyledSidePanel = styled.div`
     & header {
       padding: 0.5em;
       margin-top: 2em;
-      background-color: var(--color-blueGrey);
+      background-color: var(--color-midGrey);
+      border: 1px solid var(--color-border-subtle);
+      border-bottom: 0;
       border-radius: 0.5em 0.5em 0em 0em;
       & h3 {
         margin: 0.2em 0.2em 0.2em;
@@ -97,6 +102,7 @@ const StyledSidePanel = styled.div`
       border-radius: 0em 0em 0.5em 0.5em;
       padding: 1em;
       background-color: var(--color-darkBlueGrey);
+      border: 1px solid var(--color-border-subtle);
     }
   }
 

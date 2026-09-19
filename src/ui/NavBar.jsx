@@ -20,7 +20,8 @@ const StyledNavBar = styled.div`
   z-index: 215;
   line-height: normal;
 
-  background-color: #19202cf5;
+  background-color: rgba(20, 32, 50, 0.96);
+  box-shadow: 0 0 16px rgba(5, 10, 18, 0.26);
 
   &.nav-bar--full-height {
     height: 100%;
@@ -28,6 +29,7 @@ const StyledNavBar = styled.div`
 
   &.nav-bar--folded {
     height: auto;
+    border-bottom: 1px solid var(--color-border);
 
     & .spacer {
       display: none;
@@ -44,12 +46,12 @@ const StyledNavBar = styled.div`
 
   &.nav-bar--left {
     left: 0;
-    border-right: 1px solid #3c3c42f5;
+    border-right: 1px solid var(--color-border);
   }
 
   &.nav-bar--right {
     right: 0;
-    border-left: 1px solid #3c3c42f5;
+    border-left: 1px solid var(--color-border);
   }
 
   .blurry & {
