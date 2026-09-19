@@ -201,6 +201,7 @@ const genGame = () => {
       type: "jewel",
       size: 70,
       color: "#ff0000",
+      grid: { type: "grid", size: 100, show: true },
     },
   });
 
@@ -323,7 +324,7 @@ const genGame = () => {
       minAge: "10",
       duration: [30, 90],
       imageUrl: "/game_assets/default.png",
-      gridSize: 1,
+      grid: { type: null, size: 1 },
     },
     id: "test",
   };

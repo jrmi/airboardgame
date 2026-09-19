@@ -128,3 +128,24 @@ To verify both backend endpoints, run `npm run check` after starting the backend
 Run the backend tests with `npm run backend:test`, and the frontend lint/build
 checks with `npm run lint` and `npm run build`. The Cypress suite requires a
 running database, backend, and client; run it with `npm run cypress:run`.
+
+## Local Syncboard grid development
+
+Grid resolution, snapping, and `BoardGridOverlay` live in the sibling
+`react-syncboard` repository. Airboardgame converts old game/session grid fields
+in `src/utils/migrateGrids.js` before loading Syncboard state; normal saves then
+persist that converted data. No eager database migration is required.
+
+Until these Syncboard changes are released, install the local build after
+`npm ci` (the published `1.4.3` package does not export `BoardGridOverlay`):
+
+```sh
+(cd ../react-syncboard && npm run build && npm pack --pack-destination /tmp)
+npm install --no-save --package-lock=false --ignore-scripts /tmp/react-sync-board-1.4.3.tgz
+npm run dev -- --force
+```
+
+This preserves the dependency manifest and lockfile and refreshes Vite's cached
+bundle. Publishing Syncboard and updating the registry dependency are separate
+release steps. The sibling repository's `tests/browser/README.md` describes the
+real-pointer and two-client grid regressions.

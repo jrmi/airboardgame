@@ -246,7 +246,7 @@
     "bgType": "default",
     "playerCount": [1, 9],
     "duration": [],
-    "gridSize": 1,
+    "grid": { "type": null, "size": 1 },
     "imageUrl": "/game_assets/default.png",
     "keepTitle": true,
     "initialBoardPosition": {

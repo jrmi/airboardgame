@@ -7,6 +7,8 @@ import { useBoardConfig } from "react-sync-board";
 import Hint from "../../ui/formUtils/Hint";
 import Label from "../../ui/formUtils/Label";
 import SliderRange from "../../ui/SliderRange";
+import Slider from "../../ui/Slider";
+import ColorPicker from "../../ui/formUtils/ColorPicker";
 
 import { ImageField } from "../../mediaLibrary";
 
@@ -130,15 +132,73 @@ const BoardConfigForm = () => {
           style={{ width: "5em", textAlign: "right" }}
         />
       </Label>
-      <Label>
-        {t("Magnetic Grid size")}
-        <Field
-          name="gridSize"
-          component="input"
-          initialValue={boardConfig.gridSize || 1}
-          style={{ width: "5em", textAlign: "right" }}
-        />
-      </Label>
+      <fieldset style={{ marginBottom: "2em", paddingBottom: "1em" }}>
+        <legend>{t("Moving grid")}</legend>
+        <Label>
+          {t("Grid type")}
+          <Field
+            name="grid.type"
+            component="select"
+            initialValue={boardConfig.grid?.type || "none"}
+          >
+            <option value="none">{t("None")}</option>
+            <option value="grid">{t("Grid")}</option>
+            <option value="hexH">{t("Horizontal hexagons")}</option>
+            <option value="hexV">{t("Vertical hexagons")}</option>
+          </Field>
+        </Label>
+        <Label>
+          {t("Magnetic Grid size")}
+          <Field
+            name="grid.size"
+            component="input"
+            type="number"
+            step="any"
+            min="0.01"
+            parse={Number}
+            initialValue={boardConfig.grid?.size || 1}
+            style={{ width: "5em", textAlign: "right" }}
+          />
+        </Label>
+        <Label>
+          {t("Display board grid while moving")}
+          <Field
+            name="grid.show"
+            component="input"
+            type="checkbox"
+            initialValue={boardConfig.grid?.show || false}
+          />
+        </Label>
+        <Label>
+          {t("Grid color")}
+          <Field
+            name="grid.color"
+            initialValue={boardConfig.grid?.color || "#000000"}
+          >
+            {({ input: { onChange, value } }) => (
+              <ColorPicker value={value} onChange={onChange} />
+            )}
+          </Field>
+        </Label>
+        <Label>
+          {t("Grid opacity")}
+          <Field
+            name="grid.opacity"
+            initialValue={boardConfig.grid?.opacity ?? 0.2}
+          >
+            {({ input: { onChange, value } }) => (
+              <Slider
+                min={0}
+                max={1}
+                step={0.05}
+                value={Number(value)}
+                onChange={onChange}
+                marks={{ 0: "0%", 0.5: "50%", 1: "100%" }}
+              />
+            )}
+          </Field>
+        </Label>
+      </fieldset>
       <Label>
         {t("Main image")}
         <Field name="imageUrl" initialValue={boardConfig.imageUrl}>

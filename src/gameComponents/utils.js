@@ -32,7 +32,26 @@ const defaultTemplate = () => ({
 });
 
 export const createItemTemplate = (template) => {
-  return Object.assign({}, defaultTemplate(), template, { id: uid() });
+  const itemTemplate =
+    typeof template.template === "function"
+      ? (...args) => ({
+          grid: { show: true, color: "#000000", opacity: 0.2 },
+          ...template.template(...args),
+        })
+      : {
+          ...template.template,
+          grid: {
+            show: true,
+            color: "#000000",
+            opacity: 0.2,
+            ...(template.template?.grid || {}),
+          },
+        };
+
+  return Object.assign({}, defaultTemplate(), template, {
+    id: uid(),
+    template: itemTemplate,
+  });
 };
 
 export default createItemTemplate;

@@ -634,6 +634,13 @@ export const useGameItemActions = () => {
         const newItem = JSON.parse(JSON.stringify(itemToClone));
         newItem.id = uid();
         delete newItem.move;
+        // A generator owns its generated item. Cloning the owner must create
+        // a new generated item instead of making both generators share the
+        // same child and react to each other's placement events.
+        if (newItem.type === "generator") {
+          delete newItem.currentItemId;
+          delete newItem.linkedItems;
+        }
         return newItem;
       });
       if (newItems.length) {

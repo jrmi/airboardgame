@@ -285,7 +285,7 @@ describe("Studio", () => {
       cy.get("[title^='Edit']").click({ force: true });
 
       cy.get('select[name="grid.type"]').select("grid");
-      cy.get('input[name="grid.size"]').clear().type("50").blur();
+      cy.get('input[name="grid.size"]').type("{selectall}50").blur();
 
       cy.intercept(
         {
@@ -295,7 +295,7 @@ describe("Studio", () => {
         (req) => {
           expect(req.body.items[0].grid).to.deep.include({
             type: "grid",
-            size: "50",
+            size: 50,
           });
           req.reply(req.body);
         }

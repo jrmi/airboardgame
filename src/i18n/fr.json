@@ -1,4 +1,5 @@
 {
+  "Use board grid": "Utiliser la grille du plateau",
   "About": "À propos",
   "Action forbidden. Try logging in again.": "Action interdite. Essayez de vous ré-identifier.",
   "Actions": "Actions",
@@ -83,6 +84,11 @@
   "Go back": "Retour",
   "Got it!": "Compris !",
   "Grid type": "type de grille",
+  "Display grid while moving": "Afficher la grille pendant le déplacement",
+  "Grid color": "Couleur de la grille",
+  "Grid opacity": "Opacité de la grille",
+  "Moving grid": "Grille pendant le déplacement",
+  "Display board grid while moving": "Afficher la grille du plateau pendant le déplacement",
   "Grid": "Grille",
   "Height": "Hauteur",
   "Help & info": "Aide & Informations",

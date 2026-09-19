@@ -8,6 +8,7 @@ import {
 import { useTranslation } from "react-i18next";
 
 import { updateSession, getSession, getGame } from "../utils/api";
+import { migrateGrids } from "../utils/migrateGrids";
 
 import demoEn from "../games/demo_en.json?url";
 import demoFr from "../games/demo_fr.json?url";
@@ -32,7 +33,7 @@ const emptyBoard = {
     defaultName: "Choose a game",
     defaultLanguage: "en",
     defaultDescription: "...",
-    gridSize: 1,
+    grid: { type: null, size: 1 },
   },
 };
 
@@ -102,7 +103,12 @@ export const SessionProvider = ({
 
   const setSession = React.useCallback(
     async (newData) => {
-      const { availableItems, items, board, messages = [] } = newData;
+      const {
+        availableItems,
+        items,
+        board,
+        messages = [],
+      } = migrateGrids(newData);
       setAvailableItems(availableItems);
       // The filter prevents the empty item bug or missing type on reload
       setItemList(items.filter((item) => item && item.type));

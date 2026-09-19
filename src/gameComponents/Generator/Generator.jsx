@@ -1,13 +1,11 @@
 import React, { memo } from "react";
 import styled, { css } from "styled-components";
-import { useItemActions, useItemInteraction, useUsers } from "react-sync-board";
 import { FiMove } from "react-icons/fi";
 import { useTranslation } from "react-i18next";
 import debounce from "lodash.debounce";
 
-import { uid, getItemElement } from "../../utils";
-import { isItemCenterInsideElement } from "../../utils/item";
 import itemTemplates from "../itemTemplates";
+import useGeneratedItem from "./useGeneratedItem";
 
 const StyledShape = styled.div`
   ${({ $color }) => css`
@@ -57,47 +55,23 @@ const StyledShape = styled.div`
 
 const Generator = ({ color = "#ccc", item, id, currentItemId, setState }) => {
   const { t } = useTranslation();
-  const { isSpaceMaster: isMaster } = useUsers();
   const itemRef = React.useRef(null);
   const [dimension, setDimension] = React.useState({
     width: 50,
     height: 50,
   });
   const [center, setCenter] = React.useState({ top: 0, left: 0 });
-  const { register: registerPlace } = useItemInteraction("place");
-  const { register: registerDelete } = useItemInteraction("delete");
-  const { pushItem, getItems, batchUpdateItems, removeItems } =
-    useItemActions();
-
   const centerRef = React.useRef(center);
   Object.assign(centerRef.current, center);
-  const currentItemRef = React.useRef(currentItemId);
-  currentItemRef.current = currentItemId;
-
-  const addItem = React.useCallback(async () => {
-    /**
-     * Add new generated item
-     */
-    const newItemId = uid();
-    currentItemRef.current = newItemId;
-    const [thisItem] = getItems([id]);
-    const { item } = thisItem || {}; // Inside item library, thisItem is not defined
-    if (item?.type) {
-      setState((prev) => ({
-        ...prev,
-        currentItemId: newItemId,
-        linkedItems: [newItemId],
-      }));
-      await pushItem({
-        ...item,
-        x: thisItem.x + centerRef.current.left + 3,
-        y: thisItem.y + centerRef.current.top + 3,
-        layer: thisItem.layer + 1,
-        editable: false,
-        id: newItemId,
-      });
-    }
-  }, [getItems, id, pushItem, setState]);
+  const { currentItemId: generatedItemId, currentItemRef: generatedItemRef } =
+    useGeneratedItem({
+      id,
+      item,
+      currentItemId,
+      setState,
+      generatorElement: itemRef,
+      centerRef,
+    });
 
   /**
    * Set generator dimension according to Item content.
@@ -116,9 +90,11 @@ const Generator = ({ color = "#ccc", item, id, currentItemId, setState }) => {
       targetWidth = clientWidth;
       targetHeight = clientHeight;
 
-      if (currentItemRef.current) {
+      if (generatedItemRef.current) {
         // Get size from current item if any
-        const currentDomItem = getItemElement(currentItemRef.current);
+        const currentDomItem = document.getElementsByClassName(
+          `item ${generatedItemRef.current}`
+        )[0];
         if (currentDomItem) {
           targetWidth = currentDomItem.clientWidth;
           targetHeight = currentDomItem.clientHeight;
@@ -137,150 +113,51 @@ const Generator = ({ color = "#ccc", item, id, currentItemId, setState }) => {
       const top = -targetHeight / 2 + height / 2 + 3;
       const left = -targetWidth / 2 + width / 2 + 3;
 
-      setCenter({
-        top,
-        left,
+      const nextCenter = { top, left };
+      setCenter((previous) => {
+        if (previous.top === top && previous.left === left) {
+          return previous;
+        }
+        return nextCenter;
       });
-      centerRef.current = {
-        top,
-        left,
-      };
+      centerRef.current = nextCenter;
 
-      setDimension((prev) => ({ ...prev, width, height }));
+      setDimension((previous) => {
+        if (previous.width === width && previous.height === height) {
+          return previous;
+        }
+        return { width, height };
+      });
     }, 100),
-    []
+    [generatedItemRef]
   );
 
-  const onPlaceItem = React.useCallback(
-    async (itemIds) => {
-      /**
-       * Callback if generated item or generator is placed
-       */
-      const placeSelf = itemIds.includes(id);
-
-      const [thisItem] = await getItems([id]);
-
-      if (
-        itemIds.includes(currentItemRef.current) &&
-        !placeSelf &&
-        !isItemCenterInsideElement(
-          getItemElement(currentItemRef.current),
-          itemRef.current
-        )
-      ) {
-        // We have removed generated item so we create a new one.
-        batchUpdateItems([currentItemRef.current], (item) => {
-          const result = {
-            ...item,
-            layer: thisItem.layer,
-          };
-          delete result.editable;
-          return result;
-        });
-
-        await addItem();
-        resize(item?.rotation);
-      }
-      if (placeSelf) {
-        if (!currentItemRef.current) {
-          // Missing item for any reason
-          await addItem();
-        }
-        resize(item?.rotation);
-      }
-    },
-    [addItem, batchUpdateItems, getItems, id, item?.rotation, resize]
-  );
-
-  const onDeleteItem = React.useCallback(
-    async (itemIds) => {
-      /**
-       * Callback if an item is deleted
-       */
-      if (itemIds.includes(currentItemRef.current)) {
-        await addItem();
-      }
-    },
-    [addItem]
-  );
-
-  React.useEffect(() => {
-    /**
-     * update item on modifications only if master
-     */
-    if (item?.type && isMaster) {
-      batchUpdateItems([currentItemRef.current], (prev) => ({
-        ...prev,
-        ...item,
-      }));
-    }
-  }, [batchUpdateItems, isMaster, item]);
-
-  React.useEffect(() => {
-    /**
-     * Add item if missing
-     */
-    if (isMaster && !currentItemId && !currentItemRef.current && item?.type) {
-      addItem();
-    }
-  }, [addItem, currentItemId, isMaster, item?.type]);
-
-  React.useEffect(() => {
-    /**
-     * Check if type is defined
-     */
-    const checkType = async () => {
-      if (currentItemRef.current) {
-        const [currentItem] = await getItems([currentItemRef.current]);
-        if (currentItem?.type !== item.type) {
-          if (currentItem) {
-            // Remove old if exists
-            await removeItems([currentItemRef.current]);
-          }
-          // Add new item on new type
-          await addItem();
-        }
-      }
-    };
-
-    if (item?.type && isMaster) {
-      checkType();
-    }
-  }, [addItem, getItems, item?.type, removeItems, isMaster]);
-
-  React.useEffect(() => {
-    /**
-     * Register events callback
-     */
-    const unregisterList = [];
-    if (currentItemId) {
-      unregisterList.push(registerPlace(onPlaceItem));
-      unregisterList.push(registerDelete(onDeleteItem));
-    }
-
-    return () => {
-      unregisterList.forEach((callback) => callback());
-    };
-  }, [registerPlace, registerDelete, onPlaceItem, onDeleteItem, currentItemId]);
+  React.useEffect(() => () => resize.cancel(), [resize]);
 
   React.useEffect(() => {
     /**
      * Update center and generator width height
      */
     resize(item?.rotation);
-  }, [item, resize, dimension.height, dimension.width]);
+  }, [item, resize]);
 
   // Define item component if type is defined
   let Item = () => (
     <div className="generator__empty-message">{t("No item type defined")}</div>
   );
-  if (item) {
+  if (item?.type && itemTemplates[item.type]) {
     const itemTemplate = itemTemplates[item.type];
     Item = itemTemplate.component;
   }
 
   return (
-    <StyledShape $color={color} $center={center}>
+    <StyledShape
+      $color={color}
+      $center={center}
+      data-generator-id={id}
+      data-current-item-id={generatedItemId || ""}
+      data-generator-child-id={generatedItemId || ""}
+    >
       <div className="handle">
         <FiMove size="20" color="white" />
       </div>

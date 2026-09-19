@@ -195,4 +195,27 @@ describe("useGameItemActions", () => {
     await hookValue.actionMap.clone.action()([]);
     expect(board.pushItems).not.toHaveBeenCalled();
   });
+
+  it("clones generators without sharing their generated item", async () => {
+    board.getItems.mockResolvedValue([
+      {
+        id: "generator",
+        type: "generator",
+        currentItemId: "generated",
+        linkedItems: ["generated"],
+      },
+    ]);
+
+    await hookValue.actionMap.clone.action()(["generator"]);
+
+    expect(board.pushItems).toHaveBeenCalledWith(
+      [
+        {
+          id: "clone-id",
+          type: "generator",
+        },
+      ],
+      null
+    );
+  });
 });
