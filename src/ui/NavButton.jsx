@@ -19,7 +19,7 @@ const StyledNavButton = styled(FixedButton)`
     color 150ms ease;
 
   &:hover:not(:disabled) {
-    background-color: rgba(120, 159, 201, 0.18);
+    background-color: rgba(255, 210, 240, 0.12);
     color: var(--font-color);
   }
 `;

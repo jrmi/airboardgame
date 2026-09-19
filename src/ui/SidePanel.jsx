@@ -20,7 +20,7 @@ const StyledSidePanel = styled.div`
   background-color: var(--color-blueGrey);
   border-right: 1px solid var(--color-border);
 
-  box-shadow: 8px 0 24px rgba(5, 10, 18, 0.38);
+  box-shadow: 8px 0 24px rgba(0, 0, 0, 0.38);
 
   min-width: 280px;
   max-width: 500px;

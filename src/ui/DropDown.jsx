@@ -10,7 +10,7 @@ const StyledMenu = styled.div`
     margin-top: 20px;
     background-color: var(--color-midGrey);
     border: 1px solid var(--color-border);
-    box-shadow: 0 8px 20px rgba(5, 10, 18, 0.38);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.38);
     border-radius: 6px;
     max-height: 25em;
     overflow-y: scroll;
