@@ -10,6 +10,7 @@ import AutoSave from "../../ui/formUtils/AutoSave";
 
 import { useBoardConfig } from "react-sync-board";
 import NavButton from "../../ui/NavButton";
+import InteractionSettingsForm from "./InteractionSettingsForm";
 
 const BoardConfigForm = styled.div`
   display: flex;
@@ -19,7 +20,13 @@ const BoardConfigForm = styled.div`
   }
 `;
 
-const BoardConfigPanel = ({ BoardFormComponent, show, setShow }) => {
+const BoardConfigPanel = ({
+  BoardFormComponent,
+  interaction,
+  setInteraction,
+  show,
+  setShow,
+}) => {
   const { t } = useTranslation();
   const [, setBoardConfig] = useBoardConfig();
 
@@ -48,6 +55,12 @@ const BoardConfigPanel = ({ BoardFormComponent, show, setShow }) => {
             <BoardConfigForm>
               <AutoSave save={onSubmitHandler} />
               <BoardFormComponent />
+              {interaction && setInteraction && (
+                <InteractionSettingsForm
+                  interaction={interaction}
+                  setInteraction={setInteraction}
+                />
+              )}
             </BoardConfigForm>
           )}
         />
@@ -56,7 +69,11 @@ const BoardConfigPanel = ({ BoardFormComponent, show, setShow }) => {
   );
 };
 
-const EditInfoButton = ({ BoardFormComponent }) => {
+const EditInfoButton = ({
+  BoardFormComponent,
+  interaction,
+  setInteraction,
+}) => {
   const { t } = useTranslation();
 
   const [show, setShow] = React.useState(false);
@@ -71,6 +88,8 @@ const EditInfoButton = ({ BoardFormComponent }) => {
       />
       <BoardConfigPanel
         BoardFormComponent={BoardFormComponent}
+        interaction={interaction}
+        setInteraction={setInteraction}
         show={show}
         setShow={setShow}
       />
