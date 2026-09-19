@@ -41,7 +41,7 @@
     "react-icons": "^5.7.0",
     "react-query": "^3.39.3",
     "react-router-dom": "^7.18.3",
-    "react-sync-board": "^1.4.7",
+    "react-sync-board": "^1.5.2",
     "react-toastify": "^11.1.0",
     "recoil": "^0.7.7",
     "socket.io-client": "^4.8.3",
@@ -108,5 +108,10 @@
     "vite": "^8.3.0",
     "vitest": "^5.0.1",
     "wait-on": "^9.1.0"
+  },
+  "allowScripts": {
+    "cypress@16.0.0": true,
+    "core-js": false,
+    "es5-ext": false
   }
 }
