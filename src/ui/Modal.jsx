@@ -17,7 +17,7 @@ const StyledModalWrapper = styled.div`
 
   transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
 
-  background-color: #00000040;
+  background-color: var(--color-backdrop);
 
   opacity: 0;
   display: flex;
@@ -41,9 +41,10 @@ const StyledModalWrapper = styled.div`
 
   .modal {
     background-color: var(--color-blueGrey);
-    border-radius: 5px;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
     position: relative;
-    box-shadow: rgba(0, 0, 0, 0.5) 0px 0px 30px;
+    box-shadow: 0 18px 48px rgba(0, 0, 0, 0.48);
     margin: 5px;
     margin-top: 2em;
     max-width: 40%;
@@ -57,7 +58,9 @@ const StyledModalWrapper = styled.div`
     header {
       padding: 0.5em;
       margin-top: 2em;
-      background-color: var(--color-blueGrey);
+      background-color: var(--color-midGrey);
+      border: 1px solid var(--color-border-subtle);
+      border-bottom: 0;
       border-radius: 0.5em 0.5em 0em 0em;
       & h3 {
         margin: 0.2em 0.2em 0.2em;
@@ -73,6 +76,7 @@ const StyledModalWrapper = styled.div`
       border-radius: 0em 0em 0.5em 0.5em;
       padding: 1em;
       background-color: var(--color-darkBlueGrey);
+      border: 1px solid var(--color-border-subtle);
     }
   }
 

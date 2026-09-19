@@ -326,21 +326,30 @@ const backgrounds = [
     name: i18n.t("Default"),
     form: null,
     getStyle() {
-      const color = "#2c3749";
-      const thickness = 4;
-      const secondaryColor = defaultSecondaryColor;
-      const size = 200;
+      const size = 160;
       const dataUrl = drawToDataURL(size, size, (ctx) => {
-        ctx.lineWidth = thickness;
-        ctx.strokeStyle = secondaryColor;
-        ctx.beginPath();
-        ctx.moveTo(size, 2);
-        ctx.lineTo(2, 2);
-        ctx.lineTo(2, size);
-        ctx.stroke();
+        ctx.strokeStyle = "rgba(166, 201, 232, 0.055)";
+        ctx.lineWidth = 1;
+
+        for (let position = 0; position <= size; position += 40) {
+          ctx.beginPath();
+          ctx.moveTo(position, 0);
+          ctx.lineTo(position, size);
+          ctx.moveTo(0, position);
+          ctx.lineTo(size, position);
+          ctx.stroke();
+        }
+
+        ctx.fillStyle = "rgba(166, 201, 232, 0.13)";
+        for (let x = 0; x <= size; x += 80) {
+          for (let y = 0; y <= size; y += 80) {
+            ctx.fillRect(x - 1, y - 1, 2, 2);
+          }
+        }
       });
+
       return {
-        backgroundColor: color,
+        backgroundColor: "#182235",
         backgroundImage: `url(${dataUrl})`,
       };
     },

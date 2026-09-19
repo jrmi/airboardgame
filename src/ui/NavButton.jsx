@@ -10,9 +10,18 @@ const StyledNavButton = styled(FixedButton)`
   padding: 4px;
   margin: 0;
   border: none;
+  border-radius: 4px;
   line-height: 0;
   color: ${({ active }) => (active ? "var(--color-primary)" : "white")};
   cursor: ${({ disabled }) => (disabled ? "not-allowed" : "pointer")};
+  transition:
+    background-color 150ms ease,
+    color 150ms ease;
+
+  &:hover:not(:disabled) {
+    background-color: rgba(120, 159, 201, 0.18);
+    color: var(--font-color);
+  }
 `;
 
 const NavButton = ({

@@ -7,20 +7,23 @@ body {
 }
 
 :root {
-  --bg-color: #000000;
-  --bg-secondary-color: #121212;
-  --font-color: #f9fbfa;
-  --font-color2: #b3b3b3;
-  --color-darkGrey: #121212;
-  --color-darkBlueGrey: #151a23;
-  --color-blueGrey: #19202c;
-  --color-lightGrey: #90969d;
-  --color-grey: #454545;
-  --color-midGrey: #2c3749;
-  --color-primary: #db5034;
-  --color-secondary: #00a698ff;
-  --color-error: #d43939;
-  --color-success: #28bd14;
+  --bg-color: #0d1522;
+  --bg-secondary-color: #121d2e;
+  --font-color: #f4f7fb;
+  --font-color2: #adbad0;
+  --color-darkGrey: #101827;
+  --color-darkBlueGrey: #17243a;
+  --color-blueGrey: #1d2c43;
+  --color-lightGrey: #b4c0d0;
+  --color-grey: #65748b;
+  --color-midGrey: #2a405d;
+  --color-primary: #ed7258;
+  --color-secondary: #4acbbd;
+  --color-error: #e15d62;
+  --color-success: #58c779;
+  --color-border: #3a506e;
+  --color-border-subtle: #2a3c56;
+  --color-backdrop: rgba(5, 10, 18, 0.72);
   --grid-maxWidth: 120rem;
   --grid-gutter: 2rem;
   --font-size: 1.6rem;

@@ -10,6 +10,7 @@ import { FiCopy } from "react-icons/fi";
 
 const StyledUrl = styled.div`
   background-color: var(--color-midGrey);
+  border: 1px solid var(--color-border-subtle);
   padding: 0.5em;
   border-radius: 2px;
   display: flex;
@@ -61,7 +62,7 @@ const WelcomeModal = ({ show, setShow, welcome = true }) => {
             alt={t("Copy")}
             onClick={handleCopy}
             size="22"
-            color="#888886"
+            color="var(--font-color2)"
           />
         </StyledUrl>
         <p>
