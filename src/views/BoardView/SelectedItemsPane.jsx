@@ -30,12 +30,12 @@ const ActionPane = styled.div`
   user-select: none;
   touch-action: none;
   display: flex;
-  background-color: var(--color-blueGrey);
+  background-color: var(--color-board-panel);
   justify-content: center;
   align-items: center;
   border-top-left-radius: 4px;
   border-top-right-radius: 4px;
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--color-board-border);
   border-bottom: 0;
   padding: 0.1em 0.5em;
   height: 50px;

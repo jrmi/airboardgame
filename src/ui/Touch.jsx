@@ -26,7 +26,7 @@ const StyledButton = styled(FixedButton).attrs(({ active }) => ({
   display: inline-block;
   cursor: pointer;
   border-color: transparent;
-  color: var(--font-color);
+  color: var(--color-primary-foreground);
   background-color: var(--color-primary);
   padding: 0.5rem;
   width: 38px;

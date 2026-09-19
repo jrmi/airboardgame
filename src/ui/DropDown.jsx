@@ -8,8 +8,8 @@ const StyledMenu = styled.div`
 
   & .content {
     margin-top: 20px;
-    background-color: var(--color-midGrey);
-    border: 1px solid var(--color-border);
+    background-color: var(--color-board-panel-raised);
+    border: 1px solid var(--color-board-border);
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.38);
     border-radius: 6px;
     max-height: 25em;
@@ -23,7 +23,7 @@ const StyledMenu = styled.div`
     right: 1.2em;
     border-width: 0 15px 15px;
     border-style: solid;
-    border-color: var(--color-border) transparent;
+    border-color: var(--color-board-border) transparent;
   }
 `;
 
