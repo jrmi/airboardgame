@@ -17,7 +17,8 @@ body {
   --color-lightGrey: #c1c0bd;
   --color-grey: #777a80;
   --color-midGrey: #373b43;
-  --color-primary: #9d6bd4;
+  --color-primary: #ffd166;
+  --color-primary-foreground: #241d10;
   --color-secondary: #24c9bd;
   --color-error: #ee5267;
   --color-success: #62c978;
@@ -26,6 +27,10 @@ body {
   --color-border: #4a4f58;
   --color-border-subtle: #373b43;
   --color-backdrop: rgba(12, 13, 15, 0.74);
+  --color-board-panel: #202b3b;
+  --color-board-panel-raised: #2a384d;
+  --color-board-panel-inset: #172131;
+  --color-board-border: #3a4c65;
   --grid-maxWidth: 120rem;
   --grid-gutter: 2rem;
   --font-size: 1.6rem;
@@ -44,7 +49,7 @@ body {
 [type="submit"],
 button {
   padding: 1rem 2.5rem;
-  color: var(--font-color);
+  color: var(--color-primary-foreground);
   background: var(--color-primary);
   border-radius: 0;
 }
@@ -134,7 +139,7 @@ select:focus,
 textarea:focus {
   outline: none;
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(157, 107, 212, 0.18);
+  box-shadow: 0 0 0 3px rgba(255, 209, 102, 0.28);
   background-color: var(--bg-secondary-color);
 }
 

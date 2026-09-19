@@ -14,7 +14,7 @@ const StyledNavButton = styled(FixedButton)`
   border-radius: 4px;
   line-height: 0;
   color: ${({ active }) =>
-    active ? "var(--font-color)" : "var(--color-primary)"};
+    active ? "var(--color-primary-foreground)" : "var(--color-primary)"};
   cursor: ${({ disabled }) => (disabled ? "not-allowed" : "pointer")};
   transition:
     background-color 150ms ease,
