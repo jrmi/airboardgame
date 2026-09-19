@@ -108,5 +108,10 @@
     "vite": "^8.3.0",
     "vitest": "^5.0.1",
     "wait-on": "^9.1.0"
+  },
+  "allowScripts": {
+    "cypress@16.0.0": true,
+    "core-js": false,
+    "es5-ext": false
   }
 }
