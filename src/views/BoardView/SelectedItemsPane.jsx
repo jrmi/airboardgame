@@ -17,8 +17,8 @@ const ActionPaneWrapper = styled.div`
   pointer-events: none;
   position: fixed;
   bottom: 0;
-  left: 40px;
-  right: 40px;
+  left: 0;
+  right: 0;
   display: flex;
   justify-content: center;
   align-items: center;

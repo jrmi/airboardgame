@@ -8,13 +8,13 @@ import { FiX } from "react-icons/fi";
 const StyledSidePanel = styled.div`
   position: fixed;
 
-  top: 0;
+  top: 40px;
   bottom: 0;
   z-index: ${({ $layer }) => 213 + $layer};
   display: flex;
   flex-direction: column;
-  height: 100%;
-  max-height: 100%;
+  height: calc(100% - 40px);
+  max-height: calc(100% - 40px);
   overflow: hidden;
 
   background-color: var(--color-board-panel);
@@ -32,13 +32,11 @@ const StyledSidePanel = styled.div`
   transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
 
   &.side-panel--left {
-    padding-left: 40px;
     left: 0px;
     transform: translateX(-100%);
   }
 
   &.side-panel--right {
-    padding-right: 40px;
     right: 0;
     transform: translateX(100%);
     border-right: 0;
@@ -74,7 +72,7 @@ const StyledSidePanel = styled.div`
   }
 
   &.side-panel--right .side-panel__title {
-    margin-left: 45px;
+    margin-left: 35px;
   }
 
   .side-panel__content {

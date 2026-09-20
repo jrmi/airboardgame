@@ -49,23 +49,21 @@ const BoardConfigPanel = ({
       show={show}
       position="left"
     >
-      <section>
-        <Form
-          onSubmit={onSubmitHandler}
-          render={() => (
-            <BoardConfigForm>
-              <AutoSave save={onSubmitHandler} />
-              {BoardFormComponent && <BoardFormComponent />}
-              {interaction && setInteraction && (
-                <InteractionSettingsForm
-                  interaction={interaction}
-                  setInteraction={setInteraction}
-                />
-              )}
-            </BoardConfigForm>
-          )}
-        />
-      </section>
+      <Form
+        onSubmit={onSubmitHandler}
+        render={() => (
+          <BoardConfigForm>
+            <AutoSave save={onSubmitHandler} />
+            {BoardFormComponent && <BoardFormComponent />}
+            {interaction && setInteraction && (
+              <InteractionSettingsForm
+                interaction={interaction}
+                setInteraction={setInteraction}
+              />
+            )}
+          </BoardConfigForm>
+        )}
+      />
     </SidePanel>
   );
 };
@@ -75,6 +73,7 @@ const EditInfoButton = ({
   interaction,
   setInteraction,
   title,
+  renderTrigger,
 }) => {
   const { t } = useTranslation();
 
@@ -82,12 +81,16 @@ const EditInfoButton = ({
 
   return (
     <>
-      <NavButton
-        onClick={() => setShow((prev) => !prev)}
-        alt={t(title || "Edit game info")}
-        title={t(title || "Edit game info")}
-        Icon={FiSettings}
-      />
+      {renderTrigger ? (
+        renderTrigger(() => setShow((prev) => !prev))
+      ) : (
+        <NavButton
+          onClick={() => setShow((prev) => !prev)}
+          alt={t(title || "Edit game info")}
+          title={t(title || "Edit game info")}
+          Icon={FiSettings}
+        />
+      )}
       <BoardConfigPanel
         BoardFormComponent={BoardFormComponent}
         interaction={interaction}
