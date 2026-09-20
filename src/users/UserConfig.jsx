@@ -15,10 +15,23 @@ const StyledInputName = styled.input`
   }
 `;
 
+const UserNameButton = styled.button`
+  overflow: hidden;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: ${({ disabled }) => (disabled ? "default" : "pointer")};
+  font: inherit;
+  text-align: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+`;
+
 const emptyStyle = {};
 const emptyColors = [];
 
-const UserConfig = ({ user, updateCurrentUser, editable, index }) => {
+const UserConfig = ({ user, updateCurrentUser, editable, index, showName }) => {
   const { t } = useTranslation();
 
   const [name, setName] = React.useState(user.name);
@@ -54,6 +67,14 @@ const UserConfig = ({ user, updateCurrentUser, editable, index }) => {
         name={user.name || `${index}`}
         isSelf={editable}
       />
+      {showName && (
+        <UserNameButton
+          disabled={!editable}
+          onClick={() => editable && setShowDetails(true)}
+        >
+          {user.name || `${index}`}
+        </UserNameButton>
+      )}
       <Modal
         title={t("User details")}
         show={showDetails}

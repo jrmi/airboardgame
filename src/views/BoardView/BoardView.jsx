@@ -21,7 +21,6 @@ import flipAudio from "../../media/audio/flip.ogg?url";
 import rollAudio from "../../media/audio/roll.ogg?url";
 import shuffleAudio from "../../media/audio/shuffle.ogg?url";
 import { preloadAudio } from "../../utils";
-import UserBar from "./UserBar";
 import BoardGridOverlay from "../../gameComponents/GridOverlay";
 import HeldItemRotationStyles from "./HeldItemRotationStyles";
 import TemporaryZoomShortcut from "./TemporaryZoomShortcut";
@@ -109,7 +108,6 @@ export const BoardView = ({
           showItemFinder={showItemFinder}
           setShowItemFinder={setShowItemFinder}
         />
-        {!editMode && <UserBar />}
         <WelcomeModal show={showWelcomeModal} setShow={setShowWelcomeModal} />
       </ImageDropNPaste>
       <SelectedItemsPane
