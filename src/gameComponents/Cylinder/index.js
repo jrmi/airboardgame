@@ -8,7 +8,7 @@ const Template = createItemTemplate({
   type: "cylinder",
   component: Component,
   form: FormComponent,
-  defaultActions: ["clone", "lock", "remove"],
+  defaultActions: ["clone", "lock", "groupHide", "remove"],
   availableActions: [
     "stack",
     "alignAsLine",
@@ -16,6 +16,7 @@ const Template = createItemTemplate({
     "shuffle",
     "clone",
     "lock",
+    "groupHide",
     "remove",
   ],
   name: i18n.t("Cylinder"),

@@ -38,7 +38,7 @@ const InviteModal = ({ show, setShow, welcome = true }) => {
 
   return (
     <Modal
-      title={welcome ? t("Ready to play ?") : t("Invite more player")}
+      title={welcome ? t("Ready to play ?") : t("Invite more players")}
       setShow={setShow}
       show={show}
     >

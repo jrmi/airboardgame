@@ -85,6 +85,10 @@ const MediaLibraryModal = ({ show, setShow, onSelect }) => {
         }
         queryClient.invalidateQueries(`media__${tab}`);
       },
+      onError: () => {
+        setFileUploading(false);
+        toast.error(t("Error while uploading media. Try again later..."));
+      },
     }
   );
 

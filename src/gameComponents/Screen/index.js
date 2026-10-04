@@ -8,8 +8,8 @@ const Template = createItemTemplate({
   type: "screen",
   component: Component,
   form: FormComponent,
-  defaultActions: ["clone", "lock", "remove"],
-  availableActions: ["clone", "lock", "remove"],
+  defaultActions: ["clone", "lock", "groupHide", "remove"],
+  availableActions: ["clone", "lock", "groupHide", "remove"],
   name: i18n.t("Screen"),
   template: {
     layer: -2,

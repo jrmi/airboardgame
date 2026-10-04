@@ -35,3 +35,10 @@ cypress/videos
 archives/
 
 ricochet.json
+
+# local dev data / personal saves
+/Saves
+backend/data
+
+# Claude Code local session state
+.claude/

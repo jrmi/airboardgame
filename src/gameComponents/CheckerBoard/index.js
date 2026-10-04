@@ -7,8 +7,8 @@ import CheckerBoardFormFields from "./CheckerBoardFormFields";
 const CheckerBoardTemplate = createItemTemplate({
   type: "checkerboard",
   component: CheckerBoard,
-  defaultActions: ["clone", "lock", "remove"],
-  availableActions: ["clone", "lock", "remove"],
+  defaultActions: ["clone", "lock", "groupHide", "remove"],
+  availableActions: ["clone", "lock", "groupHide", "remove"],
   form: CheckerBoardFormFields,
   name: i18n.t("Checkerboard"),
   template: {

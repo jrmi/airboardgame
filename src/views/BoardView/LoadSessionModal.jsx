@@ -12,7 +12,7 @@ import LoadData from "./LoadData";
 
 const LoadSessionModal = ({ show, setShow }) => {
   const { t } = useTranslation();
-  const { setSession, sessionId } = useSession();
+  const { setSession, saveSession, sessionId } = useSession();
   const [loading, setLoading] = React.useState();
   const [error, setError] = React.useState(false);
   const [fileCount, setFileCount] = React.useState(0);
@@ -37,6 +37,11 @@ const LoadSessionModal = ({ show, setShow }) => {
       const itemMediaUploader = new ItemMediaUploader(onFile);
 
       try {
+        // The backend rejects media uploads for a session that has never been
+        // stored, which is the case for a fresh empty board.
+        if (files && Object.keys(files).length) {
+          await saveSession(true);
+        }
         game.items = await Promise.all(
           game.items.map((item) => itemMediaUploader.upload(item))
         );
@@ -63,7 +68,7 @@ const LoadSessionModal = ({ show, setShow }) => {
         setLoading(false);
       }
     },
-    [sessionId, setSession, setShow]
+    [saveSession, sessionId, setSession, setShow]
   );
 
   React.useEffect(() => {

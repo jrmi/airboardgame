@@ -8,7 +8,7 @@ const Template = createItemTemplate({
   type: "hexagon",
   component: Component,
   form: FormComponent,
-  defaultActions: ["clone", "lock", "remove"],
+  defaultActions: ["clone", "lock", "groupHide", "remove"],
   availableActions: [
     "flip",
     "stack",
@@ -17,6 +17,7 @@ const Template = createItemTemplate({
     "shuffle",
     "clone",
     "lock",
+    "groupHide",
     "remove",
   ],
   name: i18n.t("Hexagon"),

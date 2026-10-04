@@ -6,7 +6,7 @@ import RectFormFields from "./RectFormFields";
 
 const RectTemplate = createItemTemplate({
   type: "rect",
-  defaultActions: ["lock", "remove"],
+  defaultActions: ["lock", "groupHide", "remove"],
   availableActions: [
     "flip",
     "stack",
@@ -15,6 +15,7 @@ const RectTemplate = createItemTemplate({
     "shuffle",
     "clone",
     "lock",
+    "groupHide",
     "remove",
   ],
   component: Rect,

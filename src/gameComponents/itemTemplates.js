@@ -19,6 +19,8 @@ import ScreenTemplate from "./Screen";
 import TokenTemplate from "./Token";
 import ZoneTemplate from "./Zone";
 
+import withGroupVisibility from "./GroupVisibilityWrapper";
+
 export const itemLibrary = [
   RectTemplate,
   CubeTemplate,
@@ -43,7 +45,10 @@ export const itemLibrary = [
 ];
 
 const itemTemplates = Object.fromEntries(
-  itemLibrary.map((itemTemplate) => [itemTemplate.type, itemTemplate])
+  itemLibrary.map((itemTemplate) => [
+    itemTemplate.type,
+    { ...itemTemplate, component: withGroupVisibility(itemTemplate.component) },
+  ])
 );
 
 export default itemTemplates;

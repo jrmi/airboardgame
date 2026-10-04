@@ -14,6 +14,7 @@ import { GlobalConfProvider } from "../hooks/useGlobalConf";
 
 import useSession, { SessionProvider } from "../hooks/useSession";
 import AutoSaveSession from "./AutoSaveSession";
+import useUniqueUsername from "../users/useUniqueUsername";
 
 // Keep compatibility with previous availableItems shape
 const migrateAvailableItemList = (old) => {
@@ -60,10 +61,26 @@ export const Session = () => {
   } = useSession();
 
   const gameLoadingRef = React.useRef(false);
-  const { isSpaceMaster: isMaster } = useUsers();
+  const { isSpaceMaster: isMaster, joinSpace } = useUsers();
   const { sessionInfo } = useSessionInfo();
 
   const { t } = useTranslation();
+
+  // The users store is shared for the whole room (all of its tables), so
+  // without this, a player who opens a session/invite link directly (never
+  // visiting the room lobby, which is the only other place that calls
+  // joinSpace) keeps the default unset space and never matches against the
+  // other players actually at this table — silently skipping the
+  // uniqueness check below. Also a no-op-but-harmless call for solo,
+  // room-less sessions.
+  React.useEffect(() => {
+    joinSpace(sessionId);
+  }, [joinSpace, sessionId]);
+
+  // Run before the board/game data finishes loading so a colliding username
+  // (e.g. two tabs sharing a persisted default name) is caught as soon as
+  // this client joins the session, not only once the board UI mounts.
+  useUniqueUsername();
 
   useAsyncEffect(
     async (isMounted) => {

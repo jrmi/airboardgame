@@ -17,6 +17,7 @@ import Waiter from "../../ui/Waiter";
 import NavBar from "../../ui/NavBar";
 import NavButton from "../../ui/NavButton";
 import { FiChevronLeft } from "react-icons/fi";
+import useUniqueUsername from "../../users/useUniqueUsername";
 
 const StyledPlayer = styled.li`
   position: absolute;
@@ -107,6 +108,8 @@ const Room = ({ roomId, room, setRoom }) => {
   const { users, joinSpace } = useUsers();
 
   const { isMaster } = useWire("room");
+
+  useUniqueUsername();
 
   const onAdd = () => {
     setRoom((prev) => ({
