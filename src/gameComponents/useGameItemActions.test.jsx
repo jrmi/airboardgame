@@ -147,7 +147,7 @@ describe("useGameItemActions", () => {
       ["remove", ["a"]],
       ["clone", ["a"]],
     ];
-    board.getItems.mockResolvedValue([
+    board.getItems.mockReturnValue([
       { id: "a", type: "counter", value: 1, rotation: 0, move: { x: 4 } },
     ]);
     for (const [name, ids] of commands) {
@@ -217,5 +217,21 @@ describe("useGameItemActions", () => {
       ],
       null
     );
+  });
+
+  it("rotates held items around their holder's center", async () => {
+    const items = {
+      holder: { id: "holder", x: 0, y: 0, rotation: 0, linkedItems: ["token"] },
+      token: { id: "token", x: 50, y: 0, rotation: 0 },
+    };
+    board.getItems.mockImplementation((ids) => ids.map((id) => items[id]));
+
+    await hookValue.rotate(["holder"], { angle: 90 });
+
+    const [ids, updater] = board.batchUpdateItems.mock.calls.at(-1);
+    expect(ids).toEqual(["holder", "token"]);
+    expect(updater(items.holder)).toEqual({ rotation: 90 });
+    // Token center (75, 25) turns 90° around holder center (25, 25).
+    expect(updater(items.token)).toEqual({ x: 0, y: 50, rotation: 90 });
   });
 });
