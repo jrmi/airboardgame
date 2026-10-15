@@ -97,7 +97,9 @@ input::placeholder {
   color: var(--color-grey);
 }
 
-input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="color"]):not([type="button"]):not([type="reset"]),
+input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not(
+    [type="color"]
+  ):not([type="button"]):not([type="reset"]),
 select,
 textarea,
 textarea[type="text"] {
@@ -193,7 +195,6 @@ textarea[type="text"] {
 .invisible-scrollbar::-webkit-scrollbar {
   display: none;
 }
-
 
 @keyframes shine {
   to {

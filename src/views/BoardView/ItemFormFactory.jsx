@@ -2,12 +2,18 @@ import React from "react";
 import { Form } from "react-final-form";
 import arrayMutators from "final-form-arrays";
 
-import ItemForm from "../../gameComponents/ItemForm";
+import ItemForm, {
+  getItemFormInitialValues,
+} from "../../gameComponents/ItemForm";
 import AutoSave from "../../ui/formUtils/AutoSave";
 
 const ItemFormFactory = ({ onUpdate, items, extraExcludeFields }) => {
   const types = React.useMemo(
     () => Array.from(new Set(items.map(({ type }) => type))),
+    [items]
+  );
+  const initialValues = React.useMemo(
+    () => (items.length ? getItemFormInitialValues(items) : {}),
     [items]
   );
 
@@ -19,6 +25,7 @@ const ItemFormFactory = ({ onUpdate, items, extraExcludeFields }) => {
   return (
     <Form
       onSubmit={onUpdate}
+      initialValues={initialValues}
       mutators={{
         ...arrayMutators,
       }}
@@ -34,7 +41,7 @@ const ItemFormFactory = ({ onUpdate, items, extraExcludeFields }) => {
             types={types}
             extraExcludeFields={extraExcludeFields}
           />
-          <AutoSave save={onUpdate} />
+          <AutoSave save={onUpdate} guardRotationInitialization />
         </div>
       )}
     />

@@ -16,6 +16,7 @@ import {
   getItemElement,
   playAudio,
 } from "../utils";
+import { getHeldRotationUpdates, normalizeAngle } from "../utils/item";
 
 import itemTemplates from "./itemTemplates";
 import ActionRotateForm from "./actionForms/ActionRotateForm";
@@ -78,6 +79,39 @@ export const useGameItemActions = () => {
       }
     },
     [getItems, getSelectedItems]
+  );
+
+  const computeHeldRotationUpdates = React.useCallback(
+    async (rootAngles) => {
+      const pendingIds = Object.keys(rootAngles);
+      const items = [];
+      const seen = new Set();
+      while (pendingIds.length) {
+        const ids = pendingIds.splice(0).filter((id) => !seen.has(id));
+        if (!ids.length) continue;
+        const fetched = await getItems(ids);
+        fetched.filter(Boolean).forEach((item) => {
+          if (seen.has(item.id)) return;
+          seen.add(item.id);
+          items.push(item);
+          (item.linkedItems || []).forEach((id) => pendingIds.push(id));
+        });
+      }
+      const dimensions = Object.fromEntries(
+        items.map((item) => {
+          const element = getItemElement(item.id);
+          return [
+            item.id,
+            element && {
+              width: element.clientWidth,
+              height: element.clientHeight,
+            },
+          ];
+        })
+      );
+      return getHeldRotationUpdates({ items, dimensions, rootAngles });
+    },
+    [getItems]
   );
 
   // Stack selection to Center
@@ -405,21 +439,33 @@ export const useGameItemActions = () => {
 
   const randomlyRotateSelectedItems = React.useCallback(
     async (itemIds, { angle, maxRotateCount = 0 }) => {
+      // A zero increment has no valid random range (360 / 0) and must not
+      // rewrite legacy 360° values to 0°, which can animate as a full turn.
+      if (!Number(angle)) return;
       const [ids] = await getItemListOrSelected(itemIds);
 
       const maxRotate = maxRotateCount || Math.round(360 / angle);
+      const rootAngles = Object.fromEntries(
+        ids.map((id) => [id, angle * randInt(0, maxRotate)])
+      );
+
+      const { roots, updates: heldUpdates } =
+        await computeHeldRotationUpdates(rootAngles);
+      const heldIds = Object.keys(heldUpdates);
 
       batchUpdateItems(
-        ids,
-        (item) => {
-          const rotation =
-            ((item.rotation || 0) + angle * randInt(0, maxRotate)) % 360;
-          return { rotation };
-        },
+        [...ids, ...heldIds],
+        (item) =>
+          heldUpdates[item.id] || {
+            rotation: normalizeAngle(
+              (item.rotation || 0) +
+                (roots.includes(item.id) ? rootAngles[item.id] : 0)
+            ),
+          },
         true
       );
     },
-    [getItemListOrSelected, batchUpdateItems]
+    [getItemListOrSelected, computeHeldRotationUpdates, batchUpdateItems]
   );
 
   // Tap/Untap elements
@@ -436,16 +482,25 @@ export const useGameItemActions = () => {
         tap = false;
       }
 
+      const angleDelta = tap ? 90 : -90;
+      const { roots, updates: heldUpdates } = await computeHeldRotationUpdates(
+        Object.fromEntries(ids.map((id) => [id, angleDelta]))
+      );
+      const heldIds = Object.keys(heldUpdates);
+
       batchUpdateItems(
-        ids,
-        (item) => ({
-          tapped: tap,
-          rotation: tap ? (item.rotation || 0) + 90 : (item.rotation || 0) - 90,
-        }),
+        [...ids, ...heldIds],
+        (item) =>
+          heldUpdates[item.id] || {
+            tapped: tap,
+            rotation: normalizeAngle(
+              (item.rotation || 0) + (roots.includes(item.id) ? angleDelta : 0)
+            ),
+          },
         true
       );
     },
-    [getItemListOrSelected, batchUpdateItems]
+    [getItemListOrSelected, computeHeldRotationUpdates, batchUpdateItems]
   );
 
   // Lock / unlock elements
@@ -529,20 +584,33 @@ export const useGameItemActions = () => {
     [getItemListOrSelected, setFlip]
   );
 
-  // Rotate element
+  // Rotate element, along with any items held on top of it, keeping their
+  // relative position by rotating them around the holder's center.
   const rotate = React.useCallback(
     async (itemIds, { angle }) => {
+      // Keep zero-angle rotations as true no-ops. Besides avoiding needless
+      // updates, this prevents a stored legacy 360° value normalizing to 0°
+      // and being rendered as a visible full rotation.
+      if (!Number(angle)) return;
       const [ids] = await getItemListOrSelected(itemIds);
 
+      const { roots, updates: heldUpdates } = await computeHeldRotationUpdates(
+        Object.fromEntries(ids.map((id) => [id, angle]))
+      );
+      const heldIds = Object.keys(heldUpdates);
+
       batchUpdateItems(
-        ids,
-        (item) => ({
-          rotation: (item.rotation || 0) + angle,
-        }),
+        [...ids, ...heldIds],
+        (item) =>
+          heldUpdates[item.id] || {
+            rotation: normalizeAngle(
+              (item.rotation || 0) + (roots.includes(item.id) ? angle : 0)
+            ),
+          },
         true
       );
     },
-    [getItemListOrSelected, batchUpdateItems]
+    [getItemListOrSelected, computeHeldRotationUpdates, batchUpdateItems]
   );
 
   // Reveal for player only
@@ -1004,6 +1072,7 @@ export const useGameItemActions = () => {
     roll,
     changeValue,
     rotate,
+    computeHeldRotationUpdates,
     stack: stackToTopLeft,
     setFlip,
     setFlipSelf,

@@ -4,7 +4,11 @@ import styled, { css } from "styled-components";
 import { useItemInteraction, useItemActions } from "react-sync-board";
 import { opacify } from "color2k";
 
-import { getHeldItems, areItemsInside } from "../../utils/item";
+import {
+  getHeldItems,
+  areItemsInside,
+  getHeldReferenceUpdates,
+} from "../../utils/item";
 import useGameItemActions from "../useGameItemActions";
 
 const ZoneWrapper = styled.div`
@@ -56,29 +60,47 @@ const Zone = ({
 }) => {
   const { register } = useItemInteraction("place");
   const { register: registerDelete } = useItemInteraction("delete");
-  const { getItemList } = useItemActions();
+  const { getItemList, batchUpdateItems } = useItemActions();
   const { actionMap } = useGameItemActions();
 
   const zoneRef = React.useRef(null);
 
   const onInsideItem = React.useCallback(
     (itemIds) => {
+      let heldReferences = null;
       setState((item) => {
+        const previousLinkedItems = item.linkedItems;
         const newLinkedItems = getHeldItems({
           element: zoneRef.current,
           currentItemId,
-          currentLinkedItemIds: item.linkedItems,
+          currentLinkedItemIds: previousLinkedItems,
           itemList: getItemList(),
           itemIds,
           shouldHoldItems: item.holdItems,
         });
+        heldReferences = getHeldReferenceUpdates({
+          holderId: currentItemId,
+          linkedItems: newLinkedItems,
+          itemList: getItemList(),
+        });
 
-        if (item.linkedItems !== newLinkedItems) {
+        if (previousLinkedItems !== newLinkedItems) {
           return {
             linkedItems: newLinkedItems,
           };
         }
       }, true);
+
+      // Capture, on each newly held item, the offset/angle it was placed
+      // with so future rotations of this holder stay precise (see
+      // captureHeldReferences).
+      if (heldReferences && Object.keys(heldReferences).length) {
+        batchUpdateItems(
+          Object.keys(heldReferences),
+          (heldItem) => heldReferences[heldItem.id],
+          true
+        );
+      }
 
       setState((item) => {
         const safeInsideItems = Array.isArray(item.insideItems)
@@ -121,7 +143,7 @@ const Zone = ({
         }
       }, true);
     },
-    [actionMap, currentItemId, getItemList, onItem, setState]
+    [actionMap, batchUpdateItems, currentItemId, getItemList, onItem, setState]
   );
 
   const onDeleteItem = React.useCallback(

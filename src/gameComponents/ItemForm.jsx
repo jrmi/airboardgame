@@ -44,6 +44,38 @@ const getAvailableActionsFromItem = (item) => {
   return [];
 };
 
+const getEditorRotation = (rotation = 0) => {
+  const normalized = ((rotation % 360) + 360) % 360;
+  return normalized > 180 ? normalized - 360 : normalized;
+};
+
+export const getItemFormInitialValues = (items) => {
+  const [firstItem, ...restItems] = items.map((item) => {
+    const newActions = (item.actions || getDefaultActionsFromItem(item)).map(
+      (action) => {
+        if (typeof action === "string") {
+          return { name: action };
+        }
+        return action;
+      }
+    );
+    return {
+      ...item,
+      // The rotation slider accepts only -180° through 180°. Feed it an
+      // equivalent value in that range so opening the editor cannot clamp
+      // stored values such as 270° or 360° to 180°.
+      rotation: getEditorRotation(item.rotation),
+      actions: newActions,
+    };
+  });
+
+  // Set initial values to intersection of all common item values.
+  return restItems.reduce(
+    objectIntersection,
+    JSON.parse(JSON.stringify(firstItem))
+  );
+};
+
 const getExcludedFields = (types) => {
   return types.reduce((excluded, type) => {
     return Object.assign(excluded, itemTemplates[type].excludeFields || {});
@@ -83,32 +115,14 @@ const ItemForm = ({ items, types, extraExcludeFields }) => {
     return { ...getExcludedFields(types), ...extraExcludeFields };
   }, [extraExcludeFields, types]);
 
-  const initialValues = React.useMemo(() => {
-    const [firstItem, ...restItems] = items.map((item) => {
-      const newActions = (item.actions || getDefaultActionsFromItem(item)).map(
-        (action) => {
-          if (typeof action === "string") {
-            return { name: action };
-          }
-          return action;
-        }
-      );
-      return {
-        ...item,
-        actions: newActions,
-      };
-    });
-
-    // Set initial values to intersection of all common item values
-    return restItems.reduce(
-      objectIntersection,
-      JSON.parse(JSON.stringify(firstItem))
-    );
-  }, [items]);
+  const initialValues = React.useMemo(
+    () => getItemFormInitialValues(items),
+    [items]
+  );
 
   const {
     locked = false,
-    rotation = 0,
+    rotation,
     layer = 0,
     groupId = "",
     grid: {
@@ -144,7 +158,7 @@ const ItemForm = ({ items, types, extraExcludeFields }) => {
               return (
                 <Slider
                   defaultValue={0}
-                  value={value}
+                  value={value === "" ? 0 : value}
                   min={-180}
                   max={180}
                   step={5}

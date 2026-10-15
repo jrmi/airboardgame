@@ -5,7 +5,7 @@ import { media2Url } from "../../mediaLibrary";
 import { FiEye } from "react-icons/fi";
 import { useItemInteraction, useItemActions } from "react-sync-board";
 
-import { getHeldItems } from "../../utils/item";
+import { getHeldItems, getHeldReferenceUpdates } from "../../utils/item";
 import Canvas from "../Canvas";
 import { getImage } from "../../utils/image";
 
@@ -78,7 +78,7 @@ const AdvancedImage = ({
   id: currentItemId,
 }) => {
   const { register } = useItemInteraction("place");
-  const { getItemList } = useItemActions();
+  const { getItemList, batchUpdateItems } = useItemActions();
   const wrapperRef = React.useRef(null);
   const { currentUser, localUsers: users } = useUsers();
 
@@ -130,24 +130,42 @@ const AdvancedImage = ({
 
   const onPlaceItem = React.useCallback(
     (itemIds) => {
+      let heldReferences = null;
       setState((item) => {
+        const previousLinkedItems = item.linkedItems;
         const newLinkedItems = getHeldItems({
           element: wrapperRef.current,
           currentItemId,
-          currentLinkedItemIds: item.linkedItems,
+          currentLinkedItemIds: previousLinkedItems,
           itemList: getItemList(),
           itemIds,
           shouldHoldItems: item.holdItems,
         });
+        heldReferences = getHeldReferenceUpdates({
+          holderId: currentItemId,
+          linkedItems: newLinkedItems,
+          itemList: getItemList(),
+        });
 
-        if (item.linkedItems !== newLinkedItems) {
+        if (previousLinkedItems !== newLinkedItems) {
           return {
             linkedItems: newLinkedItems,
           };
         }
       }, true);
+
+      // Capture, on each newly held item, the offset/angle it was placed
+      // with so future rotations of this holder stay precise (see
+      // captureHeldReferences).
+      if (heldReferences && Object.keys(heldReferences).length) {
+        batchUpdateItems(
+          Object.keys(heldReferences),
+          (heldItem) => heldReferences[heldItem.id],
+          true
+        );
+      }
     },
-    [currentItemId, getItemList, setState]
+    [currentItemId, getItemList, setState, batchUpdateItems]
   );
 
   React.useEffect(() => {
