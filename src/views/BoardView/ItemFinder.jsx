@@ -273,7 +273,12 @@ const ItemFinder = ({ open, onClose }) => {
   );
 
   return (
-    <SidePanel open={open} onClose={onClose} title={t("Find items")}>
+    <SidePanel
+      open={open}
+      onClose={onClose}
+      onPointerDown={(event) => event.stopPropagation()}
+      title={t("Find items")}
+    >
       <input
         ref={inputRef}
         type="search"
