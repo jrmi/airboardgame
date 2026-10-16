@@ -321,4 +321,4 @@ const ItemFinder = ({ open, onClose }) => {
   );
 };
 
-export default ItemFinder;
+export default React.memo(ItemFinder);
