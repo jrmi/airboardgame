@@ -79,6 +79,7 @@ export const BoardView = ({
             style={style}
             itemTemplates={itemTemplates}
             showResizeHandle={editItem}
+            interaction={{ inertia: false }}
           >
             <BoardGridOverlay />
             <ItemFinder
