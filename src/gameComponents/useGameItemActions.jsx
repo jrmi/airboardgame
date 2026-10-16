@@ -144,8 +144,8 @@ export const useGameItemActions = () => {
         }
 
         const holderCenter = {
-          x: rootItem.x + rootElement.clientWidth / 2,
-          y: rootItem.y + rootElement.clientHeight / 2,
+          x: rootItem.x + rootElement.offsetWidth / 2,
+          y: rootItem.y + rootElement.offsetHeight / 2,
         };
         const holderPreviousRotation = rootItem.rotation || 0;
         const holderNewRotation = holderPreviousRotation + angleDelta;
@@ -185,7 +185,7 @@ export const useGameItemActions = () => {
         if (!heldElement) {
           continue;
         }
-        const { clientWidth, clientHeight } = heldElement;
+        const { offsetWidth, offsetHeight } = heldElement;
 
         let offset;
         let referenceAngle;
@@ -199,8 +199,8 @@ export const useGameItemActions = () => {
           referenceAngle = heldItem.heldAngle || 0;
         } else {
           offset = {
-            x: heldItem.x + clientWidth / 2 - holderCenter.x,
-            y: heldItem.y + clientHeight / 2 - holderCenter.y,
+            x: heldItem.x + offsetWidth / 2 - holderCenter.x,
+            y: heldItem.y + offsetHeight / 2 - holderCenter.y,
           };
           referenceAngle = holderPreviousRotation;
         }
@@ -216,8 +216,8 @@ export const useGameItemActions = () => {
         // Round to avoid floating point noise (e.g. cos/sin of "exact"
         // angles like 90/180 aren't exactly 0/-1/1 in IEEE-754) leaking
         // into the stored position.
-        const newX = Math.round((newCenter.x - clientWidth / 2) * 100) / 100;
-        const newY = Math.round((newCenter.y - clientHeight / 2) * 100) / 100;
+        const newX = Math.round((newCenter.x - offsetWidth / 2) * 100) / 100;
+        const newY = Math.round((newCenter.y - offsetHeight / 2) * 100) / 100;
         const newRotation = ((heldItem.rotation || 0) + angleDelta) % 360;
 
         heldUpdates[heldId] = { x: newX, y: newY, rotation: newRotation };
@@ -227,8 +227,8 @@ export const useGameItemActions = () => {
           heldItem.linkedItems.length > 0
         ) {
           const childHolderCenter = {
-            x: newX + clientWidth / 2,
-            y: newY + clientHeight / 2,
+            x: newX + offsetWidth / 2,
+            y: newY + offsetHeight / 2,
           };
           getDirectlyHeldIds(heldItem.linkedItems).forEach((childId) => {
             queue.push({

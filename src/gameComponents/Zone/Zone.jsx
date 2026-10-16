@@ -8,6 +8,7 @@ import {
   getHeldItems,
   areItemsInside,
   captureHeldReferences,
+  getHeldIdsToCapture,
 } from "../../utils/item";
 import useGameItemActions from "../useGameItemActions";
 
@@ -67,7 +68,7 @@ const Zone = ({
 
   const onInsideItem = React.useCallback(
     (itemIds) => {
-      let newlyHeldIds = null;
+      let heldIdsToCapture = [];
       setState((item) => {
         const previousLinkedItems = item.linkedItems;
         const newLinkedItems = getHeldItems({
@@ -79,22 +80,25 @@ const Zone = ({
           shouldHoldItems: item.holdItems,
         });
 
+        heldIdsToCapture = getHeldIdsToCapture({
+          previousLinkedItemIds: previousLinkedItems,
+          newLinkedItemIds: newLinkedItems,
+          placedItemIds: itemIds,
+        });
         if (previousLinkedItems !== newLinkedItems) {
-          const previousIds = new Set(previousLinkedItems || []);
-          newlyHeldIds = newLinkedItems.filter((id) => !previousIds.has(id));
           return {
             linkedItems: newLinkedItems,
           };
         }
       }, true);
 
-      // Capture, on each newly held item, the offset/angle it was placed
-      // with so future rotations of this holder stay precise (see
+      // Capture, on each newly held or just-moved held item, the offset/angle
+      // it now sits at so future rotations of this holder stay precise (see
       // captureHeldReferences).
-      if (newlyHeldIds && newlyHeldIds.length > 0) {
+      if (heldIdsToCapture.length > 0) {
         const references = captureHeldReferences({
           holderId: currentItemId,
-          heldIds: newlyHeldIds,
+          heldIds: heldIdsToCapture,
           itemList: getItemList(),
         });
         if (references) {
