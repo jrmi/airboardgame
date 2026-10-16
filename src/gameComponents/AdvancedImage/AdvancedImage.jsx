@@ -5,7 +5,11 @@ import { media2Url } from "../../mediaLibrary";
 import { FiEye } from "react-icons/fi";
 import { useItemInteraction, useItemActions } from "react-sync-board";
 
-import { getHeldItems } from "../../utils/item";
+import {
+  getHeldItems,
+  captureHeldReferences,
+  getHeldIdsToCapture,
+} from "../../utils/item";
 import Canvas from "../Canvas";
 import { getImage } from "../../utils/image";
 
@@ -78,7 +82,7 @@ const AdvancedImage = ({
   id: currentItemId,
 }) => {
   const { register } = useItemInteraction("place");
-  const { getItemList } = useItemActions();
+  const { getItemList, batchUpdateItems } = useItemActions();
   const wrapperRef = React.useRef(null);
   const { currentUser, localUsers: users } = useUsers();
 
@@ -130,24 +134,49 @@ const AdvancedImage = ({
 
   const onPlaceItem = React.useCallback(
     (itemIds) => {
+      let heldIdsToCapture = [];
       setState((item) => {
+        const previousLinkedItems = item.linkedItems;
         const newLinkedItems = getHeldItems({
           element: wrapperRef.current,
           currentItemId,
-          currentLinkedItemIds: item.linkedItems,
+          currentLinkedItemIds: previousLinkedItems,
           itemList: getItemList(),
           itemIds,
           shouldHoldItems: item.holdItems,
         });
 
-        if (item.linkedItems !== newLinkedItems) {
+        heldIdsToCapture = getHeldIdsToCapture({
+          previousLinkedItemIds: previousLinkedItems,
+          newLinkedItemIds: newLinkedItems,
+          placedItemIds: itemIds,
+        });
+        if (previousLinkedItems !== newLinkedItems) {
           return {
             linkedItems: newLinkedItems,
           };
         }
       }, true);
+
+      // Capture, on each newly held or just-moved held item, the offset/angle
+      // it now sits at so future rotations of this holder stay precise (see
+      // captureHeldReferences).
+      if (heldIdsToCapture.length > 0) {
+        const references = captureHeldReferences({
+          holderId: currentItemId,
+          heldIds: heldIdsToCapture,
+          itemList: getItemList(),
+        });
+        if (references) {
+          batchUpdateItems(
+            Object.keys(references),
+            (heldItem) => references[heldItem.id],
+            true
+          );
+        }
+      }
     },
-    [currentItemId, getItemList, setState]
+    [currentItemId, getItemList, setState, batchUpdateItems]
   );
 
   React.useEffect(() => {

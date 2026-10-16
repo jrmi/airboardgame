@@ -165,3 +165,83 @@ export const getHeldItems = ({
 
   return currentLinkedItemIds;
 };
+
+// Held items whose reference must be (re)captured after a placement: those
+// that just became held, and those that were moved while staying held, whose
+// old reference no longer matches where they now sit on the holder.
+export const getHeldIdsToCapture = ({
+  previousLinkedItemIds,
+  newLinkedItemIds,
+  placedItemIds,
+}) => {
+  const previousIds = new Set(previousLinkedItemIds || []);
+  const placedIds = new Set(placedItemIds || []);
+  return (newLinkedItemIds || []).filter(
+    (id) => !previousIds.has(id) || placedIds.has(id)
+  );
+};
+
+// Capture, on each held item itself, the offset from its holder's center and
+// the holder's rotation at that exact moment (heldOffset / heldAngle). All later rotations of the holder are then derived from that
+// fixed reference (see computeHeldRotationUpdates) instead of from the held
+// item's own live (already rotated) position, so floating point error can't
+// compound across repeated rotations. Returns null if nothing to capture.
+export const captureHeldReferences = ({ holderId, heldIds, itemList }) => {
+  if (!heldIds || heldIds.length === 0) {
+    return null;
+  }
+  const holderItemData = itemList.find(({ id }) => id === holderId);
+  const holderElement = getItemElement(holderId);
+  if (!holderItemData || !holderElement) {
+    return null;
+  }
+  // Sizes use offsetWidth/offsetHeight: react-sync-board swaps an item's
+  // padding for a border while it's selected, which changes clientWidth but
+  // not offsetWidth, and selection differs between placing and rotating.
+  const holderCenter = {
+    x: holderItemData.x + holderElement.offsetWidth / 2,
+    y: holderItemData.y + holderElement.offsetHeight / 2,
+  };
+  const holderAngle = holderItemData.rotation || 0;
+
+  // An item inside nested holders (token on a card on a board) is linked by
+  // each of them, but only its nearest holder positions it. Skip items that
+  // one of this holder's own held items also holds, so the outer holder
+  // doesn't overwrite the inner holder's reference.
+  const holderLinkedIds = new Set(holderItemData.linkedItems || []);
+  const heldByNearerHolder = new Set(
+    itemList
+      .filter(
+        ({ id, linkedItems }) =>
+          id !== holderId &&
+          holderLinkedIds.has(id) &&
+          Array.isArray(linkedItems)
+      )
+      .flatMap(({ id, linkedItems }) =>
+        linkedItems.filter((linkedId) => linkedId !== id)
+      )
+  );
+
+  const referenceById = {};
+  heldIds.forEach((heldId) => {
+    if (heldByNearerHolder.has(heldId)) {
+      return;
+    }
+    const heldItemData = itemList.find(({ id }) => id === heldId);
+    const heldElement = getItemElement(heldId);
+    if (!heldItemData || !heldElement) {
+      return;
+    }
+    referenceById[heldId] = {
+      heldOffset: {
+        x: heldItemData.x + heldElement.offsetWidth / 2 - holderCenter.x,
+        y: heldItemData.y + heldElement.offsetHeight / 2 - holderCenter.y,
+      },
+      heldAngle: holderAngle,
+      // Record which holder this offset is relative to.
+      heldBy: holderId,
+    };
+  });
+
+  return Object.keys(referenceById).length > 0 ? referenceById : null;
+};

@@ -45,7 +45,13 @@ vi.mock("../utils", () => ({
   shuffle: (items) => items.reverse(),
   randInt: (min) => min,
   uid: () => "clone-id",
-  getItemElement: () => ({ clientWidth: 50, clientHeight: 50, firstChild: {} }),
+  getItemElement: () => ({
+    clientWidth: 50,
+    clientHeight: 50,
+    offsetWidth: 50,
+    offsetHeight: 50,
+    firstChild: {},
+  }),
   playAudio: vi.fn(),
 }));
 
@@ -147,7 +153,7 @@ describe("useGameItemActions", () => {
       ["remove", ["a"]],
       ["clone", ["a"]],
     ];
-    board.getItems.mockResolvedValue([
+    board.getItems.mockReturnValue([
       { id: "a", type: "counter", value: 1, rotation: 0, move: { x: 4 } },
     ]);
     for (const [name, ids] of commands) {
@@ -217,5 +223,53 @@ describe("useGameItemActions", () => {
       ],
       null
     );
+  });
+
+  it("rotates held items around their holder's center", async () => {
+    const items = {
+      holder: { id: "holder", x: 0, y: 0, rotation: 0, linkedItems: ["token"] },
+      token: { id: "token", x: 50, y: 0, rotation: 0 },
+    };
+    board.getItems.mockImplementation((ids) => ids.map((id) => items[id]));
+
+    await hookValue.rotate(["holder"], { angle: 90 });
+
+    const [ids, updater] = board.batchUpdateItems.mock.calls.at(-1);
+    expect(ids).toEqual(["holder", "token"]);
+    expect(updater(items.holder)).toEqual({ rotation: 90 });
+    // Token center (75, 25) turns 90° around holder center (25, 25).
+    expect(updater(items.token)).toEqual({ x: 0, y: 50, rotation: 90 });
+  });
+
+  it("returns held items to their exact spot when the holder rotates back", async () => {
+    const items = {
+      holder: { id: "holder", x: 0, y: 0, rotation: 0, linkedItems: ["token"] },
+      token: {
+        id: "token",
+        x: 37,
+        y: 81,
+        rotation: 45,
+        heldOffset: { x: 37, y: 81 },
+        heldAngle: 0,
+        heldBy: "holder",
+      },
+    };
+    board.getItems.mockImplementation((ids) => ids.map((id) => items[id]));
+    const applyLastUpdate = () => {
+      const [ids, updater] = board.batchUpdateItems.mock.calls.at(-1);
+      ids.forEach((id) => {
+        items[id] = { ...items[id], ...updater(items[id]) };
+      });
+    };
+
+    await hookValue.rotate(["holder"], { angle: 30 });
+    applyLastUpdate();
+    expect(items.token).toMatchObject({ rotation: 75 });
+    expect(items.token.x).not.toBe(37);
+
+    await hookValue.rotate(["holder"], { angle: -30 });
+    applyLastUpdate();
+    expect(items.holder.rotation).toBe(0);
+    expect(items.token).toMatchObject({ x: 37, y: 81, rotation: 45 });
   });
 });

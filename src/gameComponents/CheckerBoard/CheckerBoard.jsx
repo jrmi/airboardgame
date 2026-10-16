@@ -2,7 +2,11 @@ import React, { memo } from "react";
 import styled, { css } from "styled-components";
 import { useItemInteraction, useItemActions } from "react-sync-board";
 
-import { getHeldItems } from "../../utils/item";
+import {
+  getHeldItems,
+  captureHeldReferences,
+  getHeldIdsToCapture,
+} from "../../utils/item";
 
 const StyledCheckerBoard = styled.div`
   ${({ $width, $height, $color, $alternateColor, $colCount, $rowCount }) => css`
@@ -33,29 +37,54 @@ const CheckerBoard = ({
   id: currentItemId,
 }) => {
   const { register } = useItemInteraction("place");
-  const { getItemList } = useItemActions();
+  const { getItemList, batchUpdateItems } = useItemActions();
   const wrapperRef = React.useRef(null);
 
   const onPlaceItem = React.useCallback(
     (itemIds) => {
+      let heldIdsToCapture = [];
       setState((item) => {
+        const previousLinkedItems = item.linkedItems;
         const newLinkedItems = getHeldItems({
           element: wrapperRef.current,
           currentItemId,
-          currentLinkedItemIds: item.linkedItems,
+          currentLinkedItemIds: previousLinkedItems,
           itemList: getItemList(),
           itemIds,
           shouldHoldItems: item.holdItems,
         });
 
-        if (item.linkedItems !== newLinkedItems) {
+        heldIdsToCapture = getHeldIdsToCapture({
+          previousLinkedItemIds: previousLinkedItems,
+          newLinkedItemIds: newLinkedItems,
+          placedItemIds: itemIds,
+        });
+        if (previousLinkedItems !== newLinkedItems) {
           return {
             linkedItems: newLinkedItems,
           };
         }
       }, true);
+
+      // Capture, on each newly held or just-moved held item, the offset/angle
+      // it now sits at so future rotations of this holder stay precise (see
+      // captureHeldReferences).
+      if (heldIdsToCapture.length > 0) {
+        const references = captureHeldReferences({
+          holderId: currentItemId,
+          heldIds: heldIdsToCapture,
+          itemList: getItemList(),
+        });
+        if (references) {
+          batchUpdateItems(
+            Object.keys(references),
+            (heldItem) => references[heldItem.id],
+            true
+          );
+        }
+      }
     },
-    [currentItemId, getItemList, setState]
+    [currentItemId, getItemList, setState, batchUpdateItems]
   );
 
   React.useEffect(() => {
