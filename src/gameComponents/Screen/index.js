@@ -11,6 +11,7 @@ const Template = createItemTemplate({
   defaultActions: ["clone", "lock", "remove"],
   availableActions: ["clone", "lock", "remove"],
   name: i18n.t("Screen"),
+  translationKey: "Screen",
   template: {
     layer: -2,
     width: 200,

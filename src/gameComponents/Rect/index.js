@@ -20,6 +20,7 @@ const RectTemplate = createItemTemplate({
   component: Rect,
   form: RectFormFields,
   name: i18n.t("Rectangle"),
+  translationKey: "Rectangle",
   template: {
     width: 50,
     height: 50,

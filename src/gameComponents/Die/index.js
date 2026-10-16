@@ -18,6 +18,7 @@ const Template = createItemTemplate({
     "alignAsSquare",
   ],
   name: i18n.t("Die"),
+  translationKey: "Die",
   template: { value: 0, color: "#CCC", textColor: "#fff", fontSize: "35" },
   resizeDirections: {},
 });

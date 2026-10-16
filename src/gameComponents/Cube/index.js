@@ -19,6 +19,7 @@ const Template = createItemTemplate({
     "remove",
   ],
   name: i18n.t("Cube"),
+  translationKey: "Cube",
   template: { size: 50, color: "#b3b3b3" },
   resize: sizeResize,
   resizeDirections: { b: true },

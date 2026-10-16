@@ -11,6 +11,7 @@ const AnchorTemplate = createItemTemplate({
   availableActions: ["clone", "lock", "remove"],
   form: AnchorFormFields,
   name: i18n.t("Anchor"),
+  translationKey: "Anchor",
   template: {},
   resizeDirections: {},
   excludeFields: { rotation: true, family: true, grid: true },

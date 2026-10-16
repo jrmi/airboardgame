@@ -54,6 +54,7 @@ const Template = createItemTemplate({
     "alignAsSquare",
   ],
   name: i18n.t("Image die"),
+  translationKey: "Image die",
   template: () => ({
     value: 0,
     images: defaultDiceImages(),

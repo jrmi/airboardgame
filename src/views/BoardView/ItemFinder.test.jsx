@@ -65,11 +65,26 @@ describe("ItemFinder", () => {
     expect(getItemDisplayName({ type: "counter" }, templates)).toBe("Counter");
   });
 
+  it("translates item template names at render time", () => {
+    const templates = {
+      counter: { name: "Counter", translationKey: "Counter" },
+    };
+
+    expect(
+      getItemDisplayName({ type: "counter" }, templates, (value) =>
+        value === "Counter" ? "Compteur" : value
+      )
+    ).toBe("Compteur");
+  });
+
   it("keeps image previews within the thumbnail without changing their ratio", () => {
     expect(getPreviewSize({ type: "image", width: 400, height: 200 })).toEqual({
       width: 64,
       height: 32,
     });
+    expect(
+      getPreviewSize({ type: "diceImage", width: 100, height: 50 })
+    ).toEqual({ width: 64, height: 32 });
     expect(
       getPreviewSize({ type: "advancedImage", width: 100, height: 300 })
     ).toEqual({ width: expect.closeTo(21.33, 2), height: 64 });

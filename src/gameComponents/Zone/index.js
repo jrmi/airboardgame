@@ -11,6 +11,7 @@ const Template = createItemTemplate({
   defaultActions: ["clone", "lock", "remove"],
   availableActions: ["clone", "lock", "remove", "alignAsLine", "alignAsSquare"],
   name: i18n.t("Zone"),
+  translationKey: "Zone",
   template: {
     layer: -1,
     width: 200,
