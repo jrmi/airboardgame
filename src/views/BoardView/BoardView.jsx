@@ -21,6 +21,7 @@ import shuffleAudio from "../../media/audio/shuffle.ogg?url";
 import { preloadAudio } from "../../utils";
 import UserBar from "./UserBar";
 import BoardGridOverlay from "../../gameComponents/GridOverlay";
+import HeldItemRotationStyles from "./HeldItemRotationStyles";
 
 const StyledBoard = styled.div`
   & .item.locked::after {
@@ -79,6 +80,7 @@ export const BoardView = ({
             showResizeHandle={editItem}
           >
             <BoardGridOverlay />
+            <HeldItemRotationStyles />
           </Board>
         </StyledBoard>
         <NavBar

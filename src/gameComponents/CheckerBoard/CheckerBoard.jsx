@@ -1,8 +1,8 @@
 import React, { memo } from "react";
 import styled, { css } from "styled-components";
-import { useItemInteraction, useItemActions } from "react-sync-board";
+import { useItemInteraction } from "react-sync-board";
 
-import { getHeldItems } from "../../utils/item";
+import useHeldItemPlacement from "../useHeldItemPlacement";
 
 const StyledCheckerBoard = styled.div`
   ${({ $width, $height, $color, $alternateColor, $colCount, $rowCount }) => css`
@@ -33,30 +33,13 @@ const CheckerBoard = ({
   id: currentItemId,
 }) => {
   const { register } = useItemInteraction("place");
-  const { getItemList } = useItemActions();
   const wrapperRef = React.useRef(null);
 
-  const onPlaceItem = React.useCallback(
-    (itemIds) => {
-      setState((item) => {
-        const newLinkedItems = getHeldItems({
-          element: wrapperRef.current,
-          currentItemId,
-          currentLinkedItemIds: item.linkedItems,
-          itemList: getItemList(),
-          itemIds,
-          shouldHoldItems: item.holdItems,
-        });
-
-        if (item.linkedItems !== newLinkedItems) {
-          return {
-            linkedItems: newLinkedItems,
-          };
-        }
-      }, true);
-    },
-    [currentItemId, getItemList, setState]
-  );
+  const onPlaceItem = useHeldItemPlacement({
+    holderRef: wrapperRef,
+    holderId: currentItemId,
+    setState,
+  });
 
   React.useEffect(() => {
     const unregisterList = [];

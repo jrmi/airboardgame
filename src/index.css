@@ -97,7 +97,9 @@ input::placeholder {
   color: var(--color-grey);
 }
 
-input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="color"]):not([type="button"]):not([type="reset"]),
+input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not(
+    [type="color"]
+  ):not([type="button"]):not([type="reset"]),
 select,
 textarea,
 textarea[type="text"] {
@@ -194,6 +196,50 @@ textarea[type="text"] {
   display: none;
 }
 
+.rotation-delta-controls {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.4rem;
+  margin-top: 0.5rem;
+}
+
+.rotation-delta-controls > button {
+  margin: 0;
+  padding: 0.4rem;
+}
+
+.rotation-delta-controls .button + .button {
+  margin-left: 0;
+}
+
+.rotation-custom-amount {
+  display: flex;
+  grid-column: 1 / -1;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.rotation-custom-amount input {
+  min-width: 0;
+  margin: 0;
+  text-align: right;
+}
+
+.rotation-custom-buttons {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.4rem;
+}
+
+.rotation-custom-buttons > button {
+  margin: 0;
+  padding: 0.4rem;
+}
+
+.rotation-delta-controls > .rotation-reset {
+  grid-column: 1 / -1;
+}
 
 @keyframes shine {
   to {

@@ -14,6 +14,9 @@ const board = {
 };
 const currentUser = { uid: "me" };
 const setStorage = vi.fn();
+const random = vi.hoisted(() => ({
+  int: vi.fn((min) => min),
+}));
 let hookValue;
 
 vi.mock("react-i18next", () => ({
@@ -43,7 +46,7 @@ vi.mock("react-sync-board", () => ({
 
 vi.mock("../utils", () => ({
   shuffle: (items) => items.reverse(),
-  randInt: (min) => min,
+  randInt: random.int,
   uid: () => "clone-id",
   getItemElement: () => ({ clientWidth: 50, clientHeight: 50, firstChild: {} }),
   playAudio: vi.fn(),
@@ -147,7 +150,7 @@ describe("useGameItemActions", () => {
       ["remove", ["a"]],
       ["clone", ["a"]],
     ];
-    board.getItems.mockResolvedValue([
+    board.getItems.mockReturnValue([
       { id: "a", type: "counter", value: 1, rotation: 0, move: { x: 4 } },
     ]);
     for (const [name, ids] of commands) {
@@ -217,5 +220,169 @@ describe("useGameItemActions", () => {
       ],
       null
     );
+  });
+
+  it("rotates held items around their holder's center", async () => {
+    const items = {
+      holder: {
+        id: "holder",
+        x: 0,
+        y: 0,
+        rotation: 0,
+        holdItems: true,
+        linkedItems: ["token"],
+      },
+      token: { id: "token", x: 50, y: 0, rotation: 0 },
+    };
+    board.getItems.mockImplementation((ids) => ids.map((id) => items[id]));
+
+    await hookValue.rotate(["holder"], { angle: 90 });
+
+    const [ids, updater] = board.batchUpdateItems.mock.calls.at(-1);
+    expect(ids).toEqual(["holder", "token"]);
+    expect(updater(items.holder)).toEqual({ rotation: 90 });
+    // Token center (75, 25) turns 90° around holder center (25, 25).
+    expect(updater(items.token)).toEqual({ x: 0, y: 50, rotation: 90 });
+  });
+
+  it("rotates a selected held item only through its selected holder", async () => {
+    const items = {
+      holder: {
+        id: "holder",
+        x: 0,
+        y: 0,
+        rotation: 0,
+        holdItems: true,
+        linkedItems: ["token"],
+      },
+      token: { id: "token", x: 50, y: 0, rotation: 30 },
+    };
+    board.getItems.mockImplementation((ids) => ids.map((id) => items[id]));
+
+    await hookValue.rotate(["holder", "token"], { angle: 90 });
+
+    const [ids, updater] = board.batchUpdateItems.mock.calls.at(-1);
+    expect(ids).toEqual(["holder", "token"]);
+    expect(updater(items.holder)).toEqual({ rotation: 90 });
+    expect(updater(items.token)).toEqual({ x: 0, y: 50, rotation: 120 });
+  });
+
+  it("resets every selected angle while preserving held-stack geometry", async () => {
+    const items = {
+      holder: {
+        id: "holder",
+        x: 0,
+        y: 0,
+        rotation: 10,
+        holdItems: true,
+        linkedItems: ["token"],
+      },
+      token: { id: "token", x: 50, y: 0, rotation: 40 },
+    };
+    board.getItems.mockImplementation((ids) => ids.map((id) => items[id]));
+
+    await hookValue.resetRotation(["holder", "token"]);
+
+    const [ids, updater] = board.batchUpdateItems.mock.calls.at(-1);
+    expect(ids).toEqual(["holder", "token"]);
+    expect(updater(items.holder)).toEqual({ rotation: 0 });
+    expect(updater(items.token)).toMatchObject({ rotation: 0 });
+    expect(updater(items.token)).toHaveProperty("x");
+    expect(updater(items.token)).toHaveProperty("y");
+  });
+
+  it("keeps action rotations continuous when crossing zero", async () => {
+    const items = {
+      holder: {
+        id: "holder",
+        x: 0,
+        y: 0,
+        rotation: 270,
+        holdItems: true,
+        linkedItems: ["token"],
+      },
+      token: {
+        id: "token",
+        x: 50,
+        y: 0,
+        rotation: 270,
+      },
+    };
+    board.getItems.mockImplementation((ids) => ids.map((id) => items[id]));
+
+    await hookValue.rotate(["holder"], { angle: 90 });
+
+    const [, updater] = board.batchUpdateItems.mock.calls.at(-1);
+    expect(updater(items.holder).rotation).toBe(360);
+    expect(updater(items.token).rotation).toBe(360);
+  });
+
+  it("keeps random rotations continuous for holders and held items", async () => {
+    const items = {
+      holder: {
+        id: "holder",
+        x: 0,
+        y: 0,
+        rotation: 270,
+        holdItems: true,
+        linkedItems: ["token"],
+      },
+      token: {
+        id: "token",
+        x: 50,
+        y: 0,
+        rotation: 270,
+      },
+    };
+    board.getItems.mockImplementation((ids) => ids.map((id) => items[id]));
+    random.int.mockReturnValueOnce(1);
+
+    await hookValue.randomlyRotate(["holder"], {
+      angle: 90,
+      maxRotateCount: 4,
+    });
+
+    const [, updater] = board.batchUpdateItems.mock.calls.at(-1);
+    expect(updater(items.holder).rotation).toBe(360);
+    expect(updater(items.token).rotation).toBe(360);
+  });
+
+  it("updates tap state on explicitly selected held items", async () => {
+    const items = {
+      holder: {
+        id: "holder",
+        x: 0,
+        y: 0,
+        rotation: 0,
+        tapped: false,
+        holdItems: true,
+        linkedItems: ["token"],
+      },
+      token: {
+        id: "token",
+        x: 50,
+        y: 0,
+        rotation: 0,
+        tapped: false,
+      },
+    };
+    board.getItems.mockImplementation((ids) => ids.map((id) => items[id]));
+
+    await hookValue.actionMap.tap.action()(["holder", "token"]);
+
+    const [, updater] = board.batchUpdateItems.mock.calls.at(-1);
+    expect(updater(items.token)).toMatchObject({
+      x: 0,
+      y: 50,
+      rotation: 90,
+      tapped: true,
+    });
+  });
+
+  it("does not rewrite items for a zero rotation", async () => {
+    await hookValue.rotate(["a"], { angle: 0 });
+    await hookValue.actionMap.randomlyRotate.action({ angle: 0 })(["a"]);
+
+    expect(board.batchUpdateItems).not.toHaveBeenCalled();
   });
 });
