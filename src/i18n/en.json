@@ -366,6 +366,8 @@
   "An error occurred. Try again!": "An error occurred. Try again!",
   "Rotate board": "Rotate board",
   "Center on items": "Center on items",
+  "Find items": "Find items",
+  "No matching items": "No matching items",
   "Hold items": "Hold items",
   "Custom rotation amount": "Custom rotation amount",
   "Reset rotation to 0°": "Reset rotation to 0°",

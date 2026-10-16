@@ -63,6 +63,7 @@ const NavButton = ({
       disabled={disabled}
       onClick={handleClick}
       title={title}
+      aria-label={alt}
     >
       {component}
     </StyledNavButton>
