@@ -18,6 +18,7 @@ const Template = createItemTemplate({
     "alignAsSquare",
   ],
   name: i18n.t("Note"),
+  translationKey: "Note",
   template: {
     color: "#FFEC27",
     textColor: "#000",

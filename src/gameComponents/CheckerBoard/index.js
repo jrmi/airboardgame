@@ -11,6 +11,7 @@ const CheckerBoardTemplate = createItemTemplate({
   availableActions: ["clone", "lock", "remove"],
   form: CheckerBoardFormFields,
   name: i18n.t("Checkerboard"),
+  translationKey: "Checkerboard",
   template: {
     width: 50,
     height: 50,

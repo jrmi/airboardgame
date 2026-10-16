@@ -106,11 +106,25 @@ const Result = styled.div`
   }
 `;
 
-export const getItemDisplayName = (item, templates = itemTemplates) =>
-  item.label || item.text || templates[item.type]?.name || item.type;
+export const getItemDisplayName = (
+  item,
+  templates = itemTemplates,
+  t = (value) => value
+) =>
+  item.label ||
+  item.text ||
+  t(
+    templates[item.type]?.translationKey ||
+      templates[item.type]?.name ||
+      item.type
+  );
 
 export const getPreviewSize = (item) => {
-  if (item.type !== "image" && item.type !== "advancedImage") {
+  if (
+    item.type !== "image" &&
+    item.type !== "advancedImage" &&
+    item.type !== "diceImage"
+  ) {
     return { width: 64, height: 64, size: 64 };
   }
 
@@ -143,7 +157,7 @@ export const getPreviewImageUrl = (item) => {
   return null;
 };
 
-const ItemResult = ({ item, onSelect, onKeyDown }) => {
+const ItemResult = ({ item, onSelect, onKeyDown, t }) => {
   const Component = itemTemplates[item.type]?.component;
   const imageUrl = getPreviewImageUrl(item);
   const [loadedUrl, setLoadedUrl] = React.useState(null);
@@ -172,7 +186,10 @@ const ItemResult = ({ item, onSelect, onKeyDown }) => {
 
   if (isLoading) {
     return (
-      <ResultSkeleton aria-busy="true" aria-label={getItemDisplayName(item)}>
+      <ResultSkeleton
+        aria-busy="true"
+        aria-label={getItemDisplayName(item, itemTemplates, t)}
+      >
         <PreviewSkeleton className="item-finder__preview-skeleton" />
         <PreviewSkeleton className="item-finder__name-skeleton" />
       </ResultSkeleton>
@@ -189,7 +206,7 @@ const ItemResult = ({ item, onSelect, onKeyDown }) => {
       <Preview aria-hidden="true">
         <Component {...item} {...previewSize} setState={() => {}} />
       </Preview>
-      <span>{getItemDisplayName(item)}</span>
+      <span>{getItemDisplayName(item, itemTemplates, t)}</span>
     </div>
   );
 };
@@ -212,8 +229,10 @@ const ItemFinder = ({ open, onClose }) => {
 
   const matchingItems = React.useMemo(
     () =>
-      items.filter((item) => search(searchFilter, getItemDisplayName(item))),
-    [searchFilter, items]
+      items.filter((item) =>
+        search(searchFilter, getItemDisplayName(item, itemTemplates, t))
+      ),
+    [searchFilter, items, t]
   );
 
   React.useEffect(() => {
@@ -309,6 +328,7 @@ const ItemFinder = ({ open, onClose }) => {
                   item={item}
                   onSelect={centerOnItem}
                   onKeyDown={handleResultKeyDown}
+                  t={t}
                 />
               </Result>
             ))}
