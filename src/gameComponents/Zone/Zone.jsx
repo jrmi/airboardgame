@@ -1,11 +1,12 @@
 import React from "react";
 import { memo } from "react";
 import styled, { css } from "styled-components";
-import { useItemInteraction, useItemActions } from "react-sync-board";
+import { useItemInteraction } from "react-sync-board";
 import { opacify } from "color2k";
 
-import { getHeldItems, areItemsInside } from "../../utils/item";
+import { areItemsInside } from "../../utils/item";
 import useGameItemActions from "../useGameItemActions";
+import useHeldItemPlacement from "../useHeldItemPlacement";
 
 const ZoneWrapper = styled.div`
   ${({ $width, $height, $borderColor, $borderStyle, $backgroundColor }) => css`
@@ -56,29 +57,18 @@ const Zone = ({
 }) => {
   const { register } = useItemInteraction("place");
   const { register: registerDelete } = useItemInteraction("delete");
-  const { getItemList } = useItemActions();
   const { actionMap } = useGameItemActions();
 
   const zoneRef = React.useRef(null);
+  const updateHeldItems = useHeldItemPlacement({
+    holderRef: zoneRef,
+    holderId: currentItemId,
+    setState,
+  });
 
   const onInsideItem = React.useCallback(
     (itemIds) => {
-      setState((item) => {
-        const newLinkedItems = getHeldItems({
-          element: zoneRef.current,
-          currentItemId,
-          currentLinkedItemIds: item.linkedItems,
-          itemList: getItemList(),
-          itemIds,
-          shouldHoldItems: item.holdItems,
-        });
-
-        if (item.linkedItems !== newLinkedItems) {
-          return {
-            linkedItems: newLinkedItems,
-          };
-        }
-      }, true);
+      updateHeldItems(itemIds);
 
       setState((item) => {
         const safeInsideItems = Array.isArray(item.insideItems)
@@ -121,7 +111,7 @@ const Zone = ({
         }
       }, true);
     },
-    [actionMap, currentItemId, getItemList, onItem, setState]
+    [actionMap, onItem, setState, updateHeldItems]
   );
 
   const onDeleteItem = React.useCallback(

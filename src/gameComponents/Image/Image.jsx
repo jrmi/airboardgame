@@ -2,10 +2,10 @@ import React, { memo } from "react";
 import { useUsers } from "react-sync-board";
 import styled from "styled-components";
 import { FiEye } from "react-icons/fi";
-import { useItemInteraction, useItemActions } from "react-sync-board";
+import { useItemInteraction } from "react-sync-board";
 
-import { getHeldItems } from "../../utils/item";
 import Canvas from "../Canvas";
+import useHeldItemPlacement from "../useHeldItemPlacement";
 import { media2Url } from "../../mediaLibrary";
 import { getImage } from "../../utils/image";
 
@@ -69,8 +69,6 @@ const Image = ({
   const { currentUser, localUsers: users } = useUsers();
   const { register: registerPlace } = useItemInteraction("place");
   const { register: registerDelete } = useItemInteraction("delete");
-  const { getItemList } = useItemActions();
-
   const wrapperRef = React.useRef(null);
 
   const imageContent = media2Url(content) || "/default.png";
@@ -121,26 +119,11 @@ const Image = ({
     }
   }, [imageContent, backContent]);
 
-  const onPlaceItem = React.useCallback(
-    (itemIds) => {
-      setState((item) => {
-        const newLinkedItems = getHeldItems({
-          element: wrapperRef.current,
-          currentItemId,
-          currentLinkedItemIds: item.linkedItems,
-          itemList: getItemList(),
-          itemIds,
-          shouldHoldItems: item.holdItems,
-        });
-        if (item.linkedItems !== newLinkedItems) {
-          return {
-            linkedItems: newLinkedItems,
-          };
-        }
-      }, true);
-    },
-    [currentItemId, getItemList, setState]
-  );
+  const onPlaceItem = useHeldItemPlacement({
+    holderRef: wrapperRef,
+    holderId: currentItemId,
+    setState,
+  });
 
   const onDeleteItem = React.useCallback(
     (itemIds) => {
