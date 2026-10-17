@@ -89,6 +89,15 @@ const Game = styled.li`
     & .button {
       border-radius: 4px;
     }
+
+    & .share-button {
+      background-color: var(--color-secondary);
+    }
+
+    & .edit-game-button {
+      background-color: var(--color-accent-violet);
+      color: var(--font-color);
+    }
   }
 
   & .baseline {
@@ -418,7 +427,7 @@ const GameListItem = ({
       <span className="extra-actions">
         <a
           href={getGameUrl(id)}
-          className="button edit icon-only success"
+          className="button edit icon-only share-button"
           onClick={onShare}
         >
           <FiShare2
@@ -441,7 +450,10 @@ const GameListItem = ({
                 color="white"
               />
             </button>
-            <Link to={`/game/${id}/edit`} className="button edit icon-only ">
+            <Link
+              to={`/game/${id}/edit`}
+              className="button edit icon-only edit-game-button"
+            >
               <FiEdit
                 alt={t("Edit")}
                 title={t("Edit")}
