@@ -4,12 +4,14 @@ import LanguageDetector from "i18next-browser-languagedetector";
 
 import en from "./en.json";
 import fr from "./fr.json";
+import { SUPPORTED_LANGUAGES } from "./languages";
 
 i18n
   .use(initReactI18next) // passes i18n down to react-i18next
   .use(LanguageDetector)
   .init({
     resources: { fr: { translation: fr }, en: { translation: en } },
+    supportedLngs: SUPPORTED_LANGUAGES.map(({ code }) => code),
     debug: false,
     fallbackLng: "en",
 
