@@ -37,20 +37,17 @@ const Game = styled.li`
   & .hover-card {
     position: absolute;
     z-index: 3;
-    top: -1px;
-    right: -1px;
-    left: -1px;
+    top: calc(-0.75em - 1px);
+    right: calc(-0.75em - 1px);
+    left: calc(-0.75em - 1px);
     box-sizing: border-box;
+    padding: 0.75em;
     overflow: hidden;
     border: 1px solid var(--color-border-subtle);
     border-radius: 6px;
     background: var(--color-darkBlueGrey);
     box-shadow: 0 8px 18px #00000080;
     opacity: 0;
-    transform: translateY(0.5em);
-    transition:
-      opacity 180ms ease,
-      transform 180ms ease;
     pointer-events: none;
   }
 
@@ -113,7 +110,6 @@ const Game = styled.li`
 
   &:hover .hover-card {
     opacity: 1;
-    transform: translateY(0);
   }
 
   &:hover .extra-actions,
