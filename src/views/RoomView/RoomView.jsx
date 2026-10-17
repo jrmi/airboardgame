@@ -119,7 +119,6 @@ const StyledTable = styled.li`
       rgba(10, 16, 26, 0.34)
     );
     opacity: ${({ $add }) => ($add ? "0" : "1")};
-    transition: transform 180ms ease;
   }
 
   & a {
@@ -220,10 +219,6 @@ const StyledTable = styled.li`
       0 24px 42px rgba(0, 0, 0, 0.38),
       0 0 0 4px rgba(108, 147, 220, 0.08),
       inset 0 1px 0 rgba(255, 255, 255, 0.12);
-  }
-
-  &:hover::before {
-    transform: scale(1.06);
   }
 
   &:hover a {
