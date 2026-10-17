@@ -27,6 +27,33 @@ const Game = styled.li`
   display: flex;
   flex-direction: column;
 
+  & .card-content,
+  & .hover-card {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  & .hover-card {
+    position: absolute;
+    z-index: 3;
+    top: -1px;
+    right: -1px;
+    left: -1px;
+    box-sizing: border-box;
+    overflow: hidden;
+    border: 1px solid var(--color-border-subtle);
+    border-radius: 6px;
+    background: var(--color-darkBlueGrey);
+    box-shadow: 0 8px 18px #00000080;
+    opacity: 0;
+    transform: translateY(0.5em);
+    transition:
+      opacity 180ms ease,
+      transform 180ms ease;
+    pointer-events: none;
+  }
+
   & .game-name {
     margin: 0.35em 0 0.1em;
     padding: 0 0.75em;
@@ -42,6 +69,7 @@ const Game = styled.li`
     top: 0.5em;
     left: 0.5em;
     padding: 0em;
+    z-index: 4;
   }
 
   & .button.play {
@@ -67,43 +95,23 @@ const Game = styled.li`
   }
 
   & .baseline {
-    position: absolute;
-    z-index: 3;
-    top: 100%;
-    right: 0;
-    left: 0;
     box-sizing: border-box;
     max-height: 7.5em;
     margin: 0;
     padding: 0.75em;
     overflow: hidden;
-    border: 1px solid var(--color-border-subtle);
-    border-top: 0;
-    border-radius: 0 0 6px 6px;
-    background: var(--color-darkBlueGrey);
     color: var(--font-color);
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 4;
     line-height: 1.25;
-    opacity: 0;
-    transform: translateY(0.5em);
-    transition:
-      opacity 180ms ease,
-      transform 180ms ease;
-    pointer-events: none;
   }
 
   &:hover {
     z-index: 5;
-    border-radius: 6px;
-    background: var(--color-darkBlueGrey);
-    box-shadow:
-      0 0 0 1px var(--color-border-subtle),
-      0 8px 18px #00000080;
   }
 
-  &:hover .baseline {
+  &:hover .hover-card {
     opacity: 1;
     transform: translateY(0);
   }
@@ -338,70 +346,23 @@ const GameListItem = ({
 
   const owned = userId && (userId === owner || !owner);
 
-  return (
-    <Game $other={!owned && studio} $fallback={usingFallbackImage}>
+  const renderCardContent = (includeBaseline = false) => (
+    <>
       <a href={`/playgame/${id}`} className="img-wrapper">
         <span onClick={onClick}>
           {showImage && (
-            <>
-              <img
-                className="img"
-                src={realImageUrl}
-                alt={translation.name}
-                onError={() => {
-                  setShowImage(false);
-                  setUsingFallbackImage(true);
-                }}
-              />
-            </>
+            <img
+              className="img"
+              src={realImageUrl}
+              alt={translation.name}
+              onError={() => {
+                setShowImage(false);
+                setUsingFallbackImage(true);
+              }}
+            />
           )}
         </span>
       </a>
-      <span className="extra-actions">
-        <a
-          href={getGameUrl(id)}
-          className="button edit icon-only success"
-          onClick={onShare}
-        >
-          <FiShare2
-            alt={t("Share game link")}
-            title={t("Share game link")}
-            size="16"
-            color="white"
-          />
-        </a>
-        {(owned || isAdmin) && (
-          <>
-            <button
-              onClick={deleteGameHandler}
-              className="button edit icon-only error"
-            >
-              <FiTrash2
-                alt={t("Delete")}
-                title={t("Delete")}
-                size="16"
-                color="white"
-              />
-            </button>
-            <Link to={`/game/${id}/edit`} className="button edit icon-only ">
-              <FiEdit
-                alt={t("Edit")}
-                title={t("Edit")}
-                size="16"
-                color="white"
-              />
-            </Link>
-          </>
-        )}
-      </span>
-      {!published && (
-        <FiEyeOff
-          className="unpublished"
-          alt={t("Unpublished")}
-          size="16"
-          color="white"
-        />
-      )}
       <h2 className="game-name">{translation.name}</h2>
 
       <div className="details">
@@ -448,8 +409,60 @@ const GameListItem = ({
         )}
       </div>
 
-      {translation.baseline && (
+      {includeBaseline && translation.baseline && (
         <p className="baseline">{translation.baseline}</p>
+      )}
+    </>
+  );
+
+  return (
+    <Game $other={!owned && studio} $fallback={usingFallbackImage}>
+      <div className="card-content">{renderCardContent()}</div>
+      <div className="hover-card">{renderCardContent(true)}</div>
+      <span className="extra-actions">
+        <a
+          href={getGameUrl(id)}
+          className="button edit icon-only success"
+          onClick={onShare}
+        >
+          <FiShare2
+            alt={t("Share game link")}
+            title={t("Share game link")}
+            size="16"
+            color="white"
+          />
+        </a>
+        {(owned || isAdmin) && (
+          <>
+            <button
+              onClick={deleteGameHandler}
+              className="button edit icon-only error"
+            >
+              <FiTrash2
+                alt={t("Delete")}
+                title={t("Delete")}
+                size="16"
+                color="white"
+              />
+            </button>
+            <Link to={`/game/${id}/edit`} className="button edit icon-only ">
+              <FiEdit
+                alt={t("Edit")}
+                title={t("Edit")}
+                size="16"
+                color="white"
+              />
+            </Link>
+          </>
+        )}
+      </span>
+      {!published && (
+        <FiEyeOff
+          className="unpublished"
+          alt={t("Unpublished")}
+          size="16"
+          color="white"
+        />
       )}
     </Game>
   );
