@@ -40,7 +40,10 @@ describe("Studio", () => {
         win.localStorage.setItem("isAuthenticated", "true");
       },
     });
-    cy.contains("Studio").click();
+    // The authenticated navigation is rendered after the initial auth check.
+    // Give it enough time to appear when the suite starts a fresh browser page
+    // on a busy CI runner.
+    cy.contains("Studio", { timeout: 10000 }).click();
   });
 
   it("Can see add game button", () => {
