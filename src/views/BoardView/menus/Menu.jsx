@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-const MenuRoot = styled.div.attrs({ className: "top-menu" })`
+export const MenuRoot = styled.div.attrs({ className: "top-menu" })`
   position: relative;
   height: 100%;
 
