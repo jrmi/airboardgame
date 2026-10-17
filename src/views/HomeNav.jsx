@@ -44,10 +44,8 @@ const Nav = styled.nav`
   }
 `;
 
-const HomeNav = () => {
+const HomeNav = ({ cookieConsent }) => {
   const { t } = useTranslation();
-
-  const cookieConsent = true;
 
   const { isAuthenticated } = useAuth();
 
