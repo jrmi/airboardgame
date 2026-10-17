@@ -14,9 +14,6 @@ import table from "../../media/images/table.png";
 import { useTranslation } from "react-i18next";
 import { useSocket } from "@jrmi/use-socket.io";
 import Waiter from "../../ui/Waiter";
-import NavBar from "../../ui/NavBar";
-import NavButton from "../../ui/NavButton";
-import { FiChevronLeft } from "react-icons/fi";
 
 const StyledPlayer = styled.li`
   position: absolute;
@@ -33,7 +30,7 @@ const StyledPlayer = styled.li`
 `;
 
 const StyledRoom = styled.div`
-  padding-top: 5em;
+  padding-top: 3em;
   background-color: var(--color-darkGrey);
   min-height: 100vh;
   & .tables {
@@ -137,17 +134,6 @@ const Room = ({ roomId, room, setRoom }) => {
 
   return (
     <StyledRoom>
-      <NavBar>
-        <div className="keep-folded">
-          <NavButton
-            Icon={FiChevronLeft}
-            to="/"
-            alt={t("Go back")}
-            title={t("Go back")}
-          />
-        </div>
-        <div className="spacer" />
-      </NavBar>
       <RoomNavBar />
 
       <h3>{t("Choose your board")}</h3>
