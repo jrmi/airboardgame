@@ -39,6 +39,18 @@ const Nav = styled.nav`
     border-bottom: 1px solid var(--color-primary);
   }
 
+  & .login,
+  & .icon.button,
+  & .language-switch {
+    align-items: center;
+    display: inline-flex;
+    line-height: 1;
+  }
+
+  & .login button {
+    line-height: 1;
+  }
+
   & .language-switch {
     background: none;
     border: 0;
@@ -50,14 +62,6 @@ const Nav = styled.nav`
     padding: 0.1em 0.25em;
   }
 
-  & .language-option {
-    align-items: center;
-    display: flex;
-    gap: 0.5em;
-    justify-content: space-between;
-    min-width: 10em;
-  }
-
   @media screen and (max-width: 640px) {
     & .button,
     & button {
@@ -67,6 +71,40 @@ const Nav = styled.nav`
     & .language-switch {
       display: block;
     }
+  }
+`;
+
+const LanguageList = styled.div`
+  display: grid;
+  gap: 0.5em;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+
+  @media screen and (max-width: 640px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+`;
+
+const LanguageOption = styled.button`
+  align-items: center;
+  background: transparent !important;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 4px;
+  color: var(--font-color) !important;
+  display: flex;
+  gap: 0.5em;
+  justify-content: flex-start;
+  margin: 0;
+  min-width: 0;
+  padding: 0.65em 0.75em;
+  text-align: left;
+  text-transform: none;
+
+  &:hover,
+  &[aria-pressed="true"] {
+    background: var(--color-midGrey) !important;
+    border-color: var(--color-primary);
+    filter: none;
+    opacity: 1;
   }
 `;
 
@@ -140,17 +178,18 @@ const HomeNav = () => {
         show={showLanguageModal}
         setShow={setShowLanguageModal}
       >
-        {SUPPORTED_LANGUAGES.map(({ code, label, flag }) => (
-          <button
-            key={code}
-            className="button language-option"
-            onClick={() => changeLanguage(code)}
-            aria-pressed={currentLanguage === code}
-          >
-            <span>{flag}</span>
-            <span>{t(label)}</span>
-          </button>
-        ))}
+        <LanguageList>
+          {SUPPORTED_LANGUAGES.map(({ code, label, flag }) => (
+            <LanguageOption
+              key={code}
+              onClick={() => changeLanguage(code)}
+              aria-pressed={currentLanguage === code}
+            >
+              <span>{flag}</span>
+              <span>{t(label)}</span>
+            </LanguageOption>
+          ))}
+        </LanguageList>
       </Modal>
     </>
   );
