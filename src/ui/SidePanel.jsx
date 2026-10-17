@@ -5,6 +5,8 @@ import { createPortal } from "react-dom";
 
 import { FiX } from "react-icons/fi";
 
+const openPanels = new Map();
+
 const StyledSidePanel = styled.div`
   position: fixed;
 
@@ -126,6 +128,33 @@ const SidePanel = ({
   const { t } = useTranslation();
 
   const [state, setState] = React.useState("closed");
+  const panelId = React.useRef({});
+  const onCloseRef = React.useRef(onClose);
+  onCloseRef.current = onClose;
+
+  React.useEffect(() => {
+    if (!open) {
+      return undefined;
+    }
+
+    const currentPanelId = panelId.current;
+    const previousPanel = openPanels.get(layer);
+    if (previousPanel && previousPanel.id !== currentPanelId) {
+      previousPanel.close();
+    }
+
+    const currentPanel = {
+      id: currentPanelId,
+      close: () => onCloseRef.current(),
+    };
+    openPanels.set(layer, currentPanel);
+
+    return () => {
+      if (openPanels.get(layer)?.id === currentPanelId) {
+        openPanels.delete(layer);
+      }
+    };
+  }, [layer, open]);
 
   const onAnimationEnd = React.useCallback(() => {
     setState((prev) => {
