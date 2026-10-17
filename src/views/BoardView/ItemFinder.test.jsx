@@ -5,6 +5,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 const board = vi.hoisted(() => ({
   items: [],
   zoomToExtent: vi.fn(),
+  setSelectedItems: vi.fn(),
 }));
 
 vi.mock("react-i18next", () => ({
@@ -15,6 +16,7 @@ vi.mock("react-i18next", () => ({
 vi.mock("react-sync-board", () => ({
   useItems: () => board.items,
   useBoardPosition: () => ({ zoomToExtent: board.zoomToExtent }),
+  useSetSelectedItems: () => board.setSelectedItems,
 }));
 
 vi.mock("../../ui/SidePanel", () => ({
@@ -45,6 +47,7 @@ describe("ItemFinder", () => {
     cleanup();
     board.items = [];
     board.zoomToExtent.mockClear();
+    board.setSelectedItems.mockClear();
   });
 
   it("uses label, then text, then the item template name", () => {
@@ -141,17 +144,12 @@ describe("ItemFinder", () => {
     expect(screen.getByRole("button", { name: "Counter 50" })).toBeTruthy();
   });
 
-  it("selects and centers the board on the rendered item", () => {
+  it("sets the board selection and centers on the rendered item", () => {
     board.items = [
       { id: "counter-1", type: "counter", label: "Counter", x: 10, y: 20 },
     ];
     const element = document.createElement("div");
     element.dataset.id = "counter-1";
-    element.className = "item counter-1";
-    const pointerDown = vi.fn();
-    const pointerUp = vi.fn();
-    element.addEventListener("pointerdown", pointerDown);
-    element.addEventListener("pointerup", pointerUp);
     Object.defineProperties(element, {
       offsetWidth: { value: 40 },
       offsetHeight: { value: 20 },
@@ -166,8 +164,7 @@ describe("ItemFinder", () => {
       y: 30,
       radius: 20,
     });
-    expect(pointerDown).toHaveBeenCalledOnce();
-    expect(pointerUp).toHaveBeenCalledOnce();
+    expect(board.setSelectedItems).toHaveBeenCalledWith(["counter-1"]);
     element.remove();
   });
 });
