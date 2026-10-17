@@ -2,7 +2,7 @@ import React from "react";
 import { Routes, Route } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
-import CookieNotice, { useCookieConsent } from "./CookieNotice";
+import CookieNotice from "./CookieNotice";
 
 import useLocalStorage from "../hooks/useLocalStorage";
 import useQueryParam from "../hooks/useQueryParam";
@@ -26,8 +26,6 @@ const StyledHome = styled.div`
 
 const Home = () => {
   const { t } = useTranslation();
-  const cookieConsent = useCookieConsent();
-
   const [isBeta, setIsBeta] = useLocalStorage("isBeta", false);
 
   if (isBeta) {
@@ -49,7 +47,7 @@ const Home = () => {
   return (
     <>
       <StyledHome>
-        <HomeNav cookieConsent={cookieConsent} />
+        <HomeNav />
         <Routes>
           <Route path="games" element={<GameListView />} />
           <Route path="studio" element={<GameStudio />} />
