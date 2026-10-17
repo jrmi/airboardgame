@@ -7,7 +7,16 @@ import { confirmAlert } from "react-confirm-alert";
 import { toast } from "react-toastify";
 import { useMutation, useQueryClient } from "react-query";
 import { media2Url } from "../mediaLibrary";
-import { FiEdit, FiEyeOff, FiShare2, FiTrash2 } from "react-icons/fi";
+import {
+  FiClock,
+  FiEdit,
+  FiEyeOff,
+  FiGlobe,
+  FiShare2,
+  FiTrash2,
+  FiUser,
+  FiUsers,
+} from "react-icons/fi";
 
 const Game = styled.li`
   position: relative;
@@ -20,6 +29,7 @@ const Game = styled.li`
 
   & .game-name {
     margin: 0.35em 0 0.1em;
+    padding: 0 0.75em;
     overflow: hidden;
     font-size: clamp(1.25rem, 2vw, 2rem);
     line-height: 1.1em;
@@ -59,13 +69,18 @@ const Game = styled.li`
   & .baseline {
     position: absolute;
     z-index: 3;
-    inset: 0;
+    top: 100%;
+    right: 0;
+    left: 0;
     box-sizing: border-box;
-    max-height: none;
+    max-height: 7.5em;
     margin: 0;
-    padding: 50% 0.75em 0.75em;
+    padding: 0.75em;
     overflow: hidden;
-    background: linear-gradient(transparent 20%, #111111f5 58%);
+    border: 1px solid var(--color-border-subtle);
+    border-top: 0;
+    border-radius: 0 0 6px 6px;
+    background: var(--color-darkBlueGrey);
     color: var(--font-color);
     display: -webkit-box;
     -webkit-box-orient: vertical;
@@ -77,6 +92,15 @@ const Game = styled.li`
       opacity 180ms ease,
       transform 180ms ease;
     pointer-events: none;
+  }
+
+  &:hover {
+    z-index: 5;
+    border-radius: 6px;
+    background: var(--color-darkBlueGrey);
+    box-shadow:
+      0 0 0 1px var(--color-border-subtle),
+      0 8px 18px #00000080;
   }
 
   &:hover .baseline {
@@ -127,27 +151,37 @@ const Game = styled.li`
   & .details {
     display: flex;
     flex-direction: row;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     align-items: center;
     gap: 0.4em;
     color: var(--font-color2);
     font-size: 14px;
-    padding-top: 1em;
+    padding: 1em 0.75em 0.75em;
     min-height: 2.5em;
+    overflow: hidden;
   }
 
   & .details > span {
     display: inline-flex;
     align-items: center;
-    padding: 0.25em 0.6em;
+    gap: 0.35em;
+    min-width: 0;
+    overflow: hidden;
+    padding: 0.2em 0.5em;
     border: 1px solid var(--color-border-subtle);
     border-radius: 999px;
     background-color: var(--color-darkBlueGrey);
     white-space: nowrap;
+    text-overflow: ellipsis;
+    line-height: 1.1;
   }
 
   & .details img {
     margin-right: 0.5em;
+  }
+
+  & .details svg {
+    flex: 0 0 auto;
   }
 
   @media screen and (max-width: 1024px) {
@@ -372,21 +406,46 @@ const GameListItem = ({
 
       <div className="details">
         {playerCountDisplay && (
-          <span>
+          <span
+            title={
+              playerCountDisplay.length === 2
+                ? t("{{min}} - {{max}} players", {
+                    min: playerCountDisplay[0],
+                    max: playerCountDisplay[1],
+                  })
+                : t("{{count}} player", {
+                    count: playerCountDisplay[0],
+                  })
+            }
+          >
+            {playerCountDisplay.length === 2 ? (
+              <FiUsers aria-hidden="true" />
+            ) : (
+              <FiUser aria-hidden="true" />
+            )}
             {playerCountDisplay.length === 2 &&
-              t("{{min}} - {{max}} players", {
-                min: playerCountDisplay[0],
-                max: playerCountDisplay[1],
-              })}
-            {playerCountDisplay.length === 1 &&
-              t("{{count}} player", {
-                count: playerCountDisplay[0],
-              })}
+              `${playerCountDisplay[0]}-${playerCountDisplay[1]}`}
+            {playerCountDisplay.length === 1 && playerCountDisplay[0]}
           </span>
         )}
-        {durationDisplay && <span>{durationDisplay} mins</span>}
-        {minAge && <span>age {minAge}+</span>}
-        {materialLanguageDisplay && <span>{materialLanguageDisplay}</span>}
+        {durationDisplay && (
+          <span title={`${durationDisplay} mins`}>
+            <FiClock aria-hidden="true" />
+            {durationDisplay}
+          </span>
+        )}
+        {minAge && (
+          <span title={`age ${minAge}+`}>
+            <FiUser aria-hidden="true" />
+            {minAge}+
+          </span>
+        )}
+        {materialLanguageDisplay && (
+          <span title={materialLanguageDisplay}>
+            <FiGlobe aria-hidden="true" />
+            {materialLanguageDisplay}
+          </span>
+        )}
       </div>
 
       {translation.baseline && (
