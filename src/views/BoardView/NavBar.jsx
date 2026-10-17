@@ -16,7 +16,7 @@ import GameMenu from "./menus/GameMenu";
 import BoardMenu from "./menus/BoardMenu";
 import ViewMenu from "./menus/ViewMenu";
 import UsersMenu from "./menus/UsersMenu";
-import { MenuTrigger } from "./menus/Menu";
+import { MenuRoot, MenuTrigger } from "./menus/Menu";
 
 import useSession from "../../hooks/useSession";
 import target from "../../media/images/target.svg";
@@ -167,7 +167,7 @@ const NavBar = ({
           />
         )}
         <div className="spacer" />
-        <div className="top-menu__help">
+        <MenuRoot className="top-menu__help">
           <MenuTrigger
             type="button"
             data-close-mobile-menu
@@ -176,7 +176,7 @@ const NavBar = ({
             <FiHelpCircle size={16} aria-hidden="true" />
             {t("Help & info")}
           </MenuTrigger>
-        </div>
+        </MenuRoot>
       </RawNavBar>
       <ChangeGameModal
         show={showChangeGameModal}
