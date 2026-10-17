@@ -206,7 +206,12 @@ const SlowSelectedItemsPane = ({ setShowEdit, showEdit, hideMenu }) => {
 
   const { availableActions } = useAvailableActions();
   const selectedItems = useSelectedItems();
-  const boardState = useBoardState();
+  const boardState = useBoardState((state) => ({
+    movingItems: state.movingItems,
+    zooming: state.zooming,
+    panning: state.panning,
+    selecting: state.selecting,
+  }));
 
   const [slowAvailableActions, setSlowAvailableActions] = React.useState([]);
   const [slowSelectedItems, setSlowSelectedItems] = React.useState([]);
