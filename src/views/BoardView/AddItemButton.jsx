@@ -37,17 +37,26 @@ const AddItemPanel = ({ itemLibraries, open, onClose }) => {
   );
 };
 
-const AddItemButton = ({ itemLibraries, showAddPanel, setShowAddPanel }) => {
+const AddItemButton = ({
+  itemLibraries,
+  showAddPanel,
+  setShowAddPanel,
+  renderTrigger,
+}) => {
   const { t } = useTranslation();
 
   return (
     <>
-      <NavButton
-        onClick={() => setShowAddPanel((prev) => !prev)}
-        alt={t("Add item")}
-        title={t("Add item")}
-        Icon={FiPlusCircle}
-      />
+      {renderTrigger ? (
+        renderTrigger(() => setShowAddPanel((prev) => !prev))
+      ) : (
+        <NavButton
+          onClick={() => setShowAddPanel((prev) => !prev)}
+          alt={t("Add item")}
+          title={t("Add item")}
+          Icon={FiPlusCircle}
+        />
+      )}
       <AddItemPanel
         itemLibraries={itemLibraries}
         open={showAddPanel}

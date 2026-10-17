@@ -4,6 +4,7 @@ import { Field } from "react-final-form";
 import { useBoardConfig } from "react-sync-board";
 
 import Label from "../../ui/formUtils/Label";
+import GridSettingsForm from "./GridSettingsForm";
 
 import { backgrounds } from "../../gameComponents";
 
@@ -45,6 +46,7 @@ const BoardConfigForm = () => {
           )}
         </div>
       </fieldset>
+      <GridSettingsForm grid={boardConfig.grid} />
     </>
   );
 };

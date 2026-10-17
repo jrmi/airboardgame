@@ -1,8 +1,9 @@
 import React, { memo } from "react";
 import styled, { css } from "styled-components";
+import { darken, getLuminance, lighten } from "color2k";
 
 const CounterPane = styled.div`
-  ${({ $color }) => css`
+  ${({ $color, $inputColor }) => css`
     background-color: ${$color};
     padding: 0.5em;
     text-align: center;
@@ -36,6 +37,12 @@ const CounterPane = styled.div`
       border: none !important;
       margin: 0 -1px;
       flex: 5;
+      background-color: ${$inputColor} !important;
+
+      &:focus {
+        outline: none !important;
+        box-shadow: none !important;
+      }
     }
 
     h3 {
@@ -56,6 +63,9 @@ const Counter = ({
   fontSize = 22,
   setState,
 }) => {
+  const inputColor =
+    getLuminance(color) < 0.5 ? lighten(color, 0.15) : darken(color, 0.15);
+
   const setValue = (e) => {
     let value = parseInt(e.target.value, 10);
     if (isNaN(value)) {
@@ -85,7 +95,7 @@ const Counter = ({
   };
 
   return (
-    <CounterPane $color={color}>
+    <CounterPane $color={color} $inputColor={inputColor}>
       {label && <h3>{label}</h3>}
       <div className="counter-content">
         <button

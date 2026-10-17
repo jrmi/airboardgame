@@ -17,8 +17,8 @@ const ActionPaneWrapper = styled.div`
   pointer-events: none;
   position: fixed;
   bottom: 0;
-  left: 40px;
-  right: 40px;
+  left: 0;
+  right: 0;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -30,17 +30,19 @@ const ActionPane = styled.div`
   user-select: none;
   touch-action: none;
   display: flex;
-  background-color: var(--color-blueGrey);
+  background-color: var(--color-board-panel);
   justify-content: center;
   align-items: center;
   border-top-left-radius: 4px;
   border-top-right-radius: 4px;
+  border: 1px solid var(--color-board-border);
+  border-bottom: 0;
   padding: 0.1em 0.5em;
   height: 50px;
   overflow-x: auto;
   overflow-y: hidden;
 
-  box-shadow: 2px 2px 10px 0.3px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 -6px 20px rgba(0, 0, 0, 0.36);
   
 
   & img {

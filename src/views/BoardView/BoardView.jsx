@@ -14,13 +14,14 @@ import { MediaLibraryProvider, ImageDropNPaste } from "../../mediaLibrary";
 import HintOnLockedItem from "./HintOnLockedItem";
 import useGlobalConf from "../../hooks/useGlobalConf";
 import useSession from "../../hooks/useSession";
+import useLocalStorage from "../../hooks/useLocalStorage";
 
 import flipAudio from "../../media/audio/flip.ogg?url";
 import rollAudio from "../../media/audio/roll.ogg?url";
 import shuffleAudio from "../../media/audio/shuffle.ogg?url";
 import { preloadAudio } from "../../utils";
-import UserBar from "./UserBar";
 import BoardGridOverlay from "../../gameComponents/GridOverlay";
+import TemporaryZoomShortcut from "./TemporaryZoomShortcut";
 
 const StyledBoard = styled.div`
   & .item.locked::after {
@@ -41,6 +42,10 @@ const StyledBoard = styled.div`
 `;
 
 const preventNativeDrag = (event) => event.preventDefault();
+const defaultInteraction = {
+  navigationMode: "auto",
+  primaryAction: "pan",
+};
 
 export const BoardView = ({
   mediaLibraries,
@@ -55,7 +60,10 @@ export const BoardView = ({
 
   const [boardConfig] = useBoardConfig();
 
-  const [moveFirst, setMoveFirst] = React.useState(true);
+  const [interaction, setInteraction] = useLocalStorage(
+    "boardInteraction",
+    defaultInteraction
+  );
   const [hideMenu, setHideMenu] = React.useState(false);
   const { editItem, setEditItem } = useGlobalConf();
 
@@ -73,23 +81,23 @@ export const BoardView = ({
       <ImageDropNPaste>
         <StyledBoard onDragStart={preventNativeDrag}>
           <Board
-            moveFirst={moveFirst}
+            interaction={interaction}
             style={style}
             itemTemplates={itemTemplates}
             showResizeHandle={editItem}
           >
+            <TemporaryZoomShortcut />
             <BoardGridOverlay />
           </Board>
         </StyledBoard>
         <NavBar
           editMode={editMode}
           itemLibraries={itemLibraries}
-          moveFirst={moveFirst}
-          setMoveFirst={setMoveFirst}
+          interaction={interaction}
+          setInteraction={setInteraction}
           hideMenu={hideMenu}
           setHideMenu={setHideMenu}
         />
-        {!editMode && <UserBar />}
         <WelcomeModal show={showWelcomeModal} setShow={setShowWelcomeModal} />
       </ImageDropNPaste>
       <SelectedItemsPane

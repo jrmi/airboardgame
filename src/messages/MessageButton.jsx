@@ -27,7 +27,7 @@ const NotifCount = styled.div`
   background-color: var(--color-success);
   text-align: center;
   line-height: 2em;
-  box-shadow: 3px 3px 6px #000000c0;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.5);
 `;
 
 export const MessagePanel = ({ onNewMessage, show, setShow }) => {
@@ -52,7 +52,7 @@ export const MessagePanel = ({ onNewMessage, show, setShow }) => {
   );
 };
 
-export const MessageButton = () => {
+export const MessageButton = ({ renderTrigger }) => {
   const { t } = useTranslation();
   const { add, reset, count } = useNotify();
   const [showPanel, setShowPanel] = React.useState(false);
@@ -83,15 +83,19 @@ export const MessageButton = () => {
 
   return (
     <>
-      <div style={{ position: "relative" }}>
-        <NavButton
-          onClick={() => setShowPanelRef(!showPanelRef.current)}
-          alt={t("Chat")}
-          title={t("Chat")}
-          Icon={FiMessageSquare}
-        />
-        {count > 0 && <NotifCount>{countStr}</NotifCount>}
-      </div>
+      {renderTrigger ? (
+        renderTrigger(() => setShowPanelRef(!showPanelRef.current))
+      ) : (
+        <div style={{ position: "relative" }}>
+          <NavButton
+            onClick={() => setShowPanelRef(!showPanelRef.current)}
+            alt={t("Chat")}
+            title={t("Chat")}
+            Icon={FiMessageSquare}
+          />
+          {count > 0 && <NotifCount>{countStr}</NotifCount>}
+        </div>
+      )}
       <MessagePanel
         onNewMessage={onNewMessage}
         show={showPanel}

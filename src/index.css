@@ -7,20 +7,31 @@ body {
 }
 
 :root {
-  --bg-color: #000000;
-  --bg-secondary-color: #121212;
-  --font-color: #f9fbfa;
-  --font-color2: #b3b3b3;
-  --color-darkGrey: #121212;
-  --color-darkBlueGrey: #151a23;
-  --color-blueGrey: #19202c;
-  --color-lightGrey: #90969d;
-  --color-grey: #454545;
-  --color-midGrey: #2c3749;
-  --color-primary: #db5034;
-  --color-secondary: #00a698ff;
-  --color-error: #d43939;
-  --color-success: #28bd14;
+  --bg-color: #151719;
+  --bg-secondary-color: #1d2025;
+  --font-color: #f2f1ef;
+  --font-color2: #b7b6b3;
+  --color-darkGrey: #191c21;
+  --color-darkBlueGrey: #23262c;
+  --color-blueGrey: #2a2d33;
+  --color-lightGrey: #c1c0bd;
+  --color-grey: #777a80;
+  --color-midGrey: #373b43;
+  --color-primary: #7aa2f7;
+  --color-primary-foreground: #111827;
+  --color-primary-focus: rgba(122, 162, 247, 0.28);
+  --color-secondary: #24c9bd;
+  --color-error: #ee5267;
+  --color-success: #62c978;
+  --color-accent-violet: #8f68d4;
+  --color-accent-yellow: #eab849;
+  --color-border: #4a4f58;
+  --color-border-subtle: #373b43;
+  --color-backdrop: rgba(12, 13, 15, 0.74);
+  --color-board-panel: #202b3b;
+  --color-board-panel-raised: #2a384d;
+  --color-board-panel-inset: #172131;
+  --color-board-border: #3a4c65;
   --grid-maxWidth: 120rem;
   --grid-gutter: 2rem;
   --font-size: 1.6rem;
@@ -39,8 +50,8 @@ body {
 [type="submit"],
 button {
   padding: 1rem 2.5rem;
-  color: var(--font-color);
-  background: var(--color-midGrey);
+  color: var(--color-primary-foreground);
+  background: var(--color-primary);
   border-radius: 0;
 }
 
@@ -93,17 +104,70 @@ h5 {
 }
 
 input::placeholder {
-  color: var(--color-lightGrey);
   color: var(--color-grey);
+  opacity: 1;
 }
 
 input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="color"]):not([type="button"]):not([type="reset"]),
 select,
 textarea,
 textarea[type="text"] {
-  border-radius: 2px;
-  background-color: var(--color-lightGrey);
-  color: var(--bg-secondary-color);
+  box-sizing: border-box;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 4px;
+  background-color: var(--color-darkGrey);
+  color: var(--font-color);
+  padding: 0.55em 0.7em;
+  transition:
+    border-color 150ms ease,
+    box-shadow 150ms ease,
+    background-color 150ms ease;
+}
+
+select {
+  cursor: pointer;
+}
+
+textarea {
+  min-height: 5em;
+  resize: vertical;
+}
+
+input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="color"]):not([type="button"]):not([type="reset"]):focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-primary-focus);
+  background-color: var(--bg-secondary-color);
+}
+
+input:disabled,
+select:disabled,
+textarea:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+input[type="checkbox"],
+input[type="radio"] {
+  accent-color: var(--color-primary);
+}
+
+fieldset {
+  margin-inline: 0;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 6px;
+  background-color: rgba(0, 0, 0, 0.16);
+  padding: 1em 1.2em;
+}
+
+legend {
+  padding: 0 0.45em;
+  color: var(--font-color2);
+  font-size: 0.9em;
+  font-weight: 700;
+  letter-spacing: 0.03em;
 }
 
 /* Animation definition */

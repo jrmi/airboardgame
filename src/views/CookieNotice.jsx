@@ -1,7 +1,8 @@
 import React from "react";
 import styled from "styled-components";
-import useLocalStorage from "../hooks/useLocalStorage";
 import { useTranslation } from "react-i18next";
+import { getCookieConsent, setCookieConsent } from "../utils/cookieConsent";
+import { initSentry } from "../sentry";
 
 const StyledNotice = styled.div`
   position: fixed;
@@ -25,23 +26,24 @@ const StyledNotice = styled.div`
 const CookieNotice = () => {
   const { t } = useTranslation();
 
-  const [showNotice, setShowNotice] = React.useState(true);
+  const [cookieConsent, setConsent] = React.useState(null);
 
-  const [cookieConsent, setCookieConsent] = useLocalStorage(
-    "cookieConsent",
-    false
-  );
+  React.useEffect(() => {
+    setConsent(getCookieConsent());
+  }, []);
 
   const onAccept = React.useCallback(() => {
     setCookieConsent(true);
-  }, [setCookieConsent]);
+    setConsent(true);
+    initSentry();
+  }, []);
 
   const onRefuse = React.useCallback(() => {
     setCookieConsent(false);
-    setShowNotice(false);
-  }, [setCookieConsent]);
+    setConsent(false);
+  }, []);
 
-  if (!showNotice || cookieConsent === true) {
+  if (cookieConsent !== null) {
     return null;
   }
 
@@ -61,8 +63,13 @@ const CookieNotice = () => {
 };
 
 export const useCookieConsent = () => {
-  const [cookieConsent] = useLocalStorage("cookieConsent", false);
-  return cookieConsent;
+  const [cookieConsent, setConsent] = React.useState(null);
+
+  React.useEffect(() => {
+    setConsent(getCookieConsent());
+  }, []);
+
+  return cookieConsent === true;
 };
 
 export default CookieNotice;
