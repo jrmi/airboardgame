@@ -20,6 +20,7 @@ const Template = createItemTemplate({
     "remove",
   ],
   name: i18n.t("Round"),
+  translationKey: "Round",
   template: {
     radius: 50,
     color: "#ccc",

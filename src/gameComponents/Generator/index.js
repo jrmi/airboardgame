@@ -12,6 +12,7 @@ const Template = createItemTemplate({
   availableActions: ["clone", "lock", "remove"],
   excludeFields: { rotation: true },
   name: i18n.t("Generator"),
+  translationKey: "Generator",
   template: { layer: 0, color: "#ccc" },
   resizeDirections: {},
 });

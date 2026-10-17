@@ -56,6 +56,7 @@ const Template = createItemTemplate({
     }
   },
   name: i18n.t("Image"),
+  translationKey: "Image",
   template: {},
   async mapMedia(item, fn) {
     const result = await Promise.all([
