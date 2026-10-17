@@ -38,6 +38,11 @@ const CounterPane = styled.div`
       margin: 0 -1px;
       flex: 5;
       background-color: ${$inputColor} !important;
+
+      &:focus {
+        outline: none !important;
+        box-shadow: none !important;
+      }
     }
 
     h3 {
