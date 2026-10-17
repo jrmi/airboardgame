@@ -6,29 +6,55 @@ jobs:
   cypress-run:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 24
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            backend/package-lock.json
 
-      - name: Checkout
-        uses: actions/checkout@v4
+      - name: Install frontend dependencies
+        run: npm ci
+
+      - name: Install backend dependencies
+        run: npm ci
+        working-directory: backend
+
+      - name: Start local backend
+        run: npm start > "$RUNNER_TEMP/airboardgame-backend.log" 2>&1 &
+        working-directory: backend
+        env:
+          SERVER_HOST: 127.0.0.1
+          SERVER_PORT: 4050
+          CLIENT_URL: http://localhost:5000
+          STORE_BACKEND: nedb
+          NEDB_BACKEND_DIRNAME: ${{ runner.temp }}/airboardgame-db
+          FILE_STORAGE: disk
+          DISK_DESTINATION: ${{ runner.temp }}/airboardgame-media
+          ABG_SECRET: cypress-test-secret
+
+      - name: Wait for local backend
+        run: npx wait-on http://127.0.0.1:4050/health
 
       - name: Cypress run
         uses: cypress-io/github-action@v6
         with:
           build: npm run build
           start: npm run serve:ci
-          wait-on: http://localhost:5000
+          wait-on: http://localhost:5000,http://127.0.0.1:4050/health
           config: baseUrl=http://localhost:5000
           browser: chrome
         env:
           VITE_NO_WELCOME: 1
           VITE_CI: 1
-          VITE_SOCKET_URL: https://abg.filai.re
+          VITE_SOCKET_URL: http://127.0.0.1:4050
           VITE_SOCKET_PATH: /socket.io
-          VITE_API_ENDPOINT: https://abg.filai.re/
-          ACTIONS_ALLOW_UNSECURE_COMMANDS: true
+          VITE_API_ENDPOINT: http://127.0.0.1:4050
       - uses: actions/upload-artifact@v4
         if: failure()
         with:
