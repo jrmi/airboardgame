@@ -121,7 +121,10 @@ export const TopMenu = ({
       <MenuTrigger
         type="button"
         aria-expanded={open}
-        onClick={() => setActiveMenu(open ? null : label)}
+        onClick={() => {
+          setDismissed(false);
+          setActiveMenu(open ? null : label);
+        }}
       >
         {Icon && <Icon size={16} aria-hidden="true" />}
         {label}

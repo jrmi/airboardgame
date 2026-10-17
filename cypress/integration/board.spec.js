@@ -1,4 +1,18 @@
 describe("Board interactions", () => {
+  const openMenu = (label) =>
+    cy
+      .get(".top-menu__trigger")
+      .contains(label)
+      .trigger("mouseenter")
+      .click({ force: true });
+
+  const menuItem = (label) =>
+    cy
+      .get(".top-menu__trigger[aria-expanded='true']")
+      .parent()
+      .find("[data-menu-item]")
+      .contains(label);
+
   beforeEach(() => {
     cy.viewport(1000, 600);
     cy.intercept(
@@ -26,10 +40,12 @@ describe("Board interactions", () => {
   });
 
   it("Load game page", () => {
-    cy.get("[alt=Save]");
-    cy.get("[alt=Back]");
-    cy.get("[alt='Help & info']");
-    cy.get("[title='Add an item']");
+    openMenu("Game");
+    menuItem("Save");
+    cy.get("[title='Quit']");
+    cy.get(".top-menu__help .top-menu__trigger").contains("Help & info");
+    openMenu("Board");
+    menuItem("Add an item");
   });
 
   it("Pan board with left click when move first", () => {
@@ -60,9 +76,13 @@ describe("Board interactions", () => {
   });
 
   it("Pan board with left click and meta when in select mode", () => {
-    cy.get("[title^='Switch to select mode']").click({
-      scrollBehavior: false,
-    });
+    openMenu("Board");
+    menuItem("Player interaction")
+      .click({ force: true });
+    cy.contains("label", "Primary action")
+      .find("select")
+      .select("select");
+    cy.get(".modal__close").click({ force: true });
     cy.get(".board")
       .trigger("pointerdown", {
         buttons: 1,
@@ -92,9 +112,13 @@ describe("Board interactions", () => {
   });
 
   it("Pan board with middle click when select is main action", () => {
-    cy.get("[title^='Switch to select mode']").click({
-      scrollBehavior: false,
-    });
+    openMenu("Board");
+    menuItem("Player interaction")
+      .click({ force: true });
+    cy.contains("label", "Primary action")
+      .find("select")
+      .select("select");
+    cy.get(".modal__close").click({ force: true });
 
     cy.get(".board")
       .trigger("pointerdown", {
