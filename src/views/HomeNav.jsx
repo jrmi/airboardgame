@@ -6,15 +6,11 @@ import styled from "styled-components";
 import Account from "./Account";
 import useAuth from "../hooks/useAuth";
 import Modal from "../ui/Modal";
+import { SUPPORTED_LANGUAGES } from "../i18n/languages";
 
 import Brand from "./Brand";
 import { FaDiscord } from "react-icons/fa";
 import { FiGithub } from "react-icons/fi";
-
-const SUPPORTED_LANGUAGES = [
-  { code: "en", label: "English", flag: "🇬🇧" },
-  { code: "fr", label: "French", flag: "🇫🇷" },
-];
 
 const Nav = styled.nav`
   background-color: var(--bg-color);
