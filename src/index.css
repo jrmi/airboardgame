@@ -19,6 +19,7 @@ body {
   --color-midGrey: #373b43;
   --color-primary: #7aa2f7;
   --color-primary-foreground: #111827;
+  --color-primary-focus: rgba(122, 162, 247, 0.28);
   --color-secondary: #24c9bd;
   --color-error: #ee5267;
   --color-success: #62c978;
@@ -139,7 +140,7 @@ select:focus,
 textarea:focus {
   outline: none;
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(255, 209, 102, 0.28);
+  box-shadow: 0 0 0 3px var(--color-primary-focus);
   background-color: var(--bg-secondary-color);
 }
 
