@@ -14,16 +14,16 @@ const Game = styled.li`
   padding: 0em;
   margin: 0px;
   min-width: 0; /* Fix for ellipsis */
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 
   & .game-name {
-    max-width: 80%;
+    margin: 0.35em 0 0.1em;
+    overflow: hidden;
+    font-size: clamp(1.25rem, 2vw, 2rem);
     line-height: 1.1em;
-    overflow: hidden;
-    margin-bottom: 3px;
-    margin: 0.1em 0 0.1em 0;
-    font-size: 2.2vw;
     white-space: nowrap;
-    overflow: hidden;
     text-overflow: ellipsis;
   }
 
@@ -50,15 +50,38 @@ const Game = styled.li`
     top: 0.5em;
     right: 0.5em;
     display: none;
-    z-index: 2;
+    z-index: 4;
     & .button {
       border-radius: 4px;
     }
   }
 
   & .baseline {
-    max-height: 3em;
+    position: absolute;
+    z-index: 3;
+    inset: 0;
+    box-sizing: border-box;
+    max-height: none;
+    margin: 0;
+    padding: 50% 0.75em 0.75em;
     overflow: hidden;
+    background: linear-gradient(transparent 20%, #111111f5 58%);
+    color: var(--font-color);
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 4;
+    line-height: 1.25;
+    opacity: 0;
+    transform: translateY(0.5em);
+    transition:
+      opacity 180ms ease,
+      transform 180ms ease;
+    pointer-events: none;
+  }
+
+  &:hover .baseline {
+    opacity: 1;
+    transform: translateY(0);
   }
 
   &:hover .extra-actions,
@@ -75,6 +98,12 @@ const Game = styled.li`
     padding-top: 64.5%;
     & > span {
       background-color: var(--color-blueGrey);
+      ${({ $fallback }) =>
+        $fallback
+          ? `background-image: url("${DEFAULT_IMAGE_URL}");
+             background-position: center;
+             background-size: cover;`
+          : ""};
       ${({ $other }) => (!$other ? "" : "border: 1px solid red")};
 
       position: absolute;
@@ -85,29 +114,6 @@ const Game = styled.li`
       justify-content: center;
       align-items: center;
       border-radius: 5px;
-      & > .back {
-        filter: blur(5px);
-        background-size: cover;
-        position: absolute;
-        inset: 0;
-      }
-      & > h2 {
-        position: absolute;
-        width: 100%;
-        top: calc(50%-0.6em);
-        z-index: 200;
-        left: 0;
-        text-align: center;
-        display: inline;
-        font-size: 2em;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        margin: 0;
-        padding: 0.2em 0.5em;
-        line-height: 1.2em;
-        background-color: #111111a0;
-      }
     }
   }
 
@@ -121,21 +127,23 @@ const Game = styled.li`
   & .details {
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.4em;
     color: var(--font-color2);
     font-size: 14px;
     padding-top: 1em;
+    min-height: 2.5em;
   }
 
   & .details > span {
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    padding-right: 5px;
-    margin-right: 5px;
-    border-right: 1px solid var(--font-color2);
-  }
-
-  & .details > span:last-child {
-    border: none;
+    padding: 0.25em 0.6em;
+    border: 1px solid var(--color-border-subtle);
+    border-radius: 999px;
+    background-color: var(--color-darkBlueGrey);
+    white-space: nowrap;
   }
 
   & .details img {
@@ -149,22 +157,17 @@ const Game = styled.li`
     & .details {
       font-size: 12px;
     }
-    & .game-name {
-      font-size: 28px;
-    }
   }
 
   @media screen and (max-width: 640px) {
     & {
       flex-basis: 100%;
     }
-    & .game-name {
-      font-size: 24px;
-    }
   }
 `;
 
 const getGameUrl = (id) => `${window.location.origin}/playgame/${id}`;
+const DEFAULT_IMAGE_URL = "/game_assets/default.png";
 
 const GameListItem = ({
   game: {
@@ -177,7 +180,6 @@ const GameListItem = ({
       playerCount,
       published,
       imageUrl,
-      keepTitle,
     } = {},
   },
   game,
@@ -200,6 +202,8 @@ const GameListItem = ({
   const realImageUrl = media2Url(imageUrl);
 
   const [showImage, setShowImage] = React.useState(Boolean(realImageUrl));
+  const [usingFallbackImage, setUsingFallbackImage] =
+    React.useState(!realImageUrl);
 
   const translation = React.useMemo(
     () => getBestTranslationFromConfig(game.board, i18n.languages),
@@ -301,24 +305,22 @@ const GameListItem = ({
   const owned = userId && (userId === owner || !owner);
 
   return (
-    <Game $other={!owned && studio}>
+    <Game $other={!owned && studio} $fallback={usingFallbackImage}>
       <a href={`/playgame/${id}`} className="img-wrapper">
         <span onClick={onClick}>
           {showImage && (
             <>
-              <span
-                className="back"
-                style={{ backgroundImage: `url(${realImageUrl})` }}
-              />
               <img
                 className="img"
                 src={realImageUrl}
                 alt={translation.name}
-                onError={() => setShowImage(false)}
+                onError={() => {
+                  setShowImage(false);
+                  setUsingFallbackImage(true);
+                }}
               />
             </>
           )}
-          {(!showImage || keepTitle) && <h2>{translation.name}</h2>}
         </span>
       </a>
       <span className="extra-actions">
@@ -366,6 +368,8 @@ const GameListItem = ({
           color="white"
         />
       )}
+      <h2 className="game-name">{translation.name}</h2>
+
       <div className="details">
         {playerCountDisplay && (
           <span>
@@ -385,9 +389,9 @@ const GameListItem = ({
         {materialLanguageDisplay && <span>{materialLanguageDisplay}</span>}
       </div>
 
-      <h2 className="game-name">{translation.name}</h2>
-
-      <p className="baseline">{translation.baseline}</p>
+      {translation.baseline && (
+        <p className="baseline">{translation.baseline}</p>
+      )}
     </Game>
   );
 };
