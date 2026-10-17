@@ -1,11 +1,12 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { FiPlusCircle, FiSettings } from "react-icons/fi";
+import { FiMousePointer, FiPlusCircle, FiSettings } from "react-icons/fi";
 
 import BoardForm from "../BoardForm";
 import SessionForm from "../SessionForm";
 import AddItemButton from "../AddItemButton";
 import EditInfoButton from "../EditInfoButton";
+import InteractionSettingsButton from "../InteractionSettingsButton";
 import { MenuItem, TopMenu } from "./Menu";
 
 const BoardMenu = ({
@@ -39,11 +40,19 @@ const BoardMenu = ({
           </MenuItem>
         )}
       />
+      <InteractionSettingsButton
+        interaction={interaction}
+        setInteraction={setInteraction}
+        renderTrigger={(onClick) => (
+          <MenuItem onClick={onClick}>
+            <FiMousePointer size={16} aria-hidden="true" />
+            {t("Player interaction")}
+          </MenuItem>
+        )}
+      />
       {editMode && (
         <EditInfoButton
           BoardFormComponent={BoardForm}
-          interaction={interaction}
-          setInteraction={setInteraction}
           renderTrigger={(onClick) => (
             <MenuItem onClick={onClick}>
               <FiSettings size={16} aria-hidden="true" />
@@ -55,25 +64,10 @@ const BoardMenu = ({
       {!editMode && isMaster && (
         <EditInfoButton
           BoardFormComponent={SessionForm}
-          interaction={interaction}
-          setInteraction={setInteraction}
           renderTrigger={(onClick) => (
             <MenuItem onClick={onClick}>
               <FiSettings size={16} aria-hidden="true" />
               {t("Edit game info")}
-            </MenuItem>
-          )}
-        />
-      )}
-      {!editMode && !isMaster && (
-        <EditInfoButton
-          interaction={interaction}
-          setInteraction={setInteraction}
-          title="Navigation settings"
-          renderTrigger={(onClick) => (
-            <MenuItem onClick={onClick}>
-              <FiSettings size={16} aria-hidden="true" />
-              {t("Navigation settings")}
             </MenuItem>
           )}
         />
