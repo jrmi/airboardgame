@@ -1,11 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { useTranslation } from "react-i18next";
-import {
-  useBoardPosition,
-  useItems,
-  useSetSelectedItems,
-} from "react-sync-board";
+import { useBoardPosition, useItems } from "react-sync-board";
 
 import itemTemplates from "../../gameComponents/itemTemplates";
 import { search } from "../../utils";
@@ -157,6 +153,33 @@ export const getPreviewImageUrl = (item) => {
   return null;
 };
 
+export const selectBoardItem = (element) => {
+  if (!element) return;
+
+  const { left, top, width, height } = element.getBoundingClientRect();
+  const pointerProperties = {
+    pointerId: 1,
+    pointerType: "mouse",
+    isPrimary: true,
+    clientX: left + width / 2,
+    clientY: top + height / 2,
+    button: 0,
+  };
+
+  [
+    ["pointerdown", 1],
+    ["pointerup", 0],
+  ].forEach(([type, buttons]) => {
+    const event = new Event(type, { bubbles: true, cancelable: true });
+    Object.entries({ ...pointerProperties, buttons }).forEach(
+      ([property, value]) => {
+        Object.defineProperty(event, property, { value });
+      }
+    );
+    element.dispatchEvent(event);
+  });
+};
+
 const ItemResult = ({ item, onSelect, onKeyDown, t }) => {
   const Component = itemTemplates[item.type]?.component;
   const imageUrl = getPreviewImageUrl(item);
@@ -215,7 +238,6 @@ const ItemFinder = ({ open, onClose }) => {
   const { t } = useTranslation();
   const items = useItems();
   const { zoomToExtent } = useBoardPosition();
-  const setSelectedItems = useSetSelectedItems();
   const [filter, setFilter] = React.useState("");
   const [searchFilter, setSearchFilter] = React.useState("");
   const [isSearchPending, startSearchTransition] = React.useTransition();
@@ -266,19 +288,19 @@ const ItemFinder = ({ open, onClose }) => {
 
   const centerOnItem = React.useCallback(
     (item) => {
-      setSelectedItems([item.id]);
       const element = Array.from(document.querySelectorAll("[data-id]")).find(
         (candidate) => candidate.dataset.id === item.id
       );
       if (!element) return;
 
+      selectBoardItem(element);
       zoomToExtent({
         x: item.x + element.offsetWidth / 2,
         y: item.y + element.offsetHeight / 2,
         radius: Math.max(element.offsetWidth, element.offsetHeight) / 2,
       });
     },
-    [setSelectedItems, zoomToExtent]
+    [zoomToExtent]
   );
 
   const handleResultKeyDown = React.useCallback(
