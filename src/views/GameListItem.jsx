@@ -302,7 +302,7 @@ const GameListItem = ({
 
   return (
     <Game $other={!owned && studio}>
-      <a href={`/playgame/${id}`} className="img-wrapper button">
+      <a href={`/playgame/${id}`} className="img-wrapper">
         <span onClick={onClick}>
           {showImage && (
             <>
