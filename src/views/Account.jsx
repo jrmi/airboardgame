@@ -8,7 +8,7 @@ import useAuth from "../hooks/useAuth";
 
 import Waiter from "../ui/Waiter";
 
-const Account = ({ disabled, ...props }) => {
+const Account = (props) => {
   const { t } = useTranslation();
   const { isAuthenticated, logout } = useAuth();
   const [email, setEmail] = React.useState("");
@@ -33,30 +33,12 @@ const Account = ({ disabled, ...props }) => {
     }
   };
 
-  const showAlert = () => {
-    alert(t("Cookie are disabled or not yet accepted, can't connect"));
-  };
-
   React.useEffect(() => {
     if (!showLogin) {
       setEmail("");
       setEmailSent(false);
     }
   }, [showLogin]);
-
-  if (disabled) {
-    return (
-      <div {...props}>
-        <button
-          onClick={showAlert}
-          title={t("Cookie are disabled or not yet accepted, can't connect")}
-          style={{ opacity: 0.4, cursor: "not-allowed" }}
-        >
-          {t("Login")}
-        </button>
-      </div>
-    );
-  }
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
