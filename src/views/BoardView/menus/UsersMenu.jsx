@@ -217,19 +217,17 @@ const UsersMenu = ({
     const candidates = users.filter(({ uid }) => uid !== state.moderatorId);
     confirmAlert({
       customUI: ({ onClose }) => (
-        <div className="react-confirm-alert-body">
-          <h1>{t("Transfer moderation...")}</h1>
-          <p>{t("Select a player")}</p>
-          <div
-            className="react-confirm-alert-button-group"
-            style={{
-              flexDirection: "column",
-              maxHeight: "50vh",
-              overflowY: "auto",
-            }}
-          >
+        <div className="react-confirm-alert-body transfer-moderation-dialog">
+          <h1 className="transfer-moderation-title">
+            {t("Transfer moderation...")}
+          </h1>
+          <p className="transfer-moderation-description">
+            {t("Select a player")}
+          </p>
+          <div className="transfer-moderation-options">
             {candidates.map((user) => (
               <button
+                className="button"
                 key={user.uid}
                 type="button"
                 onClick={() => {
@@ -240,7 +238,7 @@ const UsersMenu = ({
                 {user.name || t("Player")}
               </button>
             ))}
-            <button type="button" onClick={onClose}>
+            <button className="button" type="button" onClick={onClose}>
               {t("Cancel")}
             </button>
           </div>
