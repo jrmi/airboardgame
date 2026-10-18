@@ -158,7 +158,7 @@ describe("Studio", () => {
     );
 
     clickSave();
-    cy.get("button").contains("Save").click();
+    cy.get(".modal button").contains("Save").click();
   });
 
   it("Can create basic game", () => {
@@ -205,7 +205,7 @@ describe("Studio", () => {
     );
 
     clickSave();
-    cy.get("button").contains("Save").click();
+    cy.get(".modal button").contains("Save").click();
   });
 
   it("Can edit game properties", () => {
@@ -252,7 +252,7 @@ describe("Studio", () => {
     );
 
     clickSave();
-    cy.get("button").contains("Save").click();
+    cy.get(".modal button").contains("Save").click();
   });
 
   describe("Item edition", () => {
@@ -329,7 +329,7 @@ describe("Studio", () => {
       );
 
       clickSave();
-      cy.get("button").contains("Save").click();
+      cy.get(".modal button").contains("Save").click();
     });
 
     it("Can lock an item", () => {
