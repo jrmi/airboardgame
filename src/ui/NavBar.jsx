@@ -117,14 +117,17 @@ const StyledNavBar = styled.div`
     &.nav-bar--top:not(.nav-bar--folded) {
       align-items: stretch;
       flex-direction: column;
-      width: 100%;
+      left: 0;
+      right: 0;
+      width: 100vw;
+      box-sizing: border-box;
       height: 100vh;
       height: 100dvh;
       min-height: 40px;
       max-height: 100vh;
       max-height: 100dvh;
       overflow: hidden;
-      padding: 0 5px;
+      padding: 0;
       background: transparent;
       border-bottom: 0;
       box-shadow: none;
@@ -154,10 +157,19 @@ const StyledNavBar = styled.div`
 
       & .nav-bar__content {
         display: block;
-        flex: 1 1 auto;
-        min-height: 0;
+        position: absolute;
+        top: 40px;
+        right: auto;
+        bottom: 0;
+        left: 0;
+        width: min(50vw, 100%);
         overflow-y: auto;
         overscroll-behavior: contain;
+        background-color: rgba(32, 43, 59, 0.96);
+      }
+
+      & .nav-bar__menu-button {
+        padding-left: 5px;
       }
 
       & > .keep-folded {
@@ -166,7 +178,7 @@ const StyledNavBar = styled.div`
 
       & .top-menu,
       & .top-menu__help {
-        width: min(20rem, 100%);
+        width: 100%;
         height: auto;
         background-color: rgba(32, 43, 59, 0.96);
       }
@@ -179,6 +191,7 @@ const StyledNavBar = styled.div`
         justify-content: flex-start;
         width: 100%;
         height: 40px;
+        background: rgba(32, 43, 59, 0.96);
         cursor: default;
         pointer-events: none;
       }
@@ -190,7 +203,7 @@ const StyledNavBar = styled.div`
 
       & .top-menu__trigger:hover,
       & .top-menu__trigger[aria-expanded="true"] {
-        background: transparent;
+        background: rgba(32, 43, 59, 0.96);
       }
 
       & .top-menu__help .top-menu__trigger:hover {
