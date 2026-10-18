@@ -30,6 +30,11 @@ const StyledUrl = styled.div`
   }
 `;
 
+const PlayButton = styled.button`
+  background: var(--color-primary) !important;
+  color: var(--color-primary-foreground) !important;
+`;
+
 const WelcomeModal = ({ show, setShow, welcome = true }) => {
   const { t } = useTranslation();
   const currentUrl = window.location.href;
@@ -72,7 +77,7 @@ const WelcomeModal = ({ show, setShow, welcome = true }) => {
         </p>
 
         {welcome && (
-          <button
+          <PlayButton
             onClick={() => {
               setShow(false);
             }}
@@ -80,7 +85,7 @@ const WelcomeModal = ({ show, setShow, welcome = true }) => {
             style={{ margin: "1em auto" }}
           >
             {t("I want to play...")}
-          </button>
+          </PlayButton>
         )}
       </section>
       {welcome && <GameInformation />}
