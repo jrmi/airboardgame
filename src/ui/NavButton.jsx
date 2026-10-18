@@ -6,13 +6,23 @@ import FixedButton from "./FixedButton";
 
 const StyledNavButton = styled(FixedButton)`
   display: block;
-  background-color: transparent;
+  background-color: ${({ active }) =>
+    active ? "var(--color-primary)" : "transparent"};
   padding: 4px;
   margin: 0;
   border: none;
+  border-radius: 4px;
   line-height: 0;
-  color: ${({ active }) => (active ? "var(--color-primary)" : "white")};
+  color: ${({ active }) =>
+    active ? "var(--color-primary-foreground)" : "var(--color-primary)"};
   cursor: ${({ disabled }) => (disabled ? "not-allowed" : "pointer")};
+  transition:
+    background-color 150ms ease,
+    color 150ms ease;
+
+  &:hover:not(:disabled) {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
 `;
 
 const NavButton = ({

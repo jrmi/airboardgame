@@ -8,6 +8,10 @@ const StyledComposer = styled.div`
   & form {
     display: flex;
   }
+  & input:focus {
+    border-color: var(--color-border-subtle);
+    box-shadow: none;
+  }
   overflow: none;
 `;
 

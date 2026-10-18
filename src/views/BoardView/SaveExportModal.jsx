@@ -56,9 +56,13 @@ const SaveExportGameModal = ({ show, setShow }) => {
             "If you have checked the publish checkbox your game will be public."
           )}
         </p>
-        <button className="success button icon" onClick={handleSave}>
+        <button className="button icon" onClick={handleSave}>
           {t("Save game")}
-          <FiSave size="20" color="#f9fbfa" alt="Download" />
+          <FiSave
+            size="20"
+            color="var(--color-primary-foreground)"
+            alt="Download"
+          />
         </button>
       </section>
       <header>

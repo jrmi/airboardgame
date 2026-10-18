@@ -7,13 +7,13 @@ import { useBoardConfig } from "react-sync-board";
 import Hint from "../../ui/formUtils/Hint";
 import Label from "../../ui/formUtils/Label";
 import SliderRange from "../../ui/SliderRange";
-import Slider from "../../ui/Slider";
-import ColorPicker from "../../ui/formUtils/ColorPicker";
+import GridSettingsForm from "./GridSettingsForm";
 
 import { ImageField } from "../../mediaLibrary";
 
 import { backgrounds } from "../../gameComponents";
 import { FiTrash2 } from "react-icons/fi";
+import { SUPPORTED_LANGUAGES } from "../../i18n/languages";
 
 const BoardConfigForm = () => {
   const { t } = useTranslation();
@@ -132,73 +132,7 @@ const BoardConfigForm = () => {
           style={{ width: "5em", textAlign: "right" }}
         />
       </Label>
-      <fieldset style={{ marginBottom: "2em", paddingBottom: "1em" }}>
-        <legend>{t("Moving grid")}</legend>
-        <Label>
-          {t("Grid type")}
-          <Field
-            name="grid.type"
-            component="select"
-            initialValue={boardConfig.grid?.type || "none"}
-          >
-            <option value="none">{t("None")}</option>
-            <option value="grid">{t("Grid")}</option>
-            <option value="hexH">{t("Horizontal hexagons")}</option>
-            <option value="hexV">{t("Vertical hexagons")}</option>
-          </Field>
-        </Label>
-        <Label>
-          {t("Magnetic Grid size")}
-          <Field
-            name="grid.size"
-            component="input"
-            type="number"
-            step="any"
-            min="0.01"
-            parse={Number}
-            initialValue={boardConfig.grid?.size || 1}
-            style={{ width: "5em", textAlign: "right" }}
-          />
-        </Label>
-        <Label>
-          {t("Display board grid while moving")}
-          <Field
-            name="grid.show"
-            component="input"
-            type="checkbox"
-            initialValue={boardConfig.grid?.show || false}
-          />
-        </Label>
-        <Label>
-          {t("Grid color")}
-          <Field
-            name="grid.color"
-            initialValue={boardConfig.grid?.color || "#000000"}
-          >
-            {({ input: { onChange, value } }) => (
-              <ColorPicker value={value} onChange={onChange} />
-            )}
-          </Field>
-        </Label>
-        <Label>
-          {t("Grid opacity")}
-          <Field
-            name="grid.opacity"
-            initialValue={boardConfig.grid?.opacity ?? 0.2}
-          >
-            {({ input: { onChange, value } }) => (
-              <Slider
-                min={0}
-                max={1}
-                step={0.05}
-                value={Number(value)}
-                onChange={onChange}
-                marks={{ 0: "0%", 0.5: "50%", 1: "100%" }}
-              />
-            )}
-          </Field>
-        </Label>
-      </fieldset>
+      <GridSettingsForm grid={boardConfig.grid} />
       <Label>
         {t("Main image")}
         <Field name="imageUrl" initialValue={boardConfig.imageUrl}>
@@ -220,8 +154,11 @@ const BoardConfigForm = () => {
         >
           <option />
           <option value="Multi-lang">🌍 {t("Multi-lang")}</option>
-          <option value="en">🇬🇧 {t("English")}</option>
-          <option value="fr">🇫🇷 {t("French")}</option>
+          {SUPPORTED_LANGUAGES.map(({ code, label, flag }) => (
+            <option key={code} value={code}>
+              {flag} {t(label)}
+            </option>
+          ))}
         </Field>
       </Label>
       <fieldset style={{ marginBottom: "2em", paddingBottom: "1em" }}>
@@ -236,8 +173,11 @@ const BoardConfigForm = () => {
             style={{ width: "15em" }}
           >
             <option />
-            <option value="en">🇬🇧 {t("English")}</option>
-            <option value="fr">🇫🇷 {t("French")}</option>
+            {SUPPORTED_LANGUAGES.map(({ code, label, flag }) => (
+              <option key={code} value={code}>
+                {flag} {t(label)}
+              </option>
+            ))}
           </Field>
         </Label>
 
@@ -311,8 +251,11 @@ const BoardConfigForm = () => {
                   style={{ width: "15em" }}
                 >
                   <option />
-                  <option value="en">🇬🇧 {t("English")}</option>
-                  <option value="fr">🇫🇷 {t("French")}</option>
+                  {SUPPORTED_LANGUAGES.map(({ code, label, flag }) => (
+                    <option key={code} value={code}>
+                      {flag} {t(label)}
+                    </option>
+                  ))}
                 </Field>
               </Label>
 

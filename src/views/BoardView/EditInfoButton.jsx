@@ -10,6 +10,7 @@ import AutoSave from "../../ui/formUtils/AutoSave";
 
 import { useBoardConfig } from "react-sync-board";
 import NavButton from "../../ui/NavButton";
+import InteractionSettingsForm from "./InteractionSettingsForm";
 
 const BoardConfigForm = styled.div`
   display: flex;
@@ -19,7 +20,14 @@ const BoardConfigForm = styled.div`
   }
 `;
 
-const BoardConfigPanel = ({ BoardFormComponent, show, setShow }) => {
+const BoardConfigPanel = ({
+  BoardFormComponent,
+  interaction,
+  setInteraction,
+  show,
+  setShow,
+  title,
+}) => {
   const { t } = useTranslation();
   const [, setBoardConfig] = useBoardConfig();
 
@@ -36,43 +44,60 @@ const BoardConfigPanel = ({ BoardFormComponent, show, setShow }) => {
 
   return (
     <SidePanel
-      title={t("Edit game information")}
+      title={t(title || "Edit game information")}
       onClose={() => setShow(false)}
       show={show}
       position="left"
     >
-      <section>
-        <Form
-          onSubmit={onSubmitHandler}
-          render={() => (
-            <BoardConfigForm>
-              <AutoSave save={onSubmitHandler} />
-              <BoardFormComponent />
-            </BoardConfigForm>
-          )}
-        />
-      </section>
+      <Form
+        onSubmit={onSubmitHandler}
+        render={() => (
+          <BoardConfigForm>
+            <AutoSave save={onSubmitHandler} />
+            {BoardFormComponent && <BoardFormComponent />}
+            {interaction && setInteraction && (
+              <InteractionSettingsForm
+                interaction={interaction}
+                setInteraction={setInteraction}
+              />
+            )}
+          </BoardConfigForm>
+        )}
+      />
     </SidePanel>
   );
 };
 
-const EditInfoButton = ({ BoardFormComponent }) => {
+const EditInfoButton = ({
+  BoardFormComponent,
+  interaction,
+  setInteraction,
+  title,
+  renderTrigger,
+}) => {
   const { t } = useTranslation();
 
   const [show, setShow] = React.useState(false);
 
   return (
     <>
-      <NavButton
-        onClick={() => setShow((prev) => !prev)}
-        alt={t("Edit game info")}
-        title={t("Edit game info")}
-        Icon={FiSettings}
-      />
+      {renderTrigger ? (
+        renderTrigger(() => setShow((prev) => !prev))
+      ) : (
+        <NavButton
+          onClick={() => setShow((prev) => !prev)}
+          alt={t(title || "Edit game info")}
+          title={t(title || "Edit game info")}
+          Icon={FiSettings}
+        />
+      )}
       <BoardConfigPanel
         BoardFormComponent={BoardFormComponent}
+        interaction={interaction}
+        setInteraction={setInteraction}
         show={show}
         setShow={setShow}
+        title={title}
       />
     </>
   );

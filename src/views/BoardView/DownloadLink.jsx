@@ -129,11 +129,17 @@ export const DownloadLink = ({ getData = () => {}, withFile = false }) => {
 
   return (
     <>
-      <button className="button success icon" onClick={triggerDownload}>
+      <button className="button icon" onClick={triggerDownload}>
         {!generating
           ? t("Export")
           : `#${fileCount} - ${t("Generating export")} `}
-        {!generating && <FiDownload size="20" color="#f9fbfa" alt="Download" />}
+        {!generating && (
+          <FiDownload
+            size="20"
+            color="var(--color-primary-foreground)"
+            alt="Download"
+          />
+        )}
       </button>
       {error && <p className="error">{t("An error occurred. Try again!")}</p>}
     </>

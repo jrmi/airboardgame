@@ -3,7 +3,8 @@ import "./wdyr";
 import React from "react";
 import ReactDOM from "react-dom/client";
 
-import "./sentry";
+import { getCookieConsent } from "./utils/cookieConsent";
+import { initSentry } from "./sentry";
 
 import "./index.css";
 
@@ -11,6 +12,10 @@ import "./i18n"; // load translation system
 
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
+
+if (getCookieConsent() === true) {
+  initSentry();
+}
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>

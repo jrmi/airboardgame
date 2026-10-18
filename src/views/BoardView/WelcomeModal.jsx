@@ -10,6 +10,7 @@ import { FiCopy } from "react-icons/fi";
 
 const StyledUrl = styled.div`
   background-color: var(--color-midGrey);
+  border: 1px solid var(--color-border-subtle);
   padding: 0.5em;
   border-radius: 2px;
   display: flex;
@@ -27,6 +28,11 @@ const StyledUrl = styled.div`
     margin-left: 1em;
     cursor: pointer;
   }
+`;
+
+const PlayButton = styled.button`
+  background: var(--color-primary) !important;
+  color: var(--color-primary-foreground) !important;
 `;
 
 const WelcomeModal = ({ show, setShow, welcome = true }) => {
@@ -61,7 +67,7 @@ const WelcomeModal = ({ show, setShow, welcome = true }) => {
             alt={t("Copy")}
             onClick={handleCopy}
             size="22"
-            color="#888886"
+            color="var(--font-color2)"
           />
         </StyledUrl>
         <p>
@@ -71,15 +77,15 @@ const WelcomeModal = ({ show, setShow, welcome = true }) => {
         </p>
 
         {welcome && (
-          <button
+          <PlayButton
             onClick={() => {
               setShow(false);
             }}
-            className="button success"
+            className="button"
             style={{ margin: "1em auto" }}
           >
             {t("I want to play...")}
-          </button>
+          </PlayButton>
         )}
       </section>
       {welcome && <GameInformation />}

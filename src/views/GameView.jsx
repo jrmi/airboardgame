@@ -55,16 +55,16 @@ const newGameData = (translate) => ({
       type: "note",
       value:
         translate(
-          "To add new items, click on the plus button located on the left sidebar.\n\n"
+          "To add new items, click on the plus button in the top bar.\n\n"
         ) +
         translate(
           "To edit an item, click on it and then click on the pen icon at the bottom of the screen.\n\n"
         ) +
         translate(
-          "You can configure the game title and other settings by clicking on the gear icon in the left sidebar. From there, you can also choose to make your game public.\n\n"
+          "You can configure the game title and other settings by clicking on the gear icon in the top bar. From there, you can also choose to make your game public.\n\n"
         ) +
         translate(
-          "Don't forget to save your game using the save button located in the middle of the left sidebar.\n\n"
+          "Don't forget to save your game using the save button in the top bar.\n\n"
         ) +
         translate(
           "Have fun exploring the possibilities and enjoy the process of game creation!"

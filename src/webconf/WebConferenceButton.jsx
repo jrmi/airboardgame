@@ -11,7 +11,7 @@ import { WEBCONFERENCE } from "../utils/settings";
 
 const WebConference = React.lazy(() => import("./WebConference.jsx"));
 
-export const WeConferenceButton = ({ room }) => {
+export const WeConferenceButton = ({ room, renderTrigger }) => {
   const { t } = useTranslation();
   const { currentUser, localUsers } = useUsers();
   const [webConference, setWebConference] = useLocalStorage(
@@ -27,13 +27,17 @@ export const WeConferenceButton = ({ room }) => {
 
   return (
     <>
-      <NavButton
-        onClick={() => setWebConference((prev) => !prev)}
-        alt={t("Web conference")}
-        title={t("Web conference")}
-        Icon={icon}
-        active={webConference}
-      />
+      {renderTrigger ? (
+        renderTrigger(() => setWebConference((prev) => !prev), webConference)
+      ) : (
+        <NavButton
+          onClick={() => setWebConference((prev) => !prev)}
+          alt={t("Web conference")}
+          title={t("Web conference")}
+          Icon={icon}
+          active={webConference}
+        />
+      )}
       {webConference && (
         <WebConference
           room={room}

@@ -1,4 +1,18 @@
 describe("Messages interactions", () => {
+  const openMessages = () => {
+    cy
+      .get(".top-menu__trigger")
+      .contains(/^\d+ players?$/)
+      .trigger("mouseenter")
+      .click({ force: true });
+    cy
+      .get(".top-menu__trigger[aria-expanded='true']")
+      .parent()
+      .find("[data-menu-item]")
+      .contains("Messages")
+      .click({ force: true });
+  };
+
   beforeEach(() => {
     cy.viewport(1000, 600);
     cy.intercept(
@@ -22,7 +36,7 @@ describe("Messages interactions", () => {
 
   it("Should show and hide message panel", () => {
     cy.contains("Send").should("not.exist");
-    cy.get("[title^='Message']").click({ force: true });
+    openMessages();
     cy.contains("Send");
     cy.wait(400);
     cy.get(".side-panel__close").click({ force: true });
@@ -30,7 +44,7 @@ describe("Messages interactions", () => {
   });
 
   it("Should send message", () => {
-    cy.get("[title^='Message']").click({ force: true });
+    openMessages();
 
     cy.get("input[placeholder^='Enter your message...']").type(
       "What is the question?"

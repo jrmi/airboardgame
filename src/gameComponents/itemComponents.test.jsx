@@ -102,6 +102,25 @@ describe("game item components", () => {
     }
   );
 
+  it("derives a contrasting input color from the counter color", () => {
+    renderItem("counter", { color: "rgb(18, 52, 86)" });
+    expect(screen.getByRole("textbox")).toHaveStyle(
+      "background-color: hsla(210, 65%, 35%, 1)"
+    );
+
+    cleanup();
+    renderItem("counter", { color: "#cccccc" });
+    expect(screen.getByRole("textbox")).toHaveStyle(
+      "background-color: hsla(0, 0%, 65%, 1)"
+    );
+
+    cleanup();
+    renderItem("counter", { color: "yellow" });
+    expect(screen.getByRole("textbox")).toHaveStyle(
+      "background-color: hsla(60, 100%, 35%, 1)"
+    );
+  });
+
   it("supports counter increment, decrement, and direct editing", async () => {
     const user = userEvent.setup();
     renderItem("counter", { value: 2 });

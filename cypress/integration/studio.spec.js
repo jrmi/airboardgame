@@ -15,6 +15,30 @@ const gridGameData = () => ({
   },
 });
 
+const openMenu = (label) =>
+  cy
+    .get(".top-menu__trigger")
+    .contains(label)
+    .trigger("mouseenter")
+    .click({ force: true });
+
+const menuItem = (label) =>
+  cy
+    .get(".top-menu__trigger[aria-expanded='true']")
+    .parent()
+    .find("[data-menu-item]")
+    .contains(label);
+
+const clickBoardAction = (label) => {
+  openMenu("Board");
+  menuItem(label).click({ force: true });
+};
+
+const clickSave = () => {
+  openMenu("Game");
+  menuItem("Save").click({ force: true });
+};
+
 describe("Studio", () => {
   beforeEach(() => {
     cy.viewport(1000, 600);
@@ -133,8 +157,8 @@ describe("Studio", () => {
       }
     );
 
-    cy.get("[title^='Save']").click();
-    cy.get("button").contains("Save").click();
+    clickSave();
+    cy.get(".modal button").contains("Save").click();
   });
 
   it("Can create basic game", () => {
@@ -163,7 +187,7 @@ describe("Studio", () => {
       .and("have.css", "transform")
       .and("match", /^matrix\(/);
     // Add an item
-    cy.get("[title^='Add an item']").click({ force: true });
+    clickBoardAction("Add an item");
     cy.contains("Rectangle").parent().parent().click();
     cy.get(".side-panel__close").click();
 
@@ -180,8 +204,8 @@ describe("Studio", () => {
       }
     );
 
-    cy.get("[title^='Save']").click();
-    cy.get("button").contains("Save").click();
+    clickSave();
+    cy.get(".modal button").contains("Save").click();
   });
 
   it("Can edit game properties", () => {
@@ -211,7 +235,7 @@ describe("Studio", () => {
       .and("match", /^matrix\(/);
 
     // Edit title
-    cy.get("[title^='Configuration']").click({ force: true });
+    clickBoardAction("Configuration");
     cy.get('input[name="defaultName"]').clear().type("ChangeGameName");
     cy.get(".side-panel__close").click();
 
@@ -227,8 +251,8 @@ describe("Studio", () => {
       }
     );
 
-    cy.get("[title^='Save']").click();
-    cy.get("button").contains("Save").click();
+    clickSave();
+    cy.get(".modal button").contains("Save").click();
   });
 
   describe("Item edition", () => {
@@ -258,7 +282,7 @@ describe("Studio", () => {
         .and("have.css", "transform")
         .and("match", /^matrix\(/);
       // Add an item
-      cy.get("[title^='Add an item']").click({ force: true });
+      clickBoardAction("Add an item");
       cy.contains("Rectangle").parent().parent().click();
       cy.get(".side-panel__close").click();
     });
@@ -304,8 +328,8 @@ describe("Studio", () => {
         }
       );
 
-      cy.get("[title^='Save']").click();
-      cy.get("button").contains("Save").click();
+      clickSave();
+      cy.get(".modal button").contains("Save").click();
     });
 
     it("Can lock an item", () => {

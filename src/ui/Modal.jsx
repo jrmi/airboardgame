@@ -17,7 +17,7 @@ const StyledModalWrapper = styled.div`
 
   transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
 
-  background-color: #00000040;
+  background-color: var(--color-backdrop);
 
   opacity: 0;
   display: flex;
@@ -41,12 +41,15 @@ const StyledModalWrapper = styled.div`
 
   .modal {
     background-color: var(--color-blueGrey);
-    border-radius: 5px;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
     position: relative;
-    box-shadow: rgba(0, 0, 0, 0.5) 0px 0px 30px;
+    box-shadow: 0 18px 48px rgba(0, 0, 0, 0.48);
     margin: 5px;
     margin-top: 2em;
-    max-width: 40%;
+    box-sizing: ${({ $wide }) => ($wide ? "border-box" : "content-box")};
+    width: ${({ $wide }) => ($wide ? "min(90vw, 1200px)" : "auto")};
+    max-width: ${({ $wide }) => ($wide ? "min(90vw, 1200px)" : "40%")};
     min-width: 290px;
   }
 
@@ -54,10 +57,18 @@ const StyledModalWrapper = styled.div`
     flex: 1;
     overflow: auto;
     ${({ $noMargin }) => ($noMargin ? "" : "padding: 1em")};
+
+    & button {
+      background: var(--color-primary);
+      color: var(--color-primary-foreground);
+    }
+
     header {
       padding: 0.5em;
       margin-top: 2em;
-      background-color: var(--color-blueGrey);
+      background-color: var(--color-midGrey);
+      border: 1px solid var(--color-border-subtle);
+      border-bottom: 0;
       border-radius: 0.5em 0.5em 0em 0em;
       & h3 {
         margin: 0.2em 0.2em 0.2em;
@@ -73,6 +84,7 @@ const StyledModalWrapper = styled.div`
       border-radius: 0em 0em 0.5em 0.5em;
       padding: 1em;
       background-color: var(--color-darkBlueGrey);
+      border: 1px solid var(--color-border-subtle);
     }
   }
 
@@ -82,12 +94,14 @@ const StyledModalWrapper = styled.div`
 
   @media screen and (max-width: 1024px) {
     & .modal {
-      max-width: 70%;
+      width: ${({ $wide }) => ($wide ? "90vw" : "auto")};
+      max-width: ${({ $wide }) => ($wide ? "90vw" : "70%")};
     }
   }
 
   @media screen and (max-width: 640px) {
     & .modal {
+      width: ${({ $wide }) => ($wide ? "calc(100vw - 10px)" : "auto")};
       max-width: 100%;
     }
   }
@@ -101,6 +115,7 @@ const Modal = ({
   setShow = () => {},
   canClose = true,
   noMargin = false,
+  wide = false,
 }) => {
   const modalRef = React.useRef();
   const { t } = useTranslation();
@@ -153,6 +168,7 @@ const Modal = ({
       onTransitionEnd={onAnimationEnd}
       onClick={onOverlayClick}
       $noMargin={noMargin}
+      $wide={wide}
       className={
         state === "opening" || state === "open" ? "modal__wrapper--open" : ""
       }

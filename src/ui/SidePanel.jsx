@@ -5,21 +5,24 @@ import { createPortal } from "react-dom";
 
 import { FiX } from "react-icons/fi";
 
+const openPanels = new Map();
+
 const StyledSidePanel = styled.div`
   position: fixed;
 
-  top: 0;
+  top: 40px;
   bottom: 0;
   z-index: ${({ $layer }) => 213 + $layer};
   display: flex;
   flex-direction: column;
-  height: 100%;
-  max-height: 100%;
+  height: calc(100% - 40px);
+  max-height: calc(100% - 40px);
   overflow: hidden;
 
-  background-color: var(--color-blueGrey);
+  background-color: var(--color-board-panel);
+  border-right: 1px solid var(--color-board-border);
 
-  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  box-shadow: 8px 0 24px rgba(0, 0, 0, 0.38);
 
   min-width: 280px;
   max-width: 500px;
@@ -31,15 +34,26 @@ const StyledSidePanel = styled.div`
   transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
 
   &.side-panel--left {
-    padding-left: 40px;
     left: 0px;
     transform: translateX(-100%);
   }
 
   &.side-panel--right {
-    padding-right: 40px;
     right: 0;
     transform: translateX(100%);
+    border-right: 0;
+    border-left: 1px solid var(--color-board-border);
+  }
+
+  &.side-panel--item-finder {
+    overflow: hidden;
+  }
+
+  &.side-panel--item-finder .side-panel__content {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    overflow: hidden;
   }
 
   &.side-panel--open {
@@ -71,7 +85,7 @@ const StyledSidePanel = styled.div`
   }
 
   &.side-panel--right .side-panel__title {
-    margin-left: 45px;
+    margin-left: 35px;
   }
 
   .side-panel__content {
@@ -81,7 +95,9 @@ const StyledSidePanel = styled.div`
     & header {
       padding: 0.5em;
       margin-top: 2em;
-      background-color: var(--color-blueGrey);
+      background-color: var(--color-board-panel-raised);
+      border: 1px solid var(--color-board-border);
+      border-bottom: 0;
       border-radius: 0.5em 0.5em 0em 0em;
       & h3 {
         margin: 0.2em 0.2em 0.2em;
@@ -96,7 +112,8 @@ const StyledSidePanel = styled.div`
     & section {
       border-radius: 0em 0em 0.5em 0.5em;
       padding: 1em;
-      background-color: var(--color-darkBlueGrey);
+      background-color: var(--color-board-panel-inset);
+      border: 1px solid var(--color-board-border);
     }
   }
 
@@ -118,10 +135,38 @@ const SidePanel = ({
   width,
   canClose = true,
   layer = 0,
+  className,
 }) => {
   const { t } = useTranslation();
 
   const [state, setState] = React.useState("closed");
+  const panelId = React.useRef({});
+  const onCloseRef = React.useRef(onClose);
+  onCloseRef.current = onClose;
+
+  React.useEffect(() => {
+    if (!open) {
+      return undefined;
+    }
+
+    const currentPanelId = panelId.current;
+    const previousPanel = openPanels.get(layer);
+    if (previousPanel && previousPanel.id !== currentPanelId) {
+      previousPanel.close();
+    }
+
+    const currentPanel = {
+      id: currentPanelId,
+      close: () => onCloseRef.current(),
+    };
+    openPanels.set(layer, currentPanel);
+
+    return () => {
+      if (openPanels.get(layer)?.id === currentPanelId) {
+        openPanels.delete(layer);
+      }
+    };
+  }, [layer, open]);
 
   const onAnimationEnd = React.useCallback(() => {
     setState((prev) => {
@@ -157,6 +202,10 @@ const SidePanel = ({
     classes.push("side-panel--right");
   } else {
     classes.push("side-panel--left");
+  }
+
+  if (className) {
+    classes.push(className);
   }
 
   return createPortal(

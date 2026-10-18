@@ -6,24 +6,59 @@ import { deleteGame, getBestTranslationFromConfig } from "../utils/api";
 import { confirmAlert } from "react-confirm-alert";
 import { toast } from "react-toastify";
 import { useMutation, useQueryClient } from "react-query";
+import useAsyncEffect from "use-async-effect";
 import { media2Url } from "../mediaLibrary";
-import { FiEdit, FiEyeOff, FiShare2, FiTrash2 } from "react-icons/fi";
+import {
+  FiClock,
+  FiEdit,
+  FiEyeOff,
+  FiGlobe,
+  FiShare2,
+  FiTrash2,
+  FiUser,
+  FiUsers,
+} from "react-icons/fi";
 
 const Game = styled.li`
   position: relative;
   padding: 0em;
   margin: 0px;
   min-width: 0; /* Fix for ellipsis */
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  & .card-content,
+  & .hover-card {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  & .hover-card {
+    position: absolute;
+    z-index: 3;
+    top: calc(-0.75em - 1px);
+    right: calc(-0.75em - 1px);
+    left: calc(-0.75em - 1px);
+    box-sizing: border-box;
+    padding: 0.75em;
+    overflow: hidden;
+    border: 1px solid var(--color-border-subtle);
+    border-radius: 6px;
+    background: var(--color-darkBlueGrey);
+    box-shadow: 0 8px 18px #00000080;
+    opacity: 0;
+    pointer-events: none;
+  }
 
   & .game-name {
-    max-width: 80%;
+    margin: 0.35em 0 0.1em;
+    padding: 0 0.75em;
+    overflow: hidden;
+    font-size: clamp(1.25rem, 2vw, 2rem);
     line-height: 1.1em;
-    overflow: hidden;
-    margin-bottom: 3px;
-    margin: 0.1em 0 0.1em 0;
-    font-size: 2.2vw;
     white-space: nowrap;
-    overflow: hidden;
     text-overflow: ellipsis;
   }
 
@@ -32,11 +67,11 @@ const Game = styled.li`
     top: 0.5em;
     left: 0.5em;
     padding: 0em;
+    z-index: 4;
   }
 
   & .button.play {
     margin: 0 2px;
-    background-color: var(--color-secondary);
   }
 
   & .play {
@@ -50,15 +85,46 @@ const Game = styled.li`
     top: 0.5em;
     right: 0.5em;
     display: none;
-    z-index: 2;
+    z-index: 4;
     & .button {
       border-radius: 4px;
     }
   }
 
   & .baseline {
-    max-height: 3em;
+    box-sizing: border-box;
+    max-height: 7.5em;
+    margin: 0;
+    padding: 0.75em;
     overflow: hidden;
+    color: var(--font-color);
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 4;
+    line-height: 1.25;
+  }
+
+  & .description {
+    box-sizing: border-box;
+    max-height: 13.75em;
+    margin: 0;
+    padding: 0 0.75em 0.75em;
+    overflow: hidden;
+    color: var(--font-color2);
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 9;
+    line-height: 1.25;
+    -webkit-mask-image: linear-gradient(to bottom, #000 80%, transparent 100%);
+    mask-image: linear-gradient(to bottom, #000 80%, transparent 100%);
+  }
+
+  &:hover {
+    z-index: 5;
+  }
+
+  &:hover .hover-card {
+    opacity: 1;
   }
 
   &:hover .extra-actions,
@@ -75,6 +141,12 @@ const Game = styled.li`
     padding-top: 64.5%;
     & > span {
       background-color: var(--color-blueGrey);
+      ${({ $fallback }) =>
+        $fallback
+          ? `background-image: url("${DEFAULT_IMAGE_URL}");
+             background-position: center;
+             background-size: cover;`
+          : ""};
       ${({ $other }) => (!$other ? "" : "border: 1px solid red")};
 
       position: absolute;
@@ -85,29 +157,6 @@ const Game = styled.li`
       justify-content: center;
       align-items: center;
       border-radius: 5px;
-      & > .back {
-        filter: blur(5px);
-        background-size: cover;
-        position: absolute;
-        inset: 0;
-      }
-      & > h2 {
-        position: absolute;
-        width: 100%;
-        top: calc(50%-0.6em);
-        z-index: 200;
-        left: 0;
-        text-align: center;
-        display: inline;
-        font-size: 2em;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        margin: 0;
-        padding: 0.2em 0.5em;
-        line-height: 1.2em;
-        background-color: #111111a0;
-      }
     }
   }
 
@@ -121,25 +170,37 @@ const Game = styled.li`
   & .details {
     display: flex;
     flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 0.4em;
     color: var(--font-color2);
     font-size: 14px;
-    padding-top: 1em;
+    padding: 1em 0.75em 0.75em;
+    min-height: 2.5em;
+    overflow: hidden;
   }
 
   & .details > span {
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    padding-right: 5px;
-    margin-right: 5px;
-    border-right: 1px solid var(--font-color2);
-  }
-
-  & .details > span:last-child {
-    border: none;
+    gap: 0.35em;
+    min-width: 0;
+    overflow: hidden;
+    padding: 0.2em 0.5em;
+    border: 1px solid var(--color-border-subtle);
+    border-radius: 999px;
+    background-color: var(--color-darkBlueGrey);
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    line-height: 1.1;
   }
 
   & .details img {
     margin-right: 0.5em;
+  }
+
+  & .details svg {
+    flex: 0 0 auto;
   }
 
   @media screen and (max-width: 1024px) {
@@ -149,22 +210,17 @@ const Game = styled.li`
     & .details {
       font-size: 12px;
     }
-    & .game-name {
-      font-size: 28px;
-    }
   }
 
   @media screen and (max-width: 640px) {
     & {
       flex-basis: 100%;
     }
-    & .game-name {
-      font-size: 24px;
-    }
   }
 `;
 
 const getGameUrl = (id) => `${window.location.origin}/playgame/${id}`;
+const DEFAULT_IMAGE_URL = "/game_assets/default.png";
 
 const GameListItem = ({
   game: {
@@ -177,7 +233,6 @@ const GameListItem = ({
       playerCount,
       published,
       imageUrl,
-      keepTitle,
     } = {},
   },
   game,
@@ -200,10 +255,23 @@ const GameListItem = ({
   const realImageUrl = media2Url(imageUrl);
 
   const [showImage, setShowImage] = React.useState(Boolean(realImageUrl));
+  const [usingFallbackImage, setUsingFallbackImage] =
+    React.useState(!realImageUrl);
 
   const translation = React.useMemo(
     () => getBestTranslationFromConfig(game.board, i18n.languages),
     [game, i18n.languages]
+  );
+  const [descriptionHtml, setDescriptionHtml] = React.useState("");
+
+  useAsyncEffect(
+    async (isMounted) => {
+      const { marked } = await import("marked");
+      if (isMounted()) {
+        setDescriptionHtml(marked.parse(translation.description || ""));
+      }
+    },
+    [translation.description]
   );
 
   const onClick = React.useCallback(
@@ -300,31 +368,87 @@ const GameListItem = ({
 
   const owned = userId && (userId === owner || !owner);
 
-  return (
-    <Game $other={!owned && studio}>
-      <a href={`/playgame/${id}`} className="img-wrapper button">
+  const renderCardContent = (includeBaseline = false) => (
+    <>
+      <a href={`/playgame/${id}`} className="img-wrapper">
         <span onClick={onClick}>
           {showImage && (
-            <>
-              <span
-                className="back"
-                style={{ backgroundImage: `url(${realImageUrl})` }}
-              />
-              <img
-                className="img"
-                src={realImageUrl}
-                alt={translation.name}
-                onError={() => setShowImage(false)}
-              />
-            </>
+            <img
+              className="img"
+              src={realImageUrl}
+              alt={translation.name}
+              onError={() => {
+                setShowImage(false);
+                setUsingFallbackImage(true);
+              }}
+            />
           )}
-          {(!showImage || keepTitle) && <h2>{translation.name}</h2>}
         </span>
       </a>
+      <h2 className="game-name">{translation.name}</h2>
+
+      <div className="details">
+        {playerCountDisplay && (
+          <span
+            title={
+              playerCountDisplay.length === 2
+                ? t("{{min}} - {{max}} players", {
+                    min: playerCountDisplay[0],
+                    max: playerCountDisplay[1],
+                  })
+                : t("player", { count: playerCountDisplay[0] })
+            }
+          >
+            {playerCountDisplay.length === 2 ? (
+              <FiUsers aria-hidden="true" />
+            ) : (
+              <FiUser aria-hidden="true" />
+            )}
+            {playerCountDisplay.length === 2 &&
+              `${playerCountDisplay[0]}-${playerCountDisplay[1]}`}
+            {playerCountDisplay.length === 1 && playerCountDisplay[0]}
+          </span>
+        )}
+        {durationDisplay && (
+          <span title={`${durationDisplay} mins`}>
+            <FiClock aria-hidden="true" />
+            {durationDisplay}
+          </span>
+        )}
+        {minAge && (
+          <span title={`age ${minAge}+`}>
+            <FiUser aria-hidden="true" />
+            {minAge}+
+          </span>
+        )}
+        {materialLanguageDisplay && (
+          <span title={materialLanguageDisplay}>
+            <FiGlobe aria-hidden="true" />
+            {materialLanguageDisplay}
+          </span>
+        )}
+      </div>
+
+      {includeBaseline && translation.baseline && (
+        <p className="baseline">{translation.baseline}</p>
+      )}
+      {includeBaseline && descriptionHtml && (
+        <div
+          className="description"
+          dangerouslySetInnerHTML={{ __html: descriptionHtml }}
+        />
+      )}
+    </>
+  );
+
+  return (
+    <Game $other={!owned && studio} $fallback={usingFallbackImage}>
+      <div className="card-content">{renderCardContent()}</div>
+      <div className="hover-card">{renderCardContent(true)}</div>
       <span className="extra-actions">
         <a
           href={getGameUrl(id)}
-          className="button edit icon-only success"
+          className="button edit icon-only share-button"
           onClick={onShare}
         >
           <FiShare2
@@ -347,7 +471,10 @@ const GameListItem = ({
                 color="white"
               />
             </button>
-            <Link to={`/game/${id}/edit`} className="button edit icon-only ">
+            <Link
+              to={`/game/${id}/edit`}
+              className="button edit icon-only edit-game-button"
+            >
               <FiEdit
                 alt={t("Edit")}
                 title={t("Edit")}
@@ -366,28 +493,6 @@ const GameListItem = ({
           color="white"
         />
       )}
-      <div className="details">
-        {playerCountDisplay && (
-          <span>
-            {playerCountDisplay.length === 2 &&
-              t("{{min}} - {{max}} players", {
-                min: playerCountDisplay[0],
-                max: playerCountDisplay[1],
-              })}
-            {playerCountDisplay.length === 1 &&
-              t("{{count}} player", {
-                count: playerCountDisplay[0],
-              })}
-          </span>
-        )}
-        {durationDisplay && <span>{durationDisplay} mins</span>}
-        {minAge && <span>age {minAge}+</span>}
-        {materialLanguageDisplay && <span>{materialLanguageDisplay}</span>}
-      </div>
-
-      <h2 className="game-name">{translation.name}</h2>
-
-      <p className="baseline">{translation.baseline}</p>
     </Game>
   );
 };

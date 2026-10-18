@@ -113,7 +113,16 @@ export const SessionProvider = ({
       // The filter prevents the empty item bug or missing type on reload
       setItemList(items.filter((item) => item && item.type));
       setBoardConfig(board);
-      setMessages(messages);
+      setMessages(
+        messages.map((message) =>
+          Number.isFinite(message.timestamp)
+            ? {
+                ...message,
+                timestamp: new Date(message.timestamp).toISOString(),
+              }
+            : message
+        )
+      );
       updateSessionInfo({ loaded: true });
       setSessionLoaded(true);
     },

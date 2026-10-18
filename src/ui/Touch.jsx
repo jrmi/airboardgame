@@ -26,8 +26,8 @@ const StyledButton = styled(FixedButton).attrs(({ active }) => ({
   display: inline-block;
   cursor: pointer;
   border-color: transparent;
-  color: var(--font-color);
-  background-color: var(--color-midGrey);
+  color: var(--color-primary-foreground);
+  background-color: var(--color-primary);
   padding: 0.5rem;
   width: 38px;
   height: 38px;
@@ -38,7 +38,7 @@ const StyledButton = styled(FixedButton).attrs(({ active }) => ({
   &.active {
     background-color: var(--color-primary);
   }
-  box-shadow: 3px 3px 6px #00000050;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.38);
 `;
 
 const Touch = ({ onClick, to, icon, title, alt, active, label, ...rest }) => {

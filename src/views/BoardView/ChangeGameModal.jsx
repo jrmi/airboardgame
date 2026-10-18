@@ -13,12 +13,12 @@ const StyledGameList = styled.ul`
   list-style: none;
   margin: 0;
   padding: 0;
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+  gap: 20px;
 `;
 
 const ChangeGameModalContent = ({ onLoad }) => {
-  const { t } = useTranslation();
   const { changeGame } = useSession();
 
   const { isLoading, data: gameList } = useQuery("games", async () =>
@@ -48,19 +48,14 @@ const ChangeGameModalContent = ({ onLoad }) => {
   );
 
   return (
-    <>
-      <header>
-        <h3>{t("Choose a new game")}</h3>
-      </header>
-      <section>
-        <StyledGameList>
-          {!isLoading &&
-            gameList.map((game) => (
-              <GameListItem key={game.id} game={game} onClick={onGameClick} />
-            ))}
-        </StyledGameList>
-      </section>
-    </>
+    <section>
+      <StyledGameList>
+        {!isLoading &&
+          gameList.map((game) => (
+            <GameListItem key={game.id} game={game} onClick={onGameClick} />
+          ))}
+      </StyledGameList>
+    </section>
   );
 };
 
@@ -73,6 +68,7 @@ const ChangeGameModal = ({ show, setShow }) => {
       setShow={setShow}
       show={show}
       position="left"
+      wide
     >
       <ChangeGameModalContent onLoad={closeModal} />
     </Modal>

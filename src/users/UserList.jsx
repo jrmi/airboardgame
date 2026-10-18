@@ -18,20 +18,31 @@ const InlineUserListItem = styled.li`
   flex-direction: column;
   align-items: center;
   position: relative;
+
+  &.user-list__item--with-name {
+    flex-direction: row;
+    gap: 0.6em;
+    width: 100%;
+    padding: 0.35em 0.5em;
+  }
 `;
 
-export const Users = () => {
+export const Users = ({ showNames = false }) => {
   const { currentUser, updateCurrentUser, localUsers: users } = useUsers();
 
   return (
     <InlineUserList>
       {users.map((u, index) => (
-        <InlineUserListItem key={u.id}>
+        <InlineUserListItem
+          className={showNames ? "user-list__item--with-name" : undefined}
+          key={u.id}
+        >
           <UserConfig
             index={index + 1}
             user={u}
             updateCurrentUser={updateCurrentUser}
             editable={currentUser.id === u.id}
+            showName={showNames}
           />
         </InlineUserListItem>
       ))}
