@@ -6,6 +6,7 @@ const board = vi.hoisted(() => ({
   items: [],
   config: {},
   refereeView: false,
+  isModerator: false,
   zoomToExtent: vi.fn(),
   setSelectedItems: vi.fn(),
 }));
@@ -24,7 +25,10 @@ vi.mock("react-sync-board", () => ({
 }));
 
 vi.mock("../../hooks/useModeration", () => ({
-  useModeration: () => ({ state: { refereeView: board.refereeView } }),
+  useModeration: () => ({
+    state: { refereeView: board.refereeView },
+    isModerator: board.isModerator,
+  }),
 }));
 
 vi.mock("../../ui/SidePanel", () => ({
@@ -56,6 +60,7 @@ describe("ItemFinder", () => {
     board.items = [];
     board.config = {};
     board.refereeView = false;
+    board.isModerator = false;
     board.zoomToExtent.mockClear();
     board.setSelectedItems.mockClear();
   });
@@ -163,7 +168,13 @@ describe("ItemFinder", () => {
     cleanup();
     board.refereeView = true;
     renderFinder();
+    expect(screen.queryByText("Hidden")).not.toBeInTheDocument();
+
+    cleanup();
+    board.isModerator = true;
+    renderFinder();
     expect(screen.getAllByText("Hidden")).toHaveLength(2);
+    board.isModerator = false;
   });
 
   it("only renders previews for visible results", () => {

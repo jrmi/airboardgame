@@ -68,7 +68,8 @@ export const BoardView = ({
   const items = useItems();
   const selectedItems = useSelectedItems();
   const setSelectedItems = useSetSelectedItems();
-  const { state: moderationState } = useModeration();
+  const { state: moderationState, isModerator } = useModeration();
+  const refereeView = isModerator && moderationState.refereeView;
   const { isVassalSession } = useSession();
   const [showWelcomeModal, setShowWelcomeModal] = React.useState(
     SHOW_WELCOME && !editMode && isMaster && !isVassalSession
@@ -101,7 +102,7 @@ export const BoardView = ({
             item,
             userId: currentUser?.uid,
             board: boardConfig,
-            refereeView: moderationState.refereeView,
+            refereeView,
           });
           const rules = [];
           if (!visible) rules.push("display: none !important;");
@@ -115,13 +116,7 @@ export const BoardView = ({
         })
         .filter(Boolean)
         .join("\n"),
-    [
-      boardConfig,
-      currentUser?.uid,
-      hiddenOpacity,
-      items,
-      moderationState.refereeView,
-    ]
+    [boardConfig, currentUser?.uid, hiddenOpacity, items, refereeView]
   );
 
   React.useEffect(() => preloadAudio([flipAudio, shuffleAudio, rollAudio]), []);
@@ -167,7 +162,7 @@ export const BoardView = ({
             item,
             userId: currentUser?.uid,
             board: boardConfig,
-            refereeView: moderationState.refereeView,
+            refereeView,
           })
         )
         .map(({ id }) => id)
@@ -180,7 +175,7 @@ export const BoardView = ({
     boardConfig,
     currentUser?.uid,
     items,
-    moderationState.refereeView,
+    refereeView,
     selectedItems,
     setSelectedItems,
   ]);

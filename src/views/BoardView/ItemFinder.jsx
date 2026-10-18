@@ -221,7 +221,8 @@ const ItemFinder = ({ open, onClose }) => {
   const items = useItems();
   const [boardConfig] = useBoardConfig();
   const { currentUser } = useUsers();
-  const { state: moderationState } = useModeration();
+  const { state: moderationState, isModerator } = useModeration();
+  const refereeView = isModerator && moderationState.refereeView;
   const { zoomToExtent } = useBoardPosition();
   const setSelectedItems = useSetSelectedItems();
   const [filter, setFilter] = React.useState("");
@@ -243,17 +244,10 @@ const ItemFinder = ({ open, onClose }) => {
             item,
             userId: currentUser?.uid,
             board: boardConfig,
-            refereeView: moderationState.refereeView,
+            refereeView,
           }) && search(searchFilter, getItemDisplayName(item, itemTemplates, t))
       ),
-    [
-      searchFilter,
-      items,
-      t,
-      currentUser?.uid,
-      boardConfig,
-      moderationState.refereeView,
-    ]
+    [searchFilter, items, t, currentUser?.uid, boardConfig, refereeView]
   );
 
   React.useEffect(() => {
