@@ -66,11 +66,26 @@ const MenuPanel = styled.div.attrs({ className: "top-menu__panel" })`
   border-radius: 0 0 6px 6px;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.38);
   display: ${({ $open }) => ($open ? "block" : "none")};
+
+  ${({ $wide }) =>
+    $wide &&
+    `
+      width: min(23rem, calc(100vw - 3rem));
+      max-height: calc(100vh - 5rem);
+      overflow-y: auto;
+      overscroll-behavior: contain;
+
+      @media screen and (max-width: 640px) {
+        width: min(23rem, calc(100vw - 2rem));
+        max-height: calc(100vh - 8rem);
+      }
+    `}
 `;
 
 export const MenuItem = styled.button.attrs(({ $keepMenuOpen }) => ({
   "data-close-mobile-menu": $keepMenuOpen ? undefined : true,
   "data-menu-item": true,
+  "data-menu-keep-open": $keepMenuOpen ? true : undefined,
 }))`
   display: flex;
   align-items: center;
@@ -98,6 +113,7 @@ export const TopMenu = ({
   setActiveMenu,
   children,
   notificationCount = 0,
+  wide = false,
 }) => {
   const { t } = useTranslation();
   const open = activeMenu === label;
@@ -117,7 +133,10 @@ export const TopMenu = ({
         setActiveMenu(null);
       }}
       onClickCapture={(event) => {
-        if (event.target.closest("[data-menu-item]")) {
+        if (
+          event.target.closest("[data-menu-item]") &&
+          !event.target.closest("[data-menu-keep-open]")
+        ) {
           setDismissed(true);
           setActiveMenu(null);
         }
@@ -145,7 +164,9 @@ export const TopMenu = ({
           </MenuBadge>
         )}
       </MenuTrigger>
-      <MenuPanel $open={open}>{children}</MenuPanel>
+      <MenuPanel $open={open} $wide={wide}>
+        {children}
+      </MenuPanel>
     </MenuRoot>
   );
 };

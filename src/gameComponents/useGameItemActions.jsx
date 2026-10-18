@@ -7,6 +7,8 @@ import {
   useUsers,
   useGetSelectedItems,
   useItemInteraction,
+  useBoardConfig,
+  useItems,
 } from "react-sync-board";
 
 import {
@@ -49,6 +51,7 @@ import rollAudio from "../media/audio/roll.ogg?url";
 import shuffleAudio from "../media/audio/shuffle.ogg?url";
 
 import useLocalStorage from "../hooks/useLocalStorage";
+import { getLinkedItemIds } from "../utils/itemVisibility";
 
 export const useGameItemActions = () => {
   const {
@@ -66,8 +69,36 @@ export const useGameItemActions = () => {
   const [isFirstLock, setIsFirstLock] = useLocalStorage("isFirstLock", true);
 
   const { currentUser } = useUsers();
+  const [boardConfig] = useBoardConfig();
+  const allItems = useItems();
 
   const getSelectedItems = useGetSelectedItems();
+
+  const hideForMyGroup = React.useCallback(
+    async (itemIds) => {
+      const groupId =
+        boardConfig.groupAssignments?.[currentUser.uid] || "players";
+      const ids = getLinkedItemIds(allItems, itemIds);
+      batchUpdateItems(
+        ids,
+        () => ({ hidden: true, hiddenByGroup: groupId }),
+        true
+      );
+    },
+    [allItems, batchUpdateItems, boardConfig.groupAssignments, currentUser.uid]
+  );
+
+  const makePublic = React.useCallback(
+    async (itemIds) => {
+      const ids = getLinkedItemIds(allItems, itemIds);
+      batchUpdateItems(
+        ids,
+        () => ({ hidden: false, hiddenByGroup: null }),
+        true
+      );
+    },
+    [allItems, batchUpdateItems]
+  );
 
   const getItemListOrSelected = React.useCallback(
     async (itemIds) => {
@@ -789,6 +820,16 @@ export const useGameItemActions = () => {
         shortcut: "o",
         icon: FiEye,
       },
+      hideForMyGroup: {
+        action: () => hideForMyGroup,
+        label: t("Hide for my group"),
+        icon: FiEye,
+      },
+      makePublic: {
+        action: () => makePublic,
+        label: t("Make public"),
+        icon: FiEye,
+      },
       revealSelf: {
         action: () => (itemIds) => setFlipSelf(itemIds, { flipSelf: true }),
         label: t("Reveal for me"),
@@ -1079,6 +1120,8 @@ export const useGameItemActions = () => {
     alignAsSquare,
     changeValue,
     cloneItem,
+    hideForMyGroup,
+    makePublic,
     randomlyRotateSelectedItems,
     remove,
     roll,

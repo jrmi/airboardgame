@@ -5,6 +5,8 @@ import {
   useBoardPosition,
   useItems,
   useSetSelectedItems,
+  useBoardConfig,
+  useUsers,
 } from "react-sync-board";
 
 import itemTemplates from "../../gameComponents/itemTemplates";
@@ -12,6 +14,8 @@ import { search } from "../../utils";
 import { getImage } from "../../utils/image";
 import { media2Url } from "../../mediaLibrary";
 import SidePanel from "../../ui/SidePanel";
+import { canSeeItem } from "../../utils/itemVisibility";
+import { useModeration } from "../../hooks/useModeration";
 
 const Preview = styled.div`
   width: 64px;
@@ -215,6 +219,9 @@ const ItemResult = ({ item, onSelect, onKeyDown, t }) => {
 const ItemFinder = ({ open, onClose }) => {
   const { t } = useTranslation();
   const items = useItems();
+  const [boardConfig] = useBoardConfig();
+  const { currentUser } = useUsers();
+  const { state: moderationState } = useModeration();
   const { zoomToExtent } = useBoardPosition();
   const setSelectedItems = useSetSelectedItems();
   const [filter, setFilter] = React.useState("");
@@ -230,10 +237,23 @@ const ItemFinder = ({ open, onClose }) => {
 
   const matchingItems = React.useMemo(
     () =>
-      items.filter((item) =>
-        search(searchFilter, getItemDisplayName(item, itemTemplates, t))
+      items.filter(
+        (item) =>
+          canSeeItem({
+            item,
+            userId: currentUser?.uid,
+            board: boardConfig,
+            refereeView: moderationState.refereeView,
+          }) && search(searchFilter, getItemDisplayName(item, itemTemplates, t))
       ),
-    [searchFilter, items, t]
+    [
+      searchFilter,
+      items,
+      t,
+      currentUser?.uid,
+      boardConfig,
+      moderationState.refereeView,
+    ]
   );
 
   React.useEffect(() => {

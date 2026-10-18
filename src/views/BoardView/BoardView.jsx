@@ -1,6 +1,7 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 
-import { Board, useUsers, useBoardConfig } from "react-sync-board";
+import { Board, useUsers, useBoardConfig, useItems } from "react-sync-board";
 
 import { SHOW_WELCOME } from "../../utils/settings";
 import WelcomeModal from "./WelcomeModal";
@@ -23,6 +24,8 @@ import shuffleAudio from "../../media/audio/shuffle.ogg?url";
 import { preloadAudio } from "../../utils";
 import BoardGridOverlay from "../../gameComponents/GridOverlay";
 import HeldItemRotationStyles from "./HeldItemRotationStyles";
+import { canSeeItem } from "../../utils/itemVisibility";
+import { useModeration } from "../../hooks/useModeration";
 
 const StyledBoard = styled.div`
   & .item.locked::after {
@@ -53,13 +56,17 @@ export const BoardView = ({
   edit: editMode,
   itemLibraries,
 }) => {
-  const { isSpaceMaster: isMaster } = useUsers();
+  const { t } = useTranslation();
+  const { isSpaceMaster: isMaster, currentUser } = useUsers();
+  const items = useItems();
+  const { state: moderationState } = useModeration();
   const { isVassalSession } = useSession();
   const [showWelcomeModal, setShowWelcomeModal] = React.useState(
     SHOW_WELCOME && !editMode && isMaster && !isVassalSession
   );
 
   const [boardConfig] = useBoardConfig();
+  const [hiddenOpacity] = useLocalStorage("hiddenItemOpacity", 0.28);
 
   const [interaction, setInteraction] = useLocalStorage(
     "boardInteraction",
@@ -78,6 +85,58 @@ export const BoardView = ({
 
   React.useEffect(() => preloadAudio([flipAudio, shuffleAudio, rollAudio]), []);
 
+  const boardItemTemplates = React.useMemo(
+    () =>
+      Object.fromEntries(
+        Object.entries(itemTemplates).map(([type, template]) => {
+          const availableActions = template.availableActions;
+          return [
+            type,
+            {
+              ...template,
+              availableActions: (item) => {
+                const actions =
+                  typeof availableActions === "function"
+                    ? availableActions(item)
+                    : availableActions || [];
+                return [
+                  ...new Set([...actions, "hideForMyGroup", "makePublic"]),
+                ];
+              },
+            },
+          ];
+        })
+      ),
+    []
+  );
+
+  React.useLayoutEffect(() => {
+    const renderedItems = new Map(
+      Array.from(document.querySelectorAll("[data-id]")).map((element) => [
+        element.dataset.id,
+        element,
+      ])
+    );
+    items.forEach((item) => {
+      const element = renderedItems.get(item.id);
+      if (!element) return;
+      const visible = canSeeItem({
+        item,
+        userId: currentUser?.uid,
+        board: boardConfig,
+        refereeView: moderationState.refereeView,
+      });
+      element.style.display = visible ? "" : "none";
+      element.style.opacity = item.hidden ? String(hiddenOpacity) : "";
+    });
+  }, [
+    boardConfig,
+    currentUser?.uid,
+    hiddenOpacity,
+    items,
+    moderationState.refereeView,
+  ]);
+
   return (
     <MediaLibraryProvider libraries={mediaLibraries}>
       <ImageDropNPaste>
@@ -85,7 +144,7 @@ export const BoardView = ({
           <Board
             interaction={interaction}
             style={style}
-            itemTemplates={itemTemplates}
+            itemTemplates={boardItemTemplates}
             showResizeHandle={editItem}
           >
             <BoardGridOverlay />
@@ -107,6 +166,26 @@ export const BoardView = ({
           setShowItemFinder={setShowItemFinder}
         />
         <WelcomeModal show={showWelcomeModal} setShow={setShowWelcomeModal} />
+        {moderationState.refereeView && (
+          <div
+            role="status"
+            style={{
+              position: "fixed",
+              zIndex: 240,
+              top: "56px",
+              right: "0.75rem",
+              padding: "0.45rem 0.75rem",
+              borderRadius: "4px",
+              color: "white",
+              background: "#8b1e1e",
+              pointerEvents: "none",
+            }}
+          >
+            {t("Referee view is active for {{name}}", {
+              name: moderationState.moderatorName || t("Moderator"),
+            })}
+          </div>
+        )}
       </ImageDropNPaste>
       <SelectedItemsPane
         hideMenu={hideMenu}

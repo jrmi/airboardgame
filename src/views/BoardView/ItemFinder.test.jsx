@@ -4,6 +4,8 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 
 const board = vi.hoisted(() => ({
   items: [],
+  config: {},
+  refereeView: false,
   zoomToExtent: vi.fn(),
   setSelectedItems: vi.fn(),
 }));
@@ -15,8 +17,14 @@ vi.mock("react-i18next", () => ({
 
 vi.mock("react-sync-board", () => ({
   useItems: () => board.items,
+  useBoardConfig: () => [board.config],
+  useUsers: () => ({ currentUser: { uid: "player-1" } }),
   useBoardPosition: () => ({ zoomToExtent: board.zoomToExtent }),
   useSetSelectedItems: () => board.setSelectedItems,
+}));
+
+vi.mock("../../hooks/useModeration", () => ({
+  useModeration: () => ({ state: { refereeView: board.refereeView } }),
 }));
 
 vi.mock("../../ui/SidePanel", () => ({
@@ -46,6 +54,8 @@ describe("ItemFinder", () => {
   afterEach(() => {
     cleanup();
     board.items = [];
+    board.config = {};
+    board.refereeView = false;
     board.zoomToExtent.mockClear();
     board.setSelectedItems.mockClear();
   });
@@ -126,6 +136,34 @@ describe("ItemFinder", () => {
     ];
     view.rerender(<ItemFinder open={true} onClose={vi.fn()} />);
     expect(screen.getByRole("button", { name: "Eleven" })).toBeTruthy();
+  });
+
+  it("filters hidden items by assigned camp and referee view", () => {
+    board.config = {
+      groups: [
+        { id: "players", name: "Players" },
+        { id: "blue", name: "Blue" },
+      ],
+      groupAssignments: { "player-1": "players" },
+    };
+    board.items = [
+      { id: "visible", type: "counter", label: "Visible" },
+      {
+        id: "hidden",
+        type: "counter",
+        label: "Hidden",
+        hidden: true,
+        hiddenByGroup: "blue",
+      },
+    ];
+    renderFinder();
+    expect(screen.getAllByText("Visible")).toHaveLength(2);
+    expect(screen.queryByText("Hidden")).not.toBeInTheDocument();
+
+    cleanup();
+    board.refereeView = true;
+    renderFinder();
+    expect(screen.getAllByText("Hidden")).toHaveLength(2);
   });
 
   it("only renders previews for visible results", () => {
