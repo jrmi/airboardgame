@@ -11,6 +11,8 @@ import {
   useSelectedItems,
   useDebouncedItems,
 } from "react-sync-board";
+import useGameItemActions from "../../gameComponents/useGameItemActions";
+import { getContinuousRotation, normalizeAngle } from "../../utils/item";
 
 const CardContent = styled.div.attrs(() => ({ className: "content" }))`
   display: flex;
@@ -23,7 +25,9 @@ const EditItemButton = ({ showEdit, setShowEdit }) => {
 
   const items = useDebouncedItems();
   const selectedItems = useSelectedItems();
-  const { batchUpdateItems } = useItemActions();
+  const { batchUpdateItems, getItems } = useItemActions();
+  const { computeHeldRotationUpdates, rotate, resetRotation } =
+    useGameItemActions();
 
   const currentItems = React.useMemo(
     () =>
@@ -34,21 +38,96 @@ const EditItemButton = ({ showEdit, setShowEdit }) => {
   );
 
   const onSubmitHandler = React.useCallback(
-    (formValues) => {
-      batchUpdateItems(selectedItems, (item) => {
-        if (formValues.item) {
-          // Merge subitem for generator
-          return {
-            ...item,
-            ...formValues,
-            item: { ...item.item, ...formValues.item },
-          };
-        } else {
-          return { ...item, ...formValues };
-        }
-      });
+    async (formValues) => {
+      // A form must never rewrite item identity. Also ignore fields removed
+      // from the common-value intersection when a multi-selection changes.
+      const safeFormValues = Object.fromEntries(
+        Object.entries(formValues).filter(
+          ([key, value]) => key !== "id" && value !== undefined
+        )
+      );
+      // The rotation field holds an absolute angle shared by all edited
+      // items, so the delta to propagate to held items differs per item.
+      // Compute it against each item's live rotation (getItems), not the
+      // debounced `currentItems` snapshot -- during a fast slider drag the
+      // debounced value lags behind, which would desync held items from
+      // their holder's actual (always-absolute) new rotation.
+      let heldUpdates = {};
+      if (safeFormValues.rotation !== undefined) {
+        const liveItems = await getItems(currentItems.map(({ id }) => id));
+        const requestedRotation = normalizeAngle(safeFormValues.rotation);
+        const rootAngleDeltas = Object.fromEntries(
+          liveItems
+            .filter((item) => item)
+            .filter(
+              (item) => normalizeAngle(item.rotation || 0) !== requestedRotation
+            )
+            .map((item) => [
+              item.id,
+              getContinuousRotation(item.rotation || 0, requestedRotation) -
+                (item.rotation || 0),
+            ])
+        );
+        const heldRotationResult =
+          await computeHeldRotationUpdates(rootAngleDeltas);
+        heldUpdates = heldRotationResult.updates;
+      }
+      const heldIds = Object.keys(heldUpdates);
+      const updateIds = [...new Set([...selectedItems, ...heldIds])];
+
+      batchUpdateItems(
+        updateIds,
+        (item) => {
+          const heldUpdate = heldUpdates[item.id];
+          const isExplicitlySelected = selectedItems.includes(item.id);
+          const itemFormValues = !isExplicitlySelected
+            ? {}
+            : heldUpdate
+              ? Object.fromEntries(
+                  Object.entries(safeFormValues).filter(
+                    ([key]) => key !== "rotation"
+                  )
+                )
+              : safeFormValues;
+          const rotation = heldUpdate
+            ? getContinuousRotation(item.rotation || 0, heldUpdate.rotation)
+            : itemFormValues.rotation === undefined
+              ? undefined
+              : normalizeAngle(item.rotation || 0) ===
+                  normalizeAngle(itemFormValues.rotation)
+                ? item.rotation
+                : getContinuousRotation(
+                    item.rotation || 0,
+                    itemFormValues.rotation
+                  );
+          if (safeFormValues.item) {
+            // Merge subitem for generator
+            return {
+              ...item,
+              ...itemFormValues,
+              ...(heldUpdate || {}),
+              ...(rotation === undefined ? {} : { rotation }),
+              item: { ...item.item, ...safeFormValues.item },
+            };
+          } else {
+            return {
+              ...item,
+              ...itemFormValues,
+              ...(heldUpdate || {}),
+              ...(rotation === undefined ? {} : { rotation }),
+            };
+          }
+        },
+        true
+      );
     },
-    [batchUpdateItems, selectedItems]
+    [
+      batchUpdateItems,
+      getItems,
+      selectedItems,
+      currentItems,
+      computeHeldRotationUpdates,
+    ]
   );
 
   let title = "";
@@ -72,7 +151,6 @@ const EditItemButton = ({ showEdit, setShowEdit }) => {
         />
       </button>
       <SidePanel
-        key={selectedItems[0]}
         open={showEdit}
         onClose={() => {
           setShowEdit(false);
@@ -81,7 +159,13 @@ const EditItemButton = ({ showEdit, setShowEdit }) => {
         width="25%"
       >
         <CardContent>
-          <ItemFormFactory onUpdate={onSubmitHandler} items={currentItems} />
+          <ItemFormFactory
+            key={selectedItems.join(":")}
+            onUpdate={onSubmitHandler}
+            onRotate={(angle) => rotate(selectedItems, { angle })}
+            onResetRotation={() => resetRotation(selectedItems)}
+            items={currentItems}
+          />
         </CardContent>
       </SidePanel>
     </>

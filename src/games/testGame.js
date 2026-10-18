@@ -205,6 +205,35 @@ const genGame = () => {
     },
   });
 
+  // Dedicated stack for held-item rotation end-to-end tests.
+  items.push({
+    id: "rotation-holder",
+    type: "image",
+    content: "/default.png",
+    width: 100,
+    height: 100,
+    x: 50,
+    y: 350,
+    rotation: 10,
+    holdItems: true,
+    linkedItems: ["rotation-child"],
+    actions: ["rotate90", "flip"],
+  });
+  items.push({
+    id: "rotation-child",
+    type: "image",
+    content: "/game_assets/overlay.png",
+    width: 40,
+    height: 40,
+    x: 130,
+    y: 380,
+    rotation: 40,
+    heldBy: "rotation-holder",
+    heldOffset: { x: 50, y: 0 },
+    heldAngle: 10,
+    actions: ["rotate90", "tap"],
+  });
+
   return {
     items,
     availableItems: [

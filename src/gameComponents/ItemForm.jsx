@@ -1,6 +1,6 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { Field } from "react-final-form";
+import { Field, useForm } from "react-final-form";
 
 import Label from "../ui/formUtils/Label";
 import Hint from "../ui/formUtils/Hint";
@@ -44,6 +44,46 @@ const getAvailableActionsFromItem = (item) => {
   return [];
 };
 
+const normalizeActions = (item) =>
+  (item.actions || getDefaultActionsFromItem(item)).map((action) =>
+    typeof action === "string" ? { name: action } : action
+  );
+
+export const getCombinedItemActions = (items) => {
+  const actionKeys = new Set();
+  return items.flatMap(normalizeActions).filter((action) => {
+    const key = JSON.stringify(action);
+    if (actionKeys.has(key)) return false;
+    actionKeys.add(key);
+    return true;
+  });
+};
+
+const getEditorRotation = (rotation = 0) => {
+  const normalized = ((rotation % 360) + 360) % 360;
+  return normalized > 180 ? normalized - 360 : normalized;
+};
+
+export const getItemFormInitialValues = (items) => {
+  const [firstItem, ...restItems] = items.map((item) => {
+    const newActions = normalizeActions(item);
+    return {
+      ...item,
+      // The rotation slider accepts only -180° through 180°. Feed it an
+      // equivalent value in that range so opening the editor cannot clamp
+      // stored values such as 270° or 360° to 180°.
+      rotation: getEditorRotation(item.rotation),
+      actions: newActions,
+    };
+  });
+
+  // Set initial values to intersection of all common item values.
+  return restItems.reduce(
+    objectIntersection,
+    JSON.parse(JSON.stringify(firstItem))
+  );
+};
+
 const getExcludedFields = (types) => {
   return types.reduce((excluded, type) => {
     return Object.assign(excluded, itemTemplates[type].excludeFields || {});
@@ -58,8 +98,19 @@ const toNumber = (val) => {
   return value;
 };
 
-const ItemForm = ({ items, types, extraExcludeFields }) => {
+const rotationSteps = [1, 5, 33, 45];
+
+const ItemForm = ({
+  items,
+  types,
+  extraExcludeFields,
+  onRotate,
+  onResetRotation,
+}) => {
   const { t } = useTranslation();
+  const form = useForm();
+  const [customRotation, setCustomRotation] = React.useState(90);
+  const [useCombinedActions, setUseCombinedActions] = React.useState(false);
 
   const oneType = types.length === 1;
 
@@ -83,32 +134,22 @@ const ItemForm = ({ items, types, extraExcludeFields }) => {
     return { ...getExcludedFields(types), ...extraExcludeFields };
   }, [extraExcludeFields, types]);
 
-  const initialValues = React.useMemo(() => {
-    const [firstItem, ...restItems] = items.map((item) => {
-      const newActions = (item.actions || getDefaultActionsFromItem(item)).map(
-        (action) => {
-          if (typeof action === "string") {
-            return { name: action };
-          }
-          return action;
-        }
-      );
-      return {
-        ...item,
-        actions: newActions,
-      };
-    });
-
-    // Set initial values to intersection of all common item values
-    return restItems.reduce(
-      objectIntersection,
-      JSON.parse(JSON.stringify(firstItem))
-    );
-  }, [items]);
+  const initialValues = React.useMemo(
+    () => getItemFormInitialValues(items),
+    [items]
+  );
+  const hasCommonActions = Object.prototype.hasOwnProperty.call(
+    initialValues,
+    "actions"
+  );
+  const combinedActions = React.useMemo(
+    () => getCombinedItemActions(items),
+    [items]
+  );
 
   const {
     locked = false,
-    rotation = 0,
+    rotation,
     layer = 0,
     groupId = "",
     grid: {
@@ -137,35 +178,98 @@ const ItemForm = ({ items, types, extraExcludeFields }) => {
         </Label>
       )}
       {!excludeFields.rotation && (
-        <Label>
+        <Label as="div">
           {t("Rotation")}
-          <Field name="rotation" initialValue={rotation}>
-            {({ input: { onChange, value } }) => {
-              return (
-                <Slider
-                  defaultValue={0}
-                  value={value}
-                  min={-180}
-                  max={180}
-                  step={5}
-                  included={false}
-                  marks={{
-                    "-180": -180,
-                    "-90": -90,
-                    "-45": -45,
-                    "-30": -30,
-                    0: 0,
-                    30: 30,
-                    45: 45,
-                    90: 90,
-                    180: 180,
-                  }}
-                  onChange={onChange}
-                  className={"slider-rotation"}
+          {items.length > 1 ? (
+            <div className="rotation-delta-controls">
+              {rotationSteps.map((amount) => (
+                <React.Fragment key={amount}>
+                  {[-amount, amount].map((angle) => (
+                    <button
+                      className="button outline"
+                      key={angle}
+                      onClick={() => onRotate(angle)}
+                      title={t("Rotate {{angle}}°", { angle })}
+                      type="button"
+                    >
+                      {angle > 0 ? "+" : ""}
+                      {angle}°
+                    </button>
+                  ))}
+                </React.Fragment>
+              ))}
+              <div className="rotation-custom-amount">
+                <input
+                  aria-label={t("Custom rotation amount")}
+                  min="0"
+                  onChange={({ target }) =>
+                    setCustomRotation(Number(target.value))
+                  }
+                  type="number"
+                  value={customRotation}
                 />
-              );
-            }}
-          </Field>
+                <span>°</span>
+              </div>
+              <div className="rotation-custom-buttons">
+                <button
+                  className="button outline"
+                  onClick={() => onRotate(-Math.abs(customRotation || 0))}
+                  title={t("Rotate {{angle}}°", {
+                    angle: -Math.abs(customRotation || 0),
+                  })}
+                  type="button"
+                >
+                  −
+                </button>
+                <button
+                  className="button outline"
+                  onClick={() => onRotate(Math.abs(customRotation || 0))}
+                  title={t("Rotate {{angle}}°", {
+                    angle: Math.abs(customRotation || 0),
+                  })}
+                  type="button"
+                >
+                  +
+                </button>
+              </div>
+              <button
+                className="button outline rotation-reset"
+                onClick={onResetRotation}
+                title={t("Reset rotation to 0°")}
+                type="button"
+              >
+                {t("Reset rotation to 0°")}
+              </button>
+            </div>
+          ) : (
+            <Field name="rotation" initialValue={rotation}>
+              {({ input: { onChange, value } }) => {
+                return (
+                  <Slider
+                    defaultValue={0}
+                    value={value === "" ? 0 : value}
+                    min={-180}
+                    max={180}
+                    step={5}
+                    included={false}
+                    marks={{
+                      "-180": -180,
+                      "-90": -90,
+                      "-45": -45,
+                      "-30": -30,
+                      0: 0,
+                      30: 30,
+                      45: 45,
+                      90: 90,
+                      180: 180,
+                    }}
+                    onChange={onChange}
+                    className={"slider-rotation"}
+                  />
+                );
+              }}
+            </Field>
+          )}
         </Label>
       )}
       {!excludeFields.layer && (
@@ -289,12 +393,27 @@ const ItemForm = ({ items, types, extraExcludeFields }) => {
       {oneType && (
         <>
           <h3>{t("Item actions")}</h3>
-
-          <ActionList
-            name="actions"
-            initialValue={actions}
-            availableActions={availableActions}
-          />
+          {items.length > 1 && !hasCommonActions && !useCombinedActions ? (
+            <div>
+              <p>{t("Some items have different action configurations.")}</p>
+              <button
+                className="button outline"
+                onClick={() => {
+                  form.change("actions", combinedActions);
+                  setUseCombinedActions(true);
+                }}
+                type="button"
+              >
+                {t("Combine actions and edit them together")}
+              </button>
+            </div>
+          ) : (
+            <ActionList
+              name="actions"
+              initialValue={useCombinedActions ? combinedActions : actions}
+              availableActions={availableActions}
+            />
+          )}
         </>
       )}
     </>

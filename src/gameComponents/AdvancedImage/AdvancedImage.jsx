@@ -3,10 +3,10 @@ import { useUsers } from "react-sync-board";
 import styled from "styled-components";
 import { media2Url } from "../../mediaLibrary";
 import { FiEye } from "react-icons/fi";
-import { useItemInteraction, useItemActions } from "react-sync-board";
+import { useItemInteraction } from "react-sync-board";
 
-import { getHeldItems } from "../../utils/item";
 import Canvas from "../Canvas";
+import useHeldItemPlacement from "../useHeldItemPlacement";
 import { getImage } from "../../utils/image";
 
 const UnflippedFor = styled.div`
@@ -78,7 +78,6 @@ const AdvancedImage = ({
   id: currentItemId,
 }) => {
   const { register } = useItemInteraction("place");
-  const { getItemList } = useItemActions();
   const wrapperRef = React.useRef(null);
   const { currentUser, localUsers: users } = useUsers();
 
@@ -128,27 +127,11 @@ const AdvancedImage = ({
     }
   }, [frontUrl, backUrl]);
 
-  const onPlaceItem = React.useCallback(
-    (itemIds) => {
-      setState((item) => {
-        const newLinkedItems = getHeldItems({
-          element: wrapperRef.current,
-          currentItemId,
-          currentLinkedItemIds: item.linkedItems,
-          itemList: getItemList(),
-          itemIds,
-          shouldHoldItems: item.holdItems,
-        });
-
-        if (item.linkedItems !== newLinkedItems) {
-          return {
-            linkedItems: newLinkedItems,
-          };
-        }
-      }, true);
-    },
-    [currentItemId, getItemList, setState]
-  );
+  const onPlaceItem = useHeldItemPlacement({
+    holderRef: wrapperRef,
+    holderId: currentItemId,
+    setState,
+  });
 
   React.useEffect(() => {
     const unregisterList = [];

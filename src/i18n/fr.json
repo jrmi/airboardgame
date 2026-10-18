@@ -256,6 +256,8 @@
   "Select an action to add...": "Ajoutez une action...",
   "Angle": "Angle",
   "Item actions": "Actions",
+  "Some items have different action configurations.": "Certains éléments ont des configurations d'actions différentes.",
+  "Combine actions and edit them together": "Combiner les actions pour les modifier ensemble",
   "Rotate {{angle}}°": "Rotation de {{angle}}°",
   "Rotate": "Rotation",
   "Rotate randomly {{angle}}°": "Rotation aléatoire de {{angle}}°",
@@ -365,5 +367,7 @@
   "Rotate board": "Tourner le plateau",
   "Center on items": "Centrer sur les éléments",
   "Hold items": "Porte les autres éléments",
+  "Custom rotation amount": "Angle de rotation personnalisé",
+  "Reset rotation to 0°": "Réinitialiser la rotation à 0°",
   "Whether we can place items on it. When an item is placed, moving the current item one also moves the placed items.": "Indique si l'on peut placer des éléments dessus. Quand un élément est placé, il se déplace avec cet élément."
 }
