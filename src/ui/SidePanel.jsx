@@ -45,6 +45,17 @@ const StyledSidePanel = styled.div`
     border-left: 1px solid var(--color-board-border);
   }
 
+  &.side-panel--item-finder {
+    overflow: hidden;
+  }
+
+  &.side-panel--item-finder .side-panel__content {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    overflow: hidden;
+  }
+
   &.side-panel--open {
     transform: translateX(0%);
   }
@@ -124,6 +135,7 @@ const SidePanel = ({
   width,
   canClose = true,
   layer = 0,
+  className,
 }) => {
   const { t } = useTranslation();
 
@@ -190,6 +202,10 @@ const SidePanel = ({
     classes.push("side-panel--right");
   } else {
     classes.push("side-panel--left");
+  }
+
+  if (className) {
+    classes.push(className);
   }
 
   return createPortal(

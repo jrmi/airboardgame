@@ -72,9 +72,10 @@ const RESULTS_OVERSCAN = 4;
 const VISIBLE_RESULTS = 12;
 
 const Results = styled.div`
+  flex: 1 1 0;
+  min-height: 0;
   margin: 1em 0 0;
   padding: 0;
-  max-height: calc(100vh - 150px);
   overflow-y: auto;
 `;
 
@@ -297,6 +298,7 @@ const ItemFinder = ({ open, onClose }) => {
       onClose={onClose}
       onPointerDown={(event) => event.stopPropagation()}
       title={t("Find items")}
+      className="side-panel--item-finder"
     >
       <input
         ref={inputRef}
