@@ -6,6 +6,7 @@ import { deleteGame, getBestTranslationFromConfig } from "../utils/api";
 import { confirmAlert } from "react-confirm-alert";
 import { toast } from "react-toastify";
 import { useMutation, useQueryClient } from "react-query";
+import useAsyncEffect from "use-async-effect";
 import { media2Url } from "../mediaLibrary";
 import {
   FiClock,
@@ -111,6 +112,21 @@ const Game = styled.li`
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 4;
     line-height: 1.25;
+  }
+
+  & .description {
+    box-sizing: border-box;
+    max-height: 13.75em;
+    margin: 0;
+    padding: 0 0.75em 0.75em;
+    overflow: hidden;
+    color: var(--font-color2);
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 9;
+    line-height: 1.25;
+    -webkit-mask-image: linear-gradient(to bottom, #000 80%, transparent 100%);
+    mask-image: linear-gradient(to bottom, #000 80%, transparent 100%);
   }
 
   &:hover {
@@ -255,6 +271,17 @@ const GameListItem = ({
   const translation = React.useMemo(
     () => getBestTranslationFromConfig(game.board, i18n.languages),
     [game, i18n.languages]
+  );
+  const [descriptionHtml, setDescriptionHtml] = React.useState("");
+
+  useAsyncEffect(
+    async (isMounted) => {
+      const { marked } = await import("marked");
+      if (isMounted()) {
+        setDescriptionHtml(marked.parse(translation.description || ""));
+      }
+    },
+    [translation.description]
   );
 
   const onClick = React.useCallback(
@@ -416,6 +443,12 @@ const GameListItem = ({
 
       {includeBaseline && translation.baseline && (
         <p className="baseline">{translation.baseline}</p>
+      )}
+      {includeBaseline && descriptionHtml && (
+        <div
+          className="description"
+          dangerouslySetInnerHTML={{ __html: descriptionHtml }}
+        />
       )}
     </>
   );
