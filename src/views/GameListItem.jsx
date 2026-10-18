@@ -89,7 +89,6 @@ const Game = styled.li`
     & .button {
       border-radius: 4px;
     }
-
   }
 
   & .baseline {
