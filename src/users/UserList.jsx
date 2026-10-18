@@ -3,6 +3,7 @@ import { useUsers } from "react-sync-board";
 import styled from "styled-components";
 
 import UserConfig from "./UserConfig";
+import useUniqueUsername from "./useUniqueUsername";
 
 const InlineUserList = styled.ul.attrs(() => ({ className: "uk-card" }))`
   list-style: none;
@@ -30,12 +31,14 @@ const InlineUserListItem = styled.li`
 export const Users = ({ showNames = false }) => {
   const { currentUser, updateCurrentUser, localUsers: users } = useUsers();
 
+  useUniqueUsername();
+
   return (
     <InlineUserList>
       {users.map((u, index) => (
         <InlineUserListItem
           className={showNames ? "user-list__item--with-name" : undefined}
-          key={u.id}
+          key={u.uid}
         >
           <UserConfig
             index={index + 1}
@@ -43,6 +46,9 @@ export const Users = ({ showNames = false }) => {
             updateCurrentUser={updateCurrentUser}
             editable={currentUser.id === u.id}
             showName={showNames}
+            existingNames={users
+              .filter((other) => other.id !== u.id)
+              .map((other) => other.name)}
           />
         </InlineUserListItem>
       ))}
