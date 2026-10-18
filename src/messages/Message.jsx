@@ -41,9 +41,11 @@ const Message = ({
   <StyledMessage $color={color}>
     {first && <div className="name">{name}</div>}
     <div className="line">
-      <div className="left-block">
-        <span>{timestamp.format("HH:mm")}</span>
-      </div>
+      {timestamp?.isValid() && (
+        <div className="left-block">
+          <span>{timestamp.format("HH:mm")}</span>
+        </div>
+      )}
       <p>{content}</p>
     </div>
   </StyledMessage>
