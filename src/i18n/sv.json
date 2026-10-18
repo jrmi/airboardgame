@@ -402,5 +402,9 @@
   "Make public": "Gör offentligt",
   "Unassigned": "Utan lag",
   "Team {{number}}": "Lag {{number}}",
-  "Referee view is active for {{name}}": "Domarvy aktiverad: {{name}}"
+  "Referee view is active for {{name}}": "Domarvy aktiverad: {{name}}",
+  "Select a player": "Välj en spelare",
+  "Cancel": "Avbryt",
+  "Hide for my group / make public": "Dölj för mitt lag / gör offentlig",
+  "Transfer moderation...": "Överlämna modereringen..."
 }

@@ -410,5 +410,9 @@
   "Make public": "Rendre public",
   "Unassigned": "Sans équipe",
   "Team {{number}}": "Équipe {{number}}",
-  "Referee view is active for {{name}}": "Vue d'arbitre active : {{name}}"
+  "Referee view is active for {{name}}": "Vue d'arbitre active : {{name}}",
+  "Select a player": "Choisissez un joueur",
+  "Cancel": "Annuler",
+  "Hide for my group / make public": "Masquer pour mon camp / rendre public",
+  "Transfer moderation...": "Transférer modération…"
 }

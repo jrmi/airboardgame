@@ -401,5 +401,9 @@
   "Make public": "公开",
   "Unassigned": "未分队",
   "Team {{number}}": "队伍 {{number}}",
-  "Referee view is active for {{name}}": "裁判视图已启用：{{name}}"
+  "Referee view is active for {{name}}": "裁判视图已启用：{{name}}",
+  "Select a player": "选择一名玩家",
+  "Cancel": "取消",
+  "Hide for my group / make public": "对我的队伍隐藏 / 公开",
+  "Transfer moderation...": "转交主持权..."
 }

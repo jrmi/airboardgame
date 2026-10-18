@@ -404,5 +404,9 @@
   "Make public": "Зробити загальнодоступним",
   "Unassigned": "Без команди",
   "Team {{number}}": "Команда {{number}}",
-  "Referee view is active for {{name}}": "Режим судді активний: {{name}}"
+  "Referee view is active for {{name}}": "Режим судді активний: {{name}}",
+  "Select a player": "Виберіть гравця",
+  "Cancel": "Скасувати",
+  "Hide for my group / make public": "Приховати для моєї команди / зробити загальнодоступним",
+  "Transfer moderation...": "Передати модерацію..."
 }

@@ -404,5 +404,9 @@
   "Make public": "Upublicznij",
   "Unassigned": "Bez zespołu",
   "Team {{number}}": "Drużyna {{number}}",
-  "Referee view is active for {{name}}": "Widok sędziego aktywny: {{name}}"
+  "Referee view is active for {{name}}": "Widok sędziego aktywny: {{name}}",
+  "Select a player": "Wybierz gracza",
+  "Cancel": "Anuluj",
+  "Hide for my group / make public": "Ukryj dla mojej drużyny / upublicznij",
+  "Transfer moderation...": "Przekaż moderację..."
 }

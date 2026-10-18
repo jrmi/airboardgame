@@ -85,24 +85,39 @@ const SelectedItemsPane = ({
   const { findElementUnderPointer } = useItemActions();
   const { actionMap } = useGameItemActions();
 
-  const parsedAvailableActions = React.useMemo(
-    () =>
-      availableActions
-        .map(({ name, args }) => {
-          if (!actionMap[name]) {
-            console.log("Missing action " + name);
-          }
-          const action = { ...actionMap[name] };
-          action.action = action.action(args);
-          action.label = args?.customLabel || action.label(args);
-          action.shortcut = args?.customShortcut || action.shortcut;
-          action.uid = smallUid();
-          action.args = args;
-          return action;
-        })
-        .filter(({ multiple }) => !multiple || selectedItems.length > 1),
-    [actionMap, availableActions, selectedItems]
-  );
+  const parsedAvailableActions = React.useMemo(() => {
+    const actions = [];
+    availableActions.forEach((availableAction) => {
+      const isLegacyVisibilityAction = [
+        "hideForMyGroup",
+        "makePublic",
+      ].includes(availableAction.name);
+      const action = isLegacyVisibilityAction
+        ? { ...availableAction, name: "toggleGroupVisibility" }
+        : availableAction;
+      if (
+        action.name !== "toggleGroupVisibility" ||
+        !actions.some(({ name }) => name === "toggleGroupVisibility")
+      ) {
+        actions.push(action);
+      }
+    });
+
+    return actions
+      .map(({ name, args }) => {
+        if (!actionMap[name]) {
+          console.log("Missing action " + name);
+        }
+        const action = { ...actionMap[name] };
+        action.action = action.action(args);
+        action.label = args?.customLabel || action.label(args);
+        action.shortcut = args?.customShortcut || action.shortcut;
+        action.uid = smallUid();
+        action.args = args;
+        return action;
+      })
+      .filter(({ multiple }) => !multiple || selectedItems.length > 1);
+  }, [actionMap, availableActions, selectedItems]);
 
   React.useEffect(() => {
     const onKeyUp = (e) => {

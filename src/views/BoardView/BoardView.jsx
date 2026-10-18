@@ -1,7 +1,14 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 
-import { Board, useUsers, useBoardConfig, useItems } from "react-sync-board";
+import {
+  Board,
+  useUsers,
+  useBoardConfig,
+  useItems,
+  useSelectedItems,
+  useSetSelectedItems,
+} from "react-sync-board";
 
 import { SHOW_WELCOME } from "../../utils/settings";
 import WelcomeModal from "./WelcomeModal";
@@ -59,6 +66,8 @@ export const BoardView = ({
   const { t } = useTranslation();
   const { isSpaceMaster: isMaster, currentUser } = useUsers();
   const items = useItems();
+  const selectedItems = useSelectedItems();
+  const setSelectedItems = useSetSelectedItems();
   const { state: moderationState } = useModeration();
   const { isVassalSession } = useSession();
   const [showWelcomeModal, setShowWelcomeModal] = React.useState(
@@ -90,18 +99,26 @@ export const BoardView = ({
       Object.fromEntries(
         Object.entries(itemTemplates).map(([type, template]) => {
           const availableActions = template.availableActions;
+          const defaultActions = template.defaultActions;
           return [
             type,
             {
               ...template,
+              defaultActions: (item) => {
+                const actions =
+                  typeof defaultActions === "function"
+                    ? defaultActions(item)
+                    : defaultActions || [];
+                return [
+                  ...new Set([...(actions || []), "toggleGroupVisibility"]),
+                ];
+              },
               availableActions: (item) => {
                 const actions =
                   typeof availableActions === "function"
                     ? availableActions(item)
                     : availableActions || [];
-                return [
-                  ...new Set([...actions, "hideForMyGroup", "makePublic"]),
-                ];
+                return [...new Set([...actions, "toggleGroupVisibility"])];
               },
             },
           ];
@@ -135,6 +152,32 @@ export const BoardView = ({
     hiddenOpacity,
     items,
     moderationState.refereeView,
+  ]);
+
+  React.useEffect(() => {
+    const visibleItemIds = new Set(
+      items
+        .filter((item) =>
+          canSeeItem({
+            item,
+            userId: currentUser?.uid,
+            board: boardConfig,
+            refereeView: moderationState.refereeView,
+          })
+        )
+        .map(({ id }) => id)
+    );
+    const nextSelection = selectedItems.filter((id) => visibleItemIds.has(id));
+    if (nextSelection.length !== selectedItems.length) {
+      setSelectedItems(nextSelection);
+    }
+  }, [
+    boardConfig,
+    currentUser?.uid,
+    items,
+    moderationState.refereeView,
+    selectedItems,
+    setSelectedItems,
   ]);
 
   return (

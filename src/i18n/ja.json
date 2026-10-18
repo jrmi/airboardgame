@@ -401,5 +401,9 @@
   "Make public": "全員に公開",
   "Unassigned": "チーム未所属",
   "Team {{number}}": "チーム {{number}}",
-  "Referee view is active for {{name}}": "審判ビュー有効: {{name}}"
+  "Referee view is active for {{name}}": "審判ビュー有効: {{name}}",
+  "Select a player": "プレイヤーを選択",
+  "Cancel": "キャンセル",
+  "Hide for my group / make public": "自分のチームに隠す / 全員に公開",
+  "Transfer moderation...": "モデレーションを引き継ぐ..."
 }

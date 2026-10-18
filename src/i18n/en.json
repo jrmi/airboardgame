@@ -409,5 +409,9 @@
   "Make public": "Make public",
   "Unassigned": "Unassigned",
   "Team {{number}}": "Team {{number}}",
-  "Referee view is active for {{name}}": "Referee view is active: {{name}}"
+  "Referee view is active for {{name}}": "Referee view is active: {{name}}",
+  "Select a player": "Select a player",
+  "Cancel": "Cancel",
+  "Hide for my group / make public": "Hide for my group / make public",
+  "Transfer moderation...": "Transfer moderation..."
 }

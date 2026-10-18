@@ -402,5 +402,9 @@
   "Make public": "Herkese açık yap",
   "Unassigned": "Takımsız",
   "Team {{number}}": "Takım {{number}}",
-  "Referee view is active for {{name}}": "Hakem görünümü etkin: {{name}}"
+  "Referee view is active for {{name}}": "Hakem görünümü etkin: {{name}}",
+  "Select a player": "Bir oyuncu seçin",
+  "Cancel": "İptal",
+  "Hide for my group / make public": "Takımım için gizle / herkese aç",
+  "Transfer moderation...": "Moderatörlüğü devret..."
 }

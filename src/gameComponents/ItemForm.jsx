@@ -21,33 +21,45 @@ export const getFormFieldComponent = (type) => {
 };
 
 const getDefaultActionsFromItem = (item) => {
+  let actions = [];
   if (item.type in itemTemplates) {
-    const actions = itemTemplates[item.type].defaultActions;
+    actions = itemTemplates[item.type].defaultActions;
     if (typeof actions === "function") {
-      return actions(item);
+      actions = actions(item);
     }
-    return actions;
   }
 
-  return [];
+  return [...new Set([...(actions || []), "toggleGroupVisibility"])];
 };
 
 const getAvailableActionsFromItem = (item) => {
+  let actions = [];
   if (item.type in itemTemplates) {
-    const actions = itemTemplates[item.type].availableActions;
+    actions = itemTemplates[item.type].availableActions;
     if (typeof actions === "function") {
-      return actions(item);
+      actions = actions(item);
     }
-    return actions;
   }
 
-  return [];
+  return [...new Set([...(actions || []), "toggleGroupVisibility"])];
 };
 
-const normalizeActions = (item) =>
-  (item.actions || getDefaultActionsFromItem(item)).map((action) =>
-    typeof action === "string" ? { name: action } : action
+const normalizeActions = (item) => {
+  const actions = (item.actions || getDefaultActionsFromItem(item)).map(
+    (action) => (typeof action === "string" ? { name: action } : action)
   );
+  const hasGroupVisibilityAction = actions.some(({ name }) =>
+    ["hideForMyGroup", "makePublic", "toggleGroupVisibility"].includes(name)
+  );
+  const normalized = actions.filter(
+    ({ name }) =>
+      !["hideForMyGroup", "makePublic", "toggleGroupVisibility"].includes(name)
+  );
+  if (hasGroupVisibilityAction) {
+    normalized.push({ name: "toggleGroupVisibility" });
+  }
+  return normalized;
+};
 
 export const getCombinedItemActions = (items) => {
   const actionKeys = new Set();

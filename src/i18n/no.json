@@ -402,5 +402,9 @@
   "Make public": "Gjør offentlig",
   "Unassigned": "Uten lag",
   "Team {{number}}": "Lag {{number}}",
-  "Referee view is active for {{name}}": "Dommervisning aktiv: {{name}}"
+  "Referee view is active for {{name}}": "Dommervisning aktiv: {{name}}",
+  "Select a player": "Velg en spiller",
+  "Cancel": "Avbryt",
+  "Hide for my group / make public": "Skjul for laget mitt / gjør offentlig",
+  "Transfer moderation...": "Overfør modereringen..."
 }

@@ -402,5 +402,9 @@
   "Make public": "Openbaar maken",
   "Unassigned": "Geen team",
   "Team {{number}}": "Team {{number}}",
-  "Referee view is active for {{name}}": "Scheidsrechtersweergave actief: {{name}}"
+  "Referee view is active for {{name}}": "Scheidsrechtersweergave actief: {{name}}",
+  "Select a player": "Selecteer een speler",
+  "Cancel": "Annuleren",
+  "Hide for my group / make public": "Verbergen voor mijn team / openbaar maken",
+  "Transfer moderation...": "Moderatie overdragen..."
 }

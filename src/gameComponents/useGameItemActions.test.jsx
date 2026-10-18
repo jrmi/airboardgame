@@ -67,6 +67,7 @@ const renderActions = () => render(<Harness />);
 describe("useGameItemActions", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    board.selected = ["a", "b"];
     board.allItems = [];
     board.getItems.mockImplementation(async (ids) =>
       ids.map((id) => ({ id, type: "counter", value: 2, x: 10, y: 20 }))
@@ -82,6 +83,7 @@ describe("useGameItemActions", () => {
       "flipSelf",
       "hideForMyGroup",
       "makePublic",
+      "toggleGroupVisibility",
       "revealSelf",
       "hideSelf",
       "tap",
@@ -158,6 +160,37 @@ describe("useGameItemActions", () => {
       hiddenByGroup: null,
     });
     board.allItems = [];
+  });
+
+  it("toggles the selected items between hidden and public", async () => {
+    board.selected = ["a"];
+    board.allItems = [{ id: "a", hidden: false }];
+    renderActions();
+
+    expect(hookValue.actionMap.toggleGroupVisibility.label()).toBe(
+      "Hide for my group / make public"
+    );
+    await hookValue.actionMap.toggleGroupVisibility.action()();
+    expect(board.batchUpdateItems).toHaveBeenLastCalledWith(
+      ["a"],
+      expect.any(Function),
+      true
+    );
+    expect(board.batchUpdateItems.mock.calls.at(-1)[1]({ id: "a" })).toEqual({
+      hidden: true,
+      hiddenByGroup: "blue",
+    });
+
+    board.allItems = [{ id: "a", hidden: true }];
+    renderActions();
+    expect(hookValue.actionMap.toggleGroupVisibility.label()).toBe(
+      "Hide for my group / make public"
+    );
+    await hookValue.actionMap.toggleGroupVisibility.action()();
+    expect(board.batchUpdateItems.mock.calls.at(-1)[1]({ id: "a" })).toEqual({
+      hidden: false,
+      hiddenByGroup: null,
+    });
   });
 
   it("wraps image values and updates only the requested advanced-image layer", async () => {

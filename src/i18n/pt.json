@@ -403,5 +403,9 @@
   "Make public": "Tornar público",
   "Unassigned": "Sem equipe",
   "Team {{number}}": "Equipa {{number}}",
-  "Referee view is active for {{name}}": "Vista de árbitro ativa: {{name}}"
+  "Referee view is active for {{name}}": "Vista de árbitro ativa: {{name}}",
+  "Select a player": "Escolha um jogador",
+  "Cancel": "Cancelar",
+  "Hide for my group / make public": "Ocultar para a minha equipa / tornar público",
+  "Transfer moderation...": "Transferir a moderação..."
 }

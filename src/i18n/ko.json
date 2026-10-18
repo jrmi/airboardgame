@@ -401,5 +401,9 @@
   "Make public": "공개하기",
   "Unassigned": "미배정",
   "Team {{number}}": "팀 {{number}}",
-  "Referee view is active for {{name}}": "심판 보기 활성화: {{name}}"
+  "Referee view is active for {{name}}": "심판 보기 활성화: {{name}}",
+  "Select a player": "플레이어 선택",
+  "Cancel": "취소",
+  "Hide for my group / make public": "내 팀에 숨기기 / 공개하기",
+  "Transfer moderation...": "진행 권한 이전..."
 }

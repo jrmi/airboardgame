@@ -402,5 +402,9 @@
   "Make public": "Öffentlich machen",
   "Unassigned": "Ohne Team",
   "Team {{number}}": "Team {{number}}",
-  "Referee view is active for {{name}}": "Schiedsrichteransicht aktiv: {{name}}"
+  "Referee view is active for {{name}}": "Schiedsrichteransicht aktiv: {{name}}",
+  "Select a player": "Spieler auswählen",
+  "Cancel": "Abbrechen",
+  "Hide for my group / make public": "Für mein Team verbergen / öffentlich machen",
+  "Transfer moderation...": "Moderation übertragen..."
 }

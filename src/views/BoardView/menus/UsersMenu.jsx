@@ -213,6 +213,42 @@ const UsersMenu = ({
     });
   }, [runModerationAction, setRefereeView, state.refereeView, t]);
 
+  const chooseTransferTarget = React.useCallback(() => {
+    const candidates = users.filter(({ uid }) => uid !== state.moderatorId);
+    confirmAlert({
+      customUI: ({ onClose }) => (
+        <div className="react-confirm-alert-body">
+          <h1>{t("Transfer moderation...")}</h1>
+          <p>{t("Select a player")}</p>
+          <div
+            className="react-confirm-alert-button-group"
+            style={{
+              flexDirection: "column",
+              maxHeight: "50vh",
+              overflowY: "auto",
+            }}
+          >
+            {candidates.map((user) => (
+              <button
+                key={user.uid}
+                type="button"
+                onClick={() => {
+                  onClose();
+                  runModerationAction(() => transfer(user.uid));
+                }}
+              >
+                {user.name || t("Player")}
+              </button>
+            ))}
+            <button type="button" onClick={onClose}>
+              {t("Cancel")}
+            </button>
+          </div>
+        </div>
+      ),
+    });
+  }, [runModerationAction, state.moderatorId, t, transfer, users]);
+
   return (
     <TopMenu
       Icon={FiUsers}
@@ -258,20 +294,11 @@ const UsersMenu = ({
                     ? t("Turn off referee view")
                     : t("Turn on referee view")}
                 </MenuItem>
-                {users
-                  .filter(({ uid }) => uid !== state.moderatorId)
-                  .map((user) => (
-                    <MenuItem
-                      key={user.uid}
-                      onClick={() =>
-                        runModerationAction(() => transfer(user.uid))
-                      }
-                    >
-                      {t("Transfer moderator role to {{name}}", {
-                        name: user.name,
-                      })}
-                    </MenuItem>
-                  ))}
+                {users.some(({ uid }) => uid !== state.moderatorId) && (
+                  <MenuItem onClick={chooseTransferTarget}>
+                    {t("Transfer moderation...")}
+                  </MenuItem>
+                )}
               </>
             ) : null}
           </>

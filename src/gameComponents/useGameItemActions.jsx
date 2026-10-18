@@ -76,28 +76,47 @@ export const useGameItemActions = () => {
 
   const hideForMyGroup = React.useCallback(
     async (itemIds) => {
+      const rootIds = itemIds || getSelectedItems();
       const groupId =
         boardConfig.groupAssignments?.[currentUser.uid] || "players";
-      const ids = getLinkedItemIds(allItems, itemIds);
+      const ids = getLinkedItemIds(allItems, rootIds);
       batchUpdateItems(
         ids,
         () => ({ hidden: true, hiddenByGroup: groupId }),
         true
       );
     },
-    [allItems, batchUpdateItems, boardConfig.groupAssignments, currentUser.uid]
+    [
+      allItems,
+      batchUpdateItems,
+      boardConfig.groupAssignments,
+      currentUser.uid,
+      getSelectedItems,
+    ]
   );
 
   const makePublic = React.useCallback(
     async (itemIds) => {
-      const ids = getLinkedItemIds(allItems, itemIds);
+      const ids = getLinkedItemIds(allItems, itemIds || getSelectedItems());
       batchUpdateItems(
         ids,
         () => ({ hidden: false, hiddenByGroup: null }),
         true
       );
     },
-    [allItems, batchUpdateItems]
+    [allItems, batchUpdateItems, getSelectedItems]
+  );
+
+  const toggleGroupVisibility = React.useCallback(
+    async (itemIds) => {
+      const rootIds = itemIds || getSelectedItems();
+      const selectedItems = allItems.filter(({ id }) => rootIds.includes(id));
+      if (selectedItems.length && selectedItems.every(({ hidden }) => hidden)) {
+        return makePublic(rootIds);
+      }
+      return hideForMyGroup(rootIds);
+    },
+    [allItems, getSelectedItems, hideForMyGroup, makePublic]
   );
 
   const getItemListOrSelected = React.useCallback(
@@ -830,6 +849,11 @@ export const useGameItemActions = () => {
         label: t("Make public"),
         icon: FiEye,
       },
+      toggleGroupVisibility: {
+        action: () => toggleGroupVisibility,
+        label: t("Hide for my group / make public"),
+        icon: FiEye,
+      },
       revealSelf: {
         action: () => (itemIds) => setFlipSelf(itemIds, { flipSelf: true }),
         label: t("Reveal for me"),
@@ -1122,6 +1146,7 @@ export const useGameItemActions = () => {
     cloneItem,
     hideForMyGroup,
     makePublic,
+    toggleGroupVisibility,
     randomlyRotateSelectedItems,
     remove,
     roll,
