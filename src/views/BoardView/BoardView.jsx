@@ -23,7 +23,6 @@ import shuffleAudio from "../../media/audio/shuffle.ogg?url";
 import { preloadAudio } from "../../utils";
 import BoardGridOverlay from "../../gameComponents/GridOverlay";
 import HeldItemRotationStyles from "./HeldItemRotationStyles";
-import TemporaryZoomShortcut from "./TemporaryZoomShortcut";
 
 const StyledBoard = styled.div`
   & .item.locked::after {
@@ -89,7 +88,6 @@ export const BoardView = ({
             itemTemplates={itemTemplates}
             showResizeHandle={editItem}
           >
-            <TemporaryZoomShortcut />
             <BoardGridOverlay />
             <HeldItemRotationStyles />
             <ItemFinder
