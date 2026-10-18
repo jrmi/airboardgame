@@ -4,16 +4,22 @@ import { FiLink, FiMessageSquare, FiMic, FiUsers } from "react-icons/fi";
 
 import UserList from "../../../users/UserList";
 import UserBar from "../UserBar";
-import { MenuItem, TopMenu } from "./Menu";
+import { MenuBadge, MenuItem, TopMenu } from "./Menu";
 
-const UsersMenu = ({ activeMenu, setActiveMenu, users }) => {
+const UsersMenu = ({
+  activeMenu,
+  setActiveMenu,
+  users,
+  notificationCount,
+  onUnreadMessageCountChange,
+}) => {
   const { t } = useTranslation();
 
   return (
     <TopMenu
       Icon={FiUsers}
-      label={t("Users")}
-      badge={users.length}
+      label={t("player", { count: users.length })}
+      notificationCount={notificationCount}
       activeMenu={activeMenu}
       setActiveMenu={setActiveMenu}
     >
@@ -21,6 +27,7 @@ const UsersMenu = ({ activeMenu, setActiveMenu, users }) => {
         <UserList showNames />
       </div>
       <UserBar
+        onUnreadMessageCountChange={onUnreadMessageCountChange}
         renderMenuItems={({ openInvitation, renderChat, renderConference }) => (
           <>
             <MenuItem onClick={openInvitation}>
@@ -31,6 +38,11 @@ const UsersMenu = ({ activeMenu, setActiveMenu, users }) => {
               <MenuItem onClick={onClick}>
                 <FiMessageSquare size={16} aria-hidden="true" />
                 {t("Chat")}
+                {notificationCount > 0 && (
+                  <MenuBadge $notification>
+                    {notificationCount > 9 ? "9+" : notificationCount}
+                  </MenuBadge>
+                )}
               </MenuItem>
             ))}
             {renderConference((onClick) => (

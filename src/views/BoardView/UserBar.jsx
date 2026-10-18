@@ -7,7 +7,7 @@ import MessageButton from "../../messages/MessageButton";
 
 import useSession from "../../hooks/useSession";
 
-const UserBar = ({ renderMenuItems }) => {
+const UserBar = ({ renderMenuItems, onUnreadMessageCountChange }) => {
   const { sessionId: room } = useSession();
 
   const [showLink, setShowLink] = React.useState(false);
@@ -17,7 +17,10 @@ const UserBar = ({ renderMenuItems }) => {
       {renderMenuItems({
         openInvitation: () => setShowLink(true),
         renderChat: (renderTrigger) => (
-          <MessageButton renderTrigger={renderTrigger} />
+          <MessageButton
+            renderTrigger={renderTrigger}
+            onUnreadCountChange={onUnreadMessageCountChange}
+          />
         ),
         renderConference: (renderTrigger) => (
           <WebConferenceButton room={room} renderTrigger={renderTrigger} />

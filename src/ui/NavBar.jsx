@@ -44,6 +44,26 @@ const StyledNavBar = styled.div`
     }
   }
 
+  .nav-bar__menu-button {
+    position: relative;
+  }
+
+  .nav-bar__menu-notification {
+    position: absolute;
+    top: 1px;
+    right: 1px;
+    min-width: 1.2em;
+    height: 1.2em;
+    padding: 0 0.15em;
+    border-radius: 1em;
+    background: var(--color-error);
+    color: white;
+    font-size: 0.7em;
+    font-weight: 700;
+    line-height: 1.2em;
+    text-align: center;
+  }
+
   &.nav-bar--left {
     left: 0;
     border-right: 1px solid var(--color-board-border);
@@ -237,6 +257,7 @@ const NavBar = ({
   position = "left",
   children,
   onClose,
+  notificationCount = 0,
 }) => {
   const { t } = useTranslation();
   const isSmallDevice = useMediaQuery("only screen and (max-width : 640px)");
@@ -283,6 +304,16 @@ const NavBar = ({
             title={t("Fold/Unfold")}
             Icon={FiMenu}
           />
+          {notificationCount > 0 && (
+            <span
+              className="nav-bar__menu-notification"
+              aria-label={t("Unread messages: {{count}}", {
+                count: notificationCount,
+              })}
+            >
+              {notificationCount > 9 ? "9+" : notificationCount}
+            </span>
+          )}
         </div>
       )}
       {position === "top" ? (

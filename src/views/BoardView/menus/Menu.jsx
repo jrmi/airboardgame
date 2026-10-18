@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import { useTranslation } from "react-i18next";
 
 export const MenuRoot = styled.div.attrs({ className: "top-menu" })`
   position: relative;
@@ -38,7 +39,7 @@ export const MenuTrigger = styled.button.attrs({
   }
 `;
 
-const MenuBadge = styled.span`
+export const MenuBadge = styled.span`
   display: grid;
   min-width: 1.25em;
   height: 1.25em;
@@ -46,8 +47,10 @@ const MenuBadge = styled.span`
   margin-left: 0.1em;
   place-items: center;
   border-radius: 1em;
-  background: var(--color-primary);
-  color: var(--color-primary-foreground);
+  background: ${({ $notification }) =>
+    $notification ? "var(--color-error)" : "var(--color-primary)"};
+  color: ${({ $notification }) =>
+    $notification ? "white" : "var(--color-primary-foreground)"};
   font-size: 0.7em;
   font-weight: 700;
 `;
@@ -94,7 +97,9 @@ export const TopMenu = ({
   activeMenu,
   setActiveMenu,
   children,
+  notificationCount = 0,
 }) => {
+  const { t } = useTranslation();
   const open = activeMenu === label;
   const [dismissed, setDismissed] = React.useState(false);
 
@@ -129,6 +134,16 @@ export const TopMenu = ({
         {Icon && <Icon size={16} aria-hidden="true" />}
         {label}
         {badge !== undefined && <MenuBadge>{badge}</MenuBadge>}
+        {notificationCount > 0 && (
+          <MenuBadge
+            $notification
+            aria-label={t("Unread messages: {{count}}", {
+              count: notificationCount,
+            })}
+          >
+            {notificationCount > 9 ? "9+" : notificationCount}
+          </MenuBadge>
+        )}
       </MenuTrigger>
       <MenuPanel $open={open}>{children}</MenuPanel>
     </MenuRoot>

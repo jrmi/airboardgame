@@ -52,7 +52,7 @@ export const MessagePanel = ({ onNewMessage, show, setShow }) => {
   );
 };
 
-export const MessageButton = ({ renderTrigger }) => {
+export const MessageButton = ({ renderTrigger, onUnreadCountChange }) => {
   const { t } = useTranslation();
   const { add, reset, count } = useNotify();
   const [showPanel, setShowPanel] = React.useState(false);
@@ -78,6 +78,10 @@ export const MessageButton = ({ renderTrigger }) => {
   React.useEffect(() => {
     reset();
   }, [reset]);
+
+  React.useEffect(() => {
+    onUnreadCountChange?.(count);
+  }, [count, onUnreadCountChange]);
 
   const countStr = count > 9 ? "9+" : `${count}`;
 

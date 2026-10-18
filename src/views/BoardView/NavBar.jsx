@@ -53,6 +53,7 @@ const NavBar = ({
   const [showInfoModal, setShowInfoModal] = React.useState(false);
   const [showAddPanel, setShowAddPanel] = React.useState(false);
   const [activeMenu, setActiveMenu] = React.useState(null);
+  const [unreadMessageCount, setUnreadMessageCount] = React.useState(0);
 
   const closeMenu = React.useCallback(() => setActiveMenu(null), []);
 
@@ -109,7 +110,12 @@ const NavBar = ({
 
   return (
     <>
-      <RawNavBar position="top" fullHeight={false} onClose={handleQuit}>
+      <RawNavBar
+        position="top"
+        fullHeight={false}
+        onClose={handleQuit}
+        notificationCount={unreadMessageCount}
+      >
         <GameMenu
           activeMenu={activeMenu}
           setActiveMenu={setActiveMenu}
@@ -164,6 +170,8 @@ const NavBar = ({
             activeMenu={activeMenu}
             setActiveMenu={setActiveMenu}
             users={localUsers}
+            notificationCount={unreadMessageCount}
+            onUnreadMessageCountChange={setUnreadMessageCount}
           />
         )}
         <div className="spacer" />
