@@ -89,6 +89,10 @@ const NavBar = ({
   }, [items, zoomToExtent]);
 
   const handleQuit = React.useCallback(() => {
+    if (isFullScreen) {
+      toggleFullScreen();
+    }
+
     if (!editMode) {
       if (insideARoom) {
         navigate(`/room/${params.roomId}`);
@@ -106,7 +110,15 @@ const NavBar = ({
         { label: t("No"), onClick: () => {} },
       ],
     });
-  }, [editMode, insideARoom, navigate, params.roomId, t]);
+  }, [
+    editMode,
+    insideARoom,
+    isFullScreen,
+    navigate,
+    params.roomId,
+    t,
+    toggleFullScreen,
+  ]);
 
   return (
     <>
