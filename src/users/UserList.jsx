@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next";
 
 import UserConfig from "./UserConfig";
 import { UNASSIGNED_TEAM_ID } from "../utils/teamVisibility";
+import useUniqueUsername from "./useUniqueUsername";
 
 const InlineUserList = styled.ul.attrs(() => ({ className: "uk-card" }))`
   list-style: none;
@@ -49,6 +50,8 @@ export const Users = ({
   const { t } = useTranslation();
   const { currentUser, updateCurrentUser, localUsers: users } = useUsers();
 
+  useUniqueUsername();
+
   const renderUser = (u, index) => (
     <InlineUserListItem
       className={showNames ? "user-list__item--with-name" : undefined}
@@ -65,6 +68,9 @@ export const Users = ({
         onAssignTeam={
           onAssignTeam && ((teamId) => onAssignTeam(u.uid || u.id, teamId))
         }
+        existingNames={users
+          .filter((other) => other.id !== u.id)
+          .map((other) => other.name)}
       />
       {(u.uid || u.id) === moderatorId &&
         (refereeView ? (
