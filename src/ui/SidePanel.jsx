@@ -110,6 +110,7 @@ const SidePanel = ({
   position,
   noMargin,
   onClose = () => {},
+  onPointerDown,
   title,
   footer,
   show,
@@ -161,6 +162,7 @@ const SidePanel = ({
   return createPortal(
     <StyledSidePanel
       onTransitionEnd={onAnimationEnd}
+      onPointerDown={onPointerDown}
       $noMargin={noMargin}
       $width={width}
       className={classes.join(" ")}

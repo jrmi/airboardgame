@@ -44,6 +44,7 @@ const RectTemplate = createItemTemplate({
   },
   form: AdvancedImageFormFields,
   name: i18n.t("Advanced Image"),
+  translationKey: "Advanced Image",
   template: { layers: [], front: "/default.png" },
 });
 

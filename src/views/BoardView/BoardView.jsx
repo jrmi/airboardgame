@@ -7,6 +7,7 @@ import WelcomeModal from "./WelcomeModal";
 import NavBar from "./NavBar";
 import styled from "styled-components";
 import SelectedItemsPane from "./SelectedItemsPane";
+import ItemFinder from "./ItemFinder";
 
 import { itemTemplates, backgrounds } from "../../gameComponents";
 
@@ -58,6 +59,7 @@ export const BoardView = ({
 
   const [moveFirst, setMoveFirst] = React.useState(true);
   const [hideMenu, setHideMenu] = React.useState(false);
+  const [showItemFinder, setShowItemFinder] = React.useState(false);
   const { editItem, setEditItem } = useGlobalConf();
 
   const style = React.useMemo(() => {
@@ -81,6 +83,10 @@ export const BoardView = ({
           >
             <BoardGridOverlay />
             <HeldItemRotationStyles />
+            <ItemFinder
+              open={showItemFinder}
+              onClose={() => setShowItemFinder(false)}
+            />
           </Board>
         </StyledBoard>
         <NavBar
@@ -90,6 +96,8 @@ export const BoardView = ({
           setMoveFirst={setMoveFirst}
           hideMenu={hideMenu}
           setHideMenu={setHideMenu}
+          showItemFinder={showItemFinder}
+          setShowItemFinder={setShowItemFinder}
         />
         {!editMode && <UserBar />}
         <WelcomeModal show={showWelcomeModal} setShow={setShowWelcomeModal} />

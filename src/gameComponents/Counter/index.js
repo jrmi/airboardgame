@@ -11,6 +11,7 @@ const Template = createItemTemplate({
   defaultActions: ["prevImage", "nextImage", "clone", "lock", "remove"],
   availableActions: ["prevImage", "nextImage", "clone", "lock", "remove"],
   name: i18n.t("Counter"),
+  translationKey: "Counter",
   template: {
     value: 0,
     color: "#CCC",

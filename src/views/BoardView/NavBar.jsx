@@ -15,6 +15,7 @@ import {
   FiMaximize,
   FiRotateCw,
   FiTarget,
+  FiSearch,
 } from "react-icons/fi";
 import { GiPokerHand } from "react-icons/gi";
 
@@ -46,7 +47,14 @@ const LoadVassalModuleGameModal = React.lazy(
   () => import("./LoadVassalModuleGameModal.jsx")
 );
 
-const NavBar = ({ editMode, itemLibraries, moveFirst, setMoveFirst }) => {
+const NavBar = ({
+  editMode,
+  itemLibraries,
+  moveFirst,
+  setMoveFirst,
+  showItemFinder,
+  setShowItemFinder,
+}) => {
   const { t } = useTranslation();
   const { isVassalSession } = useSession();
 
@@ -176,6 +184,13 @@ const NavBar = ({ editMode, itemLibraries, moveFirst, setMoveFirst }) => {
           itemLibraries={itemLibraries}
           setShowAddPanel={setShowAddPanel}
           showAddPanel={showAddPanel}
+        />
+        <NavButton
+          Icon={FiSearch}
+          onClick={() => setShowItemFinder((prev) => !prev)}
+          alt={t("Find items")}
+          title={t("Find items")}
+          active={showItemFinder}
         />
         <div className="spacer" />
         {(isMaster || editMode) && !isVassalSession && (

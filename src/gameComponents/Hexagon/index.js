@@ -20,6 +20,7 @@ const Template = createItemTemplate({
     "remove",
   ],
   name: i18n.t("Hexagon"),
+  translationKey: "Hexagon",
   template: {
     size: 50,
     color: "#ccc",

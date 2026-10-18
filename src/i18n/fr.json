@@ -366,6 +366,8 @@
   "An error occurred. Try again!": "Une erreur est survenue. Veuillez réessayer !",
   "Rotate board": "Tourner le plateau",
   "Center on items": "Centrer sur les éléments",
+  "Find items": "Rechercher des éléments",
+  "No matching items": "Aucun élément correspondant",
   "Hold items": "Porte les autres éléments",
   "Custom rotation amount": "Angle de rotation personnalisé",
   "Reset rotation to 0°": "Réinitialiser la rotation à 0°",
