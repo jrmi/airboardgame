@@ -13,6 +13,7 @@ import { ImageField } from "../../mediaLibrary";
 
 import { backgrounds } from "../../gameComponents";
 import { FiTrash2 } from "react-icons/fi";
+import { SUPPORTED_LANGUAGES } from "../../i18n/languages";
 
 const BoardConfigForm = () => {
   const { t } = useTranslation();
@@ -153,8 +154,11 @@ const BoardConfigForm = () => {
         >
           <option />
           <option value="Multi-lang">🌍 {t("Multi-lang")}</option>
-          <option value="en">🇬🇧 {t("English")}</option>
-          <option value="fr">🇫🇷 {t("French")}</option>
+          {SUPPORTED_LANGUAGES.map(({ code, label, flag }) => (
+            <option key={code} value={code}>
+              {flag} {t(label)}
+            </option>
+          ))}
         </Field>
       </Label>
       <fieldset style={{ marginBottom: "2em", paddingBottom: "1em" }}>
@@ -169,8 +173,11 @@ const BoardConfigForm = () => {
             style={{ width: "15em" }}
           >
             <option />
-            <option value="en">🇬🇧 {t("English")}</option>
-            <option value="fr">🇫🇷 {t("French")}</option>
+            {SUPPORTED_LANGUAGES.map(({ code, label, flag }) => (
+              <option key={code} value={code}>
+                {flag} {t(label)}
+              </option>
+            ))}
           </Field>
         </Label>
 
@@ -244,8 +251,11 @@ const BoardConfigForm = () => {
                   style={{ width: "15em" }}
                 >
                   <option />
-                  <option value="en">🇬🇧 {t("English")}</option>
-                  <option value="fr">🇫🇷 {t("French")}</option>
+                  {SUPPORTED_LANGUAGES.map(({ code, label, flag }) => (
+                    <option key={code} value={code}>
+                      {flag} {t(label)}
+                    </option>
+                  ))}
                 </Field>
               </Label>
 

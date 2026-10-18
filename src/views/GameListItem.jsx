@@ -396,9 +396,7 @@ const GameListItem = ({
                     min: playerCountDisplay[0],
                     max: playerCountDisplay[1],
                   })
-                : t("{{count}} player", {
-                    count: playerCountDisplay[0],
-                  })
+                : t("player", { count: playerCountDisplay[0] })
             }
           >
             {playerCountDisplay.length === 2 ? (
