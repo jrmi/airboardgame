@@ -47,7 +47,9 @@ const StyledModalWrapper = styled.div`
     box-shadow: 0 18px 48px rgba(0, 0, 0, 0.48);
     margin: 5px;
     margin-top: 2em;
-    max-width: 40%;
+    box-sizing: ${({ $wide }) => ($wide ? "border-box" : "content-box")};
+    width: ${({ $wide }) => ($wide ? "min(90vw, 1200px)" : "auto")};
+    max-width: ${({ $wide }) => ($wide ? "min(90vw, 1200px)" : "40%")};
     min-width: 290px;
   }
 
@@ -92,12 +94,14 @@ const StyledModalWrapper = styled.div`
 
   @media screen and (max-width: 1024px) {
     & .modal {
-      max-width: 70%;
+      width: ${({ $wide }) => ($wide ? "90vw" : "auto")};
+      max-width: ${({ $wide }) => ($wide ? "90vw" : "70%")};
     }
   }
 
   @media screen and (max-width: 640px) {
     & .modal {
+      width: ${({ $wide }) => ($wide ? "calc(100vw - 10px)" : "auto")};
       max-width: 100%;
     }
   }
@@ -111,6 +115,7 @@ const Modal = ({
   setShow = () => {},
   canClose = true,
   noMargin = false,
+  wide = false,
 }) => {
   const modalRef = React.useRef();
   const { t } = useTranslation();
@@ -163,6 +168,7 @@ const Modal = ({
       onTransitionEnd={onAnimationEnd}
       onClick={onOverlayClick}
       $noMargin={noMargin}
+      $wide={wide}
       className={
         state === "opening" || state === "open" ? "modal__wrapper--open" : ""
       }
