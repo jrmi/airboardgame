@@ -405,7 +405,6 @@
   "New camp": "Nouveau camp",
   "Create camp": "Ajouter un camp",
   "Assign players": "Affecter les joueurs",
-  "Hidden item opacity": "Opacité des objets cachés",
   "Hide for my group": "Masquer pour mon camp",
   "Make public": "Rendre public",
   "Unassigned": "Sans équipe",
@@ -414,5 +413,6 @@
   "Select a player": "Choisissez un joueur",
   "Cancel": "Annuler",
   "Hide for my group / make public": "Masquer pour mon camp / rendre public",
-  "Transfer moderation...": "Transférer modération…"
+  "Transfer moderation...": "Transférer modération…",
+  "Dim hidden items": "Assombrissement des objets cachés"
 }

@@ -397,7 +397,6 @@
   "New camp": "Neues Team",
   "Create camp": "Team hinzufügen",
   "Assign players": "Spieler zuweisen",
-  "Hidden item opacity": "Deckkraft verborgener Objekte",
   "Hide for my group": "Für mein Team verbergen",
   "Make public": "Öffentlich machen",
   "Unassigned": "Ohne Team",
@@ -406,5 +405,6 @@
   "Select a player": "Spieler auswählen",
   "Cancel": "Abbrechen",
   "Hide for my group / make public": "Für mein Team verbergen / öffentlich machen",
-  "Transfer moderation...": "Moderation übertragen..."
+  "Transfer moderation...": "Moderation übertragen...",
+  "Dim hidden items": "Verborgene Objekte abdunkeln"
 }

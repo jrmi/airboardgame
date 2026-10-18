@@ -150,19 +150,19 @@ const GroupManager = ({ boardConfig, setBoardConfig }) => {
   );
 };
 
-const HiddenItemOpacity = () => {
+const HiddenItemDimming = () => {
   const { t } = useTranslation();
-  const [opacity, setOpacity] = useLocalStorage("hiddenItemOpacity", 0.28);
+  const [dimming, setDimming] = useLocalStorage("hiddenItemOpacity", 0.28);
   return (
     <label style={{ display: "block", padding: "0.5em 0.75em" }}>
-      {t("Hidden item opacity")}
+      {t("Dim hidden items")}
       <input
         type="range"
         min="0.1"
         max="1"
         step="0.05"
-        value={opacity}
-        onChange={(event) => setOpacity(Number(event.target.value))}
+        value={dimming}
+        onChange={(event) => setDimming(Number(event.target.value))}
       />
     </label>
   );
@@ -309,7 +309,7 @@ const UsersMenu = ({
         )}
       </MenuSection>
       <GroupManager boardConfig={boardConfig} setBoardConfig={setBoardConfig} />
-      <HiddenItemOpacity />
+      <HiddenItemDimming />
       <UserBar
         onUnreadMessageCountChange={onUnreadMessageCountChange}
         renderMenuItems={({ openInvitation, renderChat, renderConference }) => (

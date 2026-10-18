@@ -396,7 +396,6 @@
   "New camp": "새 팀",
   "Create camp": "팀 추가",
   "Assign players": "플레이어 배정",
-  "Hidden item opacity": "숨겨진 항목 불투명도",
   "Hide for my group": "내 팀에 숨기기",
   "Make public": "공개하기",
   "Unassigned": "미배정",
@@ -405,5 +404,6 @@
   "Select a player": "플레이어 선택",
   "Cancel": "취소",
   "Hide for my group / make public": "내 팀에 숨기기 / 공개하기",
-  "Transfer moderation...": "진행 권한 이전..."
+  "Transfer moderation...": "진행 권한 이전...",
+  "Dim hidden items": "숨겨진 항목 어둡게 하기"
 }

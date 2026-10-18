@@ -397,7 +397,6 @@
   "New camp": "Nieuw team",
   "Create camp": "Team toevoegen",
   "Assign players": "Spelers toewijzen",
-  "Hidden item opacity": "Ondoorzichtigheid van verborgen items",
   "Hide for my group": "Verbergen voor mijn team",
   "Make public": "Openbaar maken",
   "Unassigned": "Geen team",
@@ -406,5 +405,6 @@
   "Select a player": "Selecteer een speler",
   "Cancel": "Annuleren",
   "Hide for my group / make public": "Verbergen voor mijn team / openbaar maken",
-  "Transfer moderation...": "Moderatie overdragen..."
+  "Transfer moderation...": "Moderatie overdragen...",
+  "Dim hidden items": "Verborgen items dimmen"
 }

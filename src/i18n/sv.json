@@ -397,7 +397,6 @@
   "New camp": "Nytt lag",
   "Create camp": "Lägg till lag",
   "Assign players": "Tilldela spelare",
-  "Hidden item opacity": "Opacitet för dolda objekt",
   "Hide for my group": "Dölj för mitt lag",
   "Make public": "Gör offentligt",
   "Unassigned": "Utan lag",
@@ -406,5 +405,6 @@
   "Select a player": "Välj en spelare",
   "Cancel": "Avbryt",
   "Hide for my group / make public": "Dölj för mitt lag / gör offentlig",
-  "Transfer moderation...": "Överlämna modereringen..."
+  "Transfer moderation...": "Överlämna modereringen...",
+  "Dim hidden items": "Dämpa dolda objekt"
 }

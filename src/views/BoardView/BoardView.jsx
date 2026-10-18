@@ -92,6 +92,38 @@ export const BoardView = ({
     return currentBackground.getStyle(boardConfig.bgConf);
   }, [boardConfig.bgConf, boardConfig.bgType]);
 
+  const itemVisibilityStyles = React.useMemo(
+    () =>
+      items
+        .map((item) => {
+          const selector = `.item[data-id=${JSON.stringify(String(item.id))}]`;
+          const visible = canSeeItem({
+            item,
+            userId: currentUser?.uid,
+            board: boardConfig,
+            refereeView: moderationState.refereeView,
+          });
+          const rules = [];
+          if (!visible) rules.push("display: none !important;");
+          if (item.hidden) {
+            const brightness = Math.max(0.2, 1 - Number(hiddenOpacity) * 0.8);
+            rules.push(
+              `filter: grayscale(0.8) brightness(${brightness}) !important;`
+            );
+          }
+          return rules.length ? `${selector} { ${rules.join(" ")} }` : "";
+        })
+        .filter(Boolean)
+        .join("\n"),
+    [
+      boardConfig,
+      currentUser?.uid,
+      hiddenOpacity,
+      items,
+      moderationState.refereeView,
+    ]
+  );
+
   React.useEffect(() => preloadAudio([flipAudio, shuffleAudio, rollAudio]), []);
 
   const boardItemTemplates = React.useMemo(
@@ -127,33 +159,6 @@ export const BoardView = ({
     []
   );
 
-  React.useLayoutEffect(() => {
-    const renderedItems = new Map(
-      Array.from(document.querySelectorAll("[data-id]")).map((element) => [
-        element.dataset.id,
-        element,
-      ])
-    );
-    items.forEach((item) => {
-      const element = renderedItems.get(item.id);
-      if (!element) return;
-      const visible = canSeeItem({
-        item,
-        userId: currentUser?.uid,
-        board: boardConfig,
-        refereeView: moderationState.refereeView,
-      });
-      element.style.display = visible ? "" : "none";
-      element.style.opacity = item.hidden ? String(hiddenOpacity) : "";
-    });
-  }, [
-    boardConfig,
-    currentUser?.uid,
-    hiddenOpacity,
-    items,
-    moderationState.refereeView,
-  ]);
-
   React.useEffect(() => {
     const visibleItemIds = new Set(
       items
@@ -184,6 +189,7 @@ export const BoardView = ({
     <MediaLibraryProvider libraries={mediaLibraries}>
       <ImageDropNPaste>
         <StyledBoard onDragStart={preventNativeDrag}>
+          <style>{itemVisibilityStyles}</style>
           <Board
             interaction={interaction}
             style={style}

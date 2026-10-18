@@ -398,7 +398,6 @@
   "New camp": "Nova equipa",
   "Create camp": "Adicionar uma equipa",
   "Assign players": "Atribuir jogadores",
-  "Hidden item opacity": "Opacidade dos itens ocultos",
   "Hide for my group": "Ocultar para a minha equipa",
   "Make public": "Tornar público",
   "Unassigned": "Sem equipe",
@@ -407,5 +406,6 @@
   "Select a player": "Escolha um jogador",
   "Cancel": "Cancelar",
   "Hide for my group / make public": "Ocultar para a minha equipa / tornar público",
-  "Transfer moderation...": "Transferir a moderação..."
+  "Transfer moderation...": "Transferir a moderação...",
+  "Dim hidden items": "Escurecer itens ocultos"
 }

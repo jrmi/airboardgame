@@ -399,7 +399,6 @@
   "New camp": "Новая команда",
   "Create camp": "Добавить команду",
   "Assign players": "Назначить игроков",
-  "Hidden item opacity": "Непрозрачность скрытых предметов",
   "Hide for my group": "Скрыть для моей команды",
   "Make public": "Сделать общедоступным",
   "Unassigned": "Без команды",
@@ -408,5 +407,6 @@
   "Select a player": "Выберите игрока",
   "Cancel": "Отмена",
   "Hide for my group / make public": "Скрыть для команды / сделать общедоступным",
-  "Transfer moderation...": "Передать модерацию..."
+  "Transfer moderation...": "Передать модерацию...",
+  "Dim hidden items": "Затемнение скрытых предметов"
 }

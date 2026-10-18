@@ -404,7 +404,6 @@
   "New camp": "New camp",
   "Create camp": "Add a camp",
   "Assign players": "Assign players",
-  "Hidden item opacity": "Hidden item opacity",
   "Hide for my group": "Hide for my group",
   "Make public": "Make public",
   "Unassigned": "Unassigned",
@@ -413,5 +412,6 @@
   "Select a player": "Select a player",
   "Cancel": "Cancel",
   "Hide for my group / make public": "Hide for my group / make public",
-  "Transfer moderation...": "Transfer moderation..."
+  "Transfer moderation...": "Transfer moderation...",
+  "Dim hidden items": "Dim hidden items"
 }

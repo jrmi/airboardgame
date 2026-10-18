@@ -397,7 +397,6 @@
   "New camp": "Nytt lag",
   "Create camp": "Legg til lag",
   "Assign players": "Tildel spillere",
-  "Hidden item opacity": "Ugjennomsiktighet for skjulte elementer",
   "Hide for my group": "Skjul for laget mitt",
   "Make public": "Gjør offentlig",
   "Unassigned": "Uten lag",
@@ -406,5 +405,6 @@
   "Select a player": "Velg en spiller",
   "Cancel": "Avbryt",
   "Hide for my group / make public": "Skjul for laget mitt / gjør offentlig",
-  "Transfer moderation...": "Overfør modereringen..."
+  "Transfer moderation...": "Overfør modereringen...",
+  "Dim hidden items": "Demp skjulte elementer"
 }

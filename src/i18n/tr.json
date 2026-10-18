@@ -397,7 +397,6 @@
   "New camp": "Yeni takım",
   "Create camp": "Takım ekle",
   "Assign players": "Oyuncuları ata",
-  "Hidden item opacity": "Gizli öğe opaklığı",
   "Hide for my group": "Takımım için gizle",
   "Make public": "Herkese açık yap",
   "Unassigned": "Takımsız",
@@ -406,5 +405,6 @@
   "Select a player": "Bir oyuncu seçin",
   "Cancel": "İptal",
   "Hide for my group / make public": "Takımım için gizle / herkese aç",
-  "Transfer moderation...": "Moderatörlüğü devret..."
+  "Transfer moderation...": "Moderatörlüğü devret...",
+  "Dim hidden items": "Gizli öğeleri karart"
 }

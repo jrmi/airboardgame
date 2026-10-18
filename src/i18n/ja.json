@@ -396,7 +396,6 @@
   "New camp": "新しいチーム",
   "Create camp": "チームを追加",
   "Assign players": "プレイヤーを割り当て",
-  "Hidden item opacity": "非公開アイテムの不透明度",
   "Hide for my group": "自分のチームに隠す",
   "Make public": "全員に公開",
   "Unassigned": "チーム未所属",
@@ -405,5 +404,6 @@
   "Select a player": "プレイヤーを選択",
   "Cancel": "キャンセル",
   "Hide for my group / make public": "自分のチームに隠す / 全員に公開",
-  "Transfer moderation...": "モデレーションを引き継ぐ..."
+  "Transfer moderation...": "モデレーションを引き継ぐ...",
+  "Dim hidden items": "非表示アイテムを暗くする"
 }

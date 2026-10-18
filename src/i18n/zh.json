@@ -396,7 +396,6 @@
   "New camp": "新队伍",
   "Create camp": "添加队伍",
   "Assign players": "分配玩家",
-  "Hidden item opacity": "隐藏物品的不透明度",
   "Hide for my group": "对我的队伍隐藏",
   "Make public": "公开",
   "Unassigned": "未分队",
@@ -405,5 +404,6 @@
   "Select a player": "选择一名玩家",
   "Cancel": "取消",
   "Hide for my group / make public": "对我的队伍隐藏 / 公开",
-  "Transfer moderation...": "转交主持权..."
+  "Transfer moderation...": "转交主持权...",
+  "Dim hidden items": "调暗隐藏物品"
 }
