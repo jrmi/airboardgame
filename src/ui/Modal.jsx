@@ -55,6 +55,12 @@ const StyledModalWrapper = styled.div`
     flex: 1;
     overflow: auto;
     ${({ $noMargin }) => ($noMargin ? "" : "padding: 1em")};
+
+    & button {
+      background: var(--color-primary);
+      color: var(--color-primary-foreground);
+    }
+
     header {
       padding: 0.5em;
       margin-top: 2em;

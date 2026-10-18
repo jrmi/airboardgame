@@ -46,7 +46,7 @@ const MenuBadge = styled.span`
   margin-left: 0.1em;
   place-items: center;
   border-radius: 1em;
-  background: var(--color-success);
+  background: var(--color-primary);
   color: var(--color-primary-foreground);
   font-size: 0.7em;
   font-weight: 700;

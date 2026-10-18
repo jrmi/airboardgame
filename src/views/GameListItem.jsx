@@ -72,7 +72,6 @@ const Game = styled.li`
 
   & .button.play {
     margin: 0 2px;
-    background-color: var(--color-secondary);
   }
 
   & .play {
@@ -91,14 +90,6 @@ const Game = styled.li`
       border-radius: 4px;
     }
 
-    & .share-button {
-      background-color: var(--color-secondary);
-    }
-
-    & .edit-game-button {
-      background-color: var(--color-accent-violet);
-      color: var(--font-color);
-    }
   }
 
   & .baseline {

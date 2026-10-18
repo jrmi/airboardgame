@@ -76,7 +76,7 @@ const WelcomeModal = ({ show, setShow, welcome = true }) => {
             onClick={() => {
               setShow(false);
             }}
-            className="button success"
+            className="button"
             style={{ margin: "1em auto" }}
           >
             {t("I want to play...")}
