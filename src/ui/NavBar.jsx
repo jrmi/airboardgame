@@ -94,6 +94,10 @@ const StyledNavBar = styled.div`
     flex: 1;
   }
 
+  & .nav-bar__content {
+    display: contents;
+  }
+
   & .sep {
     height: 1.5em;
     width: 80%;
@@ -114,8 +118,12 @@ const StyledNavBar = styled.div`
       align-items: stretch;
       flex-direction: column;
       width: 100%;
-      height: auto;
+      height: 100vh;
+      height: 100dvh;
       min-height: 40px;
+      max-height: 100vh;
+      max-height: 100dvh;
+      overflow: hidden;
       padding: 0 5px;
       background: transparent;
       border-bottom: 0;
@@ -142,6 +150,14 @@ const StyledNavBar = styled.div`
 
       & .spacer {
         display: none;
+      }
+
+      & .nav-bar__content {
+        display: block;
+        flex: 1 1 auto;
+        min-height: 0;
+        overflow-y: auto;
+        overscroll-behavior: contain;
       }
 
       & > .keep-folded {
@@ -256,7 +272,11 @@ const NavBar = ({
           />
         </div>
       )}
-      {children}
+      {position === "top" ? (
+        <div className="nav-bar__content">{children}</div>
+      ) : (
+        children
+      )}
       {position === "top" && onClose ? (
         <div className="keep-folded nav-bar__close-button">
           <NavButton
