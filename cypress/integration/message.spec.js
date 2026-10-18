@@ -2,7 +2,7 @@ describe("Messages interactions", () => {
   const openMessages = () => {
     cy
       .get(".top-menu__trigger")
-      .contains("Players")
+      .contains(/^\d+ players?$/)
       .trigger("mouseenter")
       .click({ force: true });
     cy
