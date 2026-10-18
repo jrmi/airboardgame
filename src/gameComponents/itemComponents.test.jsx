@@ -27,7 +27,8 @@ vi.mock("react-sync-board", () => ({
     batchUpdateItems: vi.fn(),
     removeItems: vi.fn(),
   }),
-  useBoardState: () => ({ movingItems: false }),
+  useBoardState: (selector = (state) => state) =>
+    selector({ movingItems: false }),
   useSelectedItems: () => [],
 }));
 

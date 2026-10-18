@@ -39,7 +39,7 @@ const Anchor = ({ families, id, color = "#CCC" }) => {
   const { register } = useItemInteraction("place");
   const { snapToPoint } = useGameItemActions();
   const { getItems } = useItemActions();
-  const { movingItems } = useBoardState();
+  const movingItems = useBoardState((state) => state.movingItems);
   const { editMode, editItem } = useGlobalConf();
   const selectedItems = useSelectedItems();
   const [shouldHighlight, setShouldHighlight] = React.useState(false);
