@@ -13,6 +13,7 @@ import { useTranslation } from "react-i18next";
 import { useSocket } from "@jrmi/use-socket.io";
 import Waiter from "../../ui/Waiter";
 import { getSession } from "../../utils/api";
+import useUniqueUsername from "../../users/useUniqueUsername";
 
 const StyledPlayer = styled.li`
   display: flex;
@@ -258,6 +259,8 @@ const Room = ({ roomId, room, setRoom }) => {
   const { users, joinSpace } = useUsers();
 
   const { isMaster } = useWire("room");
+
+  useUniqueUsername();
   const [sessionBoards, setSessionBoards] = React.useState({});
 
   const onAdd = () => {
