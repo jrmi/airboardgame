@@ -175,7 +175,7 @@ const ConnectedSessionView = ({ sessionId, fromGame, isVassalSession }) => {
       socket={socket}
       LoadingComponent={Waiter}
     >
-      <ModerationProvider sessionId={sessionId}>
+      <ModerationProvider>
         <SessionProvider
           sessionId={sessionId}
           fromGameId={fromGame}
