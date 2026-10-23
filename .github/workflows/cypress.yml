@@ -42,7 +42,7 @@ jobs:
         run: npx wait-on http://127.0.0.1:4050/health
 
       - name: Cypress run
-        uses: cypress-io/github-action@v6
+        uses: cypress-io/github-action@v7.4.6
         with:
           build: npm run build
           start: npm run serve:ci
