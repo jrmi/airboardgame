@@ -5,8 +5,7 @@ import { FaCrown, FaGavel } from "react-icons/fa";
 import { useTranslation } from "react-i18next";
 
 import UserConfig from "./UserConfig";
-
-const INITIAL_GROUP_ID = "players";
+import { UNASSIGNED_TEAM_ID } from "../utils/teamVisibility";
 
 const InlineUserList = styled.ul.attrs(() => ({ className: "uk-card" }))`
   list-style: none;
@@ -31,7 +30,7 @@ const InlineUserListItem = styled.li`
   }
 `;
 
-const UserGroupHeading = styled.li`
+const UserTeamHeading = styled.li`
   padding: 0.55em 0.5em 0.2em;
   color: var(--color-board-muted, #aab5c4);
   font-size: 0.85em;
@@ -43,9 +42,9 @@ export const Users = ({
   moderatorId,
   moderatorWaiting,
   refereeView,
-  groups,
-  groupAssignments,
-  onAssignGroup,
+  teams,
+  teamAssignments,
+  onAssignTeam,
 }) => {
   const { t } = useTranslation();
   const { currentUser, updateCurrentUser, localUsers: users } = useUsers();
@@ -61,10 +60,10 @@ export const Users = ({
         updateCurrentUser={updateCurrentUser}
         editable={currentUser.id === u.id}
         showName={showNames}
-        groups={groups}
-        assignedGroup={groupAssignments?.[u.uid || u.id] || "players"}
-        onAssignGroup={
-          onAssignGroup && ((groupId) => onAssignGroup(u.uid || u.id, groupId))
+        teams={teams}
+        assignedTeam={teamAssignments?.[u.uid || u.id] || "players"}
+        onAssignTeam={
+          onAssignTeam && ((teamId) => onAssignTeam(u.uid || u.id, teamId))
         }
       />
       {(u.uid || u.id) === moderatorId &&
@@ -90,31 +89,31 @@ export const Users = ({
     </InlineUserListItem>
   );
 
-  const groupedUsers =
-    showNames && groups?.length
+  const usersGroupedByTeam =
+    showNames && teams?.length
       ? [
-          ...groups.filter(({ id }) => id !== INITIAL_GROUP_ID),
-          ...groups.filter(({ id }) => id === INITIAL_GROUP_ID),
-        ].flatMap((group) => {
+          ...teams.filter(({ id }) => id !== UNASSIGNED_TEAM_ID),
+          ...teams.filter(({ id }) => id === UNASSIGNED_TEAM_ID),
+        ].flatMap((team) => {
           const members = users
             .map((user, index) => ({ user, index }))
             .filter(({ user }) => {
-              const assigned = groupAssignments?.[user.uid || user.id];
-              const knownGroup = groups.some(({ id }) => id === assigned);
-              const effectiveGroup = knownGroup ? assigned : INITIAL_GROUP_ID;
-              return effectiveGroup === group.id;
+              const assigned = teamAssignments?.[user.uid || user.id];
+              const knownTeam = teams.some(({ id }) => id === assigned);
+              const effectiveTeam = knownTeam ? assigned : UNASSIGNED_TEAM_ID;
+              return effectiveTeam === team.id;
             });
           if (!members.length) return [];
           return [
-            <UserGroupHeading key={`group-${group.id}`}>
-              {group.id === INITIAL_GROUP_ID ? t("Unassigned") : group.name}
-            </UserGroupHeading>,
+            <UserTeamHeading key={`team-${team.id}`}>
+              {team.id === UNASSIGNED_TEAM_ID ? t("Unassigned") : team.name}
+            </UserTeamHeading>,
             ...members.map(({ user, index }) => renderUser(user, index)),
           ];
         })
       : users.map(renderUser);
 
-  return <InlineUserList>{groupedUsers}</InlineUserList>;
+  return <InlineUserList>{usersGroupedByTeam}</InlineUserList>;
 };
 
 export default Users;

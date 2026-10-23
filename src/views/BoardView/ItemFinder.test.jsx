@@ -143,13 +143,13 @@ describe("ItemFinder", () => {
     expect(screen.getByRole("button", { name: "Eleven" })).toBeTruthy();
   });
 
-  it("filters hidden items by assigned camp and referee view", () => {
+  it("filters hidden items by assigned team and referee view", () => {
     board.config = {
-      groups: [
+      teams: [
         { id: "players", name: "Players" },
         { id: "blue", name: "Blue" },
       ],
-      groupAssignments: { "player-1": "players" },
+      teamAssignments: { "player-1": "players" },
     };
     board.items = [
       { id: "visible", type: "counter", label: "Visible" },
@@ -158,7 +158,7 @@ describe("ItemFinder", () => {
         type: "counter",
         label: "Hidden",
         hidden: true,
-        hiddenByGroup: "blue",
+        hiddenForTeam: "blue",
       },
     ];
     renderFinder();

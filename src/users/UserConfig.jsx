@@ -1,9 +1,9 @@
 import React from "react";
-import { SketchPicker } from "react-color";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 
 import Modal from "../ui/Modal";
+import ColorPicker from "../ui/formUtils/ColorPicker";
 
 import UserCircle from "./UserCircle";
 
@@ -11,7 +11,41 @@ const StyledInputName = styled.input`
   &:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not(
       [type="color"]
     ):not([type="button"]):not([type="reset"]) {
-    width: 12em;
+    width: 100%;
+  }
+`;
+
+const UserDetailsFields = styled.div`
+  display: grid;
+  gap: 0.9rem;
+
+  > label {
+    display: block;
+    margin-bottom: 0.3rem;
+
+    input {
+      display: block;
+      margin-top: 0.3rem;
+    }
+  }
+`;
+
+const ColorField = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+`;
+
+const TeamAssignment = styled.label`
+  display: block;
+  border-top: 1px solid var(--color-border);
+  margin-top: 1rem;
+  padding-top: 1rem;
+
+  select {
+    box-sizing: border-box;
+    width: 100%;
+    margin-top: 0.3rem;
   }
 `;
 
@@ -28,25 +62,22 @@ const UserNameButton = styled.button`
   white-space: nowrap;
 `;
 
-const emptyStyle = {};
-const emptyColors = [];
-
 const UserConfig = ({
   user,
   updateCurrentUser,
   editable,
   index,
   showName,
-  groups,
-  assignedGroup,
-  onAssignGroup,
+  teams,
+  assignedTeam,
+  onAssignTeam,
 }) => {
   const { t } = useTranslation();
 
   const [name, setName] = React.useState(user.name);
   const [color, setColor] = React.useState(user.color);
   const [showDetails, setShowDetails] = React.useState(false);
-  const canOpenDetails = editable || Boolean(onAssignGroup);
+  const canOpenDetails = editable || Boolean(onAssignTeam);
 
   const handleChange = React.useCallback(
     (e) => {
@@ -56,14 +87,10 @@ const UserConfig = ({
     [updateCurrentUser]
   );
 
-  const handleChangecolor = React.useCallback((newColor) => {
-    setColor(newColor.hex);
-  }, []);
-
-  const handleChangecolorComplete = React.useCallback(
+  const handleColorChange = React.useCallback(
     (newColor) => {
-      setColor(newColor.hex);
-      updateCurrentUser({ color: newColor.hex });
+      setColor(newColor);
+      updateCurrentUser({ color: newColor });
     },
     [updateCurrentUser]
   );
@@ -91,37 +118,33 @@ const UserConfig = ({
         setShow={setShowDetails}
       >
         {editable && (
-          <>
-            <label>{t("Username")}</label>
-            <StyledInputName value={name} onChange={handleChange} />
+          <UserDetailsFields>
+            <label>
+              {t("Username")}
+              <StyledInputName value={name} onChange={handleChange} />
+            </label>
 
-            <label>{t("Color")}</label>
-            <SketchPicker
-              disableAlpha
-              presetColors={emptyColors}
-              color={color}
-              onChange={handleChangecolor}
-              onChangeComplete={handleChangecolorComplete}
-              styles={emptyStyle}
-              width={160}
-            />
-          </>
+            <ColorField>
+              <span>{t("Color")}</span>
+              <ColorPicker value={color} onChange={handleColorChange} />
+            </ColorField>
+          </UserDetailsFields>
         )}
-        {onAssignGroup && (
-          <label>
-            {t("Camp for {{name}}", { name: user.name })}
+        {onAssignTeam && (
+          <TeamAssignment>
+            {t("Team for {{name}}", { name: user.name })}
             <select
-              aria-label={t("Camp for {{name}}", { name: user.name })}
-              value={assignedGroup}
-              onChange={(event) => onAssignGroup(event.target.value)}
+              aria-label={t("Team for {{name}}", { name: user.name })}
+              value={assignedTeam}
+              onChange={(event) => onAssignTeam(event.target.value)}
             >
-              {groups.map(({ id, name }) => (
+              {teams.map(({ id, name }) => (
                 <option key={id} value={id}>
                   {id === "players" ? t("Unassigned") : name}
                 </option>
               ))}
             </select>
-          </label>
+          </TeamAssignment>
         )}
       </Modal>
     </>

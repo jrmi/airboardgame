@@ -1,18 +1,21 @@
-export const INITIAL_GROUP_ID = "players";
-export const INITIAL_GROUP = { id: INITIAL_GROUP_ID, name: "Players" };
+export const UNASSIGNED_TEAM_ID = "players";
+export const UNASSIGNED_TEAM = {
+  id: UNASSIGNED_TEAM_ID,
+  name: "Players",
+};
 
-export const getBoardGroups = (board = {}) => {
-  const groups = Array.isArray(board.groups) ? board.groups : [];
-  return groups.some(({ id }) => id === INITIAL_GROUP_ID)
-    ? groups
-    : [INITIAL_GROUP, ...groups];
+export const getBoardTeams = (board = {}) => {
+  const teams = Array.isArray(board.teams) ? board.teams : [];
+  return teams.some(({ id }) => id === UNASSIGNED_TEAM_ID)
+    ? teams
+    : [UNASSIGNED_TEAM, ...teams];
 };
 
 export const canSeeItem = ({ item, userId, board, refereeView = false }) => {
   if (!item?.hidden) return true;
   if (refereeView) return true;
-  const groupId = board?.groupAssignments?.[userId] || INITIAL_GROUP_ID;
-  return Boolean(item.hiddenByGroup && item.hiddenByGroup === groupId);
+  const teamId = board?.teamAssignments?.[userId] || UNASSIGNED_TEAM_ID;
+  return Boolean(item.hiddenForTeam && item.hiddenForTeam === teamId);
 };
 
 export const getLinkedItemIds = (items, rootIds) => {

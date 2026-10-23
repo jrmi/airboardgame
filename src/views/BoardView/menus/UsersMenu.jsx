@@ -1,27 +1,15 @@
 import React from "react";
 import { confirmAlert } from "react-confirm-alert";
-import { useBoardConfig, useItems } from "react-sync-board";
-import { toast } from "react-toastify";
+import { useBoardConfig } from "react-sync-board";
 import { useTranslation } from "react-i18next";
-import {
-  FiLink,
-  FiMessageSquare,
-  FiMic,
-  FiTrash2,
-  FiUsers,
-} from "react-icons/fi";
+import { FiLink, FiMessageSquare, FiMic, FiUsers } from "react-icons/fi";
 import styled from "styled-components";
 
 import UserList from "../../../users/UserList";
 import UserBar from "../UserBar";
 import { MenuBadge, MenuItem, TopMenu } from "./Menu";
 import { useModeration } from "../../../hooks/useModeration";
-import useLocalStorage from "../../../hooks/useLocalStorage";
-import {
-  getBoardGroups,
-  INITIAL_GROUP,
-  INITIAL_GROUP_ID,
-} from "../../../utils/itemVisibility";
+import { getBoardTeams, UNASSIGNED_TEAM } from "../../../utils/teamVisibility";
 
 const MenuSection = styled.section`
   padding: 0.65rem 0.75rem;
@@ -33,140 +21,11 @@ const MenuSection = styled.section`
   }
 `;
 
-const CampRow = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
+const MenuDivider = styled.hr`
+  border: 0;
+  border-top: 1px solid var(--color-board-border);
   margin: 0.35rem 0;
-
-  input {
-    flex: 1;
-    min-width: 0;
-  }
 `;
-
-const GroupManager = ({ boardConfig, setBoardConfig }) => {
-  const { t } = useTranslation();
-  const items = useItems();
-  const { isModerator } = useModeration();
-  const groups = getBoardGroups(boardConfig);
-
-  if (!isModerator) return null;
-
-  const updateGroups = (nextGroups, groupAssignments) =>
-    setBoardConfig((previous) => ({
-      ...previous,
-      groups: nextGroups,
-      groupAssignments: groupAssignments || previous.groupAssignments || {},
-    }));
-
-  return (
-    <MenuSection aria-label={t("Manage camps")}>
-      <strong>{t("Camps")}</strong>
-      {groups
-        .filter(({ id }) => id !== INITIAL_GROUP_ID)
-        .map((group) => (
-          <CampRow key={group.id}>
-            <input
-              aria-label={t("Camp name")}
-              value={
-                group.id === INITIAL_GROUP_ID &&
-                group.name === INITIAL_GROUP.name
-                  ? t("Users")
-                  : group.name
-              }
-              onChange={(event) => {
-                const name = event.target.value;
-                setBoardConfig((previous) => ({
-                  ...previous,
-                  groups: getBoardGroups(previous).map((candidate) =>
-                    candidate.id === group.id
-                      ? { ...candidate, name }
-                      : candidate
-                  ),
-                }));
-              }}
-            />
-            {group.id !== INITIAL_GROUP_ID && (
-              <MenuItem
-                $keepMenuOpen
-                aria-label={t("Delete camp")}
-                title={t("Delete camp")}
-                style={{ width: "auto", flex: "0 0 auto", padding: "0.5em" }}
-                onClick={() => {
-                  if (
-                    items.some(
-                      (item) => item.hidden && item.hiddenByGroup === group.id
-                    )
-                  ) {
-                    toast.error(
-                      t(
-                        "This camp still owns hidden items. Make them public first."
-                      )
-                    );
-                    return;
-                  }
-                  const assignments = Object.fromEntries(
-                    Object.entries(boardConfig.groupAssignments || {}).map(
-                      ([userId, assignedGroup]) => [
-                        userId,
-                        assignedGroup === group.id
-                          ? INITIAL_GROUP_ID
-                          : assignedGroup,
-                      ]
-                    )
-                  );
-                  updateGroups(
-                    groups.filter((candidate) => candidate.id !== group.id),
-                    assignments
-                  );
-                }}
-              >
-                <FiTrash2 size={16} aria-hidden="true" />
-              </MenuItem>
-            )}
-          </CampRow>
-        ))}
-      <MenuItem
-        $keepMenuOpen
-        onClick={() => {
-          const nextNumber =
-            groups.reduce((largest, group) => {
-              const suffix = Number(group.name.match(/(\d+)$/)?.[1] || 0);
-              return Math.max(largest, suffix);
-            }, groups.length - 1) + 1;
-          updateGroups([
-            ...groups,
-            {
-              id: `group-${Date.now()}`,
-              name: t("Team {{number}}", { number: nextNumber }),
-            },
-          ]);
-        }}
-      >
-        {t("Create camp")}
-      </MenuItem>
-    </MenuSection>
-  );
-};
-
-const HiddenItemDimming = () => {
-  const { t } = useTranslation();
-  const [dimming, setDimming] = useLocalStorage("hiddenItemOpacity", 0.28);
-  return (
-    <label style={{ display: "block", padding: "0.5em 0.75em" }}>
-      {t("Dim hidden items")}
-      <input
-        type="range"
-        min="0.1"
-        max="1"
-        step="0.05"
-        value={dimming}
-        onChange={(event) => setDimming(Number(event.target.value))}
-      />
-    </label>
-  );
-};
 
 const UsersMenu = ({
   activeMenu,
@@ -179,14 +38,14 @@ const UsersMenu = ({
   const { state, isModerator, claim, transfer, setRefereeView } =
     useModeration();
   const [boardConfig, setBoardConfig] = useBoardConfig();
-  const groups = getBoardGroups(boardConfig);
+  const teams = getBoardTeams(boardConfig);
 
   React.useEffect(() => {
-    if (isModerator && !Array.isArray(boardConfig.groups)) {
+    if (isModerator && !Array.isArray(boardConfig.teams)) {
       setBoardConfig({
         ...boardConfig,
-        groups: [INITIAL_GROUP],
-        groupAssignments: boardConfig.groupAssignments || {},
+        teams: [UNASSIGNED_TEAM],
+        teamAssignments: boardConfig.teamAssignments || {},
       });
     }
   }, [boardConfig, isModerator, setBoardConfig]);
@@ -262,52 +121,49 @@ const UsersMenu = ({
           moderatorId={state.moderatorId}
           moderatorWaiting={Boolean(state.reconnectUntil)}
           refereeView={state.refereeView}
-          groups={groups}
-          groupAssignments={boardConfig.groupAssignments}
-          onAssignGroup={
+          teams={teams}
+          teamAssignments={boardConfig.teamAssignments}
+          onAssignTeam={
             isModerator
-              ? (userId, groupId) =>
+              ? (userId, teamId) =>
                   setBoardConfig({
                     ...boardConfig,
-                    groupAssignments: {
-                      ...boardConfig.groupAssignments,
-                      [userId]: groupId,
+                    teamAssignments: {
+                      ...boardConfig.teamAssignments,
+                      [userId]: teamId,
                     },
                   })
               : undefined
           }
         />
       </div>
-      <MenuSection
-        aria-label={t("Moderator")}
-        className="moderation-controls"
-        aria-live="polite"
-      >
-        {state.moderatorId ? (
-          <>
-            {isModerator ? (
-              <>
-                <MenuItem onClick={toggleRefereeView}>
-                  {state.refereeView
-                    ? t("Turn off referee view")
-                    : t("Turn on referee view")}
+      {(!state.moderatorId || isModerator) && (
+        <MenuSection
+          aria-label={t("Moderator")}
+          className="moderation-controls"
+          aria-live="polite"
+        >
+          {state.moderatorId ? (
+            <>
+              <MenuItem onClick={toggleRefereeView}>
+                {state.refereeView
+                  ? t("Turn off referee view")
+                  : t("Turn on referee view")}
+              </MenuItem>
+              {users.some(({ uid }) => uid !== state.moderatorId) && (
+                <MenuItem onClick={chooseTransferTarget}>
+                  {t("Transfer moderation...")}
                 </MenuItem>
-                {users.some(({ uid }) => uid !== state.moderatorId) && (
-                  <MenuItem onClick={chooseTransferTarget}>
-                    {t("Transfer moderation...")}
-                  </MenuItem>
-                )}
-              </>
-            ) : null}
-          </>
-        ) : (
-          <MenuItem onClick={() => runModerationAction(claim)}>
-            {t("Take moderator role")}
-          </MenuItem>
-        )}
-      </MenuSection>
-      <GroupManager boardConfig={boardConfig} setBoardConfig={setBoardConfig} />
-      <HiddenItemDimming />
+              )}
+            </>
+          ) : (
+            <MenuItem onClick={() => runModerationAction(claim)}>
+              {t("Take moderator role")}
+            </MenuItem>
+          )}
+        </MenuSection>
+      )}
+      <MenuDivider />
       <UserBar
         onUnreadMessageCountChange={onUnreadMessageCountChange}
         renderMenuItems={({ openInvitation, renderChat, renderConference }) => (

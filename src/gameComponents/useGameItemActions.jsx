@@ -51,7 +51,7 @@ import rollAudio from "../media/audio/roll.ogg?url";
 import shuffleAudio from "../media/audio/shuffle.ogg?url";
 
 import useLocalStorage from "../hooks/useLocalStorage";
-import { getLinkedItemIds } from "../utils/itemVisibility";
+import { getLinkedItemIds } from "../utils/teamVisibility";
 
 export const useGameItemActions = () => {
   const {
@@ -74,22 +74,22 @@ export const useGameItemActions = () => {
 
   const getSelectedItems = useGetSelectedItems();
 
-  const hideForMyGroup = React.useCallback(
+  const hideForMyTeam = React.useCallback(
     async (itemIds) => {
       const rootIds = itemIds || getSelectedItems();
-      const groupId =
-        boardConfig.groupAssignments?.[currentUser.uid] || "players";
+      const teamId =
+        boardConfig.teamAssignments?.[currentUser.uid] || "players";
       const ids = getLinkedItemIds(allItems, rootIds);
       batchUpdateItems(
         ids,
-        () => ({ hidden: true, hiddenByGroup: groupId }),
+        () => ({ hidden: true, hiddenForTeam: teamId }),
         true
       );
     },
     [
       allItems,
       batchUpdateItems,
-      boardConfig.groupAssignments,
+      boardConfig.teamAssignments,
       currentUser.uid,
       getSelectedItems,
     ]
@@ -100,23 +100,23 @@ export const useGameItemActions = () => {
       const ids = getLinkedItemIds(allItems, itemIds || getSelectedItems());
       batchUpdateItems(
         ids,
-        () => ({ hidden: false, hiddenByGroup: null }),
+        () => ({ hidden: false, hiddenForTeam: null }),
         true
       );
     },
     [allItems, batchUpdateItems, getSelectedItems]
   );
 
-  const toggleGroupVisibility = React.useCallback(
+  const toggleTeamVisibility = React.useCallback(
     async (itemIds) => {
       const rootIds = itemIds || getSelectedItems();
       const selectedItems = allItems.filter(({ id }) => rootIds.includes(id));
       if (selectedItems.length && selectedItems.every(({ hidden }) => hidden)) {
         return makePublic(rootIds);
       }
-      return hideForMyGroup(rootIds);
+      return hideForMyTeam(rootIds);
     },
-    [allItems, getSelectedItems, hideForMyGroup, makePublic]
+    [allItems, getSelectedItems, hideForMyTeam, makePublic]
   );
 
   const getItemListOrSelected = React.useCallback(
@@ -839,9 +839,9 @@ export const useGameItemActions = () => {
         shortcut: "o",
         icon: FiEye,
       },
-      hideForMyGroup: {
-        action: () => hideForMyGroup,
-        label: t("Hide for my group"),
+      hideForMyTeam: {
+        action: () => hideForMyTeam,
+        label: t("Hide for my team"),
         icon: FiEye,
       },
       makePublic: {
@@ -849,10 +849,10 @@ export const useGameItemActions = () => {
         label: t("Make public"),
         icon: FiEye,
       },
-      toggleGroupVisibility: {
-        action: () => toggleGroupVisibility,
-        label: t("Hide for my group / make public"),
-        icon: FiEye,
+      toggleTeamVisibility: {
+        action: () => toggleTeamVisibility,
+        label: t("Hide for my team / make public"),
+        icon: FiLock,
       },
       revealSelf: {
         action: () => (itemIds) => setFlipSelf(itemIds, { flipSelf: true }),
@@ -1144,9 +1144,9 @@ export const useGameItemActions = () => {
     alignAsSquare,
     changeValue,
     cloneItem,
-    hideForMyGroup,
+    hideForMyTeam,
     makePublic,
-    toggleGroupVisibility,
+    toggleTeamVisibility,
     randomlyRotateSelectedItems,
     remove,
     roll,

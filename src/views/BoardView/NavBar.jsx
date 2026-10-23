@@ -15,6 +15,7 @@ import SaveExportModal from "./SaveExportModal";
 import GameMenu from "./menus/GameMenu";
 import BoardMenu from "./menus/BoardMenu";
 import ViewMenu from "./menus/ViewMenu";
+import TeamsMenu from "./menus/TeamsMenu";
 import UsersMenu from "./menus/UsersMenu";
 import { MenuRoot, MenuTrigger } from "./menus/Menu";
 
@@ -185,6 +186,9 @@ const NavBar = ({
             notificationCount={unreadMessageCount}
             onUnreadMessageCountChange={setUnreadMessageCount}
           />
+        )}
+        {!editMode && (
+          <TeamsMenu activeMenu={activeMenu} setActiveMenu={setActiveMenu} />
         )}
         <div className="spacer" />
         <MenuRoot className="top-menu__help">

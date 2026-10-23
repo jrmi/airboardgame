@@ -29,7 +29,7 @@ const getDefaultActionsFromItem = (item) => {
     }
   }
 
-  return [...new Set([...(actions || []), "toggleGroupVisibility"])];
+  return [...new Set([...(actions || []), "toggleTeamVisibility"])];
 };
 
 const getAvailableActionsFromItem = (item) => {
@@ -41,22 +41,22 @@ const getAvailableActionsFromItem = (item) => {
     }
   }
 
-  return [...new Set([...(actions || []), "toggleGroupVisibility"])];
+  return [...new Set([...(actions || []), "toggleTeamVisibility"])];
 };
 
 const normalizeActions = (item) => {
   const actions = (item.actions || getDefaultActionsFromItem(item)).map(
     (action) => (typeof action === "string" ? { name: action } : action)
   );
-  const hasGroupVisibilityAction = actions.some(({ name }) =>
-    ["hideForMyGroup", "makePublic", "toggleGroupVisibility"].includes(name)
+  const hasTeamVisibilityAction = actions.some(({ name }) =>
+    ["hideForMyTeam", "makePublic", "toggleTeamVisibility"].includes(name)
   );
   const normalized = actions.filter(
     ({ name }) =>
-      !["hideForMyGroup", "makePublic", "toggleGroupVisibility"].includes(name)
+      !["hideForMyTeam", "makePublic", "toggleTeamVisibility"].includes(name)
   );
-  if (hasGroupVisibilityAction) {
-    normalized.push({ name: "toggleGroupVisibility" });
+  if (hasTeamVisibilityAction) {
+    normalized.push({ name: "toggleTeamVisibility" });
   }
   return normalized;
 };

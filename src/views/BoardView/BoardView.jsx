@@ -9,7 +9,6 @@ import {
   useSelectedItems,
   useSetSelectedItems,
 } from "react-sync-board";
-
 import { SHOW_WELCOME } from "../../utils/settings";
 import WelcomeModal from "./WelcomeModal";
 import NavBar from "./NavBar";
@@ -31,8 +30,12 @@ import shuffleAudio from "../../media/audio/shuffle.ogg?url";
 import { preloadAudio } from "../../utils";
 import BoardGridOverlay from "../../gameComponents/GridOverlay";
 import HeldItemRotationStyles from "./HeldItemRotationStyles";
-import { canSeeItem } from "../../utils/itemVisibility";
+import { canSeeItem } from "../../utils/teamVisibility";
 import { useModeration } from "../../hooks/useModeration";
+
+const hiddenItemLockSvg =
+  "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='11' width='18' height='11' rx='2' ry='2'/><path d='M7 11V7a5 5 0 0 1 10 0v4'/></svg>";
+const hiddenItemLockMask = `url("data:image/svg+xml,${encodeURIComponent(hiddenItemLockSvg)}")`;
 
 const StyledBoard = styled.div`
   & .item.locked::after {
@@ -76,8 +79,6 @@ export const BoardView = ({
   );
 
   const [boardConfig] = useBoardConfig();
-  const [hiddenOpacity] = useLocalStorage("hiddenItemOpacity", 0.28);
-
   const [interaction, setInteraction] = useLocalStorage(
     "boardInteraction",
     defaultInteraction
@@ -93,31 +94,35 @@ export const BoardView = ({
     return currentBackground.getStyle(boardConfig.bgConf);
   }, [boardConfig.bgConf, boardConfig.bgType]);
 
-  const itemVisibilityStyles = React.useMemo(
-    () =>
-      items
-        .map((item) => {
-          const selector = `.item[data-id=${JSON.stringify(String(item.id))}]`;
-          const visible = canSeeItem({
-            item,
-            userId: currentUser?.uid,
-            board: boardConfig,
-            refereeView,
-          });
-          const rules = [];
-          if (!visible) rules.push("display: none !important;");
-          if (item.hidden) {
-            const brightness = Math.max(0.2, 1 - Number(hiddenOpacity) * 0.8);
-            rules.push(
-              `filter: grayscale(0.8) brightness(${brightness}) !important;`
-            );
-          }
-          return rules.length ? `${selector} { ${rules.join(" ")} }` : "";
-        })
-        .filter(Boolean)
-        .join("\n"),
-    [boardConfig, currentUser?.uid, hiddenOpacity, items, refereeView]
-  );
+  const teamVisibilityStyles = React.useMemo(() => {
+    const itemRules = items
+      .map((item) => {
+        const selector = `.item[data-id=${JSON.stringify(String(item.id))}]`;
+        const visible = canSeeItem({
+          item,
+          userId: currentUser?.uid,
+          board: boardConfig,
+          refereeView,
+        });
+        const rules = [];
+        if (!visible) {
+          rules.push(
+            `${selector} { visibility: hidden !important; pointer-events: none !important; }`
+          );
+        }
+        if (item.hidden && visible) {
+          rules.push(
+            `${selector} { filter: grayscale(65%); }`,
+            `${selector}::after { content: ""; position: absolute; top: 4px; right: 4px; z-index: 1; width: 18px; height: 18px; pointer-events: none; background-color: var(--color-accent-yellow); -webkit-mask: ${hiddenItemLockMask} center / contain no-repeat; mask: ${hiddenItemLockMask} center / contain no-repeat; }`
+          );
+        }
+        return rules.join("\n");
+      })
+      .filter(Boolean)
+      .join("\n");
+
+    return itemRules;
+  }, [boardConfig, currentUser?.uid, items, refereeView]);
 
   React.useEffect(() => preloadAudio([flipAudio, shuffleAudio, rollAudio]), []);
 
@@ -137,7 +142,7 @@ export const BoardView = ({
                     ? defaultActions(item)
                     : defaultActions || [];
                 return [
-                  ...new Set([...(actions || []), "toggleGroupVisibility"]),
+                  ...new Set([...(actions || []), "toggleTeamVisibility"]),
                 ];
               },
               availableActions: (item) => {
@@ -145,7 +150,7 @@ export const BoardView = ({
                   typeof availableActions === "function"
                     ? availableActions(item)
                     : availableActions || [];
-                return [...new Set([...actions, "toggleGroupVisibility"])];
+                return [...new Set([...actions, "toggleTeamVisibility"])];
               },
             },
           ];
@@ -184,7 +189,7 @@ export const BoardView = ({
     <MediaLibraryProvider libraries={mediaLibraries}>
       <ImageDropNPaste>
         <StyledBoard onDragStart={preventNativeDrag}>
-          <style>{itemVisibilityStyles}</style>
+          <style>{teamVisibilityStyles}</style>
           <Board
             interaction={interaction}
             style={style}

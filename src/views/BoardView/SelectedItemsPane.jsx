@@ -88,16 +88,15 @@ const SelectedItemsPane = ({
   const parsedAvailableActions = React.useMemo(() => {
     const actions = [];
     availableActions.forEach((availableAction) => {
-      const isLegacyVisibilityAction = [
-        "hideForMyGroup",
-        "makePublic",
-      ].includes(availableAction.name);
+      const isLegacyVisibilityAction = ["hideForMyTeam", "makePublic"].includes(
+        availableAction.name
+      );
       const action = isLegacyVisibilityAction
-        ? { ...availableAction, name: "toggleGroupVisibility" }
+        ? { ...availableAction, name: "toggleTeamVisibility" }
         : availableAction;
       if (
-        action.name !== "toggleGroupVisibility" ||
-        !actions.some(({ name }) => name === "toggleGroupVisibility")
+        action.name !== "toggleTeamVisibility" ||
+        !actions.some(({ name }) => name === "toggleTeamVisibility")
       ) {
         actions.push(action);
       }

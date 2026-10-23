@@ -14,7 +14,7 @@ import { search } from "../../utils";
 import { getImage } from "../../utils/image";
 import { media2Url } from "../../mediaLibrary";
 import SidePanel from "../../ui/SidePanel";
-import { canSeeItem } from "../../utils/itemVisibility";
+import { canSeeItem } from "../../utils/teamVisibility";
 import { useModeration } from "../../hooks/useModeration";
 
 const Preview = styled.div`

@@ -40,7 +40,7 @@ vi.mock("react-sync-board", () => ({
     swapItems: board.swapItems,
     getItems: board.getItems,
   }),
-  useBoardConfig: () => [{ groupAssignments: { me: "blue" } }],
+  useBoardConfig: () => [{ teamAssignments: { me: "blue" } }],
   useItems: () => board.allItems,
   useUsers: () => ({ currentUser }),
   useGetSelectedItems: () => () => board.selected,
@@ -81,9 +81,9 @@ describe("useGameItemActions", () => {
       "reveal",
       "hide",
       "flipSelf",
-      "hideForMyGroup",
+      "hideForMyTeam",
       "makePublic",
-      "toggleGroupVisibility",
+      "toggleTeamVisibility",
       "revealSelf",
       "hideSelf",
       "tap",
@@ -134,7 +134,7 @@ describe("useGameItemActions", () => {
     expect(updater({ type: "dice", value: 0, side: 6 })).toEqual({ value: 1 });
   });
 
-  it("hides linked items for the current camp and can make them public", async () => {
+  it("hides linked items for the current team and can make them public", async () => {
     board.allItems = [
       { id: "a", linkedItems: ["b"] },
       { id: "b", linkedItems: ["c"] },
@@ -142,7 +142,7 @@ describe("useGameItemActions", () => {
     ];
     renderActions();
 
-    await hookValue.actionMap.hideForMyGroup.action()(["a"]);
+    await hookValue.actionMap.hideForMyTeam.action()(["a"]);
     expect(board.batchUpdateItems).toHaveBeenCalledWith(
       ["a", "b", "c"],
       expect.any(Function),
@@ -150,14 +150,14 @@ describe("useGameItemActions", () => {
     );
     expect(board.batchUpdateItems.mock.calls[0][1]({ id: "a" })).toEqual({
       hidden: true,
-      hiddenByGroup: "blue",
+      hiddenForTeam: "blue",
     });
 
     board.batchUpdateItems.mockClear();
     await hookValue.actionMap.makePublic.action()(["a"]);
     expect(board.batchUpdateItems.mock.calls[0][1]({ id: "a" })).toEqual({
       hidden: false,
-      hiddenByGroup: null,
+      hiddenForTeam: null,
     });
     board.allItems = [];
   });
@@ -167,10 +167,10 @@ describe("useGameItemActions", () => {
     board.allItems = [{ id: "a", hidden: false }];
     renderActions();
 
-    expect(hookValue.actionMap.toggleGroupVisibility.label()).toBe(
-      "Hide for my group / make public"
+    expect(hookValue.actionMap.toggleTeamVisibility.label()).toBe(
+      "Hide for my team / make public"
     );
-    await hookValue.actionMap.toggleGroupVisibility.action()();
+    await hookValue.actionMap.toggleTeamVisibility.action()();
     expect(board.batchUpdateItems).toHaveBeenLastCalledWith(
       ["a"],
       expect.any(Function),
@@ -178,18 +178,18 @@ describe("useGameItemActions", () => {
     );
     expect(board.batchUpdateItems.mock.calls.at(-1)[1]({ id: "a" })).toEqual({
       hidden: true,
-      hiddenByGroup: "blue",
+      hiddenForTeam: "blue",
     });
 
     board.allItems = [{ id: "a", hidden: true }];
     renderActions();
-    expect(hookValue.actionMap.toggleGroupVisibility.label()).toBe(
-      "Hide for my group / make public"
+    expect(hookValue.actionMap.toggleTeamVisibility.label()).toBe(
+      "Hide for my team / make public"
     );
-    await hookValue.actionMap.toggleGroupVisibility.action()();
+    await hookValue.actionMap.toggleTeamVisibility.action()();
     expect(board.batchUpdateItems.mock.calls.at(-1)[1]({ id: "a" })).toEqual({
       hidden: false,
-      hiddenByGroup: null,
+      hiddenForTeam: null,
     });
   });
 
