@@ -45,11 +45,10 @@ describe("Studio", () => {
     cy.intercept(
       {
         method: "GET",
-        url: "/airboardgame/auth/check",
+        url: "**/airboardgame/auth/check",
       },
-      // eslint-disable-next-line quotes
-      '{"message":"success"}'
-    );
+      { statusCode: 200, body: { message: "success" } }
+    ).as("checkAuth");
 
     cy.intercept(
       {
@@ -64,9 +63,7 @@ describe("Studio", () => {
         win.localStorage.setItem("isAuthenticated", "true");
       },
     });
-    // The authenticated navigation is rendered after the initial auth check.
-    // Give it enough time to appear when the suite starts a fresh browser page
-    // on a busy CI runner.
+    cy.wait("@checkAuth");
     cy.contains("Studio", { timeout: 10000 }).click();
   });
 
