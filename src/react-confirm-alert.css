@@ -68,6 +68,42 @@ body.react-confirm-alert-body-element {
   cursor: pointer;
 }
 
+.transfer-moderation-dialog {
+  box-sizing: border-box;
+  width: min(440px, calc(100vw - 32px));
+  max-height: calc(100vh - 32px);
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding: 24px;
+}
+
+.transfer-moderation-dialog > .transfer-moderation-title {
+  margin: 0;
+  font-size: 1.5rem;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+
+.transfer-moderation-description {
+  margin: 12px 0 18px;
+}
+
+.transfer-moderation-options {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+  align-items: stretch;
+}
+
+.transfer-moderation-options > button {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  flex: 0 0 auto;
+  margin: 0 !important;
+}
+
 @keyframes react-confirm-alert-fadeIn {
   from {
     opacity: 0;
