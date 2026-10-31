@@ -21,27 +21,27 @@ export const getFormFieldComponent = (type) => {
 };
 
 const getDefaultActionsFromItem = (item) => {
-  let actions = [];
   if (item.type in itemTemplates) {
-    actions = itemTemplates[item.type].defaultActions;
+    const actions = itemTemplates[item.type].defaultActions;
     if (typeof actions === "function") {
-      actions = actions(item);
+      return actions(item);
     }
+    return actions;
   }
 
-  return actions || [];
+  return [];
 };
 
 const getAvailableActionsFromItem = (item) => {
-  let actions = [];
   if (item.type in itemTemplates) {
-    actions = itemTemplates[item.type].availableActions;
+    const actions = itemTemplates[item.type].availableActions;
     if (typeof actions === "function") {
-      actions = actions(item);
+      return actions(item);
     }
+    return actions;
   }
 
-  return actions || [];
+  return [];
 };
 
 const normalizeActions = (item) =>
