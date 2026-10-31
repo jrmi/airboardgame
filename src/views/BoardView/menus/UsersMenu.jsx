@@ -35,8 +35,7 @@ const UsersMenu = ({
   onUnreadMessageCountChange,
 }) => {
   const { t } = useTranslation();
-  const { state, isModerator, claim, transfer, setRefereeView } =
-    useModeration();
+  const { state, isModerator, requestModeration } = useModeration();
   const [boardConfig, setBoardConfig] = useBoardConfig();
   const teams = getBoardTeams(boardConfig);
 
@@ -65,12 +64,16 @@ const UsersMenu = ({
         {
           label: t("Yes"),
           onClick: () =>
-            runModerationAction(() => setRefereeView(!state.refereeView)),
+            runModerationAction(() =>
+              requestModeration("setRefereeView", {
+                enabled: !state.refereeView,
+              })
+            ),
         },
         { label: t("No"), onClick: () => {} },
       ],
     });
-  }, [runModerationAction, setRefereeView, state.refereeView, t]);
+  }, [runModerationAction, requestModeration, state.refereeView, t]);
 
   const chooseTransferTarget = React.useCallback(() => {
     const candidates = users.filter(({ uid }) => uid !== state.moderatorId);
@@ -91,7 +94,9 @@ const UsersMenu = ({
                 type="button"
                 onClick={() => {
                   onClose();
-                  runModerationAction(() => transfer(user.uid));
+                  runModerationAction(() =>
+                    requestModeration("transfer", { targetId: user.uid })
+                  );
                 }}
               >
                 {user.name || t("Player")}
@@ -104,7 +109,7 @@ const UsersMenu = ({
         </div>
       ),
     });
-  }, [runModerationAction, state.moderatorId, t, transfer, users]);
+  }, [runModerationAction, requestModeration, state.moderatorId, t, users]);
 
   return (
     <TopMenu
@@ -157,7 +162,11 @@ const UsersMenu = ({
               )}
             </>
           ) : (
-            <MenuItem onClick={() => runModerationAction(claim)}>
+            <MenuItem
+              onClick={() =>
+                runModerationAction(() => requestModeration("claim"))
+              }
+            >
               {t("Take moderator role")}
             </MenuItem>
           )}

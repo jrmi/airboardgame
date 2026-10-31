@@ -7,6 +7,12 @@ const STATE_REQUEST_RETRY_DELAY_MS = 250;
 const METHOD_CALL_RETRY_DELAY_MS = 200;
 const MAX_STATE_REQUEST_ATTEMPTS = 5;
 const MAX_METHOD_CALL_ATTEMPTS = 10;
+const MODERATION_METHODS = {
+  claim: "moderationClaim",
+  release: "moderationRelease",
+  transfer: "moderationTransfer",
+  setRefereeView: "moderationRefereeView",
+};
 
 const createEmptyState = () => ({
   moderatorId: null,
@@ -225,17 +231,22 @@ export const ModerationProvider = ({ children }) => {
     [currentUser?.name, currentUser?.uid, updateState, wire]
   );
 
+  const requestModeration = React.useCallback(
+    (action, params = {}) => {
+      const method = MODERATION_METHODS[action];
+      if (!method) throw new Error("unknown-moderation-action");
+      return request(method, params);
+    },
+    [request]
+  );
+
   const value = React.useMemo(
     () => ({
       state,
       isModerator: state.moderatorId === currentUser?.uid,
-      claim: () => request("moderationClaim"),
-      release: () => request("moderationRelease"),
-      transfer: (targetId) => request("moderationTransfer", { targetId }),
-      setRefereeView: (enabled) =>
-        request("moderationRefereeView", { enabled }),
+      requestModeration,
     }),
-    [currentUser?.uid, request, state]
+    [currentUser?.uid, requestModeration, state]
   );
 
   return (
