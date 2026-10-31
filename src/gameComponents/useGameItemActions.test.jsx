@@ -41,7 +41,6 @@ vi.mock("react-sync-board", () => ({
     getItems: board.getItems,
   }),
   useBoardConfig: () => [{ teamAssignments: { me: "blue" } }],
-  useItems: () => board.allItems,
   useUsers: () => ({ currentUser }),
   useGetSelectedItems: () => () => board.selected,
   useItemInteraction: () => ({ call: board.callPlace }),
@@ -133,6 +132,9 @@ describe("useGameItemActions", () => {
   });
 
   it("toggles linked items for the current team", async () => {
+    board.getItems.mockImplementation((ids) =>
+      ids.map((id) => board.allItems.find((item) => item.id === id))
+    );
     board.allItems = [
       { id: "a", linkedItems: ["b"] },
       { id: "b", linkedItems: ["c"] },
@@ -165,6 +167,9 @@ describe("useGameItemActions", () => {
   });
 
   it("toggles the selected items between hidden and public", async () => {
+    board.getItems.mockImplementation((ids) =>
+      ids.map((id) => board.allItems.find((item) => item.id === id))
+    );
     board.selected = ["a"];
     board.allItems = [{ id: "a", visibleOnlyForTeam: null }];
     renderActions();
