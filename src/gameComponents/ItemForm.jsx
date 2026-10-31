@@ -44,22 +44,10 @@ const getAvailableActionsFromItem = (item) => {
   return [...new Set([...(actions || []), "toggleTeamVisibility"])];
 };
 
-const normalizeActions = (item) => {
-  const actions = (item.actions || getDefaultActionsFromItem(item)).map(
-    (action) => (typeof action === "string" ? { name: action } : action)
+const normalizeActions = (item) =>
+  (item.actions || getDefaultActionsFromItem(item)).map((action) =>
+    typeof action === "string" ? { name: action } : action
   );
-  const hasTeamVisibilityAction = actions.some(({ name }) =>
-    ["hideForMyTeam", "makePublic", "toggleTeamVisibility"].includes(name)
-  );
-  const normalized = actions.filter(
-    ({ name }) =>
-      !["hideForMyTeam", "makePublic", "toggleTeamVisibility"].includes(name)
-  );
-  if (hasTeamVisibilityAction) {
-    normalized.push({ name: "toggleTeamVisibility" });
-  }
-  return normalized;
-};
 
 export const getCombinedItemActions = (items) => {
   const actionKeys = new Set();

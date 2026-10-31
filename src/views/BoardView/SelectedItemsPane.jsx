@@ -86,23 +86,7 @@ const SelectedItemsPane = ({
   const { actionMap } = useGameItemActions();
 
   const parsedAvailableActions = React.useMemo(() => {
-    const actions = [];
-    availableActions.forEach((availableAction) => {
-      const isLegacyVisibilityAction = ["hideForMyTeam", "makePublic"].includes(
-        availableAction.name
-      );
-      const action = isLegacyVisibilityAction
-        ? { ...availableAction, name: "toggleTeamVisibility" }
-        : availableAction;
-      if (
-        action.name !== "toggleTeamVisibility" ||
-        !actions.some(({ name }) => name === "toggleTeamVisibility")
-      ) {
-        actions.push(action);
-      }
-    });
-
-    return actions
+    return availableActions
       .map(({ name, args }) => {
         if (!actionMap[name]) {
           console.log("Missing action " + name);
