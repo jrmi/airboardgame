@@ -1,4 +1,4 @@
-export const UNASSIGNED_TEAM_ID = "players";
+export const UNASSIGNED_TEAM_ID = "__no_team__";
 export const UNASSIGNED_TEAM = {
   id: UNASSIGNED_TEAM_ID,
   name: "Players",

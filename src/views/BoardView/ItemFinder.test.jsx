@@ -1,6 +1,7 @@
 import React from "react";
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { UNASSIGNED_TEAM_ID } from "../../utils/teamVisibility";
 
 const board = vi.hoisted(() => ({
   items: [],
@@ -146,10 +147,10 @@ describe("ItemFinder", () => {
   it("filters hidden items by assigned team and referee view", () => {
     board.config = {
       teams: [
-        { id: "players", name: "Players" },
+        { id: UNASSIGNED_TEAM_ID, name: "Players" },
         { id: "blue", name: "Blue" },
       ],
-      teamAssignments: { "player-1": "players" },
+      teamAssignments: { "player-1": UNASSIGNED_TEAM_ID },
     };
     board.items = [
       { id: "visible", type: "counter", label: "Visible" },

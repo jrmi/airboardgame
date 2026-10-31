@@ -6,6 +6,7 @@ import Modal from "../ui/Modal";
 import ColorPicker from "../ui/formUtils/ColorPicker";
 
 import UserCircle from "./UserCircle";
+import { UNASSIGNED_TEAM_ID } from "../utils/teamVisibility";
 
 const StyledInputName = styled.input`
   &:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not(
@@ -140,7 +141,7 @@ const UserConfig = ({
             >
               {teams.map(({ id, name }) => (
                 <option key={id} value={id}>
-                  {id === "players" ? t("Unassigned") : name}
+                  {id === UNASSIGNED_TEAM_ID ? t("Unassigned") : name}
                 </option>
               ))}
             </select>

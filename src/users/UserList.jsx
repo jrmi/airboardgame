@@ -61,7 +61,7 @@ export const Users = ({
         editable={currentUser.id === u.id}
         showName={showNames}
         teams={teams}
-        assignedTeam={teamAssignments?.[u.uid || u.id] || "players"}
+        assignedTeam={teamAssignments?.[u.uid || u.id] || UNASSIGNED_TEAM_ID}
         onAssignTeam={
           onAssignTeam && ((teamId) => onAssignTeam(u.uid || u.id, teamId))
         }
