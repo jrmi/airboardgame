@@ -14,7 +14,7 @@ import { search } from "../../utils";
 import { getImage } from "../../utils/image";
 import { media2Url } from "../../mediaLibrary";
 import SidePanel from "../../ui/SidePanel";
-import { canSeeItem } from "../../utils/teamVisibility";
+import { canSeeItem, getUserId } from "../../utils/teamVisibility";
 import { useModeration } from "../../hooks/useModeration";
 
 const Preview = styled.div`
@@ -221,6 +221,7 @@ const ItemFinder = ({ open, onClose }) => {
   const items = useItems();
   const [boardConfig] = useBoardConfig();
   const { currentUser } = useUsers();
+  const currentUserId = getUserId(currentUser);
   const { state: moderationState, isModerator } = useModeration();
   const refereeView = isModerator && moderationState.refereeView;
   const { zoomToExtent } = useBoardPosition();
@@ -242,12 +243,12 @@ const ItemFinder = ({ open, onClose }) => {
         (item) =>
           canSeeItem({
             item,
-            userId: currentUser?.uid,
+            userId: currentUserId,
             board: boardConfig,
             refereeView,
           }) && search(searchFilter, getItemDisplayName(item, itemTemplates, t))
       ),
-    [searchFilter, items, t, currentUser?.uid, boardConfig, refereeView]
+    [searchFilter, items, t, currentUserId, boardConfig, refereeView]
   );
 
   React.useEffect(() => {

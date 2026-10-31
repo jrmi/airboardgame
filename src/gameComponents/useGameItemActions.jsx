@@ -1,6 +1,7 @@
 import React from "react";
 
 import { useTranslation } from "react-i18next";
+import { getUserId, UNASSIGNED_TEAM_ID } from "../utils/teamVisibility";
 import { toast } from "react-toastify";
 import {
   useItemActions,
@@ -77,8 +78,9 @@ export const useGameItemActions = () => {
   const hideForMyTeam = React.useCallback(
     async (itemIds) => {
       const rootIds = itemIds || getSelectedItems();
+      const userId = getUserId(currentUser);
       const teamId =
-        boardConfig.teamAssignments?.[currentUser.uid] || "players";
+        boardConfig.teamAssignments?.[userId] || UNASSIGNED_TEAM_ID;
       const ids = getLinkedItemIds(allItems, rootIds);
       batchUpdateItems(
         ids,
@@ -90,7 +92,7 @@ export const useGameItemActions = () => {
       allItems,
       batchUpdateItems,
       boardConfig.teamAssignments,
-      currentUser.uid,
+      currentUser,
       getSelectedItems,
     ]
   );
