@@ -8,7 +8,7 @@ const Template = createItemTemplate({
   type: "cube",
   component: Component,
   form: FormComponent,
-  defaultActions: ["clone", "lock", "remove"],
+  defaultActions: ["clone", "lock", "remove", "toggleTeamVisibility"],
   availableActions: [
     "stack",
     "alignAsLine",
@@ -17,6 +17,7 @@ const Template = createItemTemplate({
     "clone",
     "lock",
     "remove",
+    "toggleTeamVisibility",
   ],
   name: i18n.t("Cube"),
   translationKey: "Cube",

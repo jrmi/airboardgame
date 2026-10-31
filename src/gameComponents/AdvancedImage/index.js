@@ -8,7 +8,14 @@ const RectTemplate = createItemTemplate({
   type: "advancedImage",
   component: AdvancedImage,
   defaultActions: (item) => {
-    let actions = ["stack", "shuffle", "clone", "lock", "remove"];
+    let actions = [
+      "stack",
+      "shuffle",
+      "clone",
+      "lock",
+      "remove",
+      "toggleTeamVisibility",
+    ];
     if (item.layers?.length) {
       actions = ["nextImage"].concat(actions);
     }
@@ -30,6 +37,7 @@ const RectTemplate = createItemTemplate({
       "clone",
       "lock",
       "remove",
+      "toggleTeamVisibility",
     ];
     if (item.layers?.length) {
       actions = ["prevImageForLayer", "nextImageForLayer", "rollLayer"].concat(

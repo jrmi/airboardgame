@@ -8,7 +8,7 @@ const Template = createItemTemplate({
   type: "dice",
   component: Component,
   form: FormComponent,
-  defaultActions: ["roll", "clone", "lock", "remove"],
+  defaultActions: ["roll", "clone", "lock", "remove", "toggleTeamVisibility"],
   availableActions: [
     "roll",
     "clone",
@@ -16,6 +16,7 @@ const Template = createItemTemplate({
     "remove",
     "alignAsLine",
     "alignAsSquare",
+    "toggleTeamVisibility",
   ],
   name: i18n.t("Die"),
   translationKey: "Die",

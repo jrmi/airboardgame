@@ -7,8 +7,8 @@ import AnchorFormFields from "./AnchorFormFields";
 const AnchorTemplate = createItemTemplate({
   type: "anchor",
   component: Anchor,
-  defaultActions: ["clone", "lock", "remove"],
-  availableActions: ["clone", "lock", "remove"],
+  defaultActions: ["clone", "lock", "remove", "toggleTeamVisibility"],
+  availableActions: ["clone", "lock", "remove", "toggleTeamVisibility"],
   form: AnchorFormFields,
   name: i18n.t("Anchor"),
   translationKey: "Anchor",
