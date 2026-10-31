@@ -4,8 +4,6 @@ export const UNASSIGNED_TEAM = {
   name: "Players",
 };
 
-export const getUserId = (user) => user?.uid || user?.id;
-
 export const getBoardTeams = (board = {}) => {
   const teams = Array.isArray(board.teams) ? board.teams : [];
   return teams.some(({ id }) => id === UNASSIGNED_TEAM_ID)

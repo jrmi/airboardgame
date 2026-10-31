@@ -30,7 +30,7 @@ import shuffleAudio from "../../media/audio/shuffle.ogg?url";
 import { preloadAudio } from "../../utils";
 import BoardGridOverlay from "../../gameComponents/GridOverlay";
 import HeldItemRotationStyles from "./HeldItemRotationStyles";
-import { canSeeItem, getUserId } from "../../utils/teamVisibility";
+import { canSeeItem } from "../../utils/teamVisibility";
 import { useModeration } from "../../hooks/useModeration";
 
 const hiddenItemLockSvg =
@@ -68,7 +68,6 @@ export const BoardView = ({
 }) => {
   const { t } = useTranslation();
   const { isSpaceMaster: isMaster, currentUser } = useUsers();
-  const currentUserId = getUserId(currentUser);
   const items = useItems();
   const selectedItems = useSelectedItems();
   const setSelectedItems = useSetSelectedItems();
@@ -101,7 +100,7 @@ export const BoardView = ({
         const selector = `.item[data-id=${JSON.stringify(String(item.id))}]`;
         const visible = canSeeItem({
           item,
-          userId: currentUserId,
+          userId: currentUser?.uid,
           board: boardConfig,
           refereeView,
         });
@@ -123,7 +122,7 @@ export const BoardView = ({
       .join("\n");
 
     return itemRules;
-  }, [boardConfig, currentUserId, items, refereeView]);
+  }, [boardConfig, currentUser?.uid, items, refereeView]);
 
   React.useEffect(() => preloadAudio([flipAudio, shuffleAudio, rollAudio]), []);
 
@@ -166,7 +165,7 @@ export const BoardView = ({
         .filter((item) =>
           canSeeItem({
             item,
-            userId: currentUserId,
+            userId: currentUser?.uid,
             board: boardConfig,
             refereeView,
           })
@@ -179,7 +178,7 @@ export const BoardView = ({
     }
   }, [
     boardConfig,
-    currentUserId,
+    currentUser?.uid,
     items,
     refereeView,
     selectedItems,
