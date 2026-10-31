@@ -19,7 +19,7 @@ import ScreenTemplate from "./Screen";
 import TokenTemplate from "./Token";
 import ZoneTemplate from "./Zone";
 
-export const itemLibrary = [
+const baseItemLibrary = [
   RectTemplate,
   CubeTemplate,
   CylinderTemplate,
@@ -41,6 +41,20 @@ export const itemLibrary = [
   ScreenTemplate,
   GeneratorTemplate,
 ];
+
+const addTeamVisibilityAction = (actions, item) => {
+  const resolvedActions =
+    typeof actions === "function" ? actions(item) : actions || [];
+  return [...new Set([...(resolvedActions || []), "toggleTeamVisibility"])];
+};
+
+export const itemLibrary = baseItemLibrary.map((itemTemplate) => ({
+  ...itemTemplate,
+  defaultActions: (item) =>
+    addTeamVisibilityAction(itemTemplate.defaultActions, item),
+  availableActions: (item) =>
+    addTeamVisibilityAction(itemTemplate.availableActions, item),
+}));
 
 const itemTemplates = Object.fromEntries(
   itemLibrary.map((itemTemplate) => [itemTemplate.type, itemTemplate])

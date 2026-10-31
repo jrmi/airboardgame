@@ -126,39 +126,6 @@ export const BoardView = ({
 
   React.useEffect(() => preloadAudio([flipAudio, shuffleAudio, rollAudio]), []);
 
-  const boardItemTemplates = React.useMemo(
-    () =>
-      Object.fromEntries(
-        Object.entries(itemTemplates).map(([type, template]) => {
-          const availableActions = template.availableActions;
-          const defaultActions = template.defaultActions;
-          return [
-            type,
-            {
-              ...template,
-              defaultActions: (item) => {
-                const actions =
-                  typeof defaultActions === "function"
-                    ? defaultActions(item)
-                    : defaultActions || [];
-                return [
-                  ...new Set([...(actions || []), "toggleTeamVisibility"]),
-                ];
-              },
-              availableActions: (item) => {
-                const actions =
-                  typeof availableActions === "function"
-                    ? availableActions(item)
-                    : availableActions || [];
-                return [...new Set([...actions, "toggleTeamVisibility"])];
-              },
-            },
-          ];
-        })
-      ),
-    []
-  );
-
   React.useEffect(() => {
     const visibleItemIds = new Set(
       items
@@ -193,7 +160,7 @@ export const BoardView = ({
           <Board
             interaction={interaction}
             style={style}
-            itemTemplates={boardItemTemplates}
+            itemTemplates={itemTemplates}
             showResizeHandle={editItem}
           >
             <BoardGridOverlay />
