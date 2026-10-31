@@ -30,7 +30,6 @@ export const ModerationProvider = ({ children }) => {
   usersRef.current = localUsers;
   const stateRef = React.useRef(state);
   stateRef.current = state;
-  const expiryRef = React.useRef(null);
 
   const publishState = React.useCallback(
     (nextState) => {
@@ -46,10 +45,6 @@ export const ModerationProvider = ({ children }) => {
 
     let unregister = [];
     let cancelled = false;
-    const clearExpiryTimer = () => {
-      clearTimeout(expiryRef.current);
-      expiryRef.current = null;
-    };
     const nextState = (overrides = {}) => ({
       ...stateRef.current,
       ...overrides,
@@ -66,7 +61,6 @@ export const ModerationProvider = ({ children }) => {
               if (current.moderatorId && current.moderatorId !== userId) {
                 throw new Error("role-taken");
               }
-              clearExpiryTimer();
               const claimed = nextState({
                 moderatorId: userId,
                 moderatorName: name || "",
@@ -82,7 +76,6 @@ export const ModerationProvider = ({ children }) => {
             ({ userId } = {}) => {
               if (stateRef.current.moderatorId !== userId)
                 throw new Error("not-moderator");
-              clearExpiryTimer();
               const released = createEmptyState();
               publishState(released);
               return released;
@@ -103,7 +96,6 @@ export const ModerationProvider = ({ children }) => {
                 reconnectUntil: null,
                 refereeView: false,
               });
-              clearExpiryTimer();
               publishState(transferred);
               return transferred;
             },
@@ -125,15 +117,6 @@ export const ModerationProvider = ({ children }) => {
           else unregister.push(remove);
         }
         if (cancelled) return;
-        if (stateRef.current.moderatorId && stateRef.current.reconnectUntil) {
-          const remaining = stateRef.current.reconnectUntil - Date.now();
-          if (remaining <= 0)
-            publishState(createEmptyState());
-          else
-            expiryRef.current = setTimeout(() => {
-              publishState(createEmptyState());
-            }, remaining);
-        }
       };
       register().catch(() => {});
     }
@@ -141,40 +124,46 @@ export const ModerationProvider = ({ children }) => {
     return () => {
       cancelled = true;
       unregister.forEach((remove) => remove());
-      clearTimeout(expiryRef.current);
     };
   }, [currentUser?.uid, isMaster, publishState, wire]);
 
   React.useEffect(() => {
-    if (!isMaster || !state.moderatorId) return;
+    if (!isMaster || !state.moderatorId) return undefined;
 
     const moderatorIsConnected = localUsers.some(
       ({ uid }) => uid === state.moderatorId
     );
     if (moderatorIsConnected) {
-      if (!state.reconnectUntil) return;
-      clearTimeout(expiryRef.current);
-      expiryRef.current = null;
-      publishState({ ...state, reconnectUntil: null });
-      return;
+      if (state.reconnectUntil) {
+        publishState({ ...state, reconnectUntil: null });
+      }
+      return undefined;
     }
 
-    if (state.reconnectUntil) return;
-
-    // useUsers tracks userLeave; retain the role during a short reconnect grace period.
     const moderatorId = state.moderatorId;
-    publishState({
-      ...state,
-      reconnectUntil: Date.now() + RECONNECT_GRACE_MS,
-      refereeView: false,
-    });
-    clearTimeout(expiryRef.current);
-    expiryRef.current = setTimeout(() => {
+    if (!state.reconnectUntil) {
+      // useUsers tracks userLeave; retain the role during a short reconnect grace period.
+      publishState({
+        ...state,
+        reconnectUntil: Date.now() + RECONNECT_GRACE_MS,
+        refereeView: false,
+      });
+      return undefined;
+    }
+
+    const remaining = state.reconnectUntil - Date.now();
+    if (remaining <= 0) {
+      publishState(createEmptyState());
+      return undefined;
+    }
+
+    const expiryTimer = setTimeout(() => {
       if (stateRef.current.moderatorId !== moderatorId) return;
       if (usersRef.current.some(({ uid }) => uid === moderatorId)) return;
-      expiryRef.current = null;
       publishState(createEmptyState());
-    }, RECONNECT_GRACE_MS);
+    }, remaining);
+
+    return () => clearTimeout(expiryTimer);
   }, [isMaster, localUsers, publishState, state]);
 
   const request = React.useCallback(
