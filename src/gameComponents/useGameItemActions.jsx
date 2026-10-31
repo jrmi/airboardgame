@@ -85,7 +85,7 @@ export const useGameItemActions = () => {
       const ids = getLinkedItemIds(allItems, rootIds);
       batchUpdateItems(
         ids,
-        () => ({ hidden: true, hiddenForTeam: teamId }),
+        () => ({ visibleOnlyForTeam: teamId }),
         true
       );
     },
@@ -103,7 +103,7 @@ export const useGameItemActions = () => {
       const ids = getLinkedItemIds(allItems, itemIds || getSelectedItems());
       batchUpdateItems(
         ids,
-        () => ({ hidden: false, hiddenForTeam: null }),
+        () => ({ visibleOnlyForTeam: null }),
         true
       );
     },
@@ -114,7 +114,10 @@ export const useGameItemActions = () => {
     async (itemIds) => {
       const rootIds = itemIds || getSelectedItems();
       const selectedItems = allItems.filter(({ id }) => rootIds.includes(id));
-      if (selectedItems.length && selectedItems.every(({ hidden }) => hidden)) {
+      if (
+        selectedItems.length &&
+        selectedItems.every(({ visibleOnlyForTeam }) => visibleOnlyForTeam)
+      ) {
         return makeTeamItemsPublic(rootIds);
       }
       return hideForCurrentTeam(rootIds);

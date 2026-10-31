@@ -110,7 +110,7 @@ export const BoardView = ({
             `${selector} { visibility: hidden !important; pointer-events: none !important; }`
           );
         }
-        if (item.hidden && visible) {
+        if (item.visibleOnlyForTeam && visible) {
           rules.push(
             `${selector} { filter: grayscale(65%); }`,
             `${selector}::after { content: ""; position: absolute; top: 4px; right: 4px; z-index: 1; width: 18px; height: 18px; pointer-events: none; background-color: var(--color-accent-yellow); -webkit-mask: ${hiddenItemLockMask} center / contain no-repeat; mask: ${hiddenItemLockMask} center / contain no-repeat; }`

@@ -147,28 +147,26 @@ describe("useGameItemActions", () => {
       true
     );
     expect(board.batchUpdateItems.mock.calls[0][1]({ id: "a" })).toEqual({
-      hidden: true,
-      hiddenForTeam: "blue",
+      visibleOnlyForTeam: "blue",
     });
 
     board.batchUpdateItems.mockClear();
     board.allItems = [
-      { id: "a", linkedItems: ["b"], hidden: true },
-      { id: "b", linkedItems: ["c"], hidden: true },
-      { id: "c", hidden: true },
+      { id: "a", linkedItems: ["b"], visibleOnlyForTeam: "blue" },
+      { id: "b", linkedItems: ["c"], visibleOnlyForTeam: "blue" },
+      { id: "c", visibleOnlyForTeam: "blue" },
     ];
     renderActions();
     await hookValue.actionMap.toggleTeamVisibility.action()(["a"]);
     expect(board.batchUpdateItems.mock.calls[0][1]({ id: "a" })).toEqual({
-      hidden: false,
-      hiddenForTeam: null,
+      visibleOnlyForTeam: null,
     });
     board.allItems = [];
   });
 
   it("toggles the selected items between hidden and public", async () => {
     board.selected = ["a"];
-    board.allItems = [{ id: "a", hidden: false }];
+    board.allItems = [{ id: "a", visibleOnlyForTeam: null }];
     renderActions();
 
     expect(hookValue.actionMap.toggleTeamVisibility.label()).toBe(
@@ -181,19 +179,17 @@ describe("useGameItemActions", () => {
       true
     );
     expect(board.batchUpdateItems.mock.calls.at(-1)[1]({ id: "a" })).toEqual({
-      hidden: true,
-      hiddenForTeam: "blue",
+      visibleOnlyForTeam: "blue",
     });
 
-    board.allItems = [{ id: "a", hidden: true }];
+    board.allItems = [{ id: "a", visibleOnlyForTeam: "blue" }];
     renderActions();
     expect(hookValue.actionMap.toggleTeamVisibility.label()).toBe(
       "Hide for my team / make public"
     );
     await hookValue.actionMap.toggleTeamVisibility.action()();
     expect(board.batchUpdateItems.mock.calls.at(-1)[1]({ id: "a" })).toEqual({
-      hidden: false,
-      hiddenForTeam: null,
+      visibleOnlyForTeam: null,
     });
   });
 

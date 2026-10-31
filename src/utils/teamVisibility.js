@@ -12,10 +12,10 @@ export const getBoardTeams = (board = {}) => {
 };
 
 export const canSeeItem = ({ item, userId, board, refereeView = false }) => {
-  if (!item?.hidden) return true;
+  if (!item?.visibleOnlyForTeam) return true;
   if (refereeView) return true;
   const teamId = board?.teamAssignments?.[userId] || UNASSIGNED_TEAM_ID;
-  return Boolean(item.hiddenForTeam && item.hiddenForTeam === teamId);
+  return item.visibleOnlyForTeam === teamId;
 };
 
 export const getLinkedItemIds = (items, rootIds) => {

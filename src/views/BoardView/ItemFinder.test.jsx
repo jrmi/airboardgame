@@ -157,8 +157,7 @@ describe("ItemFinder", () => {
         id: "hidden",
         type: "counter",
         label: "Hidden",
-        hidden: true,
-        hiddenForTeam: "blue",
+        visibleOnlyForTeam: "blue",
       },
     ];
     renderFinder();

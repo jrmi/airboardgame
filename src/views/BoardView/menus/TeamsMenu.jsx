@@ -136,7 +136,7 @@ const TeamManager = ({ boardConfig, setBoardConfig }) => {
               onClick={() => {
                 if (
                   items.some(
-                    (item) => item.hidden && item.hiddenForTeam === team.id
+                    (item) => item.visibleOnlyForTeam === team.id
                   )
                 ) {
                   toast.error(
