@@ -2,30 +2,34 @@ import React from "react";
 import { useUsers, useWire } from "react-sync-board";
 
 const ModerationContext = React.createContext(null);
-const emptyState = {
+const RECONNECT_GRACE_MS = 30_000;
+const RETRY_DELAY_MS = 250;
+const METHOD_CALL_RETRY_DELAY_MS = 200;
+const MAX_LEAVE_NOTIFICATION_ATTEMPTS = 10;
+const MAX_STATE_REQUEST_ATTEMPTS = 5;
+const MAX_METHOD_CALL_ATTEMPTS = 10;
+
+const createEmptyState = () => ({
   moderatorId: null,
   moderatorName: null,
   reconnectUntil: null,
   refereeView: false,
   connectedUsers: [],
-};
+});
 
 export const ModerationProvider = ({ children }) => {
   const { wire, isMaster } = useWire("room");
   const { currentUser, localUsers } = useUsers();
+
+  // Wire callbacks can outlive a render; refs keep them pointed at current data.
   const usersRef = React.useRef(localUsers);
   usersRef.current = localUsers;
   const userIdsRef = React.useRef(new Map());
+  // userLeave reports connection IDs; moderation state uses stable user UIDs.
   localUsers.forEach(({ id, uid }) => userIdsRef.current.set(id, uid));
   const wireRef = React.useRef(wire);
   wireRef.current = wire;
-  const [state, setState] = React.useState({
-    moderatorId: null,
-    moderatorName: null,
-    reconnectUntil: null,
-    refereeView: false,
-    connectedUsers: [],
-  });
+  const [state, setState] = React.useState(createEmptyState);
   const stateRef = React.useRef(state);
   stateRef.current = state;
   const expiryRef = React.useRef(null);
@@ -38,6 +42,7 @@ export const ModerationProvider = ({ children }) => {
   const publishState = React.useCallback(
     (nextState) => {
       updateState(nextState);
+      // Update local state immediately and broadcast it to every peer.
       wireRef.current?.publish("moderationState", nextState, true);
     },
     [updateState]
@@ -48,12 +53,14 @@ export const ModerationProvider = ({ children }) => {
     const update = (nextState) => updateState(nextState);
     const markUserDisconnected = (wireUserId) => {
       const userId = userIdsRef.current.get(wireUserId);
+      // A user may have several tabs; only mark them absent after the last leaves.
       const hasOtherConnection = usersRef.current.some(
         ({ id, uid }) => uid === userId && id !== wireUserId
       );
       userIdsRef.current.delete(wireUserId);
       if (hasOtherConnection || userId !== stateRef.current.moderatorId) return;
-      const reconnectUntil = Date.now() + 30_000;
+      // Keep the role briefly so a dropped connection can reclaim it on reconnect.
+      const reconnectUntil = Date.now() + RECONNECT_GRACE_MS;
       const nextState = {
         ...stateRef.current,
         reconnectUntil,
@@ -63,8 +70,8 @@ export const ModerationProvider = ({ children }) => {
       clearTimeout(expiryRef.current);
       expiryRef.current = setTimeout(() => {
         if (stateRef.current.moderatorId !== userId) return;
-        publishState({ ...emptyState, connectedUsers: [] });
-      }, 30_000);
+        publishState(createEmptyState());
+      }, RECONNECT_GRACE_MS);
     };
     const onUserLeave = (wireUserId) => {
       if (isMaster) {
@@ -75,7 +82,9 @@ export const ModerationProvider = ({ children }) => {
       const notifyMaster = () =>
         wire.call("moderationUserLeave", { wireUserId }).catch(() => {
           attempts += 1;
-          if (!cancelled && attempts < 10) setTimeout(notifyMaster, 250);
+          if (!cancelled && attempts < MAX_LEAVE_NOTIFICATION_ATTEMPTS) {
+            setTimeout(notifyMaster, RETRY_DELAY_MS);
+          }
         });
       notifyMaster();
     };
@@ -84,12 +93,13 @@ export const ModerationProvider = ({ children }) => {
 
     let unregister = [];
     let cancelled = false;
-    const setModerator = (moderatorId) => {
+    const clearExpiryForModerator = (moderatorId) => {
       if (moderatorId && expiryRef.current) {
         clearTimeout(expiryRef.current);
         expiryRef.current = null;
       }
     };
+    // Include current connected user names in every state update from the master.
     const nextState = (overrides = {}) => ({
       ...stateRef.current,
       connectedUsers: usersRef.current.map(({ name }) => ({ name })),
@@ -97,6 +107,7 @@ export const ModerationProvider = ({ children }) => {
     });
 
     if (isMaster) {
+      // Only the room master registers mutations; peers send requests to it.
       const register = async () => {
         const methods = [
           ["moderationGetState", () => stateRef.current],
@@ -114,7 +125,7 @@ export const ModerationProvider = ({ children }) => {
               if (current.moderatorId && current.moderatorId !== userId) {
                 throw new Error("role-taken");
               }
-              setModerator(userId);
+              clearExpiryForModerator(userId);
               const claimed = nextState({
                 moderatorId: userId,
                 moderatorName: name || "",
@@ -131,7 +142,7 @@ export const ModerationProvider = ({ children }) => {
               if (stateRef.current.moderatorId !== userId)
                 throw new Error("not-moderator");
               const released = {
-                ...emptyState,
+                ...createEmptyState(),
                 connectedUsers: usersRef.current.map(({ name }) => ({ name })),
               };
               publishState(released);
@@ -153,7 +164,7 @@ export const ModerationProvider = ({ children }) => {
                 reconnectUntil: null,
                 refereeView: false,
               });
-              setModerator(targetId);
+              clearExpiryForModerator(targetId);
               publishState(transferred);
               return transferred;
             },
@@ -178,21 +189,24 @@ export const ModerationProvider = ({ children }) => {
         if (stateRef.current.moderatorId && stateRef.current.reconnectUntil) {
           const remaining = stateRef.current.reconnectUntil - Date.now();
           if (remaining <= 0)
-            publishState({ ...emptyState, connectedUsers: [] });
+            publishState(createEmptyState());
           else
             expiryRef.current = setTimeout(() => {
-              publishState({ ...emptyState, connectedUsers: [] });
+              publishState(createEmptyState());
             }, remaining);
         }
         publishState(nextState());
       };
       register().catch(() => {});
     } else {
+      // A peer may join before the master has finished registering its methods.
       let attempts = 0;
       const getState = () =>
         wire.call("moderationGetState").then(updateState, () => {
           attempts += 1;
-          if (!cancelled && attempts < 5) setTimeout(getState, 250);
+          if (!cancelled && attempts < MAX_STATE_REQUEST_ATTEMPTS) {
+            setTimeout(getState, RETRY_DELAY_MS);
+          }
         });
       getState();
     }
@@ -222,16 +236,22 @@ export const ModerationProvider = ({ children }) => {
         userId: currentUser.uid,
         name: currentUser.name,
       };
-      for (let attempt = 0; ; attempt += 1) {
+      // Retry only the startup race where the master has not registered yet.
+      for (let attempt = 1; ; attempt += 1) {
         try {
           const result = await wire.call(method, payload);
           if (result) updateState(result);
           return result;
         } catch (error) {
-          if (attempt >= 9 || !String(error).includes("not registered")) {
+          if (
+            attempt >= MAX_METHOD_CALL_ATTEMPTS ||
+            !String(error).includes("not registered")
+          ) {
             throw error;
           }
-          await new Promise((resolve) => setTimeout(resolve, 200));
+          await new Promise((resolve) =>
+            setTimeout(resolve, METHOD_CALL_RETRY_DELAY_MS)
+          );
         }
       }
     },
@@ -260,6 +280,6 @@ export const ModerationProvider = ({ children }) => {
 
 export const useModeration = () =>
   React.useContext(ModerationContext) || {
-    state: emptyState,
+    state: createEmptyState(),
     isModerator: false,
   };
