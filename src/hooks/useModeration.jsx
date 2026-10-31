@@ -1,11 +1,9 @@
 import React from "react";
-import { useUsers, useWire } from "react-sync-board";
+import { useSessionInfo, useUsers, useWire } from "react-sync-board";
 
 const ModerationContext = React.createContext(null);
 const RECONNECT_GRACE_MS = 30_000;
-const STATE_REQUEST_RETRY_DELAY_MS = 250;
 const METHOD_CALL_RETRY_DELAY_MS = 200;
-const MAX_STATE_REQUEST_ATTEMPTS = 5;
 const MAX_METHOD_CALL_ATTEMPTS = 10;
 const MODERATION_METHODS = {
   claim: "moderationClaim",
@@ -24,35 +22,27 @@ const createEmptyState = () => ({
 export const ModerationProvider = ({ children }) => {
   const { wire, isMaster } = useWire("room");
   const { currentUser, localUsers } = useUsers();
+  const { sessionInfo, updateSessionInfo } = useSessionInfo();
+  const state = sessionInfo.moderation || createEmptyState();
 
   // Wire callbacks can outlive a render; refs keep them pointed at current data.
   const usersRef = React.useRef(localUsers);
   usersRef.current = localUsers;
-  const wireRef = React.useRef(wire);
-  wireRef.current = wire;
-  const [state, setState] = React.useState(createEmptyState);
   const stateRef = React.useRef(state);
   stateRef.current = state;
   const expiryRef = React.useRef(null);
 
-  const updateState = React.useCallback((nextState) => {
-    stateRef.current = nextState;
-    setState(nextState);
-  }, []);
-
   const publishState = React.useCallback(
     (nextState) => {
-      updateState(nextState);
-      // Update local state immediately and broadcast it to every peer.
-      wireRef.current?.publish("moderationState", nextState, true);
+      stateRef.current = nextState;
+      // sessionInfo is synchronized already and is not part of saved board data.
+      updateSessionInfo({ moderation: nextState });
     },
-    [updateState]
+    [updateSessionInfo]
   );
 
   React.useEffect(() => {
     if (!wire || !currentUser?.uid) return undefined;
-    const update = (nextState) => updateState(nextState);
-    const unsubscribeState = wire.subscribe("moderationState", update);
 
     let unregister = [];
     let cancelled = false;
@@ -69,7 +59,6 @@ export const ModerationProvider = ({ children }) => {
       // Only the room master registers mutations; peers send requests to it.
       const register = async () => {
         const methods = [
-          ["moderationGetState", () => stateRef.current],
           [
             "moderationClaim",
             ({ userId, name } = {}) => {
@@ -145,29 +134,16 @@ export const ModerationProvider = ({ children }) => {
               publishState(createEmptyState());
             }, remaining);
         }
-        publishState(nextState());
       };
       register().catch(() => {});
-    } else {
-      // A peer may join before the master has finished registering its methods.
-      let attempts = 0;
-      const getState = () =>
-        wire.call("moderationGetState").then(updateState, () => {
-          attempts += 1;
-          if (!cancelled && attempts < MAX_STATE_REQUEST_ATTEMPTS) {
-            setTimeout(getState, STATE_REQUEST_RETRY_DELAY_MS);
-          }
-        });
-      getState();
     }
 
     return () => {
       cancelled = true;
       unregister.forEach((remove) => remove());
       clearTimeout(expiryRef.current);
-      unsubscribeState();
     };
-  }, [currentUser?.uid, isMaster, publishState, updateState, wire]);
+  }, [currentUser?.uid, isMaster, publishState, wire]);
 
   React.useEffect(() => {
     if (!isMaster || !state.moderatorId) return;
@@ -213,7 +189,6 @@ export const ModerationProvider = ({ children }) => {
       for (let attempt = 1; ; attempt += 1) {
         try {
           const result = await wire.call(method, payload);
-          if (result) updateState(result);
           return result;
         } catch (error) {
           if (
@@ -228,7 +203,7 @@ export const ModerationProvider = ({ children }) => {
         }
       }
     },
-    [currentUser?.name, currentUser?.uid, updateState, wire]
+    [currentUser?.name, currentUser?.uid, wire]
   );
 
   const requestModeration = React.useCallback(
