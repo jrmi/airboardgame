@@ -1,6 +1,5 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { FiLock } from "react-icons/fi";
 
 import {
   Board,
@@ -31,10 +30,15 @@ import shuffleAudio from "../../media/audio/shuffle.ogg?url";
 import { preloadAudio } from "../../utils";
 import BoardGridOverlay from "../../gameComponents/GridOverlay";
 import HeldItemRotationStyles from "./HeldItemRotationStyles";
+import { createTeamVisibilityItemWrapper } from "./TeamVisibilityItemWrapper";
 import { canSeeItem } from "../../utils/teamVisibility";
 import { useModeration } from "../../hooks/useModeration";
 
 const StyledBoard = styled.div`
+  & .team-limited-item > .item {
+    filter: grayscale(65%);
+  }
+
   & .item.locked::after {
     content: "";
     position: absolute;
@@ -65,6 +69,7 @@ export const BoardView = ({
 }) => {
   const { t } = useTranslation();
   const { isSpaceMaster: isMaster, currentUser } = useUsers();
+  const [boardConfig] = useBoardConfig();
   const items = useItems();
   const selectedItems = useSelectedItems();
   const setSelectedItems = useSetSelectedItems();
@@ -72,37 +77,11 @@ export const BoardView = ({
   const refereeView = isModerator && moderationState.refereeView;
   const ItemWrapper = React.useMemo(
     () =>
-      function TeamVisibilityItemWrapper({ item, children }) {
-        if (
-          !item.visibleOnlyForTeam ||
-          !canSeeItem({
-            item,
-            userId: currentUser?.uid,
-            board: boardConfig,
-            refereeView,
-          })
-        ) {
-          return children;
-        }
-
-        return (
-          <>
-            {children}
-            <FiLock
-              aria-hidden="true"
-              size={18}
-              style={{
-                position: "absolute",
-                zIndex: 1,
-                top: "4px",
-                right: "4px",
-                color: "var(--color-accent-yellow)",
-                pointerEvents: "none",
-              }}
-            />
-          </>
-        );
-      },
+      createTeamVisibilityItemWrapper({
+        userId: currentUser?.uid,
+        board: boardConfig,
+        refereeView,
+      }),
     [boardConfig, currentUser?.uid, refereeView]
   );
   const { isVassalSession } = useSession();
@@ -110,7 +89,6 @@ export const BoardView = ({
     SHOW_WELCOME && !editMode && isMaster && !isVassalSession
   );
 
-  const [boardConfig] = useBoardConfig();
   const [interaction, setInteraction] = useLocalStorage(
     "boardInteraction",
     defaultInteraction
@@ -125,35 +103,6 @@ export const BoardView = ({
       backgrounds.find(({ type }) => type === "default");
     return currentBackground.getStyle(boardConfig.bgConf);
   }, [boardConfig.bgConf, boardConfig.bgType]);
-
-  const teamVisibilityStyles = React.useMemo(() => {
-    const itemRules = items
-      .map((item) => {
-        const selector = `.item[data-id=${JSON.stringify(String(item.id))}]`;
-        const visible = canSeeItem({
-          item,
-          userId: currentUser?.uid,
-          board: boardConfig,
-          refereeView,
-        });
-        const rules = [];
-        if (!visible) {
-          rules.push(
-            `${selector} { visibility: hidden !important; pointer-events: none !important; }`
-          );
-        }
-        if (item.visibleOnlyForTeam && visible) {
-          rules.push(
-            `${selector} { filter: grayscale(65%); }`
-          );
-        }
-        return rules.join("\n");
-      })
-      .filter(Boolean)
-      .join("\n");
-
-    return itemRules;
-  }, [boardConfig, currentUser?.uid, items, refereeView]);
 
   React.useEffect(() => preloadAudio([flipAudio, shuffleAudio, rollAudio]), []);
 
@@ -187,7 +136,6 @@ export const BoardView = ({
     <MediaLibraryProvider libraries={mediaLibraries}>
       <ImageDropNPaste>
         <StyledBoard onDragStart={preventNativeDrag}>
-          <style>{teamVisibilityStyles}</style>
           <Board
             interaction={interaction}
             style={style}
