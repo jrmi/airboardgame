@@ -1,5 +1,6 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
+import { FiLock } from "react-icons/fi";
 
 import {
   Board,
@@ -30,7 +31,6 @@ import shuffleAudio from "../../media/audio/shuffle.ogg?url";
 import { preloadAudio } from "../../utils";
 import BoardGridOverlay from "../../gameComponents/GridOverlay";
 import HeldItemRotationStyles from "./HeldItemRotationStyles";
-import TeamVisibilityLockOverlay from "./TeamVisibilityLockOverlay";
 import { canSeeItem } from "../../utils/teamVisibility";
 import { useModeration } from "../../hooks/useModeration";
 
@@ -70,6 +70,41 @@ export const BoardView = ({
   const setSelectedItems = useSetSelectedItems();
   const { state: moderationState, isModerator } = useModeration();
   const refereeView = isModerator && moderationState.refereeView;
+  const ItemWrapper = React.useMemo(
+    () =>
+      function TeamVisibilityItemWrapper({ item, children }) {
+        if (
+          !item.visibleOnlyForTeam ||
+          !canSeeItem({
+            item,
+            userId: currentUser?.uid,
+            board: boardConfig,
+            refereeView,
+          })
+        ) {
+          return children;
+        }
+
+        return (
+          <>
+            {children}
+            <FiLock
+              aria-hidden="true"
+              size={18}
+              style={{
+                position: "absolute",
+                zIndex: 1,
+                top: "4px",
+                right: "4px",
+                color: "var(--color-accent-yellow)",
+                pointerEvents: "none",
+              }}
+            />
+          </>
+        );
+      },
+    [boardConfig, currentUser?.uid, refereeView]
+  );
   const { isVassalSession } = useSession();
   const [showWelcomeModal, setShowWelcomeModal] = React.useState(
     SHOW_WELCOME && !editMode && isMaster && !isVassalSession
@@ -157,10 +192,10 @@ export const BoardView = ({
             interaction={interaction}
             style={style}
             itemTemplates={itemTemplates}
+            ItemWrapper={ItemWrapper}
             showResizeHandle={editItem}
           >
             <BoardGridOverlay />
-            <TeamVisibilityLockOverlay />
             <HeldItemRotationStyles />
             <ItemFinder
               open={showItemFinder}
