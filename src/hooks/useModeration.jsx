@@ -3,9 +3,8 @@ import { useUsers, useWire } from "react-sync-board";
 
 const ModerationContext = React.createContext(null);
 const RECONNECT_GRACE_MS = 30_000;
-const RETRY_DELAY_MS = 250;
+const STATE_REQUEST_RETRY_DELAY_MS = 250;
 const METHOD_CALL_RETRY_DELAY_MS = 200;
-const MAX_LEAVE_NOTIFICATION_ATTEMPTS = 10;
 const MAX_STATE_REQUEST_ATTEMPTS = 5;
 const MAX_METHOD_CALL_ATTEMPTS = 10;
 
@@ -14,7 +13,6 @@ const createEmptyState = () => ({
   moderatorName: null,
   reconnectUntil: null,
   refereeView: false,
-  connectedUsers: [],
 });
 
 export const ModerationProvider = ({ children }) => {
@@ -24,9 +22,6 @@ export const ModerationProvider = ({ children }) => {
   // Wire callbacks can outlive a render; refs keep them pointed at current data.
   const usersRef = React.useRef(localUsers);
   usersRef.current = localUsers;
-  const userIdsRef = React.useRef(new Map());
-  // userLeave reports connection IDs; moderation state uses stable user UIDs.
-  localUsers.forEach(({ id, uid }) => userIdsRef.current.set(id, uid));
   const wireRef = React.useRef(wire);
   wireRef.current = wire;
   const [state, setState] = React.useState(createEmptyState);
@@ -51,58 +46,16 @@ export const ModerationProvider = ({ children }) => {
   React.useEffect(() => {
     if (!wire || !currentUser?.uid) return undefined;
     const update = (nextState) => updateState(nextState);
-    const markUserDisconnected = (wireUserId) => {
-      const userId = userIdsRef.current.get(wireUserId);
-      // A user may have several tabs; only mark them absent after the last leaves.
-      const hasOtherConnection = usersRef.current.some(
-        ({ id, uid }) => uid === userId && id !== wireUserId
-      );
-      userIdsRef.current.delete(wireUserId);
-      if (hasOtherConnection || userId !== stateRef.current.moderatorId) return;
-      // Keep the role briefly so a dropped connection can reclaim it on reconnect.
-      const reconnectUntil = Date.now() + RECONNECT_GRACE_MS;
-      const nextState = {
-        ...stateRef.current,
-        reconnectUntil,
-        refereeView: false,
-      };
-      publishState(nextState);
-      clearTimeout(expiryRef.current);
-      expiryRef.current = setTimeout(() => {
-        if (stateRef.current.moderatorId !== userId) return;
-        publishState(createEmptyState());
-      }, RECONNECT_GRACE_MS);
-    };
-    const onUserLeave = (wireUserId) => {
-      if (isMaster) {
-        markUserDisconnected(wireUserId);
-        return;
-      }
-      let attempts = 0;
-      const notifyMaster = () =>
-        wire.call("moderationUserLeave", { wireUserId }).catch(() => {
-          attempts += 1;
-          if (!cancelled && attempts < MAX_LEAVE_NOTIFICATION_ATTEMPTS) {
-            setTimeout(notifyMaster, RETRY_DELAY_MS);
-          }
-        });
-      notifyMaster();
-    };
     const unsubscribeState = wire.subscribe("moderationState", update);
-    const unsubscribeUserLeave = wire.subscribe("userLeave", onUserLeave);
 
     let unregister = [];
     let cancelled = false;
-    const clearExpiryForModerator = (moderatorId) => {
-      if (moderatorId && expiryRef.current) {
-        clearTimeout(expiryRef.current);
-        expiryRef.current = null;
-      }
+    const clearExpiryTimer = () => {
+      clearTimeout(expiryRef.current);
+      expiryRef.current = null;
     };
-    // Include current connected user names in every state update from the master.
     const nextState = (overrides = {}) => ({
       ...stateRef.current,
-      connectedUsers: usersRef.current.map(({ name }) => ({ name })),
       ...overrides,
     });
 
@@ -112,20 +65,13 @@ export const ModerationProvider = ({ children }) => {
         const methods = [
           ["moderationGetState", () => stateRef.current],
           [
-            "moderationUserLeave",
-            ({ wireUserId } = {}) => {
-              markUserDisconnected(wireUserId);
-              return stateRef.current;
-            },
-          ],
-          [
             "moderationClaim",
             ({ userId, name } = {}) => {
               const current = stateRef.current;
               if (current.moderatorId && current.moderatorId !== userId) {
                 throw new Error("role-taken");
               }
-              clearExpiryForModerator(userId);
+              clearExpiryTimer();
               const claimed = nextState({
                 moderatorId: userId,
                 moderatorName: name || "",
@@ -141,10 +87,8 @@ export const ModerationProvider = ({ children }) => {
             ({ userId } = {}) => {
               if (stateRef.current.moderatorId !== userId)
                 throw new Error("not-moderator");
-              const released = {
-                ...createEmptyState(),
-                connectedUsers: usersRef.current.map(({ name }) => ({ name })),
-              };
+              clearExpiryTimer();
+              const released = createEmptyState();
               publishState(released);
               return released;
             },
@@ -164,7 +108,7 @@ export const ModerationProvider = ({ children }) => {
                 reconnectUntil: null,
                 refereeView: false,
               });
-              clearExpiryForModerator(targetId);
+              clearExpiryTimer();
               publishState(transferred);
               return transferred;
             },
@@ -205,7 +149,7 @@ export const ModerationProvider = ({ children }) => {
         wire.call("moderationGetState").then(updateState, () => {
           attempts += 1;
           if (!cancelled && attempts < MAX_STATE_REQUEST_ATTEMPTS) {
-            setTimeout(getState, RETRY_DELAY_MS);
+            setTimeout(getState, STATE_REQUEST_RETRY_DELAY_MS);
           }
         });
       getState();
@@ -216,16 +160,39 @@ export const ModerationProvider = ({ children }) => {
       unregister.forEach((remove) => remove());
       clearTimeout(expiryRef.current);
       unsubscribeState();
-      unsubscribeUserLeave();
     };
   }, [currentUser?.uid, isMaster, publishState, updateState, wire]);
 
   React.useEffect(() => {
-    if (!isMaster || !state.moderatorId || !state.reconnectUntil) return;
-    if (!localUsers.some(({ uid }) => uid === state.moderatorId)) return;
+    if (!isMaster || !state.moderatorId) return;
+
+    const moderatorIsConnected = localUsers.some(
+      ({ uid }) => uid === state.moderatorId
+    );
+    if (moderatorIsConnected) {
+      if (!state.reconnectUntil) return;
+      clearTimeout(expiryRef.current);
+      expiryRef.current = null;
+      publishState({ ...state, reconnectUntil: null });
+      return;
+    }
+
+    if (state.reconnectUntil) return;
+
+    // useUsers tracks userLeave; retain the role during a short reconnect grace period.
+    const moderatorId = state.moderatorId;
+    publishState({
+      ...state,
+      reconnectUntil: Date.now() + RECONNECT_GRACE_MS,
+      refereeView: false,
+    });
     clearTimeout(expiryRef.current);
-    expiryRef.current = null;
-    publishState({ ...state, reconnectUntil: null });
+    expiryRef.current = setTimeout(() => {
+      if (stateRef.current.moderatorId !== moderatorId) return;
+      if (usersRef.current.some(({ uid }) => uid === moderatorId)) return;
+      expiryRef.current = null;
+      publishState(createEmptyState());
+    }, RECONNECT_GRACE_MS);
   }, [isMaster, localUsers, publishState, state]);
 
   const request = React.useCallback(
