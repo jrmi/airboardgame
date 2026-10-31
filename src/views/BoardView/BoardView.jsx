@@ -1,6 +1,5 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { FiLock } from "react-icons/fi";
 
 import {
   Board,
@@ -31,6 +30,7 @@ import shuffleAudio from "../../media/audio/shuffle.ogg?url";
 import { preloadAudio } from "../../utils";
 import BoardGridOverlay from "../../gameComponents/GridOverlay";
 import HeldItemRotationStyles from "./HeldItemRotationStyles";
+import TeamVisibilityLockOverlay from "./TeamVisibilityLockOverlay";
 import { canSeeItem } from "../../utils/teamVisibility";
 import { useModeration } from "../../hooks/useModeration";
 
@@ -122,43 +122,6 @@ export const BoardView = ({
 
   React.useEffect(() => preloadAudio([flipAudio, shuffleAudio, rollAudio]), []);
 
-  const itemTemplatesWithVisibilityLock = React.useMemo(
-    () =>
-      Object.fromEntries(
-        Object.entries(itemTemplates).map(([type, template]) => {
-          const ItemComponent = template.component;
-          const ComponentWithVisibilityLock = (item) => (
-            <>
-              <ItemComponent {...item} />
-              {item.visibleOnlyForTeam &&
-                canSeeItem({
-                  item,
-                  userId: currentUser?.uid,
-                  board: boardConfig,
-                  refereeView,
-                }) && (
-                  <FiLock
-                    aria-hidden="true"
-                    size={18}
-                    style={{
-                      position: "absolute",
-                      zIndex: 1,
-                      top: "4px",
-                      right: "4px",
-                      color: "var(--color-accent-yellow)",
-                      pointerEvents: "none",
-                    }}
-                  />
-                )}
-            </>
-          );
-
-          return [type, { ...template, component: ComponentWithVisibilityLock }];
-        })
-      ),
-    [boardConfig, currentUser?.uid, refereeView]
-  );
-
   React.useEffect(() => {
     const visibleItemIds = new Set(
       items
@@ -193,10 +156,11 @@ export const BoardView = ({
           <Board
             interaction={interaction}
             style={style}
-            itemTemplates={itemTemplatesWithVisibilityLock}
+            itemTemplates={itemTemplates}
             showResizeHandle={editItem}
           >
             <BoardGridOverlay />
+            <TeamVisibilityLockOverlay />
             <HeldItemRotationStyles />
             <ItemFinder
               open={showItemFinder}
