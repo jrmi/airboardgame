@@ -8,7 +8,7 @@ const Template = createItemTemplate({
   type: "zone",
   component: Component,
   form: FormComponent,
-  defaultActions: ["clone", "lock", "remove", "toggleTeamVisibility"],
+  defaultActions: ["clone", "lock", "remove"],
   availableActions: [
     "clone",
     "lock",

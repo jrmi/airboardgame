@@ -215,7 +215,16 @@ describe("registered game item templates", () => {
       expect(template.form).toBeDefined();
       const defaultActions = resolve(template.defaultActions, { type });
       const availableActions = resolve(template.availableActions, { type });
-      expect(defaultActions).toContain("toggleTeamVisibility");
+      const hasDefaultTeamVisibility = ![
+        "anchor",
+        "checkerboard",
+        "generator",
+        "screen",
+        "zone",
+      ].includes(type);
+      expect(defaultActions.includes("toggleTeamVisibility")).toBe(
+        hasDefaultTeamVisibility
+      );
       expect(availableActions).toContain("toggleTeamVisibility");
       expect(
         defaultActions.filter((action) => action !== "toggleTeamVisibility")
