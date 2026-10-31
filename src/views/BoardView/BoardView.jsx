@@ -1,5 +1,6 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
+import { FiLock } from "react-icons/fi";
 
 import {
   Board,
@@ -32,10 +33,6 @@ import BoardGridOverlay from "../../gameComponents/GridOverlay";
 import HeldItemRotationStyles from "./HeldItemRotationStyles";
 import { canSeeItem } from "../../utils/teamVisibility";
 import { useModeration } from "../../hooks/useModeration";
-
-const hiddenItemLockSvg =
-  "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='11' width='18' height='11' rx='2' ry='2'/><path d='M7 11V7a5 5 0 0 1 10 0v4'/></svg>";
-const hiddenItemLockMask = `url("data:image/svg+xml,${encodeURIComponent(hiddenItemLockSvg)}")`;
 
 const StyledBoard = styled.div`
   & .item.locked::after {
@@ -112,8 +109,7 @@ export const BoardView = ({
         }
         if (item.visibleOnlyForTeam && visible) {
           rules.push(
-            `${selector} { filter: grayscale(65%); }`,
-            `${selector}::after { content: ""; position: absolute; top: 4px; right: 4px; z-index: 1; width: 18px; height: 18px; pointer-events: none; background-color: var(--color-accent-yellow); -webkit-mask: ${hiddenItemLockMask} center / contain no-repeat; mask: ${hiddenItemLockMask} center / contain no-repeat; }`
+            `${selector} { filter: grayscale(65%); }`
           );
         }
         return rules.join("\n");
@@ -125,6 +121,43 @@ export const BoardView = ({
   }, [boardConfig, currentUser?.uid, items, refereeView]);
 
   React.useEffect(() => preloadAudio([flipAudio, shuffleAudio, rollAudio]), []);
+
+  const itemTemplatesWithVisibilityLock = React.useMemo(
+    () =>
+      Object.fromEntries(
+        Object.entries(itemTemplates).map(([type, template]) => {
+          const ItemComponent = template.component;
+          const ComponentWithVisibilityLock = (item) => (
+            <>
+              <ItemComponent {...item} />
+              {item.visibleOnlyForTeam &&
+                canSeeItem({
+                  item,
+                  userId: currentUser?.uid,
+                  board: boardConfig,
+                  refereeView,
+                }) && (
+                  <FiLock
+                    aria-hidden="true"
+                    size={18}
+                    style={{
+                      position: "absolute",
+                      zIndex: 1,
+                      top: "4px",
+                      right: "4px",
+                      color: "var(--color-accent-yellow)",
+                      pointerEvents: "none",
+                    }}
+                  />
+                )}
+            </>
+          );
+
+          return [type, { ...template, component: ComponentWithVisibilityLock }];
+        })
+      ),
+    [boardConfig, currentUser?.uid, refereeView]
+  );
 
   React.useEffect(() => {
     const visibleItemIds = new Set(
@@ -160,7 +193,7 @@ export const BoardView = ({
           <Board
             interaction={interaction}
             style={style}
-            itemTemplates={itemTemplates}
+            itemTemplates={itemTemplatesWithVisibilityLock}
             showResizeHandle={editItem}
           >
             <BoardGridOverlay />
