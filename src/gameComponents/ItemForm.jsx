@@ -29,7 +29,7 @@ const getDefaultActionsFromItem = (item) => {
     }
   }
 
-  return [...new Set([...(actions || []), "toggleTeamVisibility"])];
+  return actions || [];
 };
 
 const getAvailableActionsFromItem = (item) => {
@@ -41,7 +41,7 @@ const getAvailableActionsFromItem = (item) => {
     }
   }
 
-  return [...new Set([...(actions || []), "toggleTeamVisibility"])];
+  return actions || [];
 };
 
 const normalizeActions = (item) =>
