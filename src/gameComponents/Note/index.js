@@ -8,7 +8,13 @@ const Template = createItemTemplate({
   type: "note",
   component: Component,
   form: FormComponent,
-  defaultActions: ["shuffle", "clone", "lock", "remove", "toggleTeamVisibility"],
+  defaultActions: [
+    "shuffle",
+    "clone",
+    "lock",
+    "remove",
+    "toggleTeamVisibility",
+  ],
   availableActions: [
     "shuffle",
     "clone",

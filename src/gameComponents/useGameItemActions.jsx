@@ -104,11 +104,7 @@ export const useGameItemActions = () => {
       const teamId =
         boardConfig.teamAssignments?.[currentUser.uid] || UNASSIGNED_TEAM_ID;
       const ids = getLinkedItemIdsFromRoots(rootIds);
-      batchUpdateItems(
-        ids,
-        () => ({ visibleOnlyForTeam: teamId }),
-        true
-      );
+      batchUpdateItems(ids, () => ({ visibleOnlyForTeam: teamId }), true);
     },
     [
       batchUpdateItems,
@@ -122,11 +118,7 @@ export const useGameItemActions = () => {
   const makeTeamItemsPublic = React.useCallback(
     async (itemIds) => {
       const ids = getLinkedItemIdsFromRoots(itemIds || getSelectedItems());
-      batchUpdateItems(
-        ids,
-        () => ({ visibleOnlyForTeam: null }),
-        true
-      );
+      batchUpdateItems(ids, () => ({ visibleOnlyForTeam: null }), true);
     },
     [batchUpdateItems, getLinkedItemIdsFromRoots, getSelectedItems]
   );
@@ -143,12 +135,7 @@ export const useGameItemActions = () => {
       }
       return hideForCurrentTeam(rootIds);
     },
-    [
-      getItems,
-      getSelectedItems,
-      hideForCurrentTeam,
-      makeTeamItemsPublic,
-    ]
+    [getItems, getSelectedItems, hideForCurrentTeam, makeTeamItemsPublic]
   );
 
   const getItemListOrSelected = React.useCallback(
@@ -1166,8 +1153,6 @@ export const useGameItemActions = () => {
     alignAsSquare,
     changeValue,
     cloneItem,
-    hideForCurrentTeam,
-    makeTeamItemsPublic,
     toggleTeamVisibility,
     randomlyRotateSelectedItems,
     remove,

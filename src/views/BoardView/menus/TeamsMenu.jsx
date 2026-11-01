@@ -134,11 +134,7 @@ const TeamManager = ({ boardConfig, setBoardConfig }) => {
               title={t("Delete team")}
               style={{ width: "auto", flex: "0 0 auto", padding: "0.5em" }}
               onClick={() => {
-                if (
-                  items.some(
-                    (item) => item.visibleOnlyForTeam === team.id
-                  )
-                ) {
+                if (items.some((item) => item.visibleOnlyForTeam === team.id)) {
                   toast.error(
                     t(
                       "This team still owns hidden items. Make them public first."

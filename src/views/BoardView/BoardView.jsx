@@ -1,14 +1,7 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 
-import {
-  Board,
-  useUsers,
-  useBoardConfig,
-  useItems,
-  useSelectedItems,
-  useSetSelectedItems,
-} from "react-sync-board";
+import { Board, useUsers, useBoardConfig } from "react-sync-board";
 import { SHOW_WELCOME } from "../../utils/settings";
 import WelcomeModal from "./WelcomeModal";
 import NavBar from "./NavBar";
@@ -31,7 +24,7 @@ import { preloadAudio } from "../../utils";
 import BoardGridOverlay from "../../gameComponents/GridOverlay";
 import HeldItemRotationStyles from "./HeldItemRotationStyles";
 import { createTeamVisibilityItemWrapper } from "./TeamVisibilityItemWrapper";
-import { canSeeItem } from "../../utils/teamVisibility";
+import SelectedItemVisibilityGuard from "./SelectedItemVisibilityGuard";
 import { useModeration } from "../../hooks/useModeration";
 
 const StyledBoard = styled.div`
@@ -70,9 +63,6 @@ export const BoardView = ({
   const { t } = useTranslation();
   const { isSpaceMaster: isMaster, currentUser } = useUsers();
   const [boardConfig] = useBoardConfig();
-  const items = useItems();
-  const selectedItems = useSelectedItems();
-  const setSelectedItems = useSetSelectedItems();
   const { state: moderationState, isModerator } = useModeration();
   const refereeView = isModerator && moderationState.refereeView;
   const ItemWrapper = React.useMemo(
@@ -106,32 +96,6 @@ export const BoardView = ({
 
   React.useEffect(() => preloadAudio([flipAudio, shuffleAudio, rollAudio]), []);
 
-  React.useEffect(() => {
-    const visibleItemIds = new Set(
-      items
-        .filter((item) =>
-          canSeeItem({
-            item,
-            userId: currentUser?.uid,
-            board: boardConfig,
-            refereeView,
-          })
-        )
-        .map(({ id }) => id)
-    );
-    const nextSelection = selectedItems.filter((id) => visibleItemIds.has(id));
-    if (nextSelection.length !== selectedItems.length) {
-      setSelectedItems(nextSelection);
-    }
-  }, [
-    boardConfig,
-    currentUser?.uid,
-    items,
-    refereeView,
-    selectedItems,
-    setSelectedItems,
-  ]);
-
   return (
     <MediaLibraryProvider libraries={mediaLibraries}>
       <ImageDropNPaste>
@@ -143,6 +107,7 @@ export const BoardView = ({
             ItemWrapper={ItemWrapper}
             showResizeHandle={editItem}
           >
+            <SelectedItemVisibilityGuard />
             <BoardGridOverlay />
             <HeldItemRotationStyles />
             <ItemFinder
