@@ -11,6 +11,13 @@ const useHeldItemPlacement = ({ holderRef, holderId, setState }) => {
       let heldReferences = null;
       setState((item) => {
         const previousLinkedItems = item.linkedItems;
+
+        // Items that do not hold anything have no placement work to do.
+        // Avoid reading the complete board state for every registered holder.
+        if (!item.holdItems && !previousLinkedItems?.length) {
+          return;
+        }
+
         const itemList = getItemList();
         const newLinkedItems = getHeldItems({
           element: holderRef.current,
@@ -20,11 +27,13 @@ const useHeldItemPlacement = ({ holderRef, holderId, setState }) => {
           itemIds,
           shouldHoldItems: item.holdItems,
         });
-        heldReferences = getHeldReferenceUpdates({
-          holderId,
-          linkedItems: newLinkedItems,
-          itemList,
-        });
+        if (newLinkedItems?.length) {
+          heldReferences = getHeldReferenceUpdates({
+            holderId,
+            linkedItems: newLinkedItems,
+            itemList,
+          });
+        }
 
         if (previousLinkedItems !== newLinkedItems) {
           return { linkedItems: newLinkedItems };
