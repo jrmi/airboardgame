@@ -8,7 +8,7 @@ const Template = createItemTemplate({
   type: "hexagon",
   component: Component,
   form: FormComponent,
-  defaultActions: ["clone", "lock", "remove"],
+  defaultActions: ["clone", "lock", "remove", "toggleTeamVisibility"],
   availableActions: [
     "flip",
     "stack",
@@ -18,6 +18,7 @@ const Template = createItemTemplate({
     "clone",
     "lock",
     "remove",
+    "toggleTeamVisibility",
   ],
   name: i18n.t("Hexagon"),
   translationKey: "Hexagon",

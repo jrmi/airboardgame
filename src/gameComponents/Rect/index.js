@@ -6,7 +6,7 @@ import RectFormFields from "./RectFormFields";
 
 const RectTemplate = createItemTemplate({
   type: "rect",
-  defaultActions: ["lock", "remove"],
+  defaultActions: ["lock", "remove", "toggleTeamVisibility"],
   availableActions: [
     "flip",
     "stack",
@@ -16,6 +16,7 @@ const RectTemplate = createItemTemplate({
     "clone",
     "lock",
     "remove",
+    "toggleTeamVisibility",
   ],
   component: Rect,
   form: RectFormFields,

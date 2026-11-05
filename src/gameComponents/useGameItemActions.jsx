@@ -7,6 +7,7 @@ import {
   useUsers,
   useGetSelectedItems,
   useItemInteraction,
+  useBoardConfig,
 } from "react-sync-board";
 
 import {
@@ -49,6 +50,7 @@ import rollAudio from "../media/audio/roll.ogg?url";
 import shuffleAudio from "../media/audio/shuffle.ogg?url";
 
 import useLocalStorage from "../hooks/useLocalStorage";
+import { UNASSIGNED_TEAM_ID } from "../utils/teamVisibility";
 
 export const useGameItemActions = () => {
   const {
@@ -66,8 +68,75 @@ export const useGameItemActions = () => {
   const [isFirstLock, setIsFirstLock] = useLocalStorage("isFirstLock", true);
 
   const { currentUser } = useUsers();
+  const [boardConfig] = useBoardConfig();
 
   const getSelectedItems = useGetSelectedItems();
+
+  const getLinkedItemIdsFromRoots = React.useCallback(
+    (rootIds) => {
+      const ids = new Set();
+      const visitedIds = new Set();
+      const pendingIds = [...rootIds];
+
+      while (pendingIds.length) {
+        const currentIds = pendingIds
+          .splice(0)
+          .filter((id) => !visitedIds.has(id));
+        if (!currentIds.length) continue;
+        currentIds.forEach((id) => visitedIds.add(id));
+
+        getItems(currentIds)
+          .filter(Boolean)
+          .forEach((item) => {
+            ids.add(item.id);
+            (item.linkedItems || []).forEach((id) => pendingIds.push(id));
+          });
+      }
+
+      return [...ids];
+    },
+    [getItems]
+  );
+
+  const hideForCurrentTeam = React.useCallback(
+    async (itemIds) => {
+      const rootIds = itemIds || getSelectedItems();
+      const teamId =
+        boardConfig.teamAssignments?.[currentUser.uid] || UNASSIGNED_TEAM_ID;
+      const ids = getLinkedItemIdsFromRoots(rootIds);
+      batchUpdateItems(ids, () => ({ visibleOnlyForTeam: teamId }), true);
+    },
+    [
+      batchUpdateItems,
+      boardConfig.teamAssignments,
+      currentUser.uid,
+      getSelectedItems,
+      getLinkedItemIdsFromRoots,
+    ]
+  );
+
+  const makeTeamItemsPublic = React.useCallback(
+    async (itemIds) => {
+      const ids = getLinkedItemIdsFromRoots(itemIds || getSelectedItems());
+      batchUpdateItems(ids, () => ({ visibleOnlyForTeam: null }), true);
+    },
+    [batchUpdateItems, getLinkedItemIdsFromRoots, getSelectedItems]
+  );
+
+  const toggleTeamVisibility = React.useCallback(
+    async (itemIds) => {
+      const rootIds = itemIds || getSelectedItems();
+      const selectedItems = getItems(rootIds).filter(Boolean);
+      if (
+        selectedItems.length &&
+        selectedItems.every(({ visibleOnlyForTeam }) => visibleOnlyForTeam)
+      ) {
+        return makeTeamItemsPublic(rootIds);
+      }
+      return hideForCurrentTeam(rootIds);
+    },
+    [getItems, getSelectedItems, hideForCurrentTeam, makeTeamItemsPublic]
+  );
 
   const getItemListOrSelected = React.useCallback(
     async (itemIds) => {
@@ -789,6 +858,11 @@ export const useGameItemActions = () => {
         shortcut: "o",
         icon: FiEye,
       },
+      toggleTeamVisibility: {
+        action: () => toggleTeamVisibility,
+        label: t("Hide for my team / make public"),
+        icon: FiLock,
+      },
       revealSelf: {
         action: () => (itemIds) => setFlipSelf(itemIds, { flipSelf: true }),
         label: t("Reveal for me"),
@@ -1079,6 +1153,7 @@ export const useGameItemActions = () => {
     alignAsSquare,
     changeValue,
     cloneItem,
+    toggleTeamVisibility,
     randomlyRotateSelectedItems,
     remove,
     roll,

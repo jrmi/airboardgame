@@ -19,9 +19,18 @@ const Template = createItemTemplate({
         "clone",
         "lock",
         "remove",
+        "toggleTeamVisibility",
       ];
     } else {
-      return ["tap", "stack", "shuffle", "clone", "lock", "remove"];
+      return [
+        "tap",
+        "stack",
+        "shuffle",
+        "clone",
+        "lock",
+        "remove",
+        "toggleTeamVisibility",
+      ];
     }
   },
   availableActions: (item) => {
@@ -39,6 +48,7 @@ const Template = createItemTemplate({
         "clone",
         "lock",
         "remove",
+        "toggleTeamVisibility",
       ];
     } else {
       return [
@@ -52,6 +62,7 @@ const Template = createItemTemplate({
         "clone",
         "lock",
         "remove",
+        "toggleTeamVisibility",
       ];
     }
   },

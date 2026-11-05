@@ -1,9 +1,13 @@
 import React from "react";
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { UNASSIGNED_TEAM_ID } from "../../utils/teamVisibility";
 
 const board = vi.hoisted(() => ({
   items: [],
+  config: {},
+  refereeView: false,
+  isModerator: false,
   zoomToExtent: vi.fn(),
   setSelectedItems: vi.fn(),
 }));
@@ -15,8 +19,17 @@ vi.mock("react-i18next", () => ({
 
 vi.mock("react-sync-board", () => ({
   useItems: () => board.items,
+  useBoardConfig: () => [board.config],
+  useUsers: () => ({ currentUser: { uid: "player-1" } }),
   useBoardPosition: () => ({ zoomToExtent: board.zoomToExtent }),
   useSetSelectedItems: () => board.setSelectedItems,
+}));
+
+vi.mock("../../hooks/useModeration", () => ({
+  useModeration: () => ({
+    state: { refereeView: board.refereeView },
+    isModerator: board.isModerator,
+  }),
 }));
 
 vi.mock("../../ui/SidePanel", () => ({
@@ -46,6 +59,9 @@ describe("ItemFinder", () => {
   afterEach(() => {
     cleanup();
     board.items = [];
+    board.config = {};
+    board.refereeView = false;
+    board.isModerator = false;
     board.zoomToExtent.mockClear();
     board.setSelectedItems.mockClear();
   });
@@ -126,6 +142,39 @@ describe("ItemFinder", () => {
     ];
     view.rerender(<ItemFinder open={true} onClose={vi.fn()} />);
     expect(screen.getByRole("button", { name: "Eleven" })).toBeTruthy();
+  });
+
+  it("filters hidden items by assigned team and referee view", () => {
+    board.config = {
+      teams: [
+        { id: UNASSIGNED_TEAM_ID, name: "Players" },
+        { id: "blue", name: "Blue" },
+      ],
+      teamAssignments: { "player-1": UNASSIGNED_TEAM_ID },
+    };
+    board.items = [
+      { id: "visible", type: "counter", label: "Visible" },
+      {
+        id: "hidden",
+        type: "counter",
+        label: "Hidden",
+        visibleOnlyForTeam: "blue",
+      },
+    ];
+    renderFinder();
+    expect(screen.getAllByText("Visible")).toHaveLength(2);
+    expect(screen.queryByText("Hidden")).not.toBeInTheDocument();
+
+    cleanup();
+    board.refereeView = true;
+    renderFinder();
+    expect(screen.queryByText("Hidden")).not.toBeInTheDocument();
+
+    cleanup();
+    board.isModerator = true;
+    renderFinder();
+    expect(screen.getAllByText("Hidden")).toHaveLength(2);
+    board.isModerator = false;
   });
 
   it("only renders previews for visible results", () => {

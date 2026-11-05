@@ -8,7 +8,13 @@ const Template = createItemTemplate({
   type: "note",
   component: Component,
   form: FormComponent,
-  defaultActions: ["shuffle", "clone", "lock", "remove"],
+  defaultActions: [
+    "shuffle",
+    "clone",
+    "lock",
+    "remove",
+    "toggleTeamVisibility",
+  ],
   availableActions: [
     "shuffle",
     "clone",
@@ -16,6 +22,7 @@ const Template = createItemTemplate({
     "remove",
     "alignAsLine",
     "alignAsSquare",
+    "toggleTeamVisibility",
   ],
   name: i18n.t("Note"),
   translationKey: "Note",

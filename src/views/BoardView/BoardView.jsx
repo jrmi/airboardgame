@@ -1,7 +1,7 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 import { Board, useUsers, useBoardConfig } from "react-sync-board";
-
 import { SHOW_WELCOME } from "../../utils/settings";
 import WelcomeModal from "./WelcomeModal";
 import NavBar from "./NavBar";
@@ -23,8 +23,15 @@ import shuffleAudio from "../../media/audio/shuffle.ogg?url";
 import { preloadAudio } from "../../utils";
 import BoardGridOverlay from "../../gameComponents/GridOverlay";
 import HeldItemRotationStyles from "./HeldItemRotationStyles";
+import { createTeamVisibilityItemWrapper } from "./TeamVisibilityItemWrapper";
+import SelectedItemVisibilityGuard from "./SelectedItemVisibilityGuard";
+import { useModeration } from "../../hooks/useModeration";
 
 const StyledBoard = styled.div`
+  & .team-limited-item > .item {
+    filter: grayscale(65%);
+  }
+
   & .item.locked::after {
     content: "";
     position: absolute;
@@ -53,13 +60,24 @@ export const BoardView = ({
   edit: editMode,
   itemLibraries,
 }) => {
-  const { isSpaceMaster: isMaster } = useUsers();
+  const { t } = useTranslation();
+  const { isSpaceMaster: isMaster, currentUser } = useUsers();
+  const [boardConfig] = useBoardConfig();
+  const { state: moderationState, isModerator } = useModeration();
+  const refereeView = isModerator && moderationState.refereeView;
+  const ItemWrapper = React.useMemo(
+    () =>
+      createTeamVisibilityItemWrapper({
+        userId: currentUser?.uid,
+        board: boardConfig,
+        refereeView,
+      }),
+    [boardConfig, currentUser?.uid, refereeView]
+  );
   const { isVassalSession } = useSession();
   const [showWelcomeModal, setShowWelcomeModal] = React.useState(
     SHOW_WELCOME && !editMode && isMaster && !isVassalSession
   );
-
-  const [boardConfig] = useBoardConfig();
 
   const [interaction, setInteraction] = useLocalStorage(
     "boardInteraction",
@@ -86,8 +104,10 @@ export const BoardView = ({
             interaction={interaction}
             style={style}
             itemTemplates={itemTemplates}
+            ItemWrapper={ItemWrapper}
             showResizeHandle={editItem}
           >
+            <SelectedItemVisibilityGuard />
             <BoardGridOverlay />
             <HeldItemRotationStyles />
             <ItemFinder
@@ -107,6 +127,26 @@ export const BoardView = ({
           setShowItemFinder={setShowItemFinder}
         />
         <WelcomeModal show={showWelcomeModal} setShow={setShowWelcomeModal} />
+        {moderationState.refereeView && (
+          <div
+            role="status"
+            style={{
+              position: "fixed",
+              zIndex: 240,
+              top: "56px",
+              right: "0.75rem",
+              padding: "0.45rem 0.75rem",
+              borderRadius: "4px",
+              color: "white",
+              background: "#8b1e1e",
+              pointerEvents: "none",
+            }}
+          >
+            {t("Referee view is active for {{name}}", {
+              name: moderationState.moderatorName || t("Moderator"),
+            })}
+          </div>
+        )}
       </ImageDropNPaste>
       <SelectedItemsPane
         hideMenu={hideMenu}

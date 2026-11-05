@@ -14,6 +14,7 @@ import { GlobalConfProvider } from "../hooks/useGlobalConf";
 
 import useSession, { SessionProvider } from "../hooks/useSession";
 import AutoSaveSession from "./AutoSaveSession";
+import { ModerationProvider } from "../hooks/useModeration";
 
 // Keep compatibility with previous availableItems shape
 const migrateAvailableItemList = (old) => {
@@ -174,13 +175,15 @@ const ConnectedSessionView = ({ sessionId, fromGame, isVassalSession }) => {
       socket={socket}
       LoadingComponent={Waiter}
     >
-      <SessionProvider
-        sessionId={sessionId}
-        fromGameId={fromGame}
-        isVassalSession={isVassalSession}
-      >
-        <Session />
-      </SessionProvider>
+      <ModerationProvider>
+        <SessionProvider
+          sessionId={sessionId}
+          fromGameId={fromGame}
+          isVassalSession={isVassalSession}
+        >
+          <Session />
+        </SessionProvider>
+      </ModerationProvider>
     </BoardWrapper>
   );
 };

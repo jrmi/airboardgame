@@ -8,7 +8,7 @@ const CheckerBoardTemplate = createItemTemplate({
   type: "checkerboard",
   component: CheckerBoard,
   defaultActions: ["clone", "lock", "remove"],
-  availableActions: ["clone", "lock", "remove"],
+  availableActions: ["clone", "lock", "remove", "toggleTeamVisibility"],
   form: CheckerBoardFormFields,
   name: i18n.t("Checkerboard"),
   translationKey: "Checkerboard",

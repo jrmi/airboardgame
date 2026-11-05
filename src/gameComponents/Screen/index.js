@@ -9,7 +9,7 @@ const Template = createItemTemplate({
   component: Component,
   form: FormComponent,
   defaultActions: ["clone", "lock", "remove"],
-  availableActions: ["clone", "lock", "remove"],
+  availableActions: ["clone", "lock", "remove", "toggleTeamVisibility"],
   name: i18n.t("Screen"),
   translationKey: "Screen",
   template: {

@@ -213,8 +213,25 @@ describe("registered game item templates", () => {
       });
       expect(template.template).toBeDefined();
       expect(template.form).toBeDefined();
-      expect(resolve(template.defaultActions, { type })).toEqual(defaults);
-      expect(resolve(template.availableActions, { type })).toEqual(available);
+      const defaultActions = resolve(template.defaultActions, { type });
+      const availableActions = resolve(template.availableActions, { type });
+      const hasDefaultTeamVisibility = ![
+        "anchor",
+        "checkerboard",
+        "generator",
+        "screen",
+        "zone",
+      ].includes(type);
+      expect(defaultActions.includes("toggleTeamVisibility")).toBe(
+        hasDefaultTeamVisibility
+      );
+      expect(availableActions).toContain("toggleTeamVisibility");
+      expect(
+        defaultActions.filter((action) => action !== "toggleTeamVisibility")
+      ).toEqual(defaults);
+      expect(
+        availableActions.filter((action) => action !== "toggleTeamVisibility")
+      ).toEqual(available);
     }
   );
 

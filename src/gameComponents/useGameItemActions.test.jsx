@@ -11,6 +11,7 @@ const board = {
   getItems: vi.fn(),
   callPlace: vi.fn(),
   selected: ["a", "b"],
+  allItems: [],
 };
 const currentUser = { uid: "me" };
 const setStorage = vi.fn();
@@ -39,6 +40,7 @@ vi.mock("react-sync-board", () => ({
     swapItems: board.swapItems,
     getItems: board.getItems,
   }),
+  useBoardConfig: () => [{ teamAssignments: { me: "blue" } }],
   useUsers: () => ({ currentUser }),
   useGetSelectedItems: () => () => board.selected,
   useItemInteraction: () => ({ call: board.callPlace }),
@@ -64,6 +66,8 @@ const renderActions = () => render(<Harness />);
 describe("useGameItemActions", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    board.selected = ["a", "b"];
+    board.allItems = [];
     board.getItems.mockImplementation(async (ids) =>
       ids.map((id) => ({ id, type: "counter", value: 2, x: 10, y: 20 }))
     );
@@ -76,6 +80,7 @@ describe("useGameItemActions", () => {
       "reveal",
       "hide",
       "flipSelf",
+      "toggleTeamVisibility",
       "revealSelf",
       "hideSelf",
       "tap",
@@ -124,6 +129,73 @@ describe("useGameItemActions", () => {
     expect(updater({ type: "counter", value: "bad" })).toEqual({ value: 0 });
     expect(updater({ type: "dice", value: 0, side: 6 })).toEqual({ value: 1 });
     expect(updater({ type: "dice", value: 0, side: 6 })).toEqual({ value: 1 });
+  });
+
+  it("toggles linked items for the current team", async () => {
+    board.getItems.mockImplementation((ids) =>
+      ids.map((id) => board.allItems.find((item) => item.id === id))
+    );
+    board.allItems = [
+      { id: "a", linkedItems: ["b"] },
+      { id: "b", linkedItems: ["c"] },
+      { id: "c" },
+    ];
+    renderActions();
+
+    await hookValue.actionMap.toggleTeamVisibility.action()(["a"]);
+    expect(board.batchUpdateItems).toHaveBeenCalledWith(
+      ["a", "b", "c"],
+      expect.any(Function),
+      true
+    );
+    expect(board.batchUpdateItems.mock.calls[0][1]({ id: "a" })).toEqual({
+      visibleOnlyForTeam: "blue",
+    });
+
+    board.batchUpdateItems.mockClear();
+    board.allItems = [
+      { id: "a", linkedItems: ["b"], visibleOnlyForTeam: "blue" },
+      { id: "b", linkedItems: ["c"], visibleOnlyForTeam: "blue" },
+      { id: "c", visibleOnlyForTeam: "blue" },
+    ];
+    renderActions();
+    await hookValue.actionMap.toggleTeamVisibility.action()(["a"]);
+    expect(board.batchUpdateItems.mock.calls[0][1]({ id: "a" })).toEqual({
+      visibleOnlyForTeam: null,
+    });
+    board.allItems = [];
+  });
+
+  it("toggles the selected items between hidden and public", async () => {
+    board.getItems.mockImplementation((ids) =>
+      ids.map((id) => board.allItems.find((item) => item.id === id))
+    );
+    board.selected = ["a"];
+    board.allItems = [{ id: "a", visibleOnlyForTeam: null }];
+    renderActions();
+
+    expect(hookValue.actionMap.toggleTeamVisibility.label()).toBe(
+      "Hide for my team / make public"
+    );
+    await hookValue.actionMap.toggleTeamVisibility.action()();
+    expect(board.batchUpdateItems).toHaveBeenLastCalledWith(
+      ["a"],
+      expect.any(Function),
+      true
+    );
+    expect(board.batchUpdateItems.mock.calls.at(-1)[1]({ id: "a" })).toEqual({
+      visibleOnlyForTeam: "blue",
+    });
+
+    board.allItems = [{ id: "a", visibleOnlyForTeam: "blue" }];
+    renderActions();
+    expect(hookValue.actionMap.toggleTeamVisibility.label()).toBe(
+      "Hide for my team / make public"
+    );
+    await hookValue.actionMap.toggleTeamVisibility.action()();
+    expect(board.batchUpdateItems.mock.calls.at(-1)[1]({ id: "a" })).toEqual({
+      visibleOnlyForTeam: null,
+    });
   });
 
   it("wraps image values and updates only the requested advanced-image layer", async () => {
