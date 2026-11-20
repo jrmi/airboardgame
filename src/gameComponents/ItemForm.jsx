@@ -149,6 +149,7 @@ const ItemForm = ({
 
   const {
     locked = false,
+    showMoveDistance = false,
     rotation,
     layer = 0,
     groupId = "",
@@ -175,6 +176,17 @@ const ItemForm = ({
           />
           <span className="checkable">{t("Locked?")}</span>
           <Hint>{t("Lock action help")}</Hint>
+        </Label>
+      )}
+      {!excludeFields.showMoveDistance && (
+        <Label>
+          <Field
+            name="showMoveDistance"
+            component="input"
+            type="checkbox"
+            initialValue={showMoveDistance}
+          />
+          <span className="checkable">{t("Show distance while moving")}</span>
         </Label>
       )}
       {!excludeFields.rotation && (

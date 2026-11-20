@@ -8,6 +8,7 @@ import Hint from "../../ui/formUtils/Hint";
 import Label from "../../ui/formUtils/Label";
 import SliderRange from "../../ui/SliderRange";
 import GridSettingsForm from "./GridSettingsForm";
+import MeasurementSettingsForm from "./MeasurementSettingsForm";
 
 import { ImageField } from "../../mediaLibrary";
 
@@ -133,6 +134,7 @@ const BoardConfigForm = () => {
         />
       </Label>
       <GridSettingsForm grid={boardConfig.grid} />
+      <MeasurementSettingsForm config={boardConfig} />
       <Label>
         {t("Main image")}
         <Field name="imageUrl" initialValue={boardConfig.imageUrl}>

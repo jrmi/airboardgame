@@ -5,6 +5,7 @@ import { useMatch, useNavigate, useParams } from "react-router-dom";
 import { confirmAlert } from "react-confirm-alert";
 import { useBoardPosition, useItems, useUsers } from "react-sync-board";
 import { FiHelpCircle } from "react-icons/fi";
+import { FiCrosshair } from "react-icons/fi";
 
 import InfoModal from "./InfoModal";
 import LoadGameModal from "./LoadGameModal";
@@ -35,6 +36,10 @@ const NavBar = ({
   setInteraction,
   showItemFinder,
   setShowItemFinder,
+  measurementEnabled,
+  setMeasurementEnabled,
+  measurementMode,
+  setMeasurementMode,
 }) => {
   const { t } = useTranslation();
   const { isVassalSession } = useSession();
@@ -191,6 +196,37 @@ const NavBar = ({
           <TeamsMenu activeMenu={activeMenu} setActiveMenu={setActiveMenu} />
         )}
         <div className="spacer" />
+        {!editMode && (
+          <MenuRoot className="top-menu__measure">
+            <MenuTrigger
+              type="button"
+              aria-pressed={measurementEnabled}
+              title={`${t("Measure distance")} (M)`}
+              onClick={() => setMeasurementEnabled((value) => !value)}
+            >
+              <FiCrosshair size={16} aria-hidden="true" />
+              {measurementEnabled
+                ? t("Stop measuring")
+                : t("Measure distance")}{" "}
+              (M)
+            </MenuTrigger>
+            <MenuTrigger
+              type="button"
+              aria-pressed={measurementMode === "los"}
+              title={`${t("Toggle line of sight")} (L)`}
+              onClick={() =>
+                setMeasurementMode((mode) =>
+                  mode === "measure" ? "los" : "measure"
+                )
+              }
+            >
+              {measurementMode === "los"
+                ? t("Line of sight")
+                : t("Distance measurement")}{" "}
+              (L)
+            </MenuTrigger>
+          </MenuRoot>
+        )}
         <MenuRoot className="top-menu__help">
           <MenuTrigger
             type="button"
