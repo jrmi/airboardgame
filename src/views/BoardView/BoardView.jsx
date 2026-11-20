@@ -26,6 +26,7 @@ import HeldItemRotationStyles from "./HeldItemRotationStyles";
 import { createTeamVisibilityItemWrapper } from "./TeamVisibilityItemWrapper";
 import SelectedItemVisibilityGuard from "./SelectedItemVisibilityGuard";
 import { useModeration } from "../../hooks/useModeration";
+import MeasurementOverlay from "./MeasurementOverlay";
 
 const StyledBoard = styled.div`
   & .team-limited-item > .item {
@@ -85,6 +86,8 @@ export const BoardView = ({
   );
   const [hideMenu, setHideMenu] = React.useState(false);
   const [showItemFinder, setShowItemFinder] = React.useState(false);
+  const [measurementEnabled, setMeasurementEnabled] = React.useState(false);
+  const [measurementMode, setMeasurementMode] = React.useState("measure");
   const { editItem, setEditItem } = useGlobalConf();
 
   const style = React.useMemo(() => {
@@ -109,6 +112,12 @@ export const BoardView = ({
           >
             <SelectedItemVisibilityGuard />
             <BoardGridOverlay />
+            <MeasurementOverlay
+              enabled={measurementEnabled}
+              onToggle={() => setMeasurementEnabled((value) => !value)}
+              mode={measurementMode}
+              setMode={setMeasurementMode}
+            />
             <HeldItemRotationStyles />
             <ItemFinder
               open={showItemFinder}
@@ -125,6 +134,10 @@ export const BoardView = ({
           setHideMenu={setHideMenu}
           showItemFinder={showItemFinder}
           setShowItemFinder={setShowItemFinder}
+          measurementEnabled={measurementEnabled}
+          setMeasurementEnabled={setMeasurementEnabled}
+          measurementMode={measurementMode}
+          setMeasurementMode={setMeasurementMode}
         />
         <WelcomeModal show={showWelcomeModal} setShow={setShowWelcomeModal} />
         {moderationState.refereeView && (

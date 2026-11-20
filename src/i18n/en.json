@@ -414,5 +414,19 @@
   "Select a player": "Select a player",
   "Cancel": "Cancel",
   "Hide for my team / make public": "Hide for my team / make public",
-  "Transfer moderation...": "Transfer moderation..."
+  "Transfer moderation...": "Transfer moderation...",
+  "Measurement": "Measurement",
+  "Unit": "Unit",
+  "Centimeters": "Centimeters",
+  "Inches": "Inches",
+  "Free scale": "Free scale",
+  "Pixels per unit": "Pixels per unit",
+  "Unit label": "Unit label",
+  "Measurement line thickness (px)": "Measurement line thickness (px)",
+  "Show distance while moving": "Show distance while moving",
+  "Measure distance": "Measure distance",
+  "Stop measuring": "Stop measuring",
+  "Toggle line of sight": "Toggle line of sight",
+  "Line of sight": "Line of sight",
+  "Distance measurement": "Distance measurement"
 }

@@ -415,5 +415,19 @@
   "Select a player": "Choisissez un joueur",
   "Cancel": "Annuler",
   "Hide for my team / make public": "Masquer pour mon équipe / rendre public",
-  "Transfer moderation...": "Transférer modération…"
+  "Transfer moderation...": "Transférer modération…",
+  "Measurement": "Mesure",
+  "Unit": "Unité",
+  "Centimeters": "Centimètres",
+  "Inches": "Pouces",
+  "Free scale": "Échelle libre",
+  "Pixels per unit": "Pixels par unité",
+  "Unit label": "Libellé de l’unité",
+  "Measurement line thickness (px)": "Épaisseur du tracé (px)",
+  "Show distance while moving": "Afficher la distance pendant le déplacement",
+  "Measure distance": "Mesurer une distance",
+  "Stop measuring": "Arrêter la mesure",
+  "Toggle line of sight": "Basculer la ligne de vue",
+  "Line of sight": "Ligne de vue",
+  "Distance measurement": "Mesure de distance"
 }
