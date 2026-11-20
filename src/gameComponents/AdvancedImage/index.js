@@ -54,6 +54,26 @@ const RectTemplate = createItemTemplate({
   name: i18n.t("Advanced Image"),
   translationKey: "Advanced Image",
   template: { layers: [], front: "/default.png" },
+  async mapMedia(item, fn) {
+    const mapImage = async (image) => {
+      const mapped = await fn(image);
+      return image?.uid && mapped && typeof mapped === "object"
+        ? { ...mapped, uid: image.uid }
+        : mapped;
+    };
+    const [front, back] = await Promise.all([
+      mapImage(item.front),
+      mapImage(item.back),
+    ]);
+    item.front = front;
+    item.back = back;
+    item.layers = await Promise.all(
+      (item.layers || []).map(async (layer) => ({
+        ...layer,
+        images: await Promise.all((layer.images || []).map(mapImage)),
+      }))
+    );
+  },
 });
 
 export default RectTemplate;
