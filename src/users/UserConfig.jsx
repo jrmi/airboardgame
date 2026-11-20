@@ -72,21 +72,68 @@ const UserConfig = ({
   teams,
   assignedTeam,
   onAssignTeam,
+  existingNames = [],
 }) => {
   const { t } = useTranslation();
 
   const [name, setName] = React.useState(user.name);
   const [color, setColor] = React.useState(user.color);
   const [showDetails, setShowDetails] = React.useState(false);
+  const [nameTaken, setNameTaken] = React.useState(false);
   const canOpenDetails = editable || Boolean(onAssignTeam);
 
-  const handleChange = React.useCallback(
-    (e) => {
-      setName(e.target.value);
-      updateCurrentUser({ name: e.target.value });
+  React.useEffect(() => {
+    if (!showDetails) {
+      setName(user.name);
+    }
+  }, [showDetails, user.name]);
+
+  const isNameTaken = React.useCallback(
+    (value) => {
+      const normalizedName = (value || "").trim().toLowerCase();
+      return (
+        normalizedName !== "" &&
+        existingNames.some(
+          (existingName) =>
+            (existingName || "").trim().toLowerCase() === normalizedName
+        )
+      );
     },
-    [updateCurrentUser]
+    [existingNames]
   );
+
+  const handleChange = React.useCallback(
+    (event) => {
+      setName(event.target.value);
+      setNameTaken(isNameTaken(event.target.value));
+    },
+    [isNameTaken]
+  );
+
+  const handleClose = React.useCallback(() => {
+    setName(user.name);
+    setNameTaken(false);
+    setShowDetails(false);
+  }, [user.name]);
+
+  const commitName = React.useCallback(() => {
+    const trimmedName = name.trim();
+    const taken = isNameTaken(trimmedName);
+    setNameTaken(taken);
+    if (!trimmedName || taken) {
+      return false;
+    }
+    if (trimmedName !== user.name) {
+      updateCurrentUser({ name: trimmedName });
+    }
+    return true;
+  }, [isNameTaken, name, updateCurrentUser, user.name]);
+
+  const handleSave = React.useCallback(() => {
+    if (commitName()) {
+      setShowDetails(false);
+    }
+  }, [commitName]);
 
   const handleColorChange = React.useCallback(
     (newColor) => {
@@ -116,13 +163,38 @@ const UserConfig = ({
       <Modal
         title={t("User details")}
         show={showDetails}
-        setShow={setShowDetails}
+        setShow={(show) => (show ? setShowDetails(true) : handleClose())}
+        footer={
+          <div style={{ display: "flex", justifyContent: "end", gap: "0.5em" }}>
+            <button onClick={handleClose} className="button">
+              {t("Close")}
+            </button>
+            {editable && (
+              <button onClick={handleSave} className="button">
+                {t("Save")}
+              </button>
+            )}
+          </div>
+        }
       >
         {editable && (
           <UserDetailsFields>
             <label>
               {t("Username")}
-              <StyledInputName value={name} onChange={handleChange} />
+              <StyledInputName
+                value={name}
+                onChange={handleChange}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter") {
+                    commitName();
+                  }
+                }}
+              />
+              {nameTaken && (
+                <div style={{ color: "#e53935" }}>
+                  {t("This name is already taken")}
+                </div>
+              )}
             </label>
 
             <ColorField>
@@ -139,9 +211,9 @@ const UserConfig = ({
               value={assignedTeam}
               onChange={(event) => onAssignTeam(event.target.value)}
             >
-              {teams.map(({ id, name }) => (
+              {teams.map(({ id, name: teamName }) => (
                 <option key={id} value={id}>
-                  {id === UNASSIGNED_TEAM_ID ? t("Unassigned") : name}
+                  {id === UNASSIGNED_TEAM_ID ? t("Unassigned") : teamName}
                 </option>
               ))}
             </select>

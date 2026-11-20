@@ -15,6 +15,7 @@ import { GlobalConfProvider } from "../hooks/useGlobalConf";
 import useSession, { SessionProvider } from "../hooks/useSession";
 import AutoSaveSession from "./AutoSaveSession";
 import { ModerationProvider } from "../hooks/useModeration";
+import useUniqueUsername from "../users/useUniqueUsername";
 
 // Keep compatibility with previous availableItems shape
 const migrateAvailableItemList = (old) => {
@@ -61,10 +62,16 @@ export const Session = () => {
   } = useSession();
 
   const gameLoadingRef = React.useRef(false);
-  const { isSpaceMaster: isMaster } = useUsers();
+  const { isSpaceMaster: isMaster, joinSpace } = useUsers();
   const { sessionInfo } = useSessionInfo();
 
   const { t } = useTranslation();
+
+  React.useEffect(() => {
+    joinSpace(sessionId);
+  }, [joinSpace, sessionId]);
+
+  useUniqueUsername();
 
   useAsyncEffect(
     async (isMounted) => {
