@@ -142,17 +142,18 @@ export const SessionProvider = ({
       availableItems: availableItems,
       messages: messages.slice(-50),
       timestamp: Date.now(),
-      gameId: fromGameId,
+      gameId: currentGameId,
     };
 
     return currentSession;
-  }, [availableItems, boardConfig, fromGameId, getItemList, messages]);
+  }, [availableItems, boardConfig, currentGameId, getItemList, messages]);
 
   const changeGame = React.useCallback(
     async (newGameId) => {
       const newGame = await getGame(newGameId);
-      const currentSession = getCurrentSession();
+      const currentSession = await getCurrentSession();
 
+      setCurrentGameId(newGameId);
       setSession({ ...currentSession, ...newGame }, true);
     },
     [getCurrentSession, setSession]
